@@ -23,8 +23,6 @@ def main(request):
 
     if request.method == 'POST':
         form = MainForm(request.POST)
-        code = request.POST['code']
-        output = request.POST['output']
     else:
         form = MainForm()
 
