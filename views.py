@@ -5,26 +5,26 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 
 from .models import AdminEmail
-
 from .forms import MainForm
+from .registers import Registers
 
 SITE_HDR = "Emu86: an x86 assembly emulator."
 
-output = "Nothing outputted yet."
-
+output = "Nothing yet."
+registers = Registers()
 
 def get_hdr():
     return SITE_HDR
 
 def main(request):
     global output
+    global registers
 
     site_hdr = get_hdr()
     form = MainForm()
-    output = render(request, 'main.html',
+    return render(request, 'main.html',
                     {'form': form, 'header': site_hdr,
-                        'output': output})
-
+                        'output': output, 'registers': registers})
 
 def help(request):
     site_hdr = get_hdr()
