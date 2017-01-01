@@ -1,0 +1,92 @@
+{% extends "ebase.html" %}
+{% block content %}
+    <div class="module">
+        <form action="{% url 'Emu86:main' %}" method="get">
+            <table>
+	            {{ form.as_p }}
+            </table>
+            <input type="submit" value="Run">
+        </form>
+
+        <br>
+        <hr>
+        <br>
+        Output: {{ output }}
+        <br>
+        <br>
+        <table>
+            <tr>
+                <th>
+                    Register
+                </th>
+                <th>
+                    Contents
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    EAX
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    EBX
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ECX
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    EDX
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    EBX
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ESI
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    EDI
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ESP
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    EBP
+                </td>
+                <td>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+{% endblock content %}
