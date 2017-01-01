@@ -1,18 +1,14 @@
 {% extends "ebase.html" %}
 {% block content %}
     <div class="module">
-        <form action="{% url 'Emu86:main' %}" method="get">
+        <form action="{% url 'Emu86:main' %}" method="post">
+            {% csrf_token %}
 	        {{ form.as_p }}
-            <input type="submit" value="Run">
-            <br>
-            <br>
-            Output: <input type="text" readonly="readonly" value="{{ output }}"
-                     size="80">
-
+            <input type="submit" value="Run" id="run-button">
             <br>
             <hr>
             <br>
-            <table>
+            <table id="registers">
                 <tr>
                     <th>
                         Register
@@ -22,62 +18,67 @@
                     </th>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="regsiter">
                         EAX
                     </td>
-                    <td>
+                    <td id="contents">
                         x00000000
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="regsiter">
                         EBX
                     </td>
-                    <td>
+                    <td id="contents">
                         x00000000
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="regsiter">
                         ECX
                     </td>
-                    <td>
+                    <td id="contents">
                         {{ registers.ECX }}
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="regsiter">
                         EDX
                     </td>
-                    <td>
+                    <td id="contents">
+                        x00000000
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="regsiter">
                         ESI
                     </td>
-                    <td>
+                    <td id="contents">
+                        x00000000
                     </td>
                 </tr>
                 <tr>
                     <td>
                         EDI
-                    </td>
-                    <td>
+                    </td id="regsiter">
+                    <td id="contents">
+                        x00000000
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="regsiter">
                         ESP
                     </td>
-                    <td>
+                    <td id="contents">
+                        x00000000
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="regsiter">
                         EBP
                     </td>
-                    <td>
+                    <td id="contents">
+                        x00000000
                     </td>
                 </tr>
     

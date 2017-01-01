@@ -10,21 +10,27 @@ from .registers import Registers
 
 SITE_HDR = "Emu86: an x86 assembly emulator."
 
-output = "Nothing yet."
 registers = Registers()
 
 def get_hdr():
     return SITE_HDR
 
 def main(request):
-    global output
     global registers
 
     site_hdr = get_hdr()
-    form = MainForm()
+    code = ''
+
+    if request.method == 'POST':
+        form = MainForm(request.POST)
+        code = request.POST['code']
+        output = request.POST['output']
+    else:
+        form = MainForm()
+
     return render(request, 'main.html',
-                    {'form': form, 'header': site_hdr,
-                        'output': output, 'registers': registers})
+                  {'form': form, 'header': site_hdr,
+                       'registers': registers})
 
 def help(request):
     site_hdr = get_hdr()
