@@ -165,6 +165,20 @@ hr {
     line-height: 1px;
 }
 
+/* FORM */
+
+div#code-input {
+    margin: 0 30% 1em 1em;
+    padding: 0;
+}
+
+div#register-area {
+    margin: 0;
+    padding: 0;
+    float: right;
+    width: 25%;
+}
+
 /* TEXT STYLES & MODIFIERS */
 
 .small {
@@ -644,8 +658,8 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 #content-main {
-    float: left;
-    width: 100%;
+/*    float: left;  */
+/*    width: 100%;  */
 }
 
 #content-related {

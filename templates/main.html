@@ -1,13 +1,15 @@
 {% extends "ebase.html" %}
 {% block content %}
     <div class="module">
-        <form action="{% url 'Emu86:main' %}" method="post">
-            {% csrf_token %}
-	        {{ form.as_p }}
-            <input type="submit" value="Run" id="run-button">
-            <br>
-            <hr>
-            <br>
+        <div id="code-input">
+            <form action="{% url 'Emu86:main' %}" method="post">
+                {% csrf_token %}
+    	        {{ form.as_p }}
+                <input type="submit" value="Run" id="run-button">
+                <br>
+            </form>
+        </div>
+        <div id="register-area">
             <table id="registers">
                 <tr>
                     <th>
@@ -17,72 +19,25 @@
                         Contents
                     </th>
                 </tr>
-                <tr>
-                    <td id="register">
-                        EAX
-                    </td>
-                    <td id="contents">
-                        x00000000
-                    </td>
-                </tr>
-                <tr>
-                    <td id="register">
-                        EBX
-                    </td>
-                    <td id="contents">
-                        x00000000
-                    </td>
-                </tr>
-                <tr>
-                    <td id="register">
-                        ECX
-                    </td>
-                    <td id="contents">
-                        {{ registers.ECX }}
-                    </td>
-                </tr>
-                <tr>
-                    <td id="register">
-                        EDX
-                    </td>
-                    <td id="contents">
-                        x00000000
-                    </td>
-                </tr>
-                <tr>
-                    <td id="register">
-                        ESI
-                    </td>
-                    <td id="contents">
-                        x00000000
-                    </td>
-                </tr>
-                <tr>
-                    <td id="register">
-                        EDI
-                    </td>
-                    <td id="contents">
-                        x00000000
-                    </td>
-                </tr>
-                <tr>
-                    <td id="register">
-                        ESP
-                    </td>
-                    <td id="contents">
-                        x00000000
-                    </td>
-                </tr>
-                <tr>
-                    <td id="register">
-                        EBP
-                    </td>
-                    <td id="contents">
-                        x00000000
-                    </td>
-                </tr>
+                {% for reg, cont in registers.items %}
+                    <tr>
+                        <td id="register">
+                            {{ reg }}
+                        </td>
+                        <td id="contents">
+                            {{ cont }}
+                        </td>
+                    </tr>
+                {% endfor %}
     
             </table>
-        </form>
+        </div>
+        <hr>
+        <br>
+        Output: 
+        <input type="text" name="output" max_length="60"
+            readonly="readonly" value="{{ output }}">
+        <br>
+        <br>
     </div>
 {% endblock content %}
