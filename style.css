@@ -181,6 +181,10 @@ div#register-area {
 
 /* TEXT STYLES & MODIFIERS */
 
+input#error {
+    color: f00;
+}
+
 .small {
     font-size: 11px;
 }

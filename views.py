@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404, render
 
 from .models import AdminEmail
 from .forms import MainForm
-from .registers import Registers
+from .assemble import assemble
 
 SITE_HDR = "Emu86: an x86 assembly emulator."
 
@@ -31,19 +31,20 @@ def main(request):
     global registers
     global hex_digits
     output = ""
+    error = ""
 
     site_hdr = get_hdr()
 
     if request.method == 'POST':
         form = MainForm(request.POST)
-        output = "Got some output."
+        (output, error) = assemble(request.POST['code'], registers)
     else:
         form = MainForm()
 
     return render(request, 'main.html',
                   {'form': form, 'header': site_hdr,
                    'registers': registers, 'output': output,
-                   'hex_digits': hex_digits})
+                   'error': error, 'hex_digits': hex_digits})
 
 def help(request):
     site_hdr = get_hdr()
@@ -59,3 +60,9 @@ def feedback(request):
     comma_del_emails = comma_del_emails[:-1]
     return render(request, 'feedback.html', {'emails': comma_del_emails,
         'header': site_hdr})
+
+def move(code):
+    pass
+
+def add(code):
+    pass
