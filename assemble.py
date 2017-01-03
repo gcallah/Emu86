@@ -3,16 +3,27 @@ assemble.py
 Executes assembly code typed in.
 """
 
+from .errors import *  # OK here: there are *our* errors, after all!
+
+
 def move(code):
-    pass
+    return 'MOV'
 
 def add(code):
-    pass
+    return 'ADD'
+
+def sub(code):
+    return 'SUB'
+
 
 instructions = {
-        'MOV': move,
         'ADD': add,
+        'MOV': move,
+        'SUB': sub,
         }
+
+delimiters = set([' ', ',' '\n', '\t'])
+
 
 def assemble(code, registers):  # memory to come!
     """
@@ -27,11 +38,25 @@ def assemble(code, registers):  # memory to come!
     output = ''
     error = ''
 #    while len(code) > 0:
+    try:
+        output = get_instruction(code)
+        return (output, '')
+    except Error as err:
+        return (output, err.msg)
+
+def get_instruction(code):
+    """
+    We expect an instruction next.
+        Args:
+            code
+        Returns:
+            None
+    """
     token = get_token(code)
     if token not in instructions:
-        return (output, "Invalid instruction.")
-        code = code[len(token) + 1:]
-    return ("Got token of: " + token, '')
+        raise InvalidInstruction(token)
+    else:
+        return instructions[token](code)
 
 def get_token(code):
     """
@@ -43,7 +68,7 @@ def get_token(code):
     """
     token = ''
     for char in code:
-        if char != ',' and char != ' ':
+        if char not in delimiters:
             token = token + char
         else:
             break
