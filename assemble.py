@@ -7,7 +7,9 @@ from .errors import *  # OK here: there are *our* errors, after all!
 
 
 def move(code):
-    return 'MOV'
+    op1 = get_token(code)
+    op2 = get_token(code)
+    return 'MOV' + op1 + ", " + op2
 
 def add(code):
     return 'ADD'
@@ -24,8 +26,12 @@ instructions = {
 
 delimiters = set([' ', ',' '\n', '\t'])
 
+registers = None
 
-def assemble(code, registers):  # memory to come!
+code_pos = 0
+
+
+def assemble(code, regs):  # memory to come!
     """
         Assembles and runs code.
         Args:
@@ -35,14 +41,19 @@ def assemble(code, registers):  # memory to come!
             Output, if any.
             Error, if any.
     """
+    global code_pos
+    code_pos = 0
+    global registers
+    registers = regs
+
     output = ''
     error = ''
-#    while len(code) > 0:
-    try:
-        output = get_instruction(code)
-        return (output, '')
-    except Error as err:
-        return (output, err.msg)
+    while code_pos < len(code):
+        try:
+            output = get_instruction(code)
+            return (output, '')
+        except Error as err:
+            return (output, err.msg)
 
 def get_instruction(code):
     """
@@ -58,6 +69,11 @@ def get_instruction(code):
     else:
         return instructions[token](code)
 
+def get_operand(code):
+    token = get_token(code)
+    if token not in registers:
+        pass
+
 def get_token(code):
     """
         Gets the next token.
@@ -66,10 +82,19 @@ def get_token(code):
         Returns:
             The next token from string.
     """
+    global code_pos
+
+    count = 0
+    for char in code[code_pos:]:  # eat leading delimiters
+        if char in delimiters:
+            count += 1
+    code_pos += count
+
     token = ''
-    for char in code:
+    for char in code[code_pos:]:
         if char not in delimiters:
             token = token + char
         else:
             break
+    code_pos += len(token) + 1  # because we read 1 delim char
     return token

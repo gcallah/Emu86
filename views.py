@@ -1,3 +1,6 @@
+
+from collections import OrderedDict
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -10,16 +13,17 @@ from .assemble import assemble
 
 SITE_HDR = "Emu86: an x86 assembly emulator."
 
-registers = {
-             'EAX': 0,
-             'EBX': 0,
-             'ECX': 0,
-             'EDX': 0,
-             'ESI': 0,
-             'EDI': 0,
-             'ESP': 0,
-             'EBP': 0,
-            }
+registers = OrderedDict(
+            [
+                ('EAX', 0),
+                ('EBX', 0),
+                ('ECX', 0),
+                ('EDX', 0),
+                ('ESI', 0),
+                ('EDI', 0),
+                ('ESP', 0),
+                ('EBP', 0),
+            ])
 
 hex_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B',
                 'C', 'D', 'E', 'F' ]
