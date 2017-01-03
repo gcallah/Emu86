@@ -1,37 +1,41 @@
 {% extends "ebase.html" %}
 {% block content %}
     <div class="module">
-        <div id="code-input">
-            <form action="{% url 'Emu86:main' %}" method="post">
-                {% csrf_token %}
-    	        {{ form.as_p }}
-                <input type="submit" value="Run" id="run-button">
-                <br>
-            </form>
-        </div>
-        <div id="register-area">
-            <table id="registers">
-                <tr>
-                    <th>
-                        Register
-                    </th>
-                    <th>
-                        Contents
-                    </th>
-                </tr>
-                {% for reg, cont in registers.items %}
-                    <tr>
-                        <td id="register">
-                            {{ reg }}
-                        </td>
-                        <td id="contents">
-                            {{ cont }}
-                        </td>
-                    </tr>
-                {% endfor %}
-    
-            </table>
-        </div>
+        <table>
+            <tr>
+                <td id="form-cell">
+                    <form action="{% url 'Emu86:main' %}" method="post">
+                        {% csrf_token %}
+            	        {{ form.as_p }}
+                        <input type="submit" value="Run" id="run-button">
+                        <br>
+                    </form>
+                </td>
+                <td id="registers-cell">
+                    <table id="registers">
+                        <tr>
+                            <th>
+                                Register
+                            </th>
+                            <th>
+                                Contents
+                            </th>
+                        </tr>
+                        {% for reg, cont in registers.items %}
+                            <tr>
+                                <td id="register">
+                                    {{ reg }}
+                                </td>
+                                <td id="contents">
+                                    {{ cont }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+            
+                    </table>
+                </td>
+            </tr>
+        </table>
         <hr>
         <br>
         Output: 
@@ -39,5 +43,29 @@
             readonly="readonly" value="{{ output }}">
         <br>
         <br>
+        Memory (row major):
+        <br>
+        <table>
+            <tr>
+                <td></td>
+                {% for col_digit in hex_digits %}
+                    <th>
+                        {{ col_digit }}
+                    </th>
+                {% endfor %}
+            </tr>
+            {% for row_digit in hex_digits %}
+                <tr>
+                    <th>
+                        {{ row_digit }}
+                    </th>
+                    {% for x in hex_digits %}
+                        <td>
+                            0
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 {% endblock content %}

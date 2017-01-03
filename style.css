@@ -168,7 +168,7 @@ hr {
 /* FORM */
 
 div#code-input {
-    margin: 0 30% 1em 1em;
+    margin: 0 35% 1em 1em;
     padding: 0;
 }
 
@@ -752,12 +752,24 @@ a.deletelink:focus, a.deletelink:hover {
 
 #run-button {
     float: right;
-    margin: 10px 200px 20px 20px;
+    margin: 10px 180px 20px 20px;
 }
 
 td#register {
     color: #ffc;
     background: #285D91;
+}
+
+td#contents {
+    background: #eff;
+}
+
+td#form-cell {
+    background: #dde;
+}
+
+td#registers-cell {
+    background: #edd;
 }
 
 #user-tools {

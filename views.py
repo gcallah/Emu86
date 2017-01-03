@@ -21,11 +21,15 @@ registers = {
              'EBP': 0,
             }
 
+hex_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B',
+                'C', 'D', 'E', 'F' ]
+
 def get_hdr():
     return SITE_HDR
 
 def main(request):
     global registers
+    global hex_digits
     output = ""
 
     site_hdr = get_hdr()
@@ -38,7 +42,8 @@ def main(request):
 
     return render(request, 'main.html',
                   {'form': form, 'header': site_hdr,
-                   'registers': registers, 'output': output})
+                   'registers': registers, 'output': output,
+                   'hex_digits': hex_digits})
 
 def help(request):
     site_hdr = get_hdr()
