@@ -36,19 +36,21 @@ def main(request):
     global hex_digits
     output = ""
     error = ""
+    debug = ""
 
     site_hdr = get_hdr()
 
     if request.method == 'POST':
         form = MainForm(request.POST)
-        (output, error) = assemble(request.POST['code'], registers)
+        (output, error, debug) = assemble(request.POST['code'], registers)
     else:
         form = MainForm()
 
     return render(request, 'main.html',
                   {'form': form, 'header': site_hdr,
                    'registers': registers, 'output': output,
-                   'error': error, 'hex_digits': hex_digits})
+                   'error': error, 'hex_digits': hex_digits,
+                   'debug': debug})
 
 def help(request):
     site_hdr = get_hdr()

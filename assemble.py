@@ -27,8 +27,8 @@ instructions = {
 delimiters = set([' ', ',' '\n', '\t'])
 
 registers = None
-
 code_pos = 0
+debug = ""
 
 
 def assemble(code, regs):  # memory to come!
@@ -48,12 +48,15 @@ def assemble(code, regs):  # memory to come!
 
     output = ''
     error = ''
+    if code is None or len(code) == 0:
+        return ("", "Must submit code to run.", "")
+
     while code_pos < len(code):
         try:
             output = get_instruction(code)
-            return (output, '')
+            return (output, '', debug)
         except Error as err:
-            return (output, err.msg)
+            return (output, err.msg, debug)
 
 def get_instruction(code):
     """
@@ -83,12 +86,14 @@ def get_token(code):
             The next token from string.
     """
     global code_pos
+    global debug
 
     count = 0
     for char in code[code_pos:]:  # eat leading delimiters
         if char in delimiters:
             count += 1
     code_pos += count
+    debug += "code pos now: " + str(code_pos)
 
     token = ''
     for char in code[code_pos:]:
