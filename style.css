@@ -762,10 +762,16 @@ a.deletelink:focus, a.deletelink:hover {
 td#register {
     color: #ffc;
     background: #285D91;
+    vertical-align: middle
 }
 
-td#contents {
+td#contents, input#reg-cont {
     background: #eff;
+}
+
+input#reg-cont {
+    border: none;
+    padding: 0px, 0px, 0px, 0px
 }
 
 td#form-cell {

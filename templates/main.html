@@ -1,41 +1,50 @@
 {% extends "ebase.html" %}
 {% block content %}
     <div class="module">
-        <table>
-            <tr>
-                <td id="form-cell">
-                    <form action="{% url 'Emu86:main' %}" method="post">
-                        {% csrf_token %}
-            	        {{ form.as_p }}
-                        <input type="submit" value="Run" id="run-button">
-                        <br>
-                    </form>
-                </td>
-                <td id="registers-cell">
-                    <table id="registers">
-                        <tr>
-                            <th>
-                                Register
-                            </th>
-                            <th>
-                                Contents
-                            </th>
-                        </tr>
-                        {% for reg, cont in registers.items %}
+        <form action="{% url 'Emu86:main_page' %}" method="post">
+            <table>
+                <tr>
+                    <td id="form-cell">
+                            {% csrf_token %}
+                            <p>
+                            <label for="id_code">Code:</label>
+                            <textarea cols="40" rows="16" id="id_code" name="code">
+                            </textarea>
+                            </p>
+                            <input type="submit" value="Run" id="run-button">
+                            <br>
+                    </td>
+                    <td id="registers-cell">
+                        <table id="registers-table">
                             <tr>
-                                <td id="register">
-                                    {{ reg }}
-                                </td>
-                                <td id="contents">
-                                    {{ cont }}
-                                </td>
+                                <th>
+                                    Register
+                                </th>
+                                <th>
+                                    Contents
+                                </th>
                             </tr>
-                        {% endfor %}
-            
-                    </table>
-                </td>
-            </tr>
-        </table>
+                            {% for reg, cont in registers.items %}
+                                <tr>
+                                    <td id="register">
+                                        {{ reg }}
+                                    </td>
+                                    <td id="contents">
+                                        <input
+                                            id="reg-cont"
+                                            value="{{ cont }}"
+                                            name="{{ reg }}"
+                                            size="10"
+                                        >
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
         <hr>
         <br>
         Output: 

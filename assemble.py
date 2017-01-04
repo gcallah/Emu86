@@ -10,37 +10,43 @@ from .errors import *  # import * OK here:
 debug = ""
 delimiters = set([' ', ',', '\n', '\t',])
 
-registers = None
 code_pos = 0
 
 
-def move(code):
-    global registers
-
-    (op1, iop1, iop2) = two_op_ints("MOV", code)
+def move(code, registers):
+    """
+    Implments the MOV instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("MOV", code, registers)
     registers[op1] = iop2
-
     return ''
 
-def add(code):
-    global registers
-    
-    (op1, iop1, iop2) = two_op_ints("ADD", code)
+def add(code, registers):
+    """
+    Implments the ADD instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("ADD", code, registers)
     registers[op1] = iop1 + iop2
-
     return ''
 
-def sub(code):
-    global registers
-    
-    (op1, iop1, iop2) = two_op_ints("ADD", code)
+def sub(code, registers):
+    """
+    Implments the SUB instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("ADD", code, registers)
     registers[op1] = iop1 - iop2
-
     return ''
 
-def two_op_ints(instr, code):
+def imul(code, registers):
+    """
+    Implments the SUB instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("IMUL", code, registers)
+    registers[op1] = iop1 * iop2
+    return ''
+
+def two_op_ints(instr, code, registers):
     global debug
-    global registers
     
     op1 = get_token(code)
     op2 = get_token(code)
@@ -49,20 +55,20 @@ def two_op_ints(instr, code):
         raise InvalidNumArgs(instr, 2)
     if op1 not in registers:
         raise InvalidOperand(op1)
-    iop1 = get_op_as_int(op1)
-    iop2 = get_op_as_int(op2)
+    iop1 = get_op_as_int(op1, registers)
+    iop2 = get_op_as_int(op2, registers)
 
     return (op1, iop1, iop2)
 
 instructions = {
         'ADD': add,
+        'IMUL': imul,
         'MOV': move,
         'SUB': sub,
         }
 
 
-
-def assemble(code, regs):  # memory to come!
+def assemble(code, registers):  # memory to come!
     """
         Assembles and runs code.
         Args:
@@ -74,24 +80,22 @@ def assemble(code, regs):  # memory to come!
     """
     global code_pos
     code_pos = 0
-    global registers
-    registers = regs
     global debug
     debug = ''
 
     output = ''
     error = ''
     if code is None or len(code) == 0:
-        return ("", "Must submit code to run.", debug)
+        return ("", "Must submit code to run.", debug, registers)
 
     while code_pos < len(code):
         try:
-            output += get_instruction(code)
+            output += get_instruction(code, registers)
         except Error as err:
-            return (output, err.msg, debug)
-    return (output, '', debug)
+            return (output, err.msg, debug, registers)
+    return (output, '', debug, registers)
 
-def get_instruction(code):
+def get_instruction(code, registers):
     """
     We expect an instruction next.
         Args:
@@ -106,7 +110,7 @@ def get_instruction(code):
         raise InvalidInstruction(instr)
     else:
         debug += "Calling " + instr + "\n"
-        return instructions[instr](code)
+        return instructions[instr](code, registers)
 
 def get_token(code):
     """
@@ -141,7 +145,7 @@ def get_token(code):
 
     return token
 
-def get_op_as_int(op):
+def get_op_as_int(op, registers):
     """
     Returns int value of operand: direct int or reg val
     Args:
@@ -149,14 +153,14 @@ def get_op_as_int(op):
     Returns:
         int value
     """
-    global registers
     global debug
 
     int_val = None
 
+    debug += ("Checking " + op + ", regs = " + str(registers) + "\n")
     if op in registers:
         int_val = int(registers[op])
-        debug = debug + "From reg " + op + " got val " + str(int_val)
+        debug += ("From reg " + op + " got val " + str(int_val) + "\n")
     else:
         try:
             int_val = int(op)
