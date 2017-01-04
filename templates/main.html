@@ -39,13 +39,13 @@
         <hr>
         <br>
         Output: 
-        <input type="text" name="output" max_length="60"
-            readonly="readonly" value="{{ output }}">
+        <input type="text" name="output" max_length="64"
+            size="64" readonly="readonly" value="{{ output }}">
         <br>
         <br>
         Error: 
-        <input type="text" name="error" max_length="60"
-            readonly="readonly" value="{{ error }}"
+        <input type="text" name="error" max_length="64"
+            size="64" readonly="readonly" value="{{ error }}"
             id="error">
         <br>
         <br>
@@ -77,6 +77,8 @@
         <br>
         Debug info:
         <br>
-        <textarea value="{{ debug }}" rows="12" cols="60" readonly="readonly">
+        <textarea rows="12" cols="60" readonly="readonly">
+            {{ debug }}
+        </textarea>
     </div>
 {% endblock content %}

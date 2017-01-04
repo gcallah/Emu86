@@ -16,3 +16,8 @@ class InvalidInstruction(Error):
 class InvalidOperand(Error):
     def __init__(self, offender):
         self.msg = "Invalid operand: " + offender
+
+class InvalidNumArgs(Error):
+    def __init__(self, offender, num):
+        self.msg = ("Invalid number of args: " + offender
+                    + " requires " + str(num))
