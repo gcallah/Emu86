@@ -45,6 +45,30 @@ def imul(code, registers):
     registers[op1] = iop1 * iop2
     return ''
 
+def andf(code, registers):
+    """
+    Implments the SUB instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("AND", code, registers)
+    registers[op1] = iop1 & iop2
+    return ''
+
+def orf(code, registers):
+    """
+    Implments the SUB instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("OR", code, registers)
+    registers[op1] = iop1 | iop2
+    return ''
+
+def xor(code, registers):
+    """
+    Implments the SUB instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("OR", code, registers)
+    registers[op1] = iop1 ^ iop2
+    return ''
+
 def two_op_ints(instr, code, registers):
     global debug
     
@@ -65,6 +89,9 @@ instructions = {
         'IMUL': imul,
         'MOV': move,
         'SUB': sub,
+        'AND': andf,
+        'OR': orf,
+        'XOR': xor,
         }
 
 
