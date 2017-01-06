@@ -8,10 +8,14 @@ from .errors import *  # import * OK here:
 
 
 debug = ""
-delimiters = set([' ', ',', '\n', '\t',])
+delimiters = set([' ', ',', '\n', '\r', '\t',])
 
 code_pos = 0
 
+
+def add_debug(s):
+    global debug
+    debug += (s + "\n")
 
 def move(code, registers):
     """
@@ -70,8 +74,9 @@ def xor(code, registers):
     return ''
 
 def two_op_ints(instr, code, registers):
-    global debug
-    
+    """
+    For instructions that expect two integer operands.
+    """
     op1 = get_token(code)
     op2 = get_token(code)
 
@@ -117,6 +122,8 @@ def assemble(code, registers):  # memory to come!
 
     while code_pos < len(code):
         try:
+            add_debug("Trying for instruction with code_pos of " +
+                    str(code_pos))
             output += get_instruction(code, registers)
         except Error as err:
             return (output, err.msg, debug, registers)
@@ -130,13 +137,11 @@ def get_instruction(code, registers):
         Returns:
             None
     """
-    global debug
-
     instr = get_token(code)
     if instr not in instructions:
         raise InvalidInstruction(instr)
     else:
-        debug += "Calling " + instr + "\n"
+        add_debug("Calling " + instr)
         return instructions[instr](code, registers)
 
 def get_token(code):
@@ -148,9 +153,9 @@ def get_token(code):
             The next token from string.
     """
     global code_pos
-    global debug
 
     token = ''
+    add_debug("Calling get_token() with code pos of: " + str(code_pos))
     if code_pos <= len(code):
         count = 0
         for char in code[code_pos:]:  # eat leading delimiters
@@ -166,10 +171,13 @@ def get_token(code):
                 count += 1
                 if char not in delimiters:
                     token = token + char
+                    add_debug("Adding " + str(char) + " to " + token)
                 else:
                     break
             code_pos += count
 
+    token = token.upper()  # for now, a simple-minded way to allow input in
+                           # either case!
     return token
 
 def get_op_as_int(op, registers):
@@ -180,14 +188,11 @@ def get_op_as_int(op, registers):
     Returns:
         int value
     """
-    global debug
 
     int_val = None
 
-    debug += ("Checking " + op + ", regs = " + str(registers) + "\n")
     if op in registers:
         int_val = int(registers[op])
-        debug += ("From reg " + op + " got val " + str(int_val) + "\n")
     else:
         try:
             int_val = int(op)

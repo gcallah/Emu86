@@ -6,11 +6,7 @@
                 <tr>
                     <td id="form-cell">
                             {% csrf_token %}
-                            <p>
-                            <label for="id_code">Code:</label>
-                            <textarea cols="40" rows="16" id="id_code" name="code">
-                            </textarea>
-                            </p>
+                            {{ form.as_p }}
                             <input type="submit" value="Run" id="run-button">
                             <br>
                     </td>
