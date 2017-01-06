@@ -43,7 +43,7 @@ def sub(code, registers):
 
 def imul(code, registers):
     """
-    Implments the SUB instruction.
+    Implments the IMUL instruction.
     """
     (op1, iop1, iop2) = two_op_ints("IMUL", code, registers)
     registers[op1] = iop1 * iop2
@@ -51,7 +51,7 @@ def imul(code, registers):
 
 def andf(code, registers):
     """
-    Implments the SUB instruction.
+    Implments the AND instruction.
     """
     (op1, iop1, iop2) = two_op_ints("AND", code, registers)
     registers[op1] = iop1 & iop2
@@ -59,7 +59,7 @@ def andf(code, registers):
 
 def orf(code, registers):
     """
-    Implments the SUB instruction.
+    Implments the OR instruction.
     """
     (op1, iop1, iop2) = two_op_ints("OR", code, registers)
     registers[op1] = iop1 | iop2
@@ -67,11 +67,47 @@ def orf(code, registers):
 
 def xor(code, registers):
     """
-    Implments the SUB instruction.
+    Implments the XOR instruction.
     """
     (op1, iop1, iop2) = two_op_ints("OR", code, registers)
     registers[op1] = iop1 ^ iop2
     return ''
+
+def shl(code, registers):
+    """
+    Implments the XOR instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("SHL", code, registers)
+    registers[op1] = iop1 << iop2
+    return ''
+
+def shr(code, registers):
+    """
+    Implments the XOR instruction.
+    """
+    (op1, iop1, iop2) = two_op_ints("SHR", code, registers)
+    registers[op1] = iop1 >> iop2
+    return ''
+
+def notf(code, registers):
+    """
+    Implments the NOT instruction.
+    """
+    (op, iop) = one_op_int("NOT", code, registers)
+    registers[op] = ~iop
+    return ''
+
+def one_op_int(instr, code, registers):
+    """
+    For instructions that expect one integer operand.
+    """
+    op = get_token(code)
+
+    if not op:
+        raise InvalidNumArgs(instr, 1)
+    iop = get_op_as_int(op, registers)
+
+    return (op, iop)
 
 def two_op_ints(instr, code, registers):
     """
@@ -89,6 +125,8 @@ def two_op_ints(instr, code, registers):
 
     return (op1, iop1, iop2)
 
+# if a func name would interfere with a Python keyword,
+# let's just add 'f' on the end!
 instructions = {
         'ADD': add,
         'IMUL': imul,
@@ -97,6 +135,9 @@ instructions = {
         'AND': andf,
         'OR': orf,
         'XOR': xor,
+        'SHL': shl,
+        'SHR': shr,
+        'NOT': notf,
         }
 
 
