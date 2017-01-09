@@ -54,6 +54,7 @@ class Address(Location):
         return int(self.memory[self.name])
 
     def set_val(self, val):
+        add_debug("Setting memory loc " + self.name + " to " + str(val))
         self.memory[self.name] = val
 
 
@@ -246,14 +247,14 @@ def assemble(code, registers, memory):
     output = ''
     error = ''
     if code is None or len(code) == 0:
-        return ("", "Must submit code to run.", debug, registers)
+        return ("", "Must submit code to run.", debug)
 
     while code_pos < len(code):
         try:
             output += get_instruction(code, registers, memory)
         except Error as err:
-            return (output, err.msg, debug, registers)
-    return (output, '', debug, registers)
+            return (output, err.msg, debug)
+    return (output, '', debug)
 
 def get_instruction(code, registers, memory):
     """
@@ -264,7 +265,9 @@ def get_instruction(code, registers, memory):
             None
     """
     instr = get_token(code)
-    if instr not in instructions:
+    if instr == '':
+        return ''
+    elif instr not in instructions:
         raise InvalidInstruction(instr)
     else:
         add_debug("Calling " + instr)
@@ -319,7 +322,11 @@ def get_op(token, registers, memory):
     if token in registers:
         return Register(token, registers)
     elif token[0] == '[' and token[len(token) - 1] == ']':
-        return Address(token[1:len(token) - 2], memory)
+        address = token[1:len(token) - 1]
+        if address in memory:
+            return Address(token[1:len(token) - 1], memory)
+        else:
+            raise InvalidAddress(address)
     else:
         try:
             int_val = int(token)

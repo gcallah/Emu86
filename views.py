@@ -40,8 +40,6 @@ def main_page(request):
     memory = OrderedDict()
     for i in range(0, MEM_SIZE):
             memory[str(i)] = 0
-    # for test purposes:
-    memory['16'] = 16
 
     site_hdr = get_hdr()
 
@@ -51,7 +49,7 @@ def main_page(request):
         form = MainForm(request.POST)
         get_reg_contents(registers, request)
         get_mem_contents(memory, request)
-        (output, error, debug, registers) = assemble(request.POST['code'],
+        (output, error, debug) = assemble(request.POST['code'],
                                                      registers, memory)
 
     return render(request, 'main.html',
@@ -66,7 +64,7 @@ def get_reg_contents(registers, request):
 
 def get_mem_contents(memory, request):
     for loc in memory:
-        memory[loc] = request.POST[str(loc)]    # .zfill(MEM_DIGITS)]
+        memory[loc] = request.POST[str(loc)]
 
 def help(request):
     site_hdr = get_hdr()
