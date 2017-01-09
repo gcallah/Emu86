@@ -8,17 +8,19 @@ from django.shortcuts import get_object_or_404, get_list_or_404, render
 
 from .models import AdminEmail
 from .forms import MainForm
-from .assemble import assemble
+from .assemble import assemble, add_debug
 
+MEM_DIGITS = 2
+MEM_SIZE = 32
+# next is for possible later use:
+mem_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
 
-hex_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B',
-                'C', 'D', 'E', 'F' ]
 
 def get_hdr():
     return "Emu86: an x86 assembly emulator."
 
 def main_page(request):
-    global hex_digits
+    global mem_digits
     output = ""
     error = ""
     debug = ""
@@ -35,6 +37,12 @@ def main_page(request):
                     ('EBP', 0),
                 ])
 
+    memory = OrderedDict()
+    for i in range(0, MEM_SIZE):
+            memory[str(i)] = 0
+    # for test purposes:
+    memory['16'] = 16
+
     site_hdr = get_hdr()
 
     if request.method == 'GET':
@@ -42,23 +50,27 @@ def main_page(request):
     else:
         form = MainForm(request.POST)
         get_reg_contents(registers, request)
+        get_mem_contents(memory, request)
         (output, error, debug, registers) = assemble(request.POST['code'],
-                                                     registers)
+                                                     registers, memory)
 
     return render(request, 'main.html',
                   {'form': form, 'header': site_hdr,
                    'registers': registers, 'output': output,
-                   'error': error, 'hex_digits': hex_digits,
-                   'debug': debug})
+                   'error': error, 'mem_digits': mem_digits,
+                   'memory': memory, 'debug': debug})
 
 def get_reg_contents(registers, request):
     for reg in registers:
         registers[reg] = request.POST[reg]
 
+def get_mem_contents(memory, request):
+    for loc in memory:
+        memory[loc] = request.POST[str(loc)]    # .zfill(MEM_DIGITS)]
+
 def help(request):
     site_hdr = get_hdr()
     return render(request, 'help.html', {'header': site_hdr})
-
 
 def feedback(request):
     site_hdr = get_hdr()

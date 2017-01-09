@@ -3,8 +3,10 @@ assemble.py
 Executes assembly code typed in.
 """
 
+from abc import abstractmethod
+
 from .errors import *  # import * OK here:
-                       # there are *our* errors, after all!
+                       # these are *our* errors, after all!
 
 
 debug = ""
@@ -13,123 +15,206 @@ delimiters = set([' ', ',', '\n', '\r', '\t',])
 code_pos = 0
 
 
+class Operand:
+    def __init__(self, name, val=0):
+        self.name = name
+        self.value = val
+
+    def __str__(self):
+        return self.name
+
+    def get_val(self):
+        return self.value
+
+    def get_nm(self):
+        return self.name
+
+
+class IntOp(Operand):
+    def __init__(self, val=0):
+        super().__init__("IntOp", val)
+
+
+class Location(Operand):
+    """
+    Class to give common type to memory and registers.
+    Adds set_val(), not possible for ints!
+    """
+    @abstractmethod
+    def set_val(self):
+        pass
+
+
+class Address(Location):
+    def __init__(self, name, memory, val=0):
+        super().__init__(name)
+        self.memory = memory
+
+    def get_val(self):
+        return int(self.memory[self.name])
+
+    def set_val(self, val):
+        self.memory[self.name] = val
+
+
+class Register(Location):
+    def __init__(self, name, registers):
+        super().__init__(name)
+        self.registers = registers
+
+    def get_val(self):
+        return int(self.registers[self.name])
+
+    def set_val(self, val):
+        self.registers[self.name] = val
+
+
 def add_debug(s):
     global debug
     debug += (s + "\n")
 
-def move(code, registers):
+def move(code, registers, memory):
     """
     Implments the MOV instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("MOV", code, registers)
-    registers[op1] = iop2
+    (op1, op2) = get_two_ops("MOV", code, registers, memory)
+    op1.set_val(op2.get_val())
     return ''
 
-def add(code, registers):
+def add(code, registers, memory):
     """
     Implments the ADD instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("ADD", code, registers)
-    registers[op1] = iop1 + iop2
+    (op1, op2) = get_two_ops("ADD", code, registers, memory)
+    op1.set_val(op1.get_val() + op2.get_val())
     return ''
 
-def sub(code, registers):
+def sub(code, registers, memory):
     """
     Implments the SUB instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("ADD", code, registers)
-    registers[op1] = iop1 - iop2
+    (op1, op2) = get_two_ops("ADD", code, registers, memory)
+    op1.set_val(op1.get_val() - op2.get_val())
     return ''
 
-def imul(code, registers):
+def imul(code, registers, memory):
     """
     Implments the IMUL instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("IMUL", code, registers)
-    registers[op1] = iop1 * iop2
+    (op1, op2) = get_two_ops("IMUL", code, registers, memory)
+    op1.set_val(op1.get_val() * op2.get_val())
     return ''
 
-def andf(code, registers):
+def andf(code, registers, memory):
     """
     Implments the AND instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("AND", code, registers)
-    registers[op1] = iop1 & iop2
+    (op1, op2) = get_two_ops("AND", code, registers, memory)
+    op1.set_val(op1.get_val() & op2.get_val())
     return ''
 
-def orf(code, registers):
+def orf(code, registers, memory):
     """
     Implments the OR instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("OR", code, registers)
-    registers[op1] = iop1 | iop2
+    (op1, op2) = get_two_ops("OR", code, registers, memory)
+    op1.set_val(op1.get_val() | op2.get_val())
     return ''
 
-def xor(code, registers):
+def xor(code, registers, memory):
     """
     Implments the XOR instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("OR", code, registers)
-    registers[op1] = iop1 ^ iop2
+    (op1, op2) = get_two_ops("OR", code, registers, memory)
+    op1.set_val(op1.get_val() ^ op2.get_val())
     return ''
 
-def shl(code, registers):
+def shl(code, registers, memory):
     """
     Implments the XOR instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("SHL", code, registers)
-    registers[op1] = iop1 << iop2
+    (op1, op2) = get_two_ops("SHL", code, registers, memory)
+    op1.set_val(op1.get_val() << op2.get_val())
     return ''
 
-def shr(code, registers):
+def shr(code, registers, memory):
     """
     Implments the XOR instruction.
     """
-    (op1, iop1, iop2) = two_op_ints("SHR", code, registers)
-    registers[op1] = iop1 >> iop2
+    (op1, op2) = get_two_ops("SHR", code, registers, memory)
+    op1.set_val(op1.get_val() >> op2.get_val())
     return ''
 
-def notf(code, registers):
+def notf(code, registers, memory):
     """
     Implments the NOT instruction.
     """
-    (op, iop) = one_op_int("NOT", code, registers)
-    registers[op] = ~iop
+    op = get_one_op("NOT", code, registers, memory)
+    op.set_val(~(op.get_val()))
     return ''
 
-def one_op_int(instr, code, registers):
+def inc(code, registers, memory):
+    """
+    Implments the INC instruction.
+    """
+    op = get_one_op("INC", code, registers, memory)
+    op.set_val(op.get_val() + 1)
+    return ''
+
+def dec(code, registers, memory):
+    """
+    Implments the DEC instruction.
+    """
+    op = get_one_op("DEC", code, registers, memory)
+    op.set_val(op.get_val() - 1)
+    return ''
+
+def idiv(code, registers, memory):
+    """
+    Implments the IDIV instruction.
+    """
+    op = get_one_op("IDIV", code, registers, memory)
+    hireg = int(registers['EAX']) << 32
+    lowreg = int(registers['EBX'])
+    dividend = hireg + lowreg
+    registers['EAX'] = dividend // op.get_val()
+    registers['EBX'] = dividend % op.get_val()
+    return ''
+
+def get_one_op(instr, code, registers, memory):
     """
     For instructions that expect one integer operand.
     """
-    op = get_token(code)
+    tok = get_token(code)
+    op = get_op(tok, registers, memory)
 
     if not op:
         raise InvalidNumArgs(instr, 1)
-    iop = get_op_as_int(op, registers)
 
-    return (op, iop)
+    return op
 
-def two_op_ints(instr, code, registers):
+def get_two_ops(instr, code, registers, memory):
     """
     For instructions that expect two integer operands.
     """
-    op1 = get_token(code)
-    op2 = get_token(code)
+    tok1 = get_token(code)
+    tok2 = get_token(code)
+    op1 = get_op(tok1, registers, memory)
+    op2 = get_op(tok2, registers, memory)
 
     if not op1 or not op2:
         raise InvalidNumArgs(instr, 2)
-    if op1 not in registers:
+    if not isinstance(op1, Location):
         raise InvalidOperand(op1)
-    iop1 = get_op_as_int(op1, registers)
-    iop2 = get_op_as_int(op2, registers)
 
-    return (op1, iop1, iop2)
+    return (op1, op2)
 
 # if a func name would interfere with a Python keyword,
 # let's just add 'f' on the end!
 instructions = {
         'ADD': add,
         'IMUL': imul,
+        'IDIV': idiv,
         'MOV': move,
         'SUB': sub,
         'AND': andf,
@@ -138,10 +223,12 @@ instructions = {
         'SHL': shl,
         'SHR': shr,
         'NOT': notf,
+        'INC': inc,
+        'DEC': dec,
         }
 
 
-def assemble(code, registers):  # memory to come!
+def assemble(code, registers, memory):
     """
         Assembles and runs code.
         Args:
@@ -163,14 +250,12 @@ def assemble(code, registers):  # memory to come!
 
     while code_pos < len(code):
         try:
-            add_debug("Trying for instruction with code_pos of " +
-                    str(code_pos))
-            output += get_instruction(code, registers)
+            output += get_instruction(code, registers, memory)
         except Error as err:
             return (output, err.msg, debug, registers)
     return (output, '', debug, registers)
 
-def get_instruction(code, registers):
+def get_instruction(code, registers, memory):
     """
     We expect an instruction next.
         Args:
@@ -183,7 +268,7 @@ def get_instruction(code, registers):
         raise InvalidInstruction(instr)
     else:
         add_debug("Calling " + instr)
-        return instructions[instr](code, registers)
+        return instructions[instr](code, registers, memory)
 
 def get_token(code):
     """
@@ -205,14 +290,13 @@ def get_token(code):
             else:
                 break
         code_pos += count
-    
+
         if code_pos <= len(code):
             count = 0
             for char in code[code_pos:]:
                 count += 1
                 if char not in delimiters:
                     token = token + char
-                    add_debug("Adding " + str(char) + " to " + token)
                 else:
                     break
             code_pos += count
@@ -221,7 +305,7 @@ def get_token(code):
                            # either case!
     return token
 
-def get_op_as_int(op, registers):
+def get_op(token, registers, memory):
     """
     Returns int value of operand: direct int or reg val
     Args:
@@ -230,13 +314,15 @@ def get_op_as_int(op, registers):
         int value
     """
 
-    int_val = None
+    int_val = 0
 
-    if op in registers:
-        int_val = int(registers[op])
+    if token in registers:
+        return Register(token, registers)
+    elif token[0] == '[' and token[len(token) - 1] == ']':
+        return Address(token[1:len(token) - 2], memory)
     else:
         try:
-            int_val = int(op)
+            int_val = int(token)
         except Exception:
             raise InvalidOperand(op)
-    return int_val
+        return IntOp(int_val)

@@ -104,7 +104,7 @@ li ul {
 }
 
 li, dt, dd {
-    font-size: 13px;
+    font-size: 16px;
     line-height: 20px;
 }
 
@@ -759,7 +759,7 @@ a.deletelink:focus, a.deletelink:hover {
     margin: 10px 180px 20px 20px;
 }
 
-td#register {
+td#register, td#mem-loc {
     color: #ffc;
     background: #285D91;
     vertical-align: middle
@@ -769,7 +769,7 @@ td#contents, input#reg-cont {
     background: #eff;
 }
 
-input#reg-cont {
+input#reg-cont, input#mem-cont {
     border: none;
     padding: 0px, 0px, 0px, 0px
 }

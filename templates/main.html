@@ -40,44 +40,47 @@
                     </td>
                 </tr>
             </table>
-        </form>
-        <hr>
-        <br>
-        Output: 
-        <input type="text" name="output" max_length="64"
-            size="64" readonly="readonly" value="{{ output }}">
-        <br>
-        <br>
-        Error: 
-        <input type="text" name="error" max_length="64"
-            size="64" readonly="readonly" value="{{ error }}"
-            id="error">
-        <br>
-        <br>
-        Memory (row major):
-        <br>
-        <table>
-            <tr>
-                <td></td>
-                {% for col_digit in hex_digits %}
-                    <th>
-                        {{ col_digit }}
-                    </th>
-                {% endfor %}
-            </tr>
-            {% for row_digit in hex_digits %}
+            <hr>
+            <br>
+            Output: 
+            <input type="text" name="output" max_length="64"
+                size="64" readonly="readonly" value="{{ output }}">
+            <br>
+            <br>
+            Error: 
+            <input type="text" name="error" max_length="64"
+                size="64" readonly="readonly" value="{{ error }}"
+                id="error">
+            <br>
+            <br>
+            Memory:
+            <br>
+            <table id="memory-table">
                 <tr>
                     <th>
-                        {{ row_digit }}
+                        Address
                     </th>
-                    {% for x in hex_digits %}
-                        <td>
-                            0
-                        </td>
-                    {% endfor %}
+                    <th>
+                        Contents
+                    </th>
                 </tr>
-            {% endfor %}
-        </table>
+                 {% for addr, cont in memory.items %}
+                    <tr>
+                        <td id="mem-loc">
+                            {{ addr }}
+                        </td>
+                        <td id="contents">
+                            <input
+                                id="mem-cont"
+                                value="{{ cont }}"
+                                name="{{ addr }}"
+                                size="10"
+                            >
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </form>
         <br>
         <br>
         Debug info:
