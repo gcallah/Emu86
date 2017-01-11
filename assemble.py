@@ -319,7 +319,9 @@ def get_op(token, registers, memory):
 
     int_val = 0
 
-    if token in registers:
+    if not token:
+        return None
+    elif token in registers:
         return Register(token, registers)
     elif token[0] == '[' and token[len(token) - 1] == ']':
         address = token[1:len(token) - 1]

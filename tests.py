@@ -1,3 +1,8 @@
 from django.test import TestCase
 
-# Create your tests here.
+
+Class MoveTestCase(TestCase):
+
+    def test_move():
+
+

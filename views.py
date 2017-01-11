@@ -79,9 +79,3 @@ def feedback(request):
     comma_del_emails = comma_del_emails[:-1]
     return render(request, 'feedback.html', {'emails': comma_del_emails,
         'header': site_hdr})
-
-def move(code):
-    pass
-
-def add(code):
-    pass
