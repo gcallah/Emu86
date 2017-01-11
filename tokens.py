@@ -22,6 +22,20 @@ class Operand:
         return self.name
 
 
+class Instruction(Operand):
+    """
+    Class representing all instructions.
+    """
+    def __init__(self, name, instructions):
+        super().__init__(name)
+        if name not in instructions:
+            raise InvalidInstruction(name)
+        self.func = instructions[name]
+
+    def exec(self, code, registers, memory, code_pos):
+        return self.func(code, registers, memory, code_pos)
+
+
 class IntOp(Operand):
     def __init__(self, val=0):
         super().__init__("IntOp", val)

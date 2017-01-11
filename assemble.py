@@ -9,6 +9,7 @@ from .arithmetic import add, sub, imul, idiv, inc, dec, shl
 from .arithmetic import shr, notf, andf, orf, xor
 from .data_mov import mov
 from .parse import get_token, get_op, get_one_op, get_two_ops
+from .tokens import Instruction
 
 
 debug = ""
@@ -72,12 +73,11 @@ def get_instruction(code, registers, memory, code_pos):
         Returns:
             None
     """
-    (instr, code_pos) = get_token(code, code_pos)
-    if instr == '':
+    (token, code_pos) = get_token(code, code_pos)
+    if token == '':
         return ''
-    elif instr not in instructions:
-        raise InvalidInstruction(instr)
     else:
-        add_debug("Calling " + instr)
-        return instructions[instr](code, registers, memory, code_pos)
+        instr = Instruction(token, instructions)
+        add_debug("Calling " + token)
+        return instr.exec(code, registers, memory, code_pos)
 
