@@ -2,4 +2,4 @@
 
 cp ../mysite/static/Emu86/style.css .
 git commit -a
-git push origin master
+git push origin dev
