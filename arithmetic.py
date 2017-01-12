@@ -2,7 +2,10 @@
 arithmetic.py: arithmetic and logic instructions.
 """
 
-from .parse import get_two_ops
+from .parse import get_one_op, get_two_ops
+
+
+BITS = 32  # for now we assume 32-bit ints
 
 
 def add(code, registers, memory, code_pos):
@@ -91,6 +94,17 @@ def dec(code, registers, memory, code_pos):
     """
     (op, code_pos) = get_one_op("DEC", code, registers, memory, code_pos)
     op.set_val(op.get_val() - 1)
+    return ('', code_pos)
+
+def neg(code, registers, memory, code_pos):
+    """
+    Implments the NEG instruction.
+    """
+    (op, code_pos) = get_one_op("NEG", code, registers, memory, code_pos)
+    val = op.get_val()
+    if (val & (1 << (BITS - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
+        val = val - (1 << BITS)        # compute negative value
+    op.set_val(val)
     return ('', code_pos)
 
 def idiv(code, registers, memory, code_pos):

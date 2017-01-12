@@ -6,7 +6,7 @@ Executes assembly code typed in.
 from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
 from .arithmetic import add, sub, imul, idiv, inc, dec, shl
-from .arithmetic import shr, notf, andf, orf, xor
+from .arithmetic import shr, notf, andf, orf, xor, neg
 from .data_mov import mov
 from .parse import get_token, get_op, get_one_op, get_two_ops
 from .tokens import Instruction
@@ -35,6 +35,7 @@ instructions = {
         'NOT': notf,
         'INC': inc,
         'DEC': dec,
+        'NEG': neg,
         }
 
 

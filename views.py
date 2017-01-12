@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 
 from .models import AdminEmail
+from .models import Site
 from .forms import MainForm
 from .assemble import assemble, add_debug
 
@@ -17,7 +18,12 @@ mem_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
 
 
 def get_hdr():
-    return "Emu86: an x86 assembly emulator."
+    site_hdr = "Emu86: an x86 assembly emulator."
+    site_list = Site.objects.all()
+    for site in site_list:
+        site_hdr = site.header
+        break   # since we only expect a single site record!
+    return site_hdr
 
 def main_page(request):
     global mem_digits
