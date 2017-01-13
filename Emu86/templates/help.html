@@ -1,0 +1,121 @@
+{% extends "ebase.html" %}
+{% block content %}
+    <div class="module">
+        <h2>
+            About Emu86
+        </h2>
+            <p>
+            This is an open source project written by Gene Callahan.
+            The goal is to create a simple learning tool to introduce students to
+            assembly language programming in a class on, say, operating systems
+            or compilers, where the focus is not assembly language, and actually
+            using an assembler would be a distraction from the main theme of the
+            course. It includes a (growing) subset of x86 assembler
+            instructions. (This is, by the way, Intel assembly language, and
+            not AT&T assembly language.)
+            </p>
+
+        <h2>
+            Instructions Available
+        </h2>
+            <p>
+                Many of these are only partially done: for instance, as of yet,
+                there is no memory addressing available.
+                <br>
+                In the syntax descriptions, we have:
+            </p>
+            <ul>
+                <li>reg: register
+                <li>con: constant
+            </ul>
+            <ol>
+                <li>MOV
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>MOV reg, reg
+                        <li>MOV reg, con
+                    </ul>
+                <li>ADD
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>ADD reg, reg
+                        <li>ADD reg, con
+                    </ul>
+                <li>SUB
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>SUB reg, reg
+                        <li>SUB reg, con
+                    </ul>
+                <li>IMUL
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>IMUL reg, reg
+                        <li>IMUL reg, con
+                    </ul>
+                <li>AND
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>AND reg, reg
+                        <li>AND reg, con
+                    </ul>
+                <li>OR
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>OR reg, reg
+                        <li>OR reg, con
+                    </ul>
+                <li>XOR
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>XOR reg, reg
+                        <li>XOR reg, con
+                    </ul>
+                <li>SHL
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>SHL reg, reg
+                        <li>SHL reg, con
+                    </ul>
+                <li>SHR
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>SHR reg, reg
+                        <li>SHR reg, con
+                    </ul>
+                <li>NOT
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>NOT reg
+                    </ul>
+                <li>INC
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>INC reg
+                    </ul>
+                <li>DEC
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>DEC reg
+                    </ul>
+                <li>IDIV
+                    <br>
+                    Syntax available:
+                    <ul>
+                        <li>IDIV reg
+                    </ul>
+            </ol>
+    </div>
+{% endblock content %}

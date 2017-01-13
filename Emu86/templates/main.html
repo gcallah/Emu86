@@ -1,0 +1,92 @@
+{% extends "ebase.html" %}
+{% block content %}
+    <div class="module">
+        <form action="{% url 'Emu86:main_page' %}" method="post">
+            <table>
+                <tr>
+                    <td id="form-cell">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <input type="submit" value="Run" id="run-button">
+                            <br>
+                    </td>
+                    <td id="registers-cell">
+                        <table id="registers-table">
+                            <tr>
+                                <th>
+                                    Register
+                                </th>
+                                <th>
+                                    Contents
+                                </th>
+                            </tr>
+                            {% for reg, cont in registers.items %}
+                                <tr>
+                                    <td id="register">
+                                        {{ reg }}
+                                    </td>
+                                    <td id="contents">
+                                        <input
+                                            id="reg-cont"
+                                            value="{{ cont }}"
+                                            name="{{ reg }}"
+                                            size="10"
+                                        >
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <br>
+            Output: 
+            <input type="text" name="output" max_length="64"
+                size="64" readonly="readonly" value="{{ output }}">
+            <br>
+            <br>
+            Error: 
+            <input type="text" name="error" max_length="64"
+                size="64" readonly="readonly" value="{{ error }}"
+                id="error">
+            <br>
+            <br>
+            Memory:
+            <br>
+            <table id="memory-table">
+                <tr>
+                    <th>
+                        Address
+                    </th>
+                    <th>
+                        Contents
+                    </th>
+                </tr>
+                 {% for addr, cont in memory.items %}
+                    <tr>
+                        <td id="mem-loc">
+                            {{ addr }}
+                        </td>
+                        <td id="contents">
+                            <input
+                                id="mem-cont"
+                                value="{{ cont }}"
+                                name="{{ addr }}"
+                                size="10"
+                            >
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </form>
+        <br>
+        <br>
+        Debug info:
+        <br>
+        <textarea rows="12" cols="60" readonly="readonly">
+            {{ debug }}
+        </textarea>
+    </div>
+{% endblock content %}
