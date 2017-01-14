@@ -3,6 +3,8 @@ assemble.py
 Executes assembly code typed in.
 """
 
+import re
+
 from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
 from .arithmetic import add, sub, imul, idiv, inc, dec, shl
@@ -58,9 +60,32 @@ def assemble(code, registers, memory):
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", debug)
 
-    while code_pos < len(code):
+    labels = {}
+    lines = code.split("\n")
+    # we will make two passes: one to set up labels,
+    #  then one to actually perform instructions.
+    for line_no, line in enumerate(lines):
+        line = line.strip()
+        add_debug("Searching line " + line + " for a label.")
+        p = re.compile("^([A-Za-z_]+):")
+        label_match = re.search(p, line)
+        if label_match is None:
+            add_debug("No match for line " + line)
+            continue
+        else:
+            label = label_match.group(1)
+            labels[label] = line_no
+            add_debug("Found label " + label + " at line: " + str(line_no))
+            # now strip off the label:
+            line = line.split(":", 1)[-1]
+            lines[line_no] = line
+            add_debug("line is now " + line)
+    for line in lines:
+        add_debug("Got line of " + line)
+        code_pos = 0
         try:
-            (outp, code_pos) = get_instruction(code, registers, memory, code_pos)
+            # we only want one instruciton per line!
+            (outp, code_pos) = get_instruction(line, registers, memory, code_pos)
             output += outp
         except Error as err:
             return (output, err.msg, debug)
