@@ -15,6 +15,13 @@
             not AT&T assembly language.)
             </p>
 
+            <p>
+                <a
+                href="https://www.cs.virginia.edu/~evans/cs216/guides/x86.html">
+                Guide to x86 assembly.
+                </a>
+            </p>
+
         <h2>
             Instructions Available
         </h2>
@@ -25,97 +32,130 @@
                 In the syntax descriptions, we have:
             </p>
             <ul>
-                <li>reg: register
                 <li>con: constant
+                <li>lbl: label
+                <li>mem: memory location
+                <li>reg: register
             </ul>
-            <ol>
-                <li>MOV
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>MOV reg, reg
-                        <li>MOV reg, con
-                    </ul>
-                <li>ADD
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>ADD reg, reg
-                        <li>ADD reg, con
-                    </ul>
-                <li>SUB
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>SUB reg, reg
-                        <li>SUB reg, con
-                    </ul>
-                <li>IMUL
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>IMUL reg, reg
-                        <li>IMUL reg, con
-                    </ul>
-                <li>AND
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>AND reg, reg
-                        <li>AND reg, con
-                    </ul>
-                <li>OR
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>OR reg, reg
-                        <li>OR reg, con
-                    </ul>
-                <li>XOR
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>XOR reg, reg
-                        <li>XOR reg, con
-                    </ul>
-                <li>SHL
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>SHL reg, reg
-                        <li>SHL reg, con
-                    </ul>
-                <li>SHR
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>SHR reg, reg
-                        <li>SHR reg, con
-                    </ul>
-                <li>NOT
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>NOT reg
-                    </ul>
-                <li>INC
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>INC reg
-                    </ul>
-                <li>DEC
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>DEC reg
-                    </ul>
-                <li>IDIV
-                    <br>
-                    Syntax available:
-                    <ul>
-                        <li>IDIV reg
-                    </ul>
-            </ol>
+            <h3>
+                Data Movement
+            </h3>
+                <ol>
+                    <li>MOV
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>MOV reg, reg
+                            <li>MOV reg, con
+                            <li>MOV mem, mem
+                            <li>MOV reg, mem
+                            <li>MOV mem, reg
+                        </ul>
+                </ol>
+            <h3>
+                Control Flow
+            </h3>
+                <ol>
+                    <li>JMP
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>JMP lbl
+                        </ul>
+                </ol>
+            <h3>
+                Arithmetic and Logic
+            </h3>
+                <ol>
+                    <li>ADD
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>ADD reg, reg
+                            <li>ADD reg, mem
+                            <li>ADD reg, con
+                        </ul>
+                    <li>SUB
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>SUB reg, reg
+                            <li>SUB reg, mem
+                            <li>SUB reg, con
+                        </ul>
+                    <li>IMUL
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>IMUL reg, reg
+                            <li>IMUL reg, mem
+                            <li>IMUL reg, con
+                        </ul>
+                    <li>AND
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>AND reg, reg
+                            <li>AND reg, con
+                        </ul>
+                    <li>OR
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>OR reg, reg
+                            <li>OR reg, con
+                        </ul>
+                    <li>XOR
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>XOR reg, reg
+                            <li>XOR reg, con
+                        </ul>
+                    <li>SHL
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>SHL reg, reg
+                            <li>SHL reg, con
+                        </ul>
+                    <li>SHR
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>SHR reg, reg
+                            <li>SHR reg, con
+                        </ul>
+                    <li>NEG
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>NEG reg
+                        </ul>
+                    <li>NOT
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>NOT reg
+                        </ul>
+                    <li>INC
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>INC reg
+                        </ul>
+                    <li>DEC
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>DEC reg
+                        </ul>
+                    <li>IDIV
+                        <br>
+                        Syntax available:
+                        <ul>
+                            <li>IDIV reg
+                        </ul>
+                </ol>
     </div>
 {% endblock content %}

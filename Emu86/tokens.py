@@ -73,3 +73,11 @@ class Register(Location):
 
     def set_val(self, val):
         self.registers[self.name] = val
+
+
+class Symbol(Location):
+    """
+    Class to hold symbols such as labels.
+    """
+    def __init__(self, name):
+        super().__init__(name)

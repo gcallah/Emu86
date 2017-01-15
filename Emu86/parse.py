@@ -2,12 +2,15 @@
 parse.py: creates parse tree.
 """
 
+import re
+
 from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
-from .tokens import Location, Address, Register, IntOp
+from .tokens import Location, Address, Register, IntOp, Symbol
 
 
-delimiters = set([' ', ',', '\n', '\r', '\t',])
+SYMBOL_RE = "^([A-Za-z_]+)"
+DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
 
 def get_one_op(instr, code, registers, memory, code_pos):
@@ -50,7 +53,7 @@ def get_token(code, code_pos):
     if code_pos <= len(code):
         count = 0
         for char in code[code_pos:]:  # eat leading delimiters
-            if char in delimiters:
+            if char in DELIMITERS:
                 count += 1
             else:
                 break
@@ -60,7 +63,7 @@ def get_token(code, code_pos):
             count = 0
             for char in code[code_pos:]:
                 count += 1
-                if char not in delimiters:
+                if char not in DELIMITERS:
                     token = token + char
                 else:
                     break
