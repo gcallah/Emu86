@@ -10,6 +10,8 @@ from .tokens import Location, Address, Register, IntOp, Symbol
 
 
 SYMBOL_RE = "^([A-Za-z_]+)"
+sym_match = re.compile(SYMBOL_RE)
+
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
 
@@ -94,9 +96,11 @@ def get_op(token, registers, memory):
             return Address(token[1:len(token) - 1], memory)
         else:
             raise InvalidAddress(address)
+    elif token.isalpha():
+        return Symbol(token)
     else:
         try:
             int_val = int(token)
         except Exception:
-            raise InvalidOperand(op)
+            raise InvalidOperand(token)
         return IntOp(int_val)

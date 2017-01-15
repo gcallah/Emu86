@@ -9,7 +9,7 @@ from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
 from .arithmetic import add, sub, imul, idiv, inc, dec, shl
 from .arithmetic import shr, notf, andf, orf, xor, neg
-from .control_flow import jmp
+from .control_flow import jmp, Jmp, FlowBreak
 from .data_mov import mov
 from .parse import get_token, get_op, get_one_op, get_two_ops, SYMBOL_RE
 from .tokens import Instruction
@@ -69,27 +69,32 @@ def assemble(code, registers, memory):
     #  then one to actually perform instructions.
     for line_no, line in enumerate(lines):
         line = line.strip()
-        add_debug("Searching line " + line + " for a label.")
         p = re.compile(SYMBOL_RE + ":")
         label_match = re.search(p, line)
         if label_match is None:
-            add_debug("No match for line " + line)
             continue
         else:
             label = label_match.group(1)
             labels[label] = line_no
-            add_debug("Found label " + label + " at line: " + str(line_no))
             # now strip off the label:
             line = line.split(":", 1)[-1]
             lines[line_no] = line
-            add_debug("line is now " + line)
-    for line in lines:
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        i += 1
         add_debug("Got line of " + line)
         code_pos = 0
         try:
             # we only want one instruciton per line!
-            (outp, code_pos) = get_instruction(line, registers, memory, code_pos)
+            outp = get_instruction(line, registers, memory, code_pos)
             output += outp
+        except FlowBreak as brk:
+            label = brk.label
+            if label in labels:
+                i = labels[label]  # set i to line num of label
+            else:
+                return (output, "Invalid label: " + label, debug)
         except Error as err:
             return (output, err.msg, debug)
     return (output, '', debug)

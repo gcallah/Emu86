@@ -4,7 +4,7 @@ Possible assembler errors.
 
 class Error(Exception):
     """
-    Base class for all of our exceptions.
+    Base class for all of our error exceptions.
     """
     def __init__(self, offender):
         self.msg = "Uknown parsing error."
