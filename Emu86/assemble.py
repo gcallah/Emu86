@@ -14,6 +14,7 @@ from .data_mov import mov
 from .parse import get_token, get_op, get_one_op, get_two_ops, SYMBOL_RE
 from .tokens import Instruction
 
+MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 
 debug = ""
 
@@ -75,14 +76,17 @@ def assemble(code, registers, memory):
             continue
         else:
             label = label_match.group(1)
+            label = label.upper()
             labels[label] = line_no
             # now strip off the label:
             line = line.split(":", 1)[-1]
             lines[line_no] = line
     i = 0
-    while i < len(lines):
+    j = 0
+    while i < len(lines) and j < MAX_INSTRUCTIONS:
         line = lines[i]
         i += 1
+        j += 1
         add_debug("Got line of " + line)
         code_pos = 0
         try:
@@ -97,7 +101,11 @@ def assemble(code, registers, memory):
                 return (output, "Invalid label: " + label, debug)
         except Error as err:
             return (output, err.msg, debug)
-    return (output, '', debug)
+    if j == MAX_INSTRUCTIONS:
+        error = "Possible infinite loop detected."
+    else:
+        error = ''
+    return (output, error, debug)
 
 def get_instruction(code, registers, memory, code_pos):
     """

@@ -9,7 +9,7 @@ from .errors import *  # import * OK here:
 from .tokens import Location, Address, Register, IntOp, Symbol
 
 
-SYMBOL_RE = "^([A-Za-z_]+)"
+SYMBOL_RE = "^([A-Za-z]+)"
 sym_match = re.compile(SYMBOL_RE)
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
