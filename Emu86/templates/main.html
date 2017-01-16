@@ -31,6 +31,7 @@
                                             value="{{ cont }}"
                                             name="{{ reg }}"
                                             size="10"
+                                            readonly="readonly"
                                         >
                                     </td>
                                 </tr>
@@ -38,7 +39,7 @@
                             <tr>
                                 <table id="flags-table">
                                     <tr>
-                                        <th colspan="3"
+                                        <th colspan="4"
                                             style="text-align:center">
                                             Flags
                                         </th>
@@ -60,7 +61,8 @@
                                                     id="flag-cont"
                                                     value="{{ val }}"
                                                     name="{{ flag }}"
-                                                    size="2"
+                                                    size="1"
+                                                    readonly="readonly"
                                                 >
                                             </td>
                                         {% endfor %}
