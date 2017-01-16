@@ -46,9 +46,10 @@ def main_page(request):
     # for now we only need three of the flags
     flags = OrderedDict(
                 [
-                    ('SF', 0),
                     ('CF', 0),
                     ('OF', 0),
+                    ('SF', 0),
+                    ('ZF', 0),
                 ])
 
     memory = OrderedDict()

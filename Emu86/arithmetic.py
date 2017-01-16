@@ -2,82 +2,84 @@
 arithmetic.py: arithmetic and logic instructions.
 """
 
+import operator as opfs
+
 from .parse import get_one_op, get_two_ops
 
 
 BITS = 32  # for now we assume 32-bit ints
 
 
+
+def one_op_arith(code, registers, memory, code_pos, instr, f):
+    (op, code_pos) = get_one_op(instr, code, registers, memory, code_pos)
+    op.set_val(f(op.get_val()))
+
+def two_op_arith(code, registers, memory, code_pos, instr, f):
+    (op1, op2, code_pos) = get_two_ops(instr, code, registers, memory, code_pos)
+    op1.set_val(f(op1.get_val(), op2.get_val()))
+
 def add(code, registers, memory, code_pos):
     """
     Implments the ADD instruction.
     """
-    (op1, op2, code_pos) = get_two_ops("ADD", code, registers, memory, code_pos)
-    op1.set_val(op1.get_val() + op2.get_val())
+    two_op_arith(code, registers, memory, code_pos, "ADD", opfs.add)
     return ''
 
 def sub(code, registers, memory, code_pos):
     """
     Implments the SUB instruction.
     """
-    (op1, op2, code_pos) = get_two_ops("ADD", code, registers, memory, code_pos)
-    op1.set_val(op1.get_val() - op2.get_val())
+    two_op_arith(code, registers, memory, code_pos, "SUB", opfs.sub)
     return ''
 
 def imul(code, registers, memory, code_pos):
     """
     Implments the IMUL instruction.
     """
-    (op1, op2, code_pos) = get_two_ops("IMUL", code, registers, memory, code_pos)
-    op1.set_val(op1.get_val() * op2.get_val())
+    two_op_arith(code, registers, memory, code_pos, "IMUL", opfs.mul)
     return ''
 
 def andf(code, registers, memory, code_pos):
     """
     Implments the AND instruction.
     """
-    (op1, op2, code_pos) = get_two_ops("AND", code, registers, memory, code_pos)
-    op1.set_val(op1.get_val() & op2.get_val())
+    two_op_arith(code, registers, memory, code_pos, "AND", opfs.and_)
     return ''
 
 def orf(code, registers, memory, code_pos):
     """
     Implments the OR instruction.
     """
-    (op1, op2, code_pos) = get_two_ops("OR", code, registers, memory, code_pos)
-    op1.set_val(op1.get_val() | op2.get_val())
+    two_op_arith(code, registers, memory, code_pos, "OR", opfs.or_)
     return ''
 
 def xor(code, registers, memory, code_pos):
     """
     Implments the XOR instruction.
     """
-    (op1, op2, code_pos) = get_two_ops("OR", code, registers, memory, code_pos)
-    op1.set_val(op1.get_val() ^ op2.get_val())
+    two_op_arith(code, registers, memory, code_pos, "XOR", opfs.xor)
     return ''
 
 def shl(code, registers, memory, code_pos):
     """
     Implments the XOR instruction.
     """
-    (op1, op2, code_pos) = get_two_ops("SHL", code, registers, memory, code_pos)
-    op1.set_val(op1.get_val() << op2.get_val())
+    two_op_arith(code, registers, memory, code_pos, "SHL", opfs.lshift)
     return ''
 
 def shr(code, registers, memory, code_pos):
     """
     Implments the XOR instruction.
     """
-    (op1, op2, code_pos) = get_two_ops("SHR", code, registers, memory, code_pos)
-    op1.set_val(op1.get_val() >> op2.get_val())
+    two_op_arith(code, registers, memory, code_pos, "SHR", opfs.rshift)
     return ''
 
 def notf(code, registers, memory, code_pos):
     """
     Implments the NOT instruction.
     """
-    (op, code_pos) = get_one_op("NOT", code, registers, memory, code_pos)
-    op.set_val(~(op.get_val()))
+    one_op_arith(code, registers, memory, code_pos, "NOT", opfs.inv)
     return ''
 
 def inc(code, registers, memory, code_pos):
@@ -100,11 +102,7 @@ def neg(code, registers, memory, code_pos):
     """
     Implments the NEG instruction.
     """
-    (op, code_pos) = get_one_op("NEG", code, registers, memory, code_pos)
-    val = op.get_val()
-    if (val & (1 << (BITS - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
-        val = val - (1 << BITS)        # compute negative value
-    op.set_val(val)
+    one_op_arith(code, registers, memory, code_pos, "NEG", opfs.neg)
     return ''
 
 def idiv(code, registers, memory, code_pos):
