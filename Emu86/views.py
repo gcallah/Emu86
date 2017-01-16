@@ -43,6 +43,14 @@ def main_page(request):
                     ('EBP', 0),
                 ])
 
+    # for now we only need three of the flags
+    flags = OrderedDict(
+                [
+                    ('SF', 0),
+                    ('CF', 0),
+                    ('OF', 0),
+                ])
+
     memory = OrderedDict()
     for i in range(0, MEM_SIZE):
             memory[str(i)] = 0
@@ -55,18 +63,24 @@ def main_page(request):
         form = MainForm(request.POST)
         get_reg_contents(registers, request)
         get_mem_contents(memory, request)
+        get_flag_contents(flags, request)
         (output, error, debug) = assemble(request.POST['code'],
-                                                     registers, memory)
+                                          registers, memory, flags)
 
     return render(request, 'main.html',
                   {'form': form, 'header': site_hdr,
                    'registers': registers, 'output': output,
                    'error': error, 'mem_digits': mem_digits,
-                   'memory': memory, 'debug': debug})
+                   'memory': memory, 'debug': debug,
+                   'flags': flags})
 
 def get_reg_contents(registers, request):
     for reg in registers:
         registers[reg] = request.POST[reg]
+
+def get_flag_contents(flags, request):
+    for flag in flags:
+        flags[flag] = request.POST[flag]
 
 def get_mem_contents(memory, request):
     for loc in memory:

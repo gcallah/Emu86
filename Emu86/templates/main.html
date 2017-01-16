@@ -35,7 +35,38 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                
+                            <tr>
+                                <table id="flags-table">
+                                    <tr>
+                                        <th colspan="3"
+                                            style="text-align:center">
+                                            Flags
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        {% for flag in flags %}
+                                            <td id="flag"
+                                                style="text-align:center">
+                                                {{ flag }}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        {% for flag, val in flags.items %}
+                                            <td id="contents"
+                                                style="text-align:center"
+                                            >
+                                                <input
+                                                    id="flag-cont"
+                                                    value="{{ val }}"
+                                                    name="{{ flag }}"
+                                                    size="2"
+                                                >
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                </table>
+                            </tr>
                         </table>
                     </td>
                 </tr>
