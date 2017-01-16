@@ -45,12 +45,14 @@ instructions = {
         }
 
 
-def assemble(code, registers, memory):
+def assemble(code, registers, memory, flags):
     """
         Assembles and runs code.
         Args:
             code: code to assemble.
             registers: current register values.
+            memory: current memory values.
+            flags: current values of flags.
         Returns:
             Output, if any.
             Error, if any.
@@ -91,7 +93,7 @@ def assemble(code, registers, memory):
         code_pos = 0
         try:
             # we only want one instruciton per line!
-            outp = get_instruction(line, registers, memory, code_pos)
+            outp = get_instruction(line, registers, memory, flags, code_pos)
             output += outp
         except FlowBreak as brk:
             label = brk.label
@@ -107,11 +109,15 @@ def assemble(code, registers, memory):
         error = ''
     return (output, error, debug)
 
-def get_instruction(code, registers, memory, code_pos):
+def get_instruction(code, registers, memory, flags, code_pos):
     """
     We expect an instruction next.
         Args:
-            code
+            code: code to interpret
+            regsiters: current register values
+            memory: current memory values
+            flags: current flag values
+            code_pos: where we are in code
         Returns:
             None
     """

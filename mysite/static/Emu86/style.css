@@ -270,7 +270,7 @@ td, th {
 }
 
 th {
-    text-align: left;
+    text-align: center;
     background: #afd;
 }
 
@@ -759,17 +759,17 @@ a.deletelink:focus, a.deletelink:hover {
     margin: 10px 180px 20px 20px;
 }
 
-td#register, td#mem-loc {
+td#flag, td#register, td#mem-loc {
     color: #ffc;
     background: #285D91;
     vertical-align: middle
 }
 
-td#contents, input#reg-cont {
+td#contents, input#reg-cont, input#flag-cont {
     background: #eff;
 }
 
-input#reg-cont, input#mem-cont {
+input#reg-cont, input#mem-cont, input#flag-cont {
     border: none;
     padding: 0px, 0px, 0px, 0px
 }
