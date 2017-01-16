@@ -90,7 +90,7 @@ def assemble(code, registers, memory):
         add_debug("Got line of " + line)
         code_pos = 0
         try:
-            # we only want one instruciton per line!
+            # we only want one instruction per line!
             outp = get_instruction(line, registers, memory, code_pos)
             output += outp
         except FlowBreak as brk:
