@@ -15,7 +15,7 @@ sym_match = re.compile(SYMBOL_RE)
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
 
-def get_one_op(instr, code, registers, memory, code_pos):
+def get_one_op(instr, code, registers, memory, flags, code_pos):
     """
     For instructions that expect one integer operand.
     """
@@ -27,7 +27,7 @@ def get_one_op(instr, code, registers, memory, code_pos):
 
     return (op, code_pos)
 
-def get_two_ops(instr, code, registers, memory, code_pos):
+def get_two_ops(instr, code, registers, memory, flags, code_pos):
     """
     For instructions that expect two integer operands.
     """

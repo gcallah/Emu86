@@ -9,7 +9,7 @@ from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
 from .arithmetic import add, sub, imul, idiv, inc, dec, shl
 from .arithmetic import shr, notf, andf, orf, xor, neg
-from .control_flow import jmp, Jmp, FlowBreak
+from .control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
 from .data_mov import mov
 from .parse import get_token, get_op, get_one_op, get_two_ops, SYMBOL_RE
 from .tokens import Instruction
@@ -25,7 +25,10 @@ def add_debug(s):
 
 instructions = {
         # control flow:
+        'CMP': cmp,
         'JMP': jmp,
+        'JE': je,
+        'JNE': jne,
         # data movement:
         'MOV': mov,
         # arithmetic and logic:
@@ -119,7 +122,7 @@ def get_instruction(code, registers, memory, flags, code_pos):
             flags: current flag values
             code_pos: where we are in code
         Returns:
-            None
+            Output
     """
     (token, code_pos) = get_token(code, code_pos)
     if token == '':
@@ -127,5 +130,4 @@ def get_instruction(code, registers, memory, flags, code_pos):
     else:
         instr = Instruction(token, instructions)
         add_debug("Calling " + token)
-        return instr.exec(code, registers, memory, code_pos)
-
+        return instr.exec(code, registers, memory, flags, code_pos)

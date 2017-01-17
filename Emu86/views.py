@@ -1,4 +1,4 @@
-from collections import OrderedDict
+# from collections import OrderedDict
 
 import logging
 logger = logging.getLogger(__name__)
@@ -10,11 +10,36 @@ from .models import AdminEmail
 from .models import Site
 from .forms import MainForm
 from .assemble import assemble, add_debug
+from .global_data import registers, flags, memory
 
-MEM_DIGITS = 2
-MEM_SIZE = 32
 # next is for possible later use:
 mem_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
+#
+#
+#registers = OrderedDict(
+#            [
+#                ('EAX', 0),
+#                ('EBX', 0),
+#                ('ECX', 0),
+#                ('EDX', 0),
+#                ('ESI', 0),
+#                ('EDI', 0),
+#                ('ESP', 0),
+#                ('EBP', 0),
+#            ])
+#
+## for now we only need four of the flags
+#flags = OrderedDict(
+#            [
+#                ('CF', 0),
+#                ('OF', 0),
+#                ('SF', 0),
+#                ('ZF', 0),
+#            ])
+#
+#memory = OrderedDict()
+#for i in range(0, MEM_SIZE):
+#        memory[str(i)] = 0
 
 
 def get_hdr():
@@ -27,34 +52,12 @@ def get_hdr():
 
 def main_page(request):
     global mem_digits
+    global registers
+    global flags
+    global memory
     output = ""
     error = ""
     debug = ""
-
-    registers = OrderedDict(
-                [
-                    ('EAX', 0),
-                    ('EBX', 0),
-                    ('ECX', 0),
-                    ('EDX', 0),
-                    ('ESI', 0),
-                    ('EDI', 0),
-                    ('ESP', 0),
-                    ('EBP', 0),
-                ])
-
-    # for now we only need three of the flags
-    flags = OrderedDict(
-                [
-                    ('CF', 0),
-                    ('OF', 0),
-                    ('SF', 0),
-                    ('ZF', 0),
-                ])
-
-    memory = OrderedDict()
-    for i in range(0, MEM_SIZE):
-            memory[str(i)] = 0
 
     site_hdr = get_hdr()
 
