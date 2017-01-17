@@ -1,3 +1,6 @@
 *~
+migrations/
 .*swp
+*.log
 __pycache__/
+db.sqlite3
