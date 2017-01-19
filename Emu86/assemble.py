@@ -73,10 +73,19 @@ def assemble(code, registers, memory, flags):
 
     labels = {}
     lines = code.split("\n")
-    # we will make two passes: one to set up labels,
+    # we will make two passes: one to set up labels
+    #  and strip out comments, and
     #  then one to actually perform instructions.
     for line_no, line in enumerate(lines):
         line = line.strip()
+
+        # comments:
+        comm_start = line.find(";")
+        if comm_start >= 0:  # -1 means not found
+            line = line[0:comm_start]
+            lines[line_no] = line
+
+        # labels:
         p = re.compile(SYMBOL_RE + ":")
         label_match = re.search(p, line)
         if label_match is None:
@@ -95,6 +104,8 @@ def assemble(code, registers, memory, flags):
         i += 1
         j += 1
         add_debug("Got line of " + line)
+        if len(line) <= 1:  # blank lines ok; just skip 'em
+            continue
         code_pos = 0
         try:
             # we only want one instruction per line!
