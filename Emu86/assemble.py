@@ -29,6 +29,8 @@ instructions = {
         'JMP': jmp,
         'JE': je,
         'JNE': jne,
+        'JZ': je,
+        'JNZ': jne,
         # data movement:
         'MOV': mov,
         # arithmetic and logic:
