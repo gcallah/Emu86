@@ -10,6 +10,7 @@ from .errors import *  # import * OK here:
 from .arithmetic import add, sub, imul, idiv, inc, dec, shl
 from .arithmetic import shr, notf, andf, orf, xor, neg
 from .control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
+from .control_flow import jg, jge, jl, jle
 from .data_mov import mov
 from .parse import get_token, get_op, get_one_op, get_two_ops, SYMBOL_RE
 from .tokens import Instruction
@@ -29,8 +30,13 @@ instructions = {
         'JMP': jmp,
         'JE': je,
         'JNE': jne,
+        # the next two instructions are just synonyms for the previous two.
         'JZ': je,
         'JNZ': jne,
+        'JG': jg,
+        'JGE': jge,
+        'JL': jl,
+        'JLE': jle,
         # data movement:
         'MOV': mov,
         # arithmetic and logic:
