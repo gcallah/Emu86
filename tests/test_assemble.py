@@ -24,6 +24,17 @@ class AssembleTestCase(TestCase):
         assemble("add eax, ebx", registers, memory, flags)
         self.assertEqual(registers["EAX"], 6)
 
+    def test_sub(self):
+        registers["EAX"] = 2
+        registers["EBX"] = 4
+        assemble("sub eax, ebx", registers, memory, flags)
+        self.assertEqual(registers["EAX"], -2)
+     
+    def test_imul(self):
+        registers["EAX"] = 2
+        registers["EBX"] = 4
+        assemble("imul eax, ebx", registers, memory, flags)
+        self.assertEqual(registers["EAX"], 8)
 
 if __name__ == '__main__':
     main()
