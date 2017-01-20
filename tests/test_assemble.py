@@ -29,12 +29,24 @@ class AssembleTestCase(TestCase):
         registers["EBX"] = 4
         assemble("sub eax, ebx", registers, memory, flags)
         self.assertEqual(registers["EAX"], -2)
-     
+
     def test_imul(self):
         registers["EAX"] = 2
         registers["EBX"] = 4
         assemble("imul eax, ebx", registers, memory, flags)
         self.assertEqual(registers["EAX"], 8)
 
+    def test_and(self):
+        registers["EAX"] = 2
+        registers["EBX"] = 3
+        assemble("and eax, ebx", registers, memory, flags)
+        self.assertEqual(registers["EAX"], 2)
+
+    def test_or(self):
+        registers["EAX"] = 2
+        registers["EBX"] = 3
+        assemble("or eax, ebx", registers, memory, flags)
+        self.assertEqual(registers["EAX"], 3)
+        
 if __name__ == '__main__':
     main()
