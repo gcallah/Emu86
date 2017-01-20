@@ -10,36 +10,10 @@ from .models import AdminEmail
 from .models import Site
 from .forms import MainForm
 from .assemble import assemble, add_debug
-from .global_data import registers, flags, memory
+from .global_data import gdata
 
 # next is for possible later use:
 mem_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
-#
-#
-#registers = OrderedDict(
-#            [
-#                ('EAX', 0),
-#                ('EBX', 0),
-#                ('ECX', 0),
-#                ('EDX', 0),
-#                ('ESI', 0),
-#                ('EDI', 0),
-#                ('ESP', 0),
-#                ('EBP', 0),
-#            ])
-#
-## for now we only need four of the flags
-#flags = OrderedDict(
-#            [
-#                ('CF', 0),
-#                ('OF', 0),
-#                ('SF', 0),
-#                ('ZF', 0),
-#            ])
-#
-#memory = OrderedDict()
-#for i in range(0, MEM_SIZE):
-#        memory[str(i)] = 0
 
 
 def get_hdr():
@@ -52,9 +26,7 @@ def get_hdr():
 
 def main_page(request):
     global mem_digits
-    global registers
-    global flags
-    global memory
+    global gdata
     output = ""
     error = ""
     debug = ""
@@ -65,18 +37,21 @@ def main_page(request):
         form = MainForm()
     else:
         form = MainForm(request.POST)
-        get_reg_contents(registers, request)
-        get_mem_contents(memory, request)
-        get_flag_contents(flags, request)
-        (output, error, debug) = assemble(request.POST['code'],
-                                          registers, memory, flags)
+        get_reg_contents(gdata.registers, request)
+        get_mem_contents(gdata.memory, request)
+        get_flag_contents(gdata.flags, request)
+        (output, error, debug) = assemble(request.POST['code'], gdata)
 
     return render(request, 'main.html',
-                  {'form': form, 'header': site_hdr,
-                   'registers': registers, 'output': output,
-                   'error': error, 'mem_digits': mem_digits,
-                   'memory': memory, 'debug': debug,
-                   'flags': flags})
+                  {'form': form,
+                   'header': site_hdr,
+                   'registers': gdata.registers,
+                   'output': output,
+                   'error': error,
+                   'mem_digits': mem_digits,
+                   'memory': gdata.memory, 
+                   'debug': debug,
+                   'flags': gdata.flags})
 
 def get_reg_contents(registers, request):
     for reg in registers:

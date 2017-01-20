@@ -32,8 +32,8 @@ class Instruction(Operand):
             raise InvalidInstruction(name)
         self.func = instructions[name]
 
-    def exec(self, code, registers, memory, flags, code_pos):
-        return self.func(code, registers, memory, flags, code_pos)
+    def exec(self, code, gdata, code_pos):
+        return self.func(code, gdata, code_pos)
 
 
 class IntOp(Operand):

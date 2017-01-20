@@ -11,108 +11,108 @@ BITS = 32  # for now we assume 32-bit ints
 
 
 
-def one_op_arith(code, registers, memory, flags, code_pos, instr, f):
-    (op, code_pos) = get_one_op(instr, code, registers, memory, flags, code_pos)
+def one_op_arith(code, gdata, code_pos, instr, f):
+    (op, code_pos) = get_one_op(instr, code, gdata, code_pos)
     op.set_val(f(op.get_val()))
 
-def two_op_arith(code, registers, memory, flags, code_pos, instr, f):
-    (op1, op2, code_pos) = get_two_ops(instr, code, registers, memory, flags, code_pos)
+def two_op_arith(code, gdata, code_pos, instr, f):
+    (op1, op2, code_pos) = get_two_ops(instr, code, gdata, code_pos)
     op1.set_val(f(op1.get_val(), op2.get_val()))
 
-def add(code, registers, memory, flags, code_pos):
+def add(code, gdata, code_pos):
     """
     Implments the ADD instruction.
     """
-    two_op_arith(code, registers, memory, flags, code_pos, "ADD", opfs.add)
+    two_op_arith(code, gdata, code_pos, "ADD", opfs.add)
     return ''
 
-def sub(code, registers, memory, flags, code_pos):
+def sub(code, gdata, code_pos):
     """
     Implments the SUB instruction.
     """
-    two_op_arith(code, registers, memory, flags, code_pos, "SUB", opfs.sub)
+    two_op_arith(code, gdata, code_pos, "SUB", opfs.sub)
     return ''
 
-def imul(code, registers, memory, flags, code_pos):
+def imul(code, gdata, code_pos):
     """
     Implments the IMUL instruction.
     """
-    two_op_arith(code, registers, memory, flags, code_pos, "IMUL", opfs.mul)
+    two_op_arith(code, gdata, code_pos, "IMUL", opfs.mul)
     return ''
 
-def andf(code, registers, memory, flags, code_pos):
+def andf(code, gdata, code_pos):
     """
     Implments the AND instruction.
     """
-    two_op_arith(code, registers, memory, flags, code_pos, "AND", opfs.and_)
+    two_op_arith(code, gdata, code_pos, "AND", opfs.and_)
     return ''
 
-def orf(code, registers, memory, flags, code_pos):
+def orf(code, gdata, code_pos):
     """
     Implments the OR instruction.
     """
-    two_op_arith(code, registers, memory, flags, code_pos, "OR", opfs.or_)
+    two_op_arith(code, gdata, code_pos, "OR", opfs.or_)
     return ''
 
-def xor(code, registers, memory, flags, code_pos):
+def xor(code, gdata, code_pos):
     """
     Implments the XOR instruction.
     """
-    two_op_arith(code, registers, memory, flags, code_pos, "XOR", opfs.xor)
+    two_op_arith(code, gdata, code_pos, "XOR", opfs.xor)
     return ''
 
-def shl(code, registers, memory, flags, code_pos):
+def shl(code, gdata, code_pos):
     """
     Implments the XOR instruction.
     """
-    two_op_arith(code, registers, memory, flags, code_pos, "SHL", opfs.lshift)
+    two_op_arith(code, gdata, code_pos, "SHL", opfs.lshift)
     return ''
 
-def shr(code, registers, memory, flags, code_pos):
+def shr(code, gdata, code_pos):
     """
     Implments the XOR instruction.
     """
-    two_op_arith(code, registers, memory, flags, code_pos, "SHR", opfs.rshift)
+    two_op_arith(code, gdata, code_pos, "SHR", opfs.rshift)
     return ''
 
-def notf(code, registers, memory, flags, code_pos):
+def notf(code, gdata, code_pos):
     """
     Implments the NOT instruction.
     """
-    one_op_arith(code, registers, memory, flags, code_pos, "NOT", opfs.inv)
+    one_op_arith(code, gdata, code_pos, "NOT", opfs.inv)
     return ''
 
-def inc(code, registers, memory, flags, code_pos):
+def inc(code, gdata, code_pos):
     """
     Implments the INC instruction.
     """
-    (op, code_pos) = get_one_op("INC", code, registers, memory, flags, code_pos)
+    (op, code_pos) = get_one_op("INC", code, gdata, code_pos)
     op.set_val(op.get_val() + 1)
     return ''
 
-def dec(code, registers, memory, flags, code_pos):
+def dec(code, gdata, code_pos):
     """
     Implments the DEC instruction.
     """
-    (op, code_pos) = get_one_op("DEC", code, registers, memory, flags, code_pos)
+    (op, code_pos) = get_one_op("DEC", code, gdata, code_pos)
     op.set_val(op.get_val() - 1)
     return ''
 
-def neg(code, registers, memory, flags, code_pos):
+def neg(code, gdata, code_pos):
     """
     Implments the NEG instruction.
     """
-    one_op_arith(code, registers, memory, flags, code_pos, "NEG", opfs.neg)
+    one_op_arith(code, gdata, code_pos, "NEG", opfs.neg)
     return ''
 
-def idiv(code, registers, memory, flags, code_pos):
+def idiv(code, gdata, code_pos):
     """
     Implments the IDIV instruction.
     """
-    (op, code_pos) = get_one_op("IDIV", code, registers, memory, flags, code_pos)
-    hireg = int(registers['EAX']) << 32
-    lowreg = int(registers['EBX'])
+    (op, code_pos) = get_one_op("IDIV", code, gdata, code_pos)
+    hireg = int(gdata.registers['EAX']) << 32
+    lowreg = int(gdata.registers['EBX'])
     dividend = hireg + lowreg
-    registers['EAX'] = dividend // op.get_val()
-    registers['EBX'] = dividend % op.get_val()
+    gdata.registers['EAX'] = dividend // op.get_val()
+    gdata.registers['EBX'] = dividend % op.get_val()
     return ''

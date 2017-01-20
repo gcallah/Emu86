@@ -15,26 +15,26 @@ sym_match = re.compile(SYMBOL_RE)
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
 
-def get_one_op(instr, code, registers, memory, flags, code_pos):
+def get_one_op(instr, code, gdata, code_pos):
     """
     For instructions that expect one integer operand.
     """
     (tok, code_pos) = get_token(code, code_pos)
-    op = get_op(tok, registers, memory)
+    op = get_op(tok, gdata)
 
     if not op:
         raise InvalidNumArgs(instr, 1)
 
     return (op, code_pos)
 
-def get_two_ops(instr, code, registers, memory, flags, code_pos):
+def get_two_ops(instr, code, gdata, code_pos):
     """
     For instructions that expect two integer operands.
     """
     (tok1, code_pos) = get_token(code, code_pos)
     (tok2, code_pos) = get_token(code, code_pos)
-    op1 = get_op(tok1, registers, memory)
-    op2 = get_op(tok2, registers, memory)
+    op1 = get_op(tok1, gdata)
+    op2 = get_op(tok2, gdata)
 
     if not op1 or not op2:
         raise InvalidNumArgs(instr, 2)
@@ -75,7 +75,7 @@ def get_token(code, code_pos):
                            # either case!
     return (token, code_pos)
 
-def get_op(token, registers, memory):
+def get_op(token, gdata):
     """
     Returns int value of operand: direct int or reg val
     Args:
@@ -88,12 +88,12 @@ def get_op(token, registers, memory):
 
     if not token:
         return None
-    elif token in registers:
-        return Register(token, registers)
+    elif token in gdata.registers:
+        return Register(token, gdata.registers)
     elif token[0] == '[' and token[len(token) - 1] == ']':
         address = token[1:len(token) - 1]
-        if address in memory:
-            return Address(token[1:len(token) - 1], memory)
+        if address in gdata.memory:
+            return Address(token[1:len(token) - 1], gdata.memory)
         else:
             raise InvalidAddress(address)
     elif token.isalpha():

@@ -50,14 +50,16 @@ instructions = {
         }
 
 
-def assemble(code, registers, memory, flags):
+def assemble(code, gdata):
     """
         Assembles and runs code.
         Args:
             code: code to assemble.
-            registers: current register values.
-            memory: current memory values.
-            flags: current values of flags.
+            gdata:
+                Contains:
+                registers: current register values.
+                memory: current memory values.
+                flags: current values of flags.
         Returns:
             Output, if any.
             Error, if any.
@@ -109,7 +111,7 @@ def assemble(code, registers, memory, flags):
         code_pos = 0
         try:
             # we only want one instruction per line!
-            outp = get_instruction(line, registers, memory, flags, code_pos)
+            outp = get_instruction(line, gdata, code_pos)
             output += outp
         except FlowBreak as brk:
             label = brk.label
@@ -125,14 +127,16 @@ def assemble(code, registers, memory, flags):
         error = ''
     return (output, error, debug)
 
-def get_instruction(code, registers, memory, flags, code_pos):
+def get_instruction(code, gdata, code_pos):
     """
     We expect an instruction next.
         Args:
             code: code to interpret
-            regsiters: current register values
-            memory: current memory values
-            flags: current flag values
+            gdata:
+                Contains:
+                registers: current register values.
+                memory: current memory values.
+                flags: current values of flags.
             code_pos: where we are in code
         Returns:
             Output
@@ -143,4 +147,4 @@ def get_instruction(code, registers, memory, flags, code_pos):
     else:
         instr = Instruction(token, instructions)
         add_debug("Calling " + token)
-        return instr.exec(code, registers, memory, flags, code_pos)
+        return instr.exec(code, gdata, code_pos)
