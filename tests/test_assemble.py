@@ -66,5 +66,20 @@ class AssembleTestCase(TestCase):
         assemble("neg eax", gdata)
         self.assertEqual(gdata.registers["EAX"], -18)
 
+    def test_not(self):
+        gdata.registers["EAX"] = 18
+        assemble("not eax", gdata)
+        self.assertEqual(gdata.registers["EAX"], -19)
+ 
+    def test_inc(self):
+        gdata.registers["EAX"] = 18
+        assemble("inc eax", gdata)
+        self.assertEqual(gdata.registers["EAX"], 19)
+
+    def test_dec(self):
+        gdata.registers["EAX"] = 18
+        assemble("dec eax", gdata)
+        self.assertEqual(gdata.registers["EAX"], 17)
+
 if __name__ == '__main__':
     main()
