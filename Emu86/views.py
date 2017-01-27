@@ -9,8 +9,8 @@ from django.shortcuts import get_object_or_404, get_list_or_404, render
 from .models import AdminEmail
 from .models import Site
 from .forms import MainForm
-from .assemble import assemble, add_debug
-from .global_data import gdata
+from assembler.global_data import gdata
+from assembler.assemble import assemble
 
 # next is for possible later use:
 mem_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
