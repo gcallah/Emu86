@@ -8,8 +8,8 @@ sys.path.append("..")
 
 from unittest import TestCase, main
 
-from Emu86.global_data import gdata
-from Emu86.assemble import assemble
+from assembler.global_data import gdata
+from assembler.assemble import assemble
 
 
 class AssembleTestCase(TestCase):
