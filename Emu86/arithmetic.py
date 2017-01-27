@@ -110,8 +110,8 @@ def idiv(code, gdata, code_pos):
     Implments the IDIV instruction.
     """
     (op, code_pos) = get_one_op("IDIV", code, gdata, code_pos)
-    hireg = int(gdata.registers['EAX']) << 32
-    lowreg = int(gdata.registers['EBX'])
+    hireg = int(gdata.registers['EDX']) << 32
+    lowreg = int(gdata.registers['EAX'])
     dividend = hireg + lowreg
     gdata.registers['EAX'] = dividend // op.get_val()
     gdata.registers['EBX'] = dividend % op.get_val()
