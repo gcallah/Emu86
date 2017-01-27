@@ -82,11 +82,12 @@ class AssembleTestCase(TestCase):
         self.assertEqual(gdata.registers["EAX"], 17)
 
     def test_idiv(self):
-        gdata.registers["EAX"] = 2
+        gdata.registers["EAX"] = 1
         gdata.registers["EDX"] = 1
         gdata.registers["EBX"] = 2
         assemble("idiv ebx", gdata)
-        self.assertEqual(gdata.registers["EAX"], 2147483649)
+        self.assertEqual(gdata.registers["EAX"], 2147483648)
+        self.assertEqual(gdata.registers["EDX"], 1)
 
 if __name__ == '__main__':
     main()
