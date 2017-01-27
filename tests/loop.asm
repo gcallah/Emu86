@@ -5,6 +5,7 @@
 loop: cmp eax, ebx
       jz done
       inc ebx
+      dec edx
       jnz loop
 
 done: mov ecx, ebx  ; when done, store ebx in ecx
