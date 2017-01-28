@@ -98,7 +98,7 @@ class AssembleTestCase(TestCase):
         self.assertEqual(gdata.flags["ZF"], 1)
         self.assertEqual(gdata.flags["SF"], 0)
 
-    def test_cmp_g(self):
+    def test_cmp_l(self):
         gdata.registers["EAX"] = 0
         gdata.registers["EBX"] = 1
         gdata.flags["ZF"] = 0
