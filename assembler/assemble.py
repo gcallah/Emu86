@@ -81,9 +81,11 @@ def assemble(code, gdata):
 
     labels = {}
     lines = code.split("\n")
+    tok_lines = []  # this will hold the tokenized version of the code
     # we will make two passes: one to set up labels
     #  and strip out comments, and
     #  then one to actually perform instructions.
+    #  eventually, this pass should fully tokenize code
     for line_no, line in enumerate(lines):
         line = line.strip()
 
@@ -105,8 +107,10 @@ def assemble(code, gdata):
             # now strip off the label:
             line = line.split(":", 1)[-1]
             lines[line_no] = line
+
     i = 0
     j = 0
+    # eventually, this pass should deal only with fully tokenized code
     while i < len(lines) and j < MAX_INSTRUCTIONS:
         line = lines[i]
         i += 1
