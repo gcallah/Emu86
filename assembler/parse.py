@@ -4,9 +4,9 @@ parse.py: creates parse tree.
 
 import re
 
-from .errors import *  # import * OK here:
+from errors import *  # import * OK here:
                        # these are *our* errors, after all!
-from .tokens import Location, Address, Register, IntOp, Symbol
+from tokens import Location, Address, Register, IntOp, Symbol
 
 
 SYMBOL_RE = "^([A-Za-z]+)"

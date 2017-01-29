@@ -5,15 +5,15 @@ Executes assembly code typed in.
 
 import re
 
-from .errors import *  # import * OK here:
+from errors import *  # import * OK here:
                        # these are *our* errors, after all!
-from .arithmetic import add, sub, imul, idiv, inc, dec, shl
-from .arithmetic import shr, notf, andf, orf, xor, neg
-from .control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
-from .control_flow import jg, jge, jl, jle
-from .data_mov import mov
-from .parse import get_token, get_op, get_one_op, get_two_ops, SYMBOL_RE
-from .tokens import Instruction
+from arithmetic import add, sub, imul, idiv, inc, dec, shl
+from arithmetic import shr, notf, andf, orf, xor, neg
+from control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
+from control_flow import jg, jge, jl, jle
+from data_mov import mov
+from parse import get_token, get_op, get_one_op, get_two_ops, SYMBOL_RE
+from tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 
@@ -98,15 +98,14 @@ def assemble(code, gdata):
         # labels:
         p = re.compile(SYMBOL_RE + ":")
         label_match = re.search(p, line)
-        if label_match is None:
-            continue
-        else:
+        if label_match is not None:
             label = label_match.group(1)
             label = label.upper()
             labels[label] = line_no
             # now strip off the label:
             line = line.split(":", 1)[-1]
             lines[line_no] = line
+        # now tokenize!
 
     i = 0
     j = 0

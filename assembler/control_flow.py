@@ -9,7 +9,7 @@ Contains:
     Jmp
 """
 
-from .parse import get_one_op, get_two_ops
+from parse import get_one_op, get_two_ops
 
 
 class FlowBreak(Exception):

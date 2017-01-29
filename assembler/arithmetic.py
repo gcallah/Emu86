@@ -4,7 +4,7 @@ arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfs
 
-from .parse import get_one_op, get_two_ops
+from parse import get_one_op, get_two_ops
 
 
 BITS = 32  # for now we assume 32-bit ints

@@ -2,7 +2,7 @@
 data_mov.py: data movement instructions.
 """
 
-from .parse import get_two_ops
+from parse import get_two_ops
 
 
 def mov(code, gdata, code_pos):
