@@ -31,6 +31,7 @@ class Instruction(Token):
         if name not in instructions:
             raise InvalidInstruction(name)
         self.func = instructions[name]
+        self.ops = []
 
     def exec(self, code, gdata, code_pos):
         return self.func(code, gdata, code_pos)
