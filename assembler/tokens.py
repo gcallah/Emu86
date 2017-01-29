@@ -7,13 +7,13 @@ from abc import abstractmethod
 from errors import *  # import * OK here:
                        # these are *our* errors, after all!
 
-class Operand:
+class Token:
     def __init__(self, name, val=0):
         self.name = name
         self.value = val
 
     def __str__(self):
-        return self.name
+        return self.name + ": " + str(self.value)
 
     def get_val(self):
         return self.value
@@ -22,7 +22,7 @@ class Operand:
         return self.name
 
 
-class Instruction(Operand):
+class Instruction(Token):
     """
     Class representing all instructions.
     """
@@ -34,6 +34,14 @@ class Instruction(Operand):
 
     def exec(self, code, gdata, code_pos):
         return self.func(code, gdata, code_pos)
+
+
+class Operand(Token):
+    """
+    Superclass of all operands.
+    """
+    def __init__(self, name, val=0):
+        super().__init__(name, val)
 
 
 class IntOp(Operand):

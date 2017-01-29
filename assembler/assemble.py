@@ -56,6 +56,16 @@ instructions = {
         }
 
 
+def tokenize(line):
+    """
+    Turns a line into a tokenized version of the line.
+    """
+    (token, pos) = get_token(line, 0)
+    if token == '':
+        return ''
+    else:
+        instr = Instruction(token, instructions)
+
 def assemble(code, gdata):
     """
         Assembles and runs code.
