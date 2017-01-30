@@ -12,7 +12,7 @@ from arithmetic import shr, notf, andf, orf, xor, neg
 from control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
 from control_flow import jg, jge, jl, jle
 from data_mov import mov
-from parse import get_token, get_op, get_one_op, get_two_ops, SYMBOL_RE
+from parse import get_token, get_op, SYMBOL_RE
 from tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
@@ -101,9 +101,10 @@ def assemble(code, gdata):
 
         # comments:
         comm_start = line.find(";")
-        if comm_start >= 0:  # -1 means not found
+        if comm_start > 0:  # -1 means not found
             line = line[0:comm_start]
-            lines[line_no] = line
+        elif comm_start == 0:  # the whole line is a comment
+            continue
 
         # labels:
         p = re.compile(SYMBOL_RE + ":")
@@ -114,8 +115,19 @@ def assemble(code, gdata):
             labels[label] = line_no
             # now strip off the label:
             line = line.split(":", 1)[-1]
-            lines[line_no] = line
+        # we've stripped extra whitespace, comments, and labels: now store
+        # line:
+        lines[line_no] = line
         # now tokenize!
+        this_line = []
+        (instr, code_pos) = get_instr(line, code_pos)
+        this_line.append(instr)
+        (ops, code_pos) = get_ops(line, code_pos, gdata)
+        this_line.append(ops)
+        tok_lines.append(this_line)
+
+    for tline in tok_lines:
+        print(tline)
 
     i = 0
     j = 0
@@ -145,6 +157,31 @@ def assemble(code, gdata):
     else:
         error = ''
     return (output, error, debug)
+
+def get_instr(code, code_pos):
+    """
+    Get an instruction from the code text.
+    Args:
+        code: the code!
+        code_pos: where we are in reading the code.
+    Returns:
+        a tuple of the instruction found and the new code_pos.
+        (Throws an exception if the token is not an instruction.)
+    """
+    (token, code_pos) = get_token(code, code_pos)
+    instr = Instruction(token, instructions)
+    return (instr, code_pos)
+
+def get_ops(code, code_pos, gdata):
+    """
+    """
+    ops = []
+    while code_pos < len(code):
+        (token, code_pos) = get_token(code, code_pos)
+        op = get_op(token, gdata)
+        ops.append(op)
+
+    return (ops, code_pos)
 
 def get_instruction(code, gdata, code_pos):
     """
