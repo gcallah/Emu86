@@ -97,7 +97,10 @@ def assemble(code, gdata):
     #  then one to actually perform instructions.
     #  eventually, this pass should fully tokenize code
     for line_no, line in enumerate(lines):
+        code_pos = 0   # reset each line!
         line = line.strip()
+        if len(line) == 0:  # blank lines ok; just skip 'em
+            continue
 
         # comments:
         comm_start = line.find(";")
@@ -169,6 +172,7 @@ def get_instr(code, code_pos):
         (Throws an exception if the token is not an instruction.)
     """
     (token, code_pos) = get_token(code, code_pos)
+    print("Trying to get instruction for token: " + token + "; code: " + code)
     instr = Instruction(token, instructions)
     return (instr, code_pos)
 
