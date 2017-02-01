@@ -85,7 +85,7 @@ def inc(ops, gdata):
     """
     Implments the INC instruction.
     """
-    check_num_args(instr, ops, 1)
+    check_num_args("INC", ops, 1)
     ops[0].set_val(ops[0].get_val() + 1)
     return ''
 
@@ -93,7 +93,7 @@ def dec(ops, gdata):
     """
     Implments the DEC instruction.
     """
-    check_num_args(instr, ops, 1)
+    check_num_args("DEC", ops, 1)
     ops[0].set_val(ops[0].get_val() - 1)
     return ''
 
@@ -108,7 +108,7 @@ def idiv(ops, gdata):
     """
     Implments the IDIV instruction.
     """
-    check_num_args(instr, ops, 1)
+    check_num_args("IDIV", ops, 1)
 
     hireg = int(gdata.registers['EDX']) << 32
     lowreg = int(gdata.registers['EAX'])
