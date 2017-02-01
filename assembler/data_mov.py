@@ -2,6 +2,9 @@
 data_mov.py: data movement instructions.
 """
 
+from .errors import InvalidNumArgs
+
+
 def mov(ops, gdata):
     """
     Implments the MOV instruction.
