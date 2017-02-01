@@ -56,7 +56,7 @@ def cmp(ops, gdata):
     It is not clear at this moment how to treat the OF and CF flags in Python,
     since Python integer arithmetic never carries or overflows!
     """
-    (op1, op2, code_pos) = get_two_ops("CMP", ops)
+    (op1, op2) = get_two_ops("CMP", ops)
     res = op1.get_val() - op2.get_val()
     # set the proper flags
     # zero flag:
