@@ -2,7 +2,7 @@
 data_mov.py: data movement instructions.
 """
 
-from .errors import InvalidNumArgs
+from .errors import check_num_args
 
 
 def mov(ops, gdata):
