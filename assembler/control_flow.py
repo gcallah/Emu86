@@ -27,12 +27,12 @@ class FlowBreak(Exception):
 
 def get_one_op(instr, ops):
     if len(ops) != 1:
-        raise(InvalidNumArgs(instr))
+        raise(InvalidNumArgs(instr, 1))
     return ops[0]
 
 def get_two_ops(instr, ops):
     if len(ops) != 2:
-        raise(InvalidNumArgs(instr))
+        raise(InvalidNumArgs(instr, 2))
     return (ops[0], ops[1])
 
 class Jmp(FlowBreak):
