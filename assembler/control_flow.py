@@ -26,13 +26,11 @@ class FlowBreak(Exception):
         self.msg = "Uknown control flow exception."
 
 def get_one_op(instr, ops):
-    if len(ops) != 1:
-        raise(InvalidNumArgs(instr, 1))
+    check_num_args(instr, ops, 1)
     return ops[0]
 
 def get_two_ops(instr, ops):
-    if len(ops) != 2:
-        raise(InvalidNumArgs(instr, 2))
+    check_num_args(instr, ops, 2)
     return (ops[0], ops[1])
 
 class Jmp(FlowBreak):

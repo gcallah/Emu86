@@ -11,14 +11,11 @@ BITS = 32  # for now we assume 32-bit ints
 
 
 def one_op_arith(ops, gdata, instr, f):
-    if len(ops) != 1:
-        raise(InvalidNumArgs(instr, 1))
-
+    check_num_args(instr, ops, 1)
     ops[0].set_val(f(ops[0].get_val()))
 
 def two_op_arith(ops, gdata, instr, f):
-    if len(ops) != 2:
-        raise(InvalidNumArgs(instr, 2))
+    check_num_args(instr, ops, 2)
     ops[0].set_val(f(ops[0].get_val(), ops[1].get_val()))
 
 def add(ops, gdata):
@@ -88,8 +85,7 @@ def inc(ops, gdata):
     """
     Implments the INC instruction.
     """
-    if len(ops) != 1:
-        raise(InvalidNumArgs(instr, 1))
+    check_num_args(instr, ops, 1)
     ops[0].set_val(ops[0].get_val() + 1)
     return ''
 
@@ -97,8 +93,7 @@ def dec(ops, gdata):
     """
     Implments the DEC instruction.
     """
-    if len(ops) != 1:
-        raise(InvalidNumArgs(instr, 1))
+    check_num_args(instr, ops, 1)
     ops[0].set_val(ops[0].get_val() - 1)
     return ''
 
@@ -113,8 +108,7 @@ def idiv(ops, gdata):
     """
     Implments the IDIV instruction.
     """
-    if len(ops) != 1:
-        raise(InvalidNumArgs(instr, 1))
+    check_num_args(instr, ops, 1)
 
     hireg = int(gdata.registers['EDX']) << 32
     lowreg = int(gdata.registers['EAX'])
