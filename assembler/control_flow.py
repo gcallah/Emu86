@@ -15,7 +15,7 @@ Contains:
     Jmp
 """
 
-from .error import check_num_args
+from .errors import check_num_args
 
 
 class FlowBreak(Exception):
