@@ -4,14 +4,14 @@ parse.py: creates parse tree.
 
 import re
 
-from errors import *  # import * OK here:
+from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
-from tokens import Location, Address, Register, IntOp, Symbol, Instruction
-from arithmetic import add, sub, imul, idiv, inc, dec, shl
-from arithmetic import shr, notf, andf, orf, xor, neg
-from control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
-from control_flow import jg, jge, jl, jle
-from data_mov import mov
+from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
+from .arithmetic import add, sub, imul, idiv, inc, dec, shl
+from .arithmetic import shr, notf, andf, orf, xor, neg
+from .control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
+from .control_flow import jg, jge, jl, jle
+from .data_mov import mov
 
 
 SYMBOL_RE = "^([A-Za-z]+)"

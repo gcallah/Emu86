@@ -5,11 +5,11 @@ Executes assembly code typed in.
 
 import re
 
-from control_flow import FlowBreak
-from errors import *  # import * OK here:
+from .control_flow import FlowBreak
+from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
-from parse import lex
-from tokens import Instruction
+from .parse import lex
+from .tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 

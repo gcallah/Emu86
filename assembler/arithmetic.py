@@ -4,7 +4,7 @@ arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfs
 
-from errors import *
+from .errors import *
 
 
 BITS = 32  # for now we assume 32-bit ints
@@ -88,16 +88,18 @@ def inc(ops, gdata):
     """
     Implments the INC instruction.
     """
-    (op, code_pos) = get_one_op("INC", ops, gdata)
-    op.set_val(op.get_val() + 1)
+    if len(ops) != 1:
+        raise(InvalidNumArgs(instr))
+    ops[0].set_val(ops[0].get_val() + 1)
     return ''
 
 def dec(ops, gdata):
     """
     Implments the DEC instruction.
     """
-    (op, code_pos) = get_one_op("DEC", ops, gdata)
-    op.set_val(op.get_val() - 1)
+    if len(ops) != 1:
+        raise(InvalidNumArgs(instr))
+    ops[0].set_val(ops[0].get_val() - 1)
     return ''
 
 def neg(ops, gdata):

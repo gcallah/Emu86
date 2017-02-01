@@ -4,7 +4,7 @@ tokens.py: contains classes we tokenize into.
 
 from abc import abstractmethod
 
-from errors import *  # import * OK here:
+from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
 
 class Token:
