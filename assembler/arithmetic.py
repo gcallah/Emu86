@@ -4,115 +4,119 @@ arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfs
 
-from parse import get_one_op, get_two_ops
+from errors import *
 
 
 BITS = 32  # for now we assume 32-bit ints
 
 
+def one_op_arith(ops, gdata, instr, f):
+    if len(ops) != 1:
+        raise(InvalidNumArgs(instr))
 
-def one_op_arith(code, gdata, code_pos, instr, f):
-    (op, code_pos) = get_one_op(instr, code, gdata, code_pos)
-    op.set_val(f(op.get_val()))
+    ops[0].set_val(f(ops[0].get_val()))
 
-def two_op_arith(code, gdata, code_pos, instr, f):
-    (op1, op2, code_pos) = get_two_ops(instr, code, gdata, code_pos)
-    op1.set_val(f(op1.get_val(), op2.get_val()))
+def two_op_arith(ops, gdata, instr, f):
+    if len(ops) != 2:
+        raise(InvalidNumArgs(instr))
+    ops[0].set_val(f(ops[0].get_val(), ops[1].get_val()))
 
-def add(code, gdata, code_pos):
+def add(ops, gdata):
     """
     Implments the ADD instruction.
     """
-    two_op_arith(code, gdata, code_pos, "ADD", opfs.add)
+    two_op_arith(ops, gdata, "ADD", opfs.add)
     return ''
 
-def sub(code, gdata, code_pos):
+def sub(ops, gdata):
     """
     Implments the SUB instruction.
     """
-    two_op_arith(code, gdata, code_pos, "SUB", opfs.sub)
+    two_op_arith(ops, gdata, "SUB", opfs.sub)
     return ''
 
-def imul(code, gdata, code_pos):
+def imul(ops, gdata):
     """
     Implments the IMUL instruction.
     """
-    two_op_arith(code, gdata, code_pos, "IMUL", opfs.mul)
+    two_op_arith(ops, gdata, "IMUL", opfs.mul)
     return ''
 
-def andf(code, gdata, code_pos):
+def andf(ops, gdata):
     """
     Implments the AND instruction.
     """
-    two_op_arith(code, gdata, code_pos, "AND", opfs.and_)
+    two_op_arith(ops, gdata, "AND", opfs.and_)
     return ''
 
-def orf(code, gdata, code_pos):
+def orf(ops, gdata):
     """
     Implments the OR instruction.
     """
-    two_op_arith(code, gdata, code_pos, "OR", opfs.or_)
+    two_op_arith(ops, gdata, "OR", opfs.or_)
     return ''
 
-def xor(code, gdata, code_pos):
+def xor(ops, gdata):
     """
     Implments the XOR instruction.
     """
-    two_op_arith(code, gdata, code_pos, "XOR", opfs.xor)
+    two_op_arith(ops, gdata, "XOR", opfs.xor)
     return ''
 
-def shl(code, gdata, code_pos):
+def shl(ops, gdata):
     """
     Implments the XOR instruction.
     """
-    two_op_arith(code, gdata, code_pos, "SHL", opfs.lshift)
+    two_op_arith(ops, gdata, "SHL", opfs.lshift)
     return ''
 
-def shr(code, gdata, code_pos):
+def shr(ops, gdata):
     """
     Implments the XOR instruction.
     """
-    two_op_arith(code, gdata, code_pos, "SHR", opfs.rshift)
+    two_op_arith(ops, gdata, "SHR", opfs.rshift)
     return ''
 
-def notf(code, gdata, code_pos):
+def notf(ops, gdata):
     """
     Implments the NOT instruction.
     """
-    one_op_arith(code, gdata, code_pos, "NOT", opfs.inv)
+    one_op_arith(ops, gdata, "NOT", opfs.inv)
     return ''
 
-def inc(code, gdata, code_pos):
+def inc(ops, gdata):
     """
     Implments the INC instruction.
     """
-    (op, code_pos) = get_one_op("INC", code, gdata, code_pos)
+    (op, code_pos) = get_one_op("INC", ops, gdata)
     op.set_val(op.get_val() + 1)
     return ''
 
-def dec(code, gdata, code_pos):
+def dec(ops, gdata):
     """
     Implments the DEC instruction.
     """
-    (op, code_pos) = get_one_op("DEC", code, gdata, code_pos)
+    (op, code_pos) = get_one_op("DEC", ops, gdata)
     op.set_val(op.get_val() - 1)
     return ''
 
-def neg(code, gdata, code_pos):
+def neg(ops, gdata):
     """
     Implments the NEG instruction.
     """
-    one_op_arith(code, gdata, code_pos, "NEG", opfs.neg)
+    one_op_arith(ops, gdata, "NEG", opfs.neg)
     return ''
 
-def idiv(code, gdata, code_pos):
+def idiv(ops, gdata):
     """
     Implments the IDIV instruction.
     """
-    (op, code_pos) = get_one_op("IDIV", code, gdata, code_pos)
+    if len(ops) != 1:
+        raise(InvalidNumArgs(instr))
+
     hireg = int(gdata.registers['EDX']) << 32
     lowreg = int(gdata.registers['EAX'])
     dividend = hireg + lowreg
-    gdata.registers['EAX'] = dividend // op.get_val()
-    gdata.registers['EBX'] = dividend % op.get_val()
+    gdata.registers['EAX'] = dividend // ops[0].get_val()
+    gdata.registers['EBX'] = dividend % ops[0].get_val()
     return ''

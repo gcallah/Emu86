@@ -33,8 +33,8 @@ class Instruction(Token):
         self.func = instructions[name]
         self.ops = []
 
-    def exec(self, code, gdata, code_pos):
-        return self.func(code, gdata, code_pos)
+    def exec(self, ops, gdata):
+        return self.func(ops, gdata)
 
 
 class Operand(Token):

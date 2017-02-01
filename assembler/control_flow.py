@@ -3,13 +3,17 @@ control_flow.py: control flow instructions,
     plus Exceptions to signal break in flow.
 
 Contains:
-    JMP
-
+    cmp
+    jmp
+    jnz
+    jz
+    jg
+    jge
+    jl
+    jle
     FlowBreak
     Jmp
 """
-
-from parse import get_one_op, get_two_ops
 
 
 class FlowBreak(Exception):
@@ -21,6 +25,15 @@ class FlowBreak(Exception):
         self.label = label
         self.msg = "Uknown control flow exception."
 
+def get_one_op(instr, ops):
+    if len(ops) != 1:
+        raise(InvalidNumArgs(instr))
+    return ops[0]
+
+def get_two_ops(instr, ops):
+    if len(ops) != 2:
+        raise(InvalidNumArgs(instr))
+    return (ops[0], ops[1])
 
 class Jmp(FlowBreak):
     def __init__(self, label):
@@ -28,22 +41,22 @@ class Jmp(FlowBreak):
         self.msg = "Jump to " + label
 
 
-def jmp(code, gdata, code_pos):
+def jmp(ops, gdata):
     """
     Implments the JMP instruction.
     This is an unconditional jump.
     """
-    (target, code_pos) = get_one_op("JMP", code, gdata, code_pos)
+    target = get_one_op("JMP", ops)
     raise Jmp(target.name)
 
-def cmp(code, gdata, code_pos):
+def cmp(ops, gdata):
     """
     Implments the CMP instruction.
     Compares op1 and op2, and sets (right now) the SF and ZF flags.
     It is not clear at this moment how to treat the OF and CF flags in Python,
     since Python integer arithmetic never carries or overflows!
     """
-    (op1, op2, code_pos) = get_two_ops("CMP", code, gdata, code_pos)
+    (op1, op2, code_pos) = get_two_ops("CMP", ops)
     res = op1.get_val() - op2.get_val()
     # set the proper flags
     # zero flag:
@@ -58,62 +71,62 @@ def cmp(code, gdata, code_pos):
         gdata.flags['SF'] = 0
     return ''
 
-def je(code, gdata, code_pos):
+def je(ops, gdata):
     """
     Implments the JE instruction.
     Jumps if op1 == op2.
     """
-    (target, code_pos) = get_one_op("JE", code, gdata, code_pos)
+    target = get_one_op("JE", ops)
     if gdata.flags['ZF']:
         raise Jmp(target.name)
     return ''
 
-def jne(code, gdata, code_pos):
+def jne(ops, gdata):
     """
     Implments the JNE instruction.
     Jumps if op1 != op2.
     """
-    (target, code_pos) = get_one_op("JNE", code, gdata, code_pos)
+    target = get_one_op("JNE", ops)
     if not gdata.flags['ZF']:
         raise Jmp(target.name)
     return ''
 
-def jg(code, gdata, code_pos):
+def jg(ops, gdata):
     """
     Implments the JG instruction.
     Jumps if op1 > op2.
     """
-    (target, code_pos) = get_one_op("JG", code, gdata, code_pos)
+    target = get_one_op("JG", ops)
     if not gdata.flags['SF'] and not gdata.flags['ZF']:
         raise Jmp(target.name)
     return ''
 
-def jge(code, gdata, code_pos):
+def jge(ops, gdata):
     """
     Implments the JGE instruction.
     Jumps if op1 >= op2.
     """
-    (target, code_pos) = get_one_op("JGE", code, gdata, code_pos)
+    target = get_one_op("JGE", ops)
     if not gdata.flags['SF']:
         raise Jmp(target.name)
     return ''
 
-def jl(code, gdata, code_pos):
+def jl(ops, gdata):
     """
     Implments the JG instruction.
     Jumps if op1 > op2.
     """
-    (target, code_pos) = get_one_op("JG", code, gdata, code_pos)
+    target = get_one_op("JG", ops)
     if gdata.flags['SF']:
         raise Jmp(target.name)
     return ''
 
-def jle(code, gdata, code_pos):
+def jle(ops, gdata):
     """
     Implments the JGE instruction.
     Jumps if op1 >= op2.
     """
-    (target, code_pos) = get_one_op("JGE", code, gdata, code_pos)
+    target = get_one_op("JGE", ops)
     if gdata.flags['SF'] or gdata.flags['ZF']:
         raise Jmp(target.name)
     return ''

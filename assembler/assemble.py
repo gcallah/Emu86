@@ -5,14 +5,10 @@ Executes assembly code typed in.
 
 import re
 
+from control_flow import FlowBreak
 from errors import *  # import * OK here:
                        # these are *our* errors, after all!
-from arithmetic import add, sub, imul, idiv, inc, dec, shl
-from arithmetic import shr, notf, andf, orf, xor, neg
-from control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
-from control_flow import jg, jge, jl, jle
-from data_mov import mov
-from parse import get_token, get_op, SYMBOL_RE
+from parse import lex
 from tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
@@ -24,47 +20,9 @@ def add_debug(s):
     global debug
     debug += (s + "\n")
 
-instructions = {
-        # control flow:
-        'CMP': cmp,
-        'JMP': jmp,
-        'JE': je,
-        'JNE': jne,
-        # the next two instructions are just synonyms for the previous two.
-        'JZ': je,
-        'JNZ': jne,
-        'JG': jg,
-        'JGE': jge,
-        'JL': jl,
-        'JLE': jle,
-        # data movement:
-        'MOV': mov,
-        # arithmetic and logic:
-        'ADD': add,
-        'IMUL': imul,
-        'IDIV': idiv,
-        'SUB': sub,
-        'AND': andf,
-        'OR': orf,
-        'XOR': xor,
-        'SHL': shl,
-        'SHR': shr,
-        'NOT': notf,
-        'INC': inc,
-        'DEC': dec,
-        'NEG': neg,
-        }
 
-
-def tokenize(line):
-    """
-    Turns a line into a tokenized version of the line.
-    """
-    (token, pos) = get_token(line, 0)
-    if token == '':
-        return ''
-    else:
-        instr = Instruction(token, instructions)
+INSTR = 0
+OPS = 1
 
 def assemble(code, gdata):
     """
@@ -82,72 +40,26 @@ def assemble(code, gdata):
     """
     global debug
     debug = ''
-
-    code_pos = 0
     output = ''
     error = ''
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", debug)
 
-    labels = {}
-    lines = code.split("\n")
-    tok_lines = []  # this will hold the tokenized version of the code
-    # we will make two passes: one to set up labels
-    #  and strip out comments, and
-    #  then one to actually perform instructions.
-    #  eventually, this pass should fully tokenize code
-    for line_no, line in enumerate(lines):
-        code_pos = 0   # reset each line!
-        line = line.strip()
-        if len(line) == 0:  # blank lines ok; just skip 'em
-            continue
-
-        # comments:
-        comm_start = line.find(";")
-        if comm_start > 0:  # -1 means not found
-            line = line[0:comm_start]
-        elif comm_start == 0:  # the whole line is a comment
-            continue
-
-        # labels:
-        p = re.compile(SYMBOL_RE + ":")
-        label_match = re.search(p, line)
-        if label_match is not None:
-            label = label_match.group(1)
-            label = label.upper()
-            labels[label] = line_no
-            # now strip off the label:
-            line = line.split(":", 1)[-1]
-        # we've stripped extra whitespace, comments, and labels: now store
-        # line:
-        lines[line_no] = line
-        # now tokenize!
-        this_line = []
-        (instr, code_pos) = get_instr(line, code_pos)
-        this_line.append(instr)
-        (ops, code_pos) = get_ops(line, code_pos, gdata)
-        this_line.append(ops)
-        tok_lines.append(this_line)
-
-    for tline in tok_lines:
-        print(tline)
+    # break the code into tokens:
+    (tok_lines, labels) = lex(code, gdata)
 
     i = 0
     j = 0
-    # eventually, this pass should deal only with fully tokenized code
-    while i < len(lines) and j < MAX_INSTRUCTIONS:
-        line = lines[i]
+    while i < len(tok_lines) and j < MAX_INSTRUCTIONS:
+        curr_instr = tok_lines[i]
         i += 1
         j += 1
-        add_debug("Got line of " + line)
-        if len(line) <= 1:  # blank lines ok; just skip 'em
-            continue
-        code_pos = 0
         try:
             # we only want one instruction per line!
-            outp = get_instruction(line, gdata, code_pos)
+            outp = curr_instr[INSTR].exec(curr_instr[OPS], gdata)
             output += outp
         except FlowBreak as brk:
+            # we have hit one of the JUMP instructions: jump to that line.
             label = brk.label
             if label in labels:
                 i = labels[label]  # set i to line num of label
@@ -156,55 +68,8 @@ def assemble(code, gdata):
         except Error as err:
             return (output, err.msg, debug)
     if j == MAX_INSTRUCTIONS:
-        error = "Possible infinite loop detected."
+        error = ("Possible infinite loop detected: instructions run has exceeded "
+                 + str(MAX_INSTRUCTIONS))
     else:
         error = ''
     return (output, error, debug)
-
-def get_instr(code, code_pos):
-    """
-    Get an instruction from the code text.
-    Args:
-        code: the code!
-        code_pos: where we are in reading the code.
-    Returns:
-        a tuple of the instruction found and the new code_pos.
-        (Throws an exception if the token is not an instruction.)
-    """
-    (token, code_pos) = get_token(code, code_pos)
-    print("Trying to get instruction for token: " + token + "; code: " + code)
-    instr = Instruction(token, instructions)
-    return (instr, code_pos)
-
-def get_ops(code, code_pos, gdata):
-    """
-    """
-    ops = []
-    while code_pos < len(code):
-        (token, code_pos) = get_token(code, code_pos)
-        op = get_op(token, gdata)
-        ops.append(op)
-
-    return (ops, code_pos)
-
-def get_instruction(code, gdata, code_pos):
-    """
-    We expect an instruction next.
-        Args:
-            code: code to interpret
-            gdata:
-                Contains:
-                registers: current register values.
-                memory: current memory values.
-                flags: current values of flags.
-            code_pos: where we are in code
-        Returns:
-            Output
-    """
-    (token, code_pos) = get_token(code, code_pos)
-    if token == '':
-        return ''
-    else:
-        instr = Instruction(token, instructions)
-        add_debug("Calling " + token)
-        return instr.exec(code, gdata, code_pos)

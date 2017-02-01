@@ -6,7 +6,12 @@ import re
 
 from errors import *  # import * OK here:
                        # these are *our* errors, after all!
-from tokens import Location, Address, Register, IntOp, Symbol
+from tokens import Location, Address, Register, IntOp, Symbol, Instruction
+from arithmetic import add, sub, imul, idiv, inc, dec, shl
+from arithmetic import shr, notf, andf, orf, xor, neg
+from control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
+from control_flow import jg, jge, jl, jle
+from data_mov import mov
 
 
 SYMBOL_RE = "^([A-Za-z]+)"
@@ -14,34 +19,37 @@ sym_match = re.compile(SYMBOL_RE)
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
+instructions = {
+        # control flow:
+        'CMP': cmp,
+        'JMP': jmp,
+        'JE': je,
+        'JNE': jne,
+        # the next two instructions are just synonyms for the previous two.
+        'JZ': je,
+        'JNZ': jne,
+        'JG': jg,
+        'JGE': jge,
+        'JL': jl,
+        'JLE': jle,
+        # data movement:
+        'MOV': mov,
+        # arithmetic and logic:
+        'ADD': add,
+        'IMUL': imul,
+        'IDIV': idiv,
+        'SUB': sub,
+        'AND': andf,
+        'OR': orf,
+        'XOR': xor,
+        'SHL': shl,
+        'SHR': shr,
+        'NOT': notf,
+        'INC': inc,
+        'DEC': dec,
+        'NEG': neg,
+        }
 
-def get_one_op(instr, code, gdata, code_pos):
-    """
-    For instructions that expect one integer operand.
-    """
-    (tok, code_pos) = get_token(code, code_pos)
-    op = get_op(tok, gdata)
-
-    if not op:
-        raise InvalidNumArgs(instr, 1)
-
-    return (op, code_pos)
-
-def get_two_ops(instr, code, gdata, code_pos):
-    """
-    For instructions that expect two integer operands.
-    """
-    (tok1, code_pos) = get_token(code, code_pos)
-    (tok2, code_pos) = get_token(code, code_pos)
-    op1 = get_op(tok1, gdata)
-    op2 = get_op(tok2, gdata)
-
-    if not op1 or not op2:
-        raise InvalidNumArgs(instr, 2)
-    if not isinstance(op1, Location):
-        raise InvalidOperand(op1)
-
-    return (op1, op2, code_pos)
 
 def get_token(code, code_pos):
     """
@@ -104,3 +112,77 @@ def get_op(token, gdata):
         except Exception:
             raise InvalidOperand(token)
         return IntOp(int_val)
+
+def get_instr(code, code_pos):
+    """
+    Get an instruction from the code text.
+    Args:
+        code: the code!
+        code_pos: where we are in reading the code.
+    Returns:
+        a tuple of the instruction found and the new code_pos.
+        (Throws an exception if the token is not an instruction.)
+    """
+    (token, code_pos) = get_token(code, code_pos)
+    instr = Instruction(token, instructions)
+    return (instr, code_pos)
+
+def get_ops(code, code_pos, gdata):
+    """
+    """
+    ops = []
+    while code_pos < len(code):
+        (token, code_pos) = get_token(code, code_pos)
+        op = get_op(token, gdata)
+        ops.append(op)
+
+    return (ops, code_pos)
+
+def lex(code, gdata):
+    """
+    Lexical phase: tokenizes the code.
+    Args:
+        code: The code.
+    Returns:
+        tok_lines: the tokenized version
+        labels: jump locations for code labels
+    """
+    code_pos = 0
+    labels = {}
+    lines = code.split("\n")
+    tok_lines = []  # this will hold the tokenized version of the code
+    i = 0
+    for line in lines:
+        code_pos = 0   # reset each line!
+        line = line.strip()
+        if len(line) == 0:  # blank lines ok; just skip 'em
+            continue
+
+        # comments:
+        comm_start = line.find(";")
+        if comm_start > 0:  # -1 means not found
+            line = line[0:comm_start]
+        elif comm_start == 0:  # the whole line is a comment
+            continue
+
+        # labels:
+        p = re.compile(SYMBOL_RE + ":")
+        label_match = re.search(p, line)
+        if label_match is not None:
+            label = label_match.group(1)
+            label = label.upper()
+            labels[label] = i
+            # now strip off the label:
+            line = line.split(":", 1)[-1]
+        # we've stripped extra whitespace, comments, and labels: now store
+        # line:
+        lines[i] = line
+        # now tokenize!
+        this_line = []
+        (instr, code_pos) = get_instr(line, code_pos)
+        this_line.append(instr)
+        (ops, code_pos) = get_ops(line, code_pos, gdata)
+        this_line.append(ops)
+        tok_lines.append(this_line)
+        i += 1
+    return (tok_lines, labels)
