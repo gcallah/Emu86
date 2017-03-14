@@ -89,5 +89,23 @@ class AssembleTestCase(TestCase):
         self.assertEqual(gdata.registers["EAX"], 2147483648)
         self.assertEqual(gdata.registers["EDX"], 1)
 
+    def test_cmp_eq(self):
+        gdata.registers["EAX"] = 1
+        gdata.registers["EBX"] = 1
+        gdata.flags["ZF"] = 0
+        gdata.flags["SF"] = 0
+        assemble("cmp eax, ebx", gdata)
+        self.assertEqual(gdata.flags["ZF"], 1)
+        self.assertEqual(gdata.flags["SF"], 0)
+
+    def test_cmp_l(self):
+        gdata.registers["EAX"] = 0
+        gdata.registers["EBX"] = 1
+        gdata.flags["ZF"] = 0
+        gdata.flags["SF"] = 0
+        assemble("cmp eax, ebx", gdata)
+        self.assertEqual(gdata.flags["ZF"], 0)
+        self.assertEqual(gdata.flags["SF"], 1)
+        
 if __name__ == '__main__':
     main()
