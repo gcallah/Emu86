@@ -21,81 +21,68 @@ def two_op_arith(ops, gdata, instr, f):
 
 
 class Add(Instruction):
-
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfs.add)
         return ''
 
 class Sub(Instruction):
-
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfs.sub)
         return ''
 
 class Imul(Instruction):
-
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfs.mul)
         return ''
 
 class Andf(Instruction):
-
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfs.and_)
         return ''
 
 class Orf(Instruction):
-
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfs.or_)
         return ''
 
 class Xor(Instruction):
-
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfs.xor)
         return ''
 
 class Shl(Instruction):
-
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfs.lshift)
         return ''
 
 class Shr(Instruction):
-
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfs.rshift)
         return ''
 
 class Notf(Instruction):
-
     def f(self, ops, gdata):
         one_op_arith(ops, gdata, self.name, opfs.inv)
         return ''
 
 class Inc(Instruction):
-
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() + 1)
         return ''
 
 class Dec(Instruction):
-
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() - 1)
         return ''
 
 class Neg(Instruction):
-
     def f(self, ops, gdata):
         one_op_arith(ops, gdata, self.name, opfs.neg)
         return ''
 
 class Idiv(Instruction):
-
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
     

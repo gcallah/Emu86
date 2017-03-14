@@ -9,8 +9,8 @@ from .errors import *  # import * OK here:
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .control_flow import jmp, cmpf, je, jne, Jmp, FlowBreak
-from .control_flow import jg, jge, jl, jle
+from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak
+from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, pop, push, lea
 
 
@@ -19,21 +19,23 @@ sym_match = re.compile(SYMBOL_RE)
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
+je = Je('JE')
+jne = Jne('JNE')
 instructions = {
         # interrupts:
         'INT': None,    # the args to the interrupt determine what it does
         # control flow:
-        'CMP': cmpf,
-        'JMP': jmp,
-        'JE': je,
-        'JNE': jne,
+        'CMP': Cmpf('CMP'),
+        'JMP': Jmp('JMP'),
+        je.get_nm(): je,
+        jne.get_nm(): jne,
         # the next two instructions are just synonyms for the previous two.
         'JZ': je,
         'JNZ': jne,
-        'JG': jg,
-        'JGE': jge,
-        'JL': jl,
-        'JLE': jle,
+        'JG': Jg('JG'),
+        'JGE': Jge('JGE'),
+        'JL': Jl('JL'),
+        'JLE': Jle('JLE'),
         # data movement:
         'MOV': Mov('MOV'),
         'PUSH': push,

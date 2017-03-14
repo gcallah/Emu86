@@ -7,9 +7,6 @@ from .tokens import Instruction
 
 
 class Mov(Instruction):
-    def __init__(self, name):
-        super().__init__(name)
-
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 2)
         ops[0].set_val(ops[1].get_val())
