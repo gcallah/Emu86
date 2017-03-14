@@ -22,7 +22,8 @@ class InvalidNumArgs(Error):
                  extra_arg=None):
         extra = ""
         if extra_arg is not None:
-            extra = "; possible extra = " + extra_arg
+            extra = "; possible extra = " + str(extra_arg)
+            print("Extra = " + extra)
         self.msg = ("Invalid number of args: " + offender
                     + " requires " + str(correct_num)
                     + " but we got " + str(actual_num)
