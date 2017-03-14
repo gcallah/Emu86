@@ -26,15 +26,11 @@ class Instruction(Token):
     """
     Class representing all instructions.
     """
-    def __init__(self, name, instructions):
+    def __init__(self, name):
         super().__init__(name)
-        if name not in instructions:
-            raise InvalidInstruction(name)
-        self.func = instructions[name]
-        self.ops = []
 
-    def exec(self, ops, gdata):
-        return self.func(ops, gdata)
+    def f(self, ops, gdata):
+        return None
 
 
 class Operand(Token):

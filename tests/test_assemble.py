@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Test our assembly interpreter.
 """

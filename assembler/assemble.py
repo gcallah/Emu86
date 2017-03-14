@@ -48,26 +48,24 @@ def assemble(code, gdata):
     # break the code into tokens:
     (tok_lines, labels) = lex(code, gdata)
 
-    i = 0
-    j = 0
-    while i < len(tok_lines) and j < MAX_INSTRUCTIONS:
-        curr_instr = tok_lines[i]
-        i += 1
-        j += 1
+    ip = 0   # instruction pointer
+    count = 0
+    while ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
+        curr_instr = tok_lines[ip]
+        ip += 1
+        count += 1
         try:
-            # we only want one instruction per line!
-            outp = curr_instr[INSTR].exec(curr_instr[OPS], gdata)
-            output += outp
+            output += curr_instr[INSTR].f(curr_instr[OPS], gdata)
         except FlowBreak as brk:
             # we have hit one of the JUMP instructions: jump to that line.
             label = brk.label
             if label in labels:
-                i = labels[label]  # set i to line num of label
+                ip = labels[label]  # set i to line num of label
             else:
                 return (output, "Invalid label: " + label, debug)
         except Error as err:
             return (output, err.msg, debug)
-    if j == MAX_INSTRUCTIONS:
+    if count == MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: instructions run has exceeded "
                  + str(MAX_INSTRUCTIONS))
     else:

@@ -2,17 +2,6 @@
 control_flow.py: control flow instructions,
     plus Exceptions to signal break in flow.
 
-Contains:
-    cmp
-    jmp
-    jnz
-    jz
-    jg
-    jge
-    jl
-    jle
-    FlowBreak
-    Jmp
 """
 
 from .errors import check_num_args
@@ -49,7 +38,7 @@ def jmp(ops, gdata):
     target = get_one_op("JMP", ops)
     raise Jmp(target.name)
 
-def cmp(ops, gdata):
+def cmpf(ops, gdata):
     """
     Implments the CMP instruction.
     Compares op1 and op2, and sets (right now) the SF and ZF flags.

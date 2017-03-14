@@ -7,11 +7,11 @@ import re
 from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
-from .arithmetic import add, sub, imul, idiv, inc, dec, shl
-from .arithmetic import shr, notf, andf, orf, xor, neg
-from .control_flow import jmp, cmp, je, jne, Jmp, FlowBreak
+from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
+from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
+from .control_flow import jmp, cmpf, je, jne, Jmp, FlowBreak
 from .control_flow import jg, jge, jl, jle
-from .data_mov import mov
+from .data_mov import Mov, pop, push, lea
 
 
 SYMBOL_RE = "^([A-Za-z]+)"
@@ -20,8 +20,10 @@ sym_match = re.compile(SYMBOL_RE)
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
 instructions = {
+        # interrupts:
+        'INT': None,    # the args to the interrupt determine what it does
         # control flow:
-        'CMP': cmp,
+        'CMP': cmpf,
         'JMP': jmp,
         'JE': je,
         'JNE': jne,
@@ -33,21 +35,24 @@ instructions = {
         'JL': jl,
         'JLE': jle,
         # data movement:
-        'MOV': mov,
+        'MOV': Mov('MOV'),
+        'PUSH': push,
+        'POP': pop,
+        'LEA': lea,
         # arithmetic and logic:
-        'ADD': add,
-        'IMUL': imul,
-        'IDIV': idiv,
-        'SUB': sub,
-        'AND': andf,
-        'OR': orf,
-        'XOR': xor,
-        'SHL': shl,
-        'SHR': shr,
-        'NOT': notf,
-        'INC': inc,
-        'DEC': dec,
-        'NEG': neg,
+        'ADD': Add('ADD'),
+        'SUB': Sub('SUB'),
+        'IMUL': Imul('IMUL'),
+        'IDIV': Idiv('IDIV'),
+        'AND': Andf('AND'),
+        'OR': Orf('OR'),
+        'XOR': Xor('XOR'),
+        'SHL': Shl('SHL'),
+        'SHR': Shr('SHR'),
+        'NOT': Notf('NOT'),
+        'INC': Inc('INC'),
+        'DEC': Dec('DEC'),
+        'NEG': Neg('NEG'),
         }
 
 
@@ -124,7 +129,10 @@ def get_instr(code, code_pos):
         (Throws an exception if the token is not an instruction.)
     """
     (token, code_pos) = get_token(code, code_pos)
-    instr = Instruction(token, instructions)
+    if token in instructions:
+        instr = instructions[token]
+    else:
+        raise InvalidInstruction(token)
     return (instr, code_pos)
 
 def get_ops(code, code_pos, gdata):
