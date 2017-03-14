@@ -164,15 +164,17 @@ def lex(code, gdata):
     i = 0
     for line in lines:
         code_pos = 0   # reset each line!
-        line = line.strip()
-        if len(line) == 0:  # blank lines ok; just skip 'em
-            continue
 
         # comments:
         comm_start = line.find(";")
         if comm_start > 0:  # -1 means not found
             line = line[0:comm_start]
         elif comm_start == 0:  # the whole line is a comment
+            continue
+
+        # strip AFTER comments to handle blanks between code and ;
+        line = line.strip()
+        if len(line) == 0:  # blank lines ok; just skip 'em
             continue
 
         # labels:
