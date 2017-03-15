@@ -12,6 +12,7 @@ from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
+from .interrupts import Interrupt
 
 
 SYMBOL_RE = "^([A-Za-z]+)"
@@ -23,7 +24,7 @@ je = Je('JE')
 jne = Jne('JNE')
 instructions = {
         # interrupts:
-        'INT': None,    # the args to the interrupt determine what it does
+        'INT': Interrupt('INT'),
         # control flow:
         'CMP': Cmpf('CMP'),
         'JMP': Jmp('JMP'),
@@ -38,9 +39,9 @@ instructions = {
         'JLE': Jle('JLE'),
         # data movement:
         'MOV': Mov('MOV'),
-        'PUSH': Push,
-        'POP': Pop,
-        'LEA': Lea,
+        'PUSH': Push('PUSH'),
+        'POP': Pop('POP'),
+        'LEA': Lea('LEA'),
         # arithmetic and logic:
         'ADD': Add('ADD'),
         'SUB': Sub('SUB'),

@@ -2,16 +2,39 @@
 interrupts.py: data movement instructions.
 """
 
-from .parse import get_two_ops
+from .errors import check_num_args, InvalidOperand
+from .tokens import Instruction, IntOp
+
+nxt_key = 0
+ret_str = 'A for your efforts!'
+
+def read_key():
+    # we are faking 'reading' from the keyboard
+    global ret_str
+    global nxt_key
+    c = ret_str[nxt_key]
+    nxt_key = (nxt_key + 1) % len(ret_str)
+    return c
+
 
 int_vectors = {
-    22: [],
+    22: {0: read_key }
 }
 
 
-def interrupt(code, gdata, code_pos):
+class Interrupt(Instruction):
     """
-    Implments the INT instruction.
+    Implements interrupts
     """
-    (op1, op2, code_pos) = get_two_ops("INT", code, gdata, code_pos)
-    return ''
+
+    def f(self, ops, gdata):
+        check_num_args(self.get_nm(), ops, 2)
+        if type(ops[0]) != IntOp:
+            raise InvalidOperand(ops[0])
+        if type(ops[1]) != IntOp:
+            raise InvalidOperand(ops[1])
+        interrupt_class = int_vectors[ops[0].get_val()]
+        interrupt_handler = interrupt_class[ops[1].get_val()]
+        c = interrupt_handler()
+        gdata.registers['EAX'] = c
+        return str(c)

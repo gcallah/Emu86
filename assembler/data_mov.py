@@ -13,19 +13,22 @@ class Mov(Instruction):
         return ''
 
 
-def Pop(ops, gdata):
-    check_num_args("POP", ops, 1)
-    # TBD!
-    return ''
+class Pop(Instruction):
+    def f(self, ops, gdata):
+        check_num_args("POP", ops, 1)
+        # TBD!
+        return ''
 
 
-def Push(ops, gdata):
-    check_num_args("PUSH", ops, 1)
-    # TBD!
-    return ''
+class Push(Instruction):
+    def f(self, ops, gdata):
+        check_num_args("PUSH", ops, 1)
+        # TBD!
+        return ''
 
 
-def Lea(ops, gdata):
-    check_num_args("LEA", ops, 2)
-    # TBD!
-    return ''
+class Lea(Instruction):
+    def f(self, ops, gdata):
+        check_num_args("LEA", ops, 2)
+        # TBD!
+        return ''
