@@ -59,13 +59,31 @@ class Location(Operand):
 class Address(Location):
     def __init__(self, name, memory, val=0):
         super().__init__(name)
-        self.memory = memory
+        self.mem = memory
 
     def get_val(self):
-        return int(self.memory[self.name])
+        return int(self.mem[self.name])
 
     def set_val(self, val):
-        self.memory[self.name] = val
+        self.mem[self.name] = val
+
+
+class RegAddress(Address):
+    def __init__(self, name, registers, memory, val=0):
+        super().__init__(name, memory)
+        self.regs = registers
+
+    def get_mem_addr(self):
+        # right now, memory addresses are strings. eeh!
+        return str(self.regs[self.name])
+
+    def get_val(self):
+        mem_addr = self.get_mem_addr()
+        return int(self.mem[str(mem_addr)])
+
+    def set_val(self, val):
+        mem_addr = self.get_mem_addr()
+        self.mem[mem_addr] = val
 
 
 class Register(Location):

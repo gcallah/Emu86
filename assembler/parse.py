@@ -7,6 +7,7 @@ import re
 from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
+from .tokens import RegAddress
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak
@@ -109,7 +110,9 @@ def get_op(token, gdata):
     elif token[0] == '[' and token[len(token) - 1] == ']':
         address = token[1:len(token) - 1]
         if address in gdata.memory:
-            return Address(token[1:len(token) - 1], gdata.memory)
+            return Address(address, gdata.memory)
+        elif address in gdata.registers:
+            return RegAddress(address, gdata.registers, gdata.memory)
         else:
             raise InvalidAddress(address)
     elif token.isalpha():
