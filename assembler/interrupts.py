@@ -8,12 +8,13 @@ from .tokens import Instruction, IntOp
 nxt_key = 0
 ret_str = 'A for your efforts!'
 
-def read_key():
+def read_key(gdata):
     # we are faking 'reading' from the keyboard
     global ret_str
     global nxt_key
     c = ret_str[nxt_key]
     nxt_key = (nxt_key + 1) % len(ret_str)
+    gdata.registers['EAX'] = ord(c)
     return c
 
 
@@ -35,6 +36,5 @@ class Interrupt(Instruction):
             raise InvalidOperand(ops[1])
         interrupt_class = int_vectors[ops[0].get_val()]
         interrupt_handler = interrupt_class[ops[1].get_val()]
-        c = interrupt_handler()
-        gdata.registers['EAX'] = c
+        c = interrupt_handler(gdata)
         return str(c)
