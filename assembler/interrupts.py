@@ -6,7 +6,7 @@ from .errors import check_num_args, InvalidOperand
 from .tokens import Instruction, IntOp
 
 nxt_key = 0
-ret_str = 'A for your efforts!'
+ret_str = "Good work: you're an assembly language programer!"
 
 def read_key(gdata):
     # we are faking 'reading' from the keyboard
@@ -15,7 +15,7 @@ def read_key(gdata):
     c = ret_str[nxt_key]
     nxt_key = (nxt_key + 1) % len(ret_str)
     gdata.registers['EAX'] = ord(c)
-    return c
+    return ""
 
 
 int_vectors = {
