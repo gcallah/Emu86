@@ -8,6 +8,7 @@ import re
 from .control_flow import FlowBreak
 from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
+from .interrupts import nxt_key
 from .parse import lex
 from .tokens import Instruction
 
@@ -39,9 +40,11 @@ def assemble(code, gdata):
             Error, if any.
     """
     global debug
+    global nxt_key
     debug = ''
     output = ''
     error = ''
+    nxt_key = 0
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", debug)
 
