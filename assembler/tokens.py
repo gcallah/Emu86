@@ -75,7 +75,12 @@ class RegAddress(Address):
 
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
-        return str(self.regs[self.name])
+        address = str(self.regs[self.name])
+        if address in self.mem:
+            return address
+        else:
+            # can't let user expand memory just by addressing it!
+            raise InvalidAddress(address)
 
     def get_val(self):
         mem_addr = self.get_mem_addr()

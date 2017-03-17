@@ -34,6 +34,7 @@ def main_page(request):
     site_hdr = get_hdr()
 
     if request.method == 'GET':
+        gdata.re_init()
         form = MainForm()
     else:
         form = MainForm(request.POST)
@@ -62,7 +63,7 @@ def get_flag_contents(flags, request):
         flags[flag] = request.POST[flag]
 
 def get_mem_contents(memory, request):
-    for loc in memory and str(loc) in request.POST:
+    for loc in memory:
         memory[loc] = request.POST[str(loc)]
 
 def help(request):

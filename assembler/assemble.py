@@ -45,7 +45,6 @@ def assemble(code, gdata):
     output = ''
     error = ''
     nxt_key = 0
-    gdata.re_init()
 
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", debug)
