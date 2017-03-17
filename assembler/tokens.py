@@ -4,8 +4,8 @@ tokens.py: contains classes we tokenize into.
 
 from abc import abstractmethod
 
-from .errors import *  # import * OK here:
-                       # these are *our* errors, after all!
+from .errors import InvalidAddress
+                      
 
 class Token:
     def __init__(self, name, val=0):
