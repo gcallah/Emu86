@@ -761,7 +761,8 @@ a.deletelink:focus, a.deletelink:hover {
 
 #clear-button {
     float: left;
-    margin: 10px 20px 20px 20px;
+    margin: 10px 40px 20px 20px;
+    background: #915d28;
 }
 
 td#flag, td#register, td#mem-loc {
