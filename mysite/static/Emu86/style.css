@@ -759,6 +759,11 @@ a.deletelink:focus, a.deletelink:hover {
     margin: 10px 180px 20px 20px;
 }
 
+#clear-button {
+    float: left;
+    margin: 10px 20px 20px 20px;
+}
+
 td#flag, td#register, td#mem-loc {
     color: #ffc;
     background: #285D91;
