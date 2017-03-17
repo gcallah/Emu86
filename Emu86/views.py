@@ -62,7 +62,7 @@ def get_flag_contents(flags, request):
         flags[flag] = request.POST[flag]
 
 def get_mem_contents(memory, request):
-    for loc in memory:
+    for loc in memory and str(loc) in request.POST:
         memory[loc] = request.POST[str(loc)]
 
 def help(request):

@@ -36,7 +36,18 @@ class GlobalData:
                     ])
         
         self.memory = OrderedDict()
+        self.mem_init()
+
+    def mem_init(self):
         for i in range(0, MEM_SIZE):
                 self.memory[str(i)] = 0
+
+    def re_init(self):
+        for reg in self.registers:
+            self.registers[reg] = 0
+        for flag in self.flags:
+            self.flags[flag] = 0
+        self.mem_init()
+        
 
 gdata = GlobalData()
