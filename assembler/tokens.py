@@ -80,7 +80,7 @@ class RegAddress(Address):
             return address
         else:
             # can't let user expand memory just by addressing it!
-            raise InvalidAddress(address)
+            raise InvalidMemLoc(address)
 
     def get_val(self):
         mem_addr = self.get_mem_addr()
