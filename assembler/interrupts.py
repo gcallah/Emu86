@@ -6,7 +6,7 @@ from .errors import check_num_args, InvalidOperand
 from .tokens import Instruction, IntOp
 
 nxt_key = 0
-ret_str = "Good work: you're an assembly language programer!"
+ret_str = "Good work in assembly!"
 
 def read_key(gdata):
     # we are faking 'reading' from the keyboard
