@@ -4,7 +4,7 @@ tokens.py: contains classes we tokenize into.
 
 from abc import abstractmethod
 
-from .errors import InvalidAddress
+from .errors import InvalidMemLoc
                       
 
 class Token:
