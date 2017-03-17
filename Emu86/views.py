@@ -38,10 +38,13 @@ def main_page(request):
         form = MainForm()
     else:
         form = MainForm(request.POST)
-        get_reg_contents(gdata.registers, request)
-        get_mem_contents(gdata.memory, request)
-        get_flag_contents(gdata.flags, request)
-        (output, error, debug) = assemble(request.POST['code'], gdata)
+        if 'postVenue' in request.POST:
+
+        else:
+            get_reg_contents(gdata.registers, request)
+            get_mem_contents(gdata.memory, request)
+            get_flag_contents(gdata.flags, request)
+            (output, error, debug) = assemble(request.POST['code'], gdata)
 
     return render(request, 'main.html',
                   {'form': form,
