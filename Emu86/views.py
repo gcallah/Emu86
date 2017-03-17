@@ -38,8 +38,8 @@ def main_page(request):
         form = MainForm()
     else:
         form = MainForm(request.POST)
-        if 'postVenue' in request.POST:
-
+        if 'clear' in request.POST:
+            gdata.re_init()
         else:
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
