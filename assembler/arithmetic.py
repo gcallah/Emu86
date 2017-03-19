@@ -22,7 +22,9 @@ def two_op_arith(ops, gdata, instr, f):
 
 class Add(Instruction):
     """
-        INSTRUCTION: add
+        <instr>
+             add
+        </instr>
         SYNTAX:
             ADD reg, reg
             ADD reg, mem
@@ -34,7 +36,9 @@ class Add(Instruction):
 
 class Sub(Instruction):
     """
-        INSTRUCTION: sub
+        <instr>
+             sub
+        </instr>
         SYNTAX:
             SUB reg, reg
             SUB reg, mem
@@ -46,7 +50,9 @@ class Sub(Instruction):
 
 class Imul(Instruction):
     """
-        INSTRUCTION: imul
+        <instr>
+             imul
+        </instr>
         SYNTAX:
             IMUL reg, reg
             IMUL reg, mem
@@ -58,7 +64,9 @@ class Imul(Instruction):
 
 class Andf(Instruction):
     """
-        INSTRUCTION: and
+        <instr>
+             and
+        </instr>
         SYNTAX:
             AND reg, reg
             AND reg, mem
@@ -70,7 +78,9 @@ class Andf(Instruction):
 
 class Orf(Instruction):
     """
-        INSTRUCTION: or
+        <instr>
+             or
+        </instr>
         SYNTAX:
             OR reg, reg
             OR reg, mem
@@ -82,7 +92,9 @@ class Orf(Instruction):
 
 class Xor(Instruction):
     """
-        INSTRUCTION: xor
+        <instr>
+             xor
+        </instr>
         SYNTAX:
             XOR reg, reg
             XOR reg, mem
@@ -94,7 +106,9 @@ class Xor(Instruction):
 
 class Shl(Instruction):
     """
-        INSTRUCTION: shl
+        <instr>
+             shl
+        </instr>
         SYNTAX:
             SHL reg, reg
             SHL reg, mem
@@ -106,7 +120,9 @@ class Shl(Instruction):
 
 class Shr(Instruction):
     """
-        INSTRUCTION: shr
+        <instr>
+             shr
+        </instr>
         SYNTAX:
             SHR reg, reg
             SHR reg, mem
@@ -118,7 +134,9 @@ class Shr(Instruction):
 
 class Notf(Instruction):
     """
-        INSTRUCTION: not
+        <instr>
+             not
+        </instr>
         SYNTAX:
             NOT reg
     """
@@ -128,7 +146,9 @@ class Notf(Instruction):
 
 class Inc(Instruction):
     """
-        INSTRUCTION: inc
+        <instr>
+             inc
+        </instr>
         SYNTAX:
             INC reg
     """
@@ -139,7 +159,9 @@ class Inc(Instruction):
 
 class Dec(Instruction):
     """
-        INSTRUCTION: dec
+        <instr>
+             dec
+        </instr>
         SYNTAX:
             DEC reg
     """
@@ -150,7 +172,9 @@ class Dec(Instruction):
 
 class Neg(Instruction):
     """
-        INSTRUCTION: neg
+        <instr>
+             neg
+        </instr>
         SYNTAX:
             NEG reg
     """
@@ -160,7 +184,8 @@ class Neg(Instruction):
 
 class Idiv(Instruction):
     """
-        INSTRUCTION: idiv
+        <instr>
+             idiv
         SYNTAX:
             IDIV reg
     """

@@ -33,7 +33,8 @@ class Jump(FlowBreak):
 
 class Cmpf(Instruction):
     """
-        INSTRUCTION: cmp
+        <instr>
+             cmp
         SYNTAX:
             CMP reg, reg
             CMP reg, mem
@@ -61,7 +62,8 @@ class Cmpf(Instruction):
 
 class Jmp(Instruction):
     """
-        INSTRUCTION: jmp
+        <instr>
+             jmp
         SYNTAX:
             JMP lbl
     """
@@ -71,7 +73,8 @@ class Jmp(Instruction):
 
 class Je(Instruction):
     """
-        INSTRUCTION: je
+        <instr>
+             je
         SYNTAX:
             JE lbl
         NOTES:
@@ -85,7 +88,8 @@ class Je(Instruction):
 
 class Jne(Instruction):
     """
-        INSTRUCTION: jne
+        <instr>
+             jne
         SYNTAX:
             JNE lbl
         NOTES: Jumps if ZF is zero.
@@ -98,7 +102,8 @@ class Jne(Instruction):
 
 class Jg(Instruction):
     """
-        INSTRUCTION: jg
+        <instr>
+             jg
         SYNTAX:
             JG lbl
         NOTES: Jumps if SF == 0 and ZF == 0.
@@ -111,7 +116,8 @@ class Jg(Instruction):
 
 class Jge(Instruction):
     """
-        INSTRUCTION: jge
+        <instr>
+             jge
         SYNTAX:
             JGE lbl
         NOTES: Jumps if SF == 0.
@@ -124,7 +130,8 @@ class Jge(Instruction):
 
 class Jl(Instruction):
     """
-        INSTRUCTION: jl
+        <instr>
+             jl
         SYNTAX:
             JL lbl
         NOTES: Jumps if SF == 1.
@@ -137,7 +144,8 @@ class Jl(Instruction):
 
 class Jle(Instruction):
     """
-        INSTRUCTION:
+        <instr>
+             jle
         SYNTAX:
             JLE lbl
         NOTES: Jumps if SF == 1 or ZF == 1.

@@ -25,7 +25,9 @@ int_vectors = {
 
 class Interrupt(Instruction):
     """
-        INSTRUCTION: int
+        <instr>
+             int
+        </instr>
         SYNTAX:
             INT con, con
     """

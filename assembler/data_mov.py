@@ -8,7 +8,9 @@ from .tokens import Instruction
 
 class Mov(Instruction):
     """
-        INSTRUCTION: mov
+        <instr>
+             mov
+        </instr>
         SYNTAX:
             MOV reg, reg
             MOV reg, con
@@ -24,7 +26,9 @@ class Mov(Instruction):
 
 class Pop(Instruction):
     """
-        INSTRUCTION: pop
+        <instr>
+             pop
+        </instr>
         SYNTAX:
     """
     def f(self, ops, gdata):
@@ -35,7 +39,9 @@ class Pop(Instruction):
 
 class Push(Instruction):
     """
-        INSTRUCTION: push
+        <instr>
+             push
+        </instr>
         SYNTAX:
     """
     def f(self, ops, gdata):
@@ -46,7 +52,9 @@ class Push(Instruction):
 
 class Lea(Instruction):
     """
-        INSTRUCTION: lea
+        <instr>
+             lea
+        </instr>
         SYNTAX:
     """
     def f(self, ops, gdata):
