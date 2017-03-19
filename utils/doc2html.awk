@@ -5,6 +5,7 @@ BEGIN {
 }
 
 /<instr>/    {
+    print "<hr>"
     print "<h4>"
     next
 }
