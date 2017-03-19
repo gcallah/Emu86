@@ -1,6 +1,7 @@
 SDIR = assembler
 ODIR = Emu86/templates
 UDIR = utils
+TDIR = tests
 SRCS = $(SDIR)/arithmetic.py $(SDIR)/control_flow.py $(SDIR)/data_mov.py $(SDIR)/interrupts.py 
 INTER1 = $(ODIR)/arithmetic.txt $(ODIR)/control_flow.txt $(ODIR)/data_mov.txt $(ODIR)/interrupts.txt
 INTER2 = $(ODIR)/help.ptml
@@ -15,6 +16,7 @@ help:
 
 dev: $(SRCS) $(OBJ)
 	git checkout dev
+	$(TDIR)/test_assemble.py
 	git commit -a -m "Building development."
 	git push origin dev
 
