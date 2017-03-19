@@ -44,162 +44,321 @@
             <h3>
                 Interrupts
             </h3>
-                <ol>
-                    <li>INT
-                        <br>
-                        Syntax available: INT con, con
-                </ol>
+<h4>
+             int
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            INT con, con
+</ul>
+<h5>Description</h5>
+
+<p>
+            We will build various "interrupt" handlers as needed.
+            At present, we only have INT 22, 0, to get a key from
+            the keyboard. And we only pretend the key is from the keyboard,
+            since we are running on the Internet, and can't read the user's
+            keyboard.
+</p>
+</p>
+
             <h3>
                 Data Movement
             </h3>
-                <ol>
-                    <li>MOV
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>MOV reg, reg
-                            <li>MOV reg, con
-                            <li>MOV mem, mem
-                            <li>MOV reg, mem
-                            <li>MOV mem, reg
-                        </ul>
-                </ol>
+<h4>
+             mov
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            MOV reg, reg
+<li>            MOV reg, con
+<li>            MOV reg, mem
+<li>            MOV mem, reg
+<li>            MOV mem, mem
+</ul>
+<h4>
+             pop
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+</ul>
+<h4>
+             push
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+</ul>
+<h4>
+             lea
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+</ul>
+</ul>
+                
             <h3>
                 Control Flow
             </h3>
-                <ol>
-                    <li>CMP
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>CMP reg, reg
-                            <li>CMP reg, mem
-                            <li>CMP reg, con
-                        </ul>
-                    <li>JMP
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>JMP lbl
-                        </ul>
-                    <li>JE
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>JE lbl
-                        </ul>
-                    <li>JNE
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>JNE lbl
-                        </ul>
-                    <li>JZ
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>JZ lbl
-                        </ul>
-                    <li>JNZ
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>JNZ lbl
-                        </ul>
-                </ol>
+<h4>
+             cmp
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            CMP reg, reg
+<li>            CMP reg, mem
+<li>            CMP reg, con
+</ul>
+<h5>Description</h5>
+
+<p>
+            Compares op1 and op2, and sets (right now) the SF and ZF flags.
+            It is not clear at this moment how to treat the OF and CF flags in Python,
+            since Python integer arithmetic never carries or overflows!
+</p>
+<h4>
+            jmp
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JMP lbl
+</ul>
+<h4>
+             je
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JE lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if ZF is one.
+</p>
+<h4>
+             jne
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JNE lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if ZF is zero.
+</p>
+<h4>
+             jg
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JG lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 0 and ZF == 0.
+</p>
+<h4>
+             jge
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JGE lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 0.
+</p>
+<h4>
+             jl
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JL lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 1.
+</p>
+<h4>
+             jle
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JLE lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 1 or ZF == 1.
+</p>
+</p>
+
             <h3>
                 Arithmetic and Logic
             </h3>
-                <ol>
-                    <li>ADD
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>ADD reg, reg
-                            <li>ADD reg, mem
-                            <li>ADD reg, con
-                        </ul>
-                    <li>SUB
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>SUB reg, reg
-                            <li>SUB reg, mem
-                            <li>SUB reg, con
-                        </ul>
-                    <li>IMUL
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>IMUL reg, reg
-                            <li>IMUL reg, mem
-                            <li>IMUL reg, con
-                        </ul>
-                    <li>AND
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>AND reg, reg
-                            <li>AND reg, con
-                        </ul>
-                    <li>OR
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>OR reg, reg
-                            <li>OR reg, con
-                        </ul>
-                    <li>XOR
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>XOR reg, reg
-                            <li>XOR reg, con
-                        </ul>
-                    <li>SHL
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>SHL reg, reg
-                            <li>SHL reg, con
-                        </ul>
-                    <li>SHR
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>SHR reg, reg
-                            <li>SHR reg, con
-                        </ul>
-                    <li>NEG
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>NEG reg
-                        </ul>
-                    <li>NOT
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>NOT reg
-                        </ul>
-                    <li>INC
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>INC reg
-                        </ul>
-                    <li>DEC
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>DEC reg
-                        </ul>
-                    <li>IDIV
-                        <br>
-                        Syntax available:
-                        <ul>
-                            <li>IDIV reg
-                        </ul>
-                </ol>
+<h4>
+             add
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            ADD reg, reg
+<li>            ADD reg, mem
+<li>            ADD reg, con
+</ul>
+<h4>
+             sub
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            SUB reg, reg
+<li>            SUB reg, mem
+<li>            SUB reg, con
+</ul>
+<h4>
+             imul
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            IMUL reg, reg
+<li>            IMUL reg, mem
+<li>            IMUL reg, con
+</ul>
+<h4>
+             and
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            AND reg, reg
+<li>            AND reg, mem
+<li>            AND reg, con
+</ul>
+<h4>
+             or
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            OR reg, reg
+<li>            OR reg, mem
+<li>            OR reg, con
+</ul>
+<h4>
+             xor
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            XOR reg, reg
+<li>            XOR reg, mem
+<li>            XOR reg, con
+</ul>
+<h4>
+             shl
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            SHL reg, reg
+<li>            SHL reg, mem
+<li>            SHL reg, con
+</ul>
+<h4>
+             shr
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            SHR reg, reg
+<li>            SHR reg, mem
+<li>            SHR reg, con
+</ul>
+<h4>
+             not
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            NOT reg
+</ul>
+<h4>
+             inc
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            INC reg
+</ul>
+<h4>
+             dec
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            DEC reg
+</ul>
+<h4>
+             neg
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            NEG reg
+</ul>
+<h4>
+             idiv
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            IDIV reg
+</ul>
+</ul>
+
     </div>
 {% endblock content %}
