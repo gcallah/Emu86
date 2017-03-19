@@ -11,12 +11,13 @@ class Mov(Instruction):
         <instr>
              mov
         </instr>
-        SYNTAX:
+        <syntax>
             MOV reg, reg
             MOV reg, con
             MOV reg, mem
             MOV mem, reg
             MOV mem, mem
+        </syntax>
     """
     def f(self, ops, gdata):
         check_num_args(self.get_nm(), ops, 2)
@@ -29,7 +30,8 @@ class Pop(Instruction):
         <instr>
              pop
         </instr>
-        SYNTAX:
+        <syntax>
+        </syntax>
     """
     def f(self, ops, gdata):
         check_num_args("POP", ops, 1)
@@ -42,7 +44,8 @@ class Push(Instruction):
         <instr>
              push
         </instr>
-        SYNTAX:
+        <syntax>
+        </syntax>
     """
     def f(self, ops, gdata):
         check_num_args("PUSH", ops, 1)
@@ -55,7 +58,8 @@ class Lea(Instruction):
         <instr>
              lea
         </instr>
-        SYNTAX:
+        <syntax>
+        </syntax>
     """
     def f(self, ops, gdata):
         check_num_args("LEA", ops, 2)

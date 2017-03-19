@@ -25,10 +25,11 @@ class Add(Instruction):
         <instr>
              add
         </instr>
-        SYNTAX:
+        <syntax>
             ADD reg, reg
             ADD reg, mem
             ADD reg, con
+        </syntax>
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.add)
@@ -39,10 +40,11 @@ class Sub(Instruction):
         <instr>
              sub
         </instr>
-        SYNTAX:
+        <syntax>
             SUB reg, reg
             SUB reg, mem
             SUB reg, con
+        </syntax>
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.sub)
@@ -53,10 +55,11 @@ class Imul(Instruction):
         <instr>
              imul
         </instr>
-        SYNTAX:
+        <syntax>
             IMUL reg, reg
             IMUL reg, mem
             IMUL reg, con
+        </syntax>
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.mul)
@@ -67,10 +70,11 @@ class Andf(Instruction):
         <instr>
              and
         </instr>
-        SYNTAX:
+        <syntax>
             AND reg, reg
             AND reg, mem
             AND reg, con
+        </syntax>
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.and_)
@@ -81,10 +85,11 @@ class Orf(Instruction):
         <instr>
              or
         </instr>
-        SYNTAX:
+        <syntax>
             OR reg, reg
             OR reg, mem
             OR reg, con
+        </syntax>
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.or_)
@@ -95,10 +100,11 @@ class Xor(Instruction):
         <instr>
              xor
         </instr>
-        SYNTAX:
+        <syntax>
             XOR reg, reg
             XOR reg, mem
             XOR reg, con
+        </syntax>
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.xor)
@@ -109,10 +115,11 @@ class Shl(Instruction):
         <instr>
              shl
         </instr>
-        SYNTAX:
+        <syntax>
             SHL reg, reg
             SHL reg, mem
             SHL reg, con
+        </syntax>
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.lshift)
@@ -123,10 +130,11 @@ class Shr(Instruction):
         <instr>
              shr
         </instr>
-        SYNTAX:
+        <syntax>
             SHR reg, reg
             SHR reg, mem
             SHR reg, con
+        </syntax>
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.rshift)
@@ -137,8 +145,9 @@ class Notf(Instruction):
         <instr>
              not
         </instr>
-        SYNTAX:
+        <syntax>
             NOT reg
+        </syntax>
     """
     def f(self, ops, gdata):
         one_op_arith(ops, gdata, self.name, opfunc.inv)
@@ -149,8 +158,9 @@ class Inc(Instruction):
         <instr>
              inc
         </instr>
-        SYNTAX:
+        <syntax>
             INC reg
+        </syntax>
     """
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
@@ -162,8 +172,9 @@ class Dec(Instruction):
         <instr>
              dec
         </instr>
-        SYNTAX:
+        <syntax>
             DEC reg
+        </syntax>
     """
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
@@ -175,8 +186,9 @@ class Neg(Instruction):
         <instr>
              neg
         </instr>
-        SYNTAX:
+        <syntax>
             NEG reg
+        </syntax>
     """
     def f(self, ops, gdata):
         one_op_arith(ops, gdata, self.name, opfunc.neg)
@@ -186,8 +198,10 @@ class Idiv(Instruction):
     """
         <instr>
              idiv
-        SYNTAX:
+        </instr>
+        <syntax>
             IDIV reg
+        </syntax>
     """
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)

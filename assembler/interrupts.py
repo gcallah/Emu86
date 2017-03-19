@@ -28,8 +28,16 @@ class Interrupt(Instruction):
         <instr>
              int
         </instr>
-        SYNTAX:
+        <syntax>
             INT con, con
+        </syntax>
+        <descr>
+            We will build various "interrupt" handlers as needed.
+            At present, we only have INT 22, 0, to get a key from
+            the keyboard. And we only pretend the key is from the keyboard,
+            since we are running on the Internet, and can't read the user's
+            keyboard.
+        </descr>
     """
 
     def f(self, ops, gdata):
