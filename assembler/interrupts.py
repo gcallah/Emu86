@@ -25,7 +25,9 @@ int_vectors = {
 
 class Interrupt(Instruction):
     """
-    Implements interrupts
+        INSTRUCTION: int
+        SYNTAX:
+            INT con, con
     """
 
     def f(self, ops, gdata):

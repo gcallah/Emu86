@@ -2,7 +2,7 @@
 arithmetic.py: arithmetic and logic instructions.
 """
 
-import operator as opfs
+import operator as opfunc
 
 from .errors import *
 from .tokens import Instruction
@@ -21,68 +21,149 @@ def two_op_arith(ops, gdata, instr, f):
 
 
 class Add(Instruction):
+    """
+        INSTRUCTION: add
+        SYNTAX:
+            ADD reg, reg
+            ADD reg, mem
+            ADD reg, con
+    """
     def f(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfs.add)
+        two_op_arith(ops, gdata, self.name, opfunc.add)
         return ''
 
 class Sub(Instruction):
+    """
+        INSTRUCTION: sub
+        SYNTAX:
+            SUB reg, reg
+            SUB reg, mem
+            SUB reg, con
+    """
     def f(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfs.sub)
+        two_op_arith(ops, gdata, self.name, opfunc.sub)
         return ''
 
 class Imul(Instruction):
+    """
+        INSTRUCTION: imul
+        SYNTAX:
+            IMUL reg, reg
+            IMUL reg, mem
+            IMUL reg, con
+    """
     def f(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfs.mul)
+        two_op_arith(ops, gdata, self.name, opfunc.mul)
         return ''
 
 class Andf(Instruction):
+    """
+        INSTRUCTION: and
+        SYNTAX:
+            AND reg, reg
+            AND reg, mem
+            AND reg, con
+    """
     def f(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfs.and_)
+        two_op_arith(ops, gdata, self.name, opfunc.and_)
         return ''
 
 class Orf(Instruction):
+    """
+        INSTRUCTION: or
+        SYNTAX:
+            OR reg, reg
+            OR reg, mem
+            OR reg, con
+    """
     def f(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfs.or_)
+        two_op_arith(ops, gdata, self.name, opfunc.or_)
         return ''
 
 class Xor(Instruction):
+    """
+        INSTRUCTION: xor
+        SYNTAX:
+            XOR reg, reg
+            XOR reg, mem
+            XOR reg, con
+    """
     def f(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfs.xor)
+        two_op_arith(ops, gdata, self.name, opfunc.xor)
         return ''
 
 class Shl(Instruction):
+    """
+        INSTRUCTION: shl
+        SYNTAX:
+            SHL reg, reg
+            SHL reg, mem
+            SHL reg, con
+    """
     def f(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfs.lshift)
+        two_op_arith(ops, gdata, self.name, opfunc.lshift)
         return ''
 
 class Shr(Instruction):
+    """
+        INSTRUCTION: shr
+        SYNTAX:
+            SHR reg, reg
+            SHR reg, mem
+            SHR reg, con
+    """
     def f(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfs.rshift)
+        two_op_arith(ops, gdata, self.name, opfunc.rshift)
         return ''
 
 class Notf(Instruction):
+    """
+        INSTRUCTION: not
+        SYNTAX:
+            NOT reg
+    """
     def f(self, ops, gdata):
-        one_op_arith(ops, gdata, self.name, opfs.inv)
+        one_op_arith(ops, gdata, self.name, opfunc.inv)
         return ''
 
 class Inc(Instruction):
+    """
+        INSTRUCTION: inc
+        SYNTAX:
+            INC reg
+    """
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() + 1)
         return ''
 
 class Dec(Instruction):
+    """
+        INSTRUCTION: dec
+        SYNTAX:
+            DEC reg
+    """
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() - 1)
         return ''
 
 class Neg(Instruction):
+    """
+        INSTRUCTION: neg
+        SYNTAX:
+            NEG reg
+    """
     def f(self, ops, gdata):
-        one_op_arith(ops, gdata, self.name, opfs.neg)
+        one_op_arith(ops, gdata, self.name, opfunc.neg)
         return ''
 
 class Idiv(Instruction):
+    """
+        INSTRUCTION: idiv
+        SYNTAX:
+            IDIV reg
+    """
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
     

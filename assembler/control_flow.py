@@ -31,20 +31,17 @@ class Jump(FlowBreak):
         self.msg = "Jump to " + label
 
 
-class Jmp(Instruction):
-    """
-    This is an unconditional jump.
-    """
-    def f(self, ops, gdata):
-        target = get_one_op(self.get_nm(), ops)
-        raise Jump(target.name)
-
 class Cmpf(Instruction):
     """
-    Implments the CMP instruction.
-    Compares op1 and op2, and sets (right now) the SF and ZF flags.
-    It is not clear at this moment how to treat the OF and CF flags in Python,
-    since Python integer arithmetic never carries or overflows!
+        INSTRUCTION: cmp
+        SYNTAX:
+            CMP reg, reg
+            CMP reg, mem
+            CMP reg, con
+        NOTES:
+            Compares op1 and op2, and sets (right now) the SF and ZF flags.
+            It is not clear at this moment how to treat the OF and CF flags in Python,
+            since Python integer arithmetic never carries or overflows!
     """
     def f(self, ops, gdata):
         (op1, op2) = get_two_ops(self.get_nm(), ops)
@@ -62,9 +59,23 @@ class Cmpf(Instruction):
             gdata.flags['SF'] = 0
         return ''
 
+class Jmp(Instruction):
+    """
+        INSTRUCTION: jmp
+        SYNTAX:
+            JMP lbl
+    """
+    def f(self, ops, gdata):
+        target = get_one_op(self.get_nm(), ops)
+        raise Jump(target.name)
+
 class Je(Instruction):
     """
-    Jumps if op1 == op2.
+        INSTRUCTION: je
+        SYNTAX:
+            JE lbl
+        NOTES:
+            Jumps if ZF is one.
     """
     def f(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
@@ -74,7 +85,10 @@ class Je(Instruction):
 
 class Jne(Instruction):
     """
-    Jumps if op1 != op2.
+        INSTRUCTION: jne
+        SYNTAX:
+            JNE lbl
+        NOTES: Jumps if ZF is zero.
     """
     def f(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
@@ -84,7 +98,10 @@ class Jne(Instruction):
 
 class Jg(Instruction):
     """
-    Jumps if op1 > op2.
+        INSTRUCTION: jg
+        SYNTAX:
+            JG lbl
+        NOTES: Jumps if SF == 0 and ZF == 0.
     """
     def f(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
@@ -94,7 +111,10 @@ class Jg(Instruction):
 
 class Jge(Instruction):
     """
-    Jumps if op1 >= op2.
+        INSTRUCTION: jge
+        SYNTAX:
+            JGE lbl
+        NOTES: Jumps if SF == 0.
     """
     def f(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
@@ -104,7 +124,10 @@ class Jge(Instruction):
 
 class Jl(Instruction):
     """
-    Jumps if op1 > op2.
+        INSTRUCTION: jl
+        SYNTAX:
+            JL lbl
+        NOTES: Jumps if SF == 1.
     """
     def f(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
@@ -114,7 +137,10 @@ class Jl(Instruction):
 
 class Jle(Instruction):
     """
-    Jumps if op1 >= op2.
+        INSTRUCTION:
+        SYNTAX:
+            JLE lbl
+        NOTES: Jumps if SF == 1 or ZF == 1.
     """
     def f(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
