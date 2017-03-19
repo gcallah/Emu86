@@ -1,0 +1,65 @@
+{% extends "ebase.html" %}
+{% block content %}
+    <div class="module">
+        <h2>
+            About Emu86
+        </h2>
+            <p>
+            This is an open source project written by Gene Callahan.
+            The goal is to create a simple learning tool to introduce students to
+            assembly language programming in a class on, say, operating systems
+            or compilers, where the focus is not assembly language, and actually
+            using an assembler would be a distraction from the main theme of the
+            course. It includes a (growing) subset of x86 assembler
+            instructions. (This is, by the way, Intel assembly language, and
+            not AT&T assembly language.)
+            </p>
+
+            <p>
+                <a
+                href="https://www.cs.virginia.edu/~evans/cs216/guides/x86.html">
+                Guide to x86 assembly.
+                </a>
+            </p>
+
+        <h2>
+            Instructions Available
+        </h2>
+            <p>
+                Many of these are only partially done: for instance, as of yet,
+                there is no memory addressing available.
+                <br>
+                In the syntax descriptions, we have:
+            </p>
+            <ul>
+                <li>con: constant
+                <li>lbl: label
+                <li>mem: memory location
+                    <br>
+                    A memory location may be designated by [num], where
+                    <i>num</i> is the actual address, or by [reg], where
+                    <i>reg</i> holds the memory address.
+                <li>reg: register
+            </ul>
+            <h3>
+                Interrupts
+            </h3>
+<!--include interrupts.txt -->
+
+            <h3>
+                Data Movement
+            </h3>
+<!--include data_mov.txt -->
+                
+            <h3>
+                Control Flow
+            </h3>
+<!--include control_flow.txt -->
+
+            <h3>
+                Arithmetic and Logic
+            </h3>
+<!--include arithmetic.txt -->
+
+    </div>
+{% endblock content %}
