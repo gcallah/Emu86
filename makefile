@@ -15,11 +15,11 @@ help:
 
 dev: $(SRCS) $(OBJ)
 	git checkout dev
-	git commit -a -m "HTML rebuild."
+	git commit -a -m "Building development."
 	git push origin dev
 
 prod: $(SRCS) $(OBJ)
 	git checkout master
 	git merge dev
-	git commit -a -m "HTML rebuild."
+	git commit -a -m "Building master."
 	git push origin master
