@@ -3,7 +3,6 @@ Our x86 global data.
 """
 
 from collections import OrderedDict
-from .interrupts import nxt_key
 
 MEM_DIGITS = 2
 MEM_SIZE = 32
@@ -15,6 +14,8 @@ class GlobalData:
     """
     def __init__(self):
         # the x86 registers
+        self.nxt_key = 0
+        self.ret_str = "Hello world!"
         self.registers = OrderedDict(
                     [
                         ('EAX', 0),
@@ -44,8 +45,7 @@ class GlobalData:
                 self.memory[str(i)] = 0
 
     def re_init(self):
-        global nxt_key
-        nxt_key = 0
+        self.nxt_key = 0
         for reg in self.registers:
             self.registers[reg] = 0
         for flag in self.flags:
