@@ -44,6 +44,7 @@ class GlobalData:
                 self.memory[str(i)] = 0
 
     def re_init(self):
+        global nxt_key
         nxt_key = 0
         for reg in self.registers:
             self.registers[reg] = 0
