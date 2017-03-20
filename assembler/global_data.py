@@ -14,6 +14,8 @@ class GlobalData:
     """
     def __init__(self):
         # the x86 registers
+        self.nxt_key = 0
+        self.ret_str = "Hello world!"
         self.registers = OrderedDict(
                     [
                         ('EAX', 0),
@@ -43,6 +45,7 @@ class GlobalData:
                 self.memory[str(i)] = 0
 
     def re_init(self):
+        self.nxt_key = 0
         for reg in self.registers:
             self.registers[reg] = 0
         for flag in self.flags:

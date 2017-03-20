@@ -4,16 +4,12 @@ interrupts.py: data movement instructions.
 
 from .errors import check_num_args, InvalidOperand
 from .tokens import Instruction, IntOp
-
-nxt_key = 0
-ret_str = "Good work in assembly!"
+from .global_data import gdata
 
 def read_key(gdata):
     # we are faking 'reading' from the keyboard
-    global ret_str
-    global nxt_key
-    c = ret_str[nxt_key]
-    nxt_key = (nxt_key + 1) % len(ret_str)
+    c = gdata.ret_str[gdata.nxt_key]
+    gdata.nxt_key = (gdata.nxt_key + 1) % len(gdata.ret_str)
     gdata.registers['EAX'] = ord(c)
     return ""
 

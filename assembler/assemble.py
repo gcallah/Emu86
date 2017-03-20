@@ -8,7 +8,6 @@ import re
 from .control_flow import FlowBreak
 from .errors import *  # import * OK here:
                        # these are *our* errors, after all!
-from .interrupts import nxt_key
 from .parse import lex
 from .tokens import Instruction
 

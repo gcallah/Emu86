@@ -41,6 +41,7 @@ def main_page(request):
         if 'clear' in request.POST:
             gdata.re_init()
         else:
+            gdata.nxt_key = 0
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
             get_flag_contents(gdata.flags, request)
