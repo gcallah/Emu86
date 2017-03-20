@@ -422,7 +422,7 @@ input[type=button][disabled].default {
 
 .module caption,
 .inline-group h2 {
-    font-size: 12px;
+    font-size: 20px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
@@ -740,7 +740,7 @@ a.deletelink:focus, a.deletelink:hover {
 
 #branding h2 {
     padding: 0 10px;
-    font-size: 14px;
+    font-size: 22px;
     margin: -8px 0 8px 0;
     font-weight: normal;
     color: #ffc;
@@ -851,7 +851,7 @@ td#registers-cell {
     padding: 16px;
     margin-bottom: 16px;
     border-bottom: 1px solid #eaeaea;
-    font-size: 18px;
+    font-size: 22px;
     color: #333;
 }
 
