@@ -9,7 +9,7 @@ from .global_data import gdata
 def read_key(gdata):
     # we are faking 'reading' from the keyboard
     c = gdata.ret_str[gdata.nxt_key]
-    gdata.nxt_key = (gdata.nxt_key + 1) % len(ret_str)
+    gdata.nxt_key = (gdata.nxt_key + 1) % len(gdata.ret_str)
     gdata.registers['EAX'] = ord(c)
     return ""
 
