@@ -5,7 +5,8 @@
             About Emu86
         </h2>
             <p>
-            This is an open source project written by Gene Callahan.
+            This is an open source project written by
+            Gene Callahan and Nathan Conroy.
             The goal is to create a simple learning tool to introduce students to
             assembly language programming in a class on, say, operating systems
             or compilers, where the focus is not assembly language, and actually
