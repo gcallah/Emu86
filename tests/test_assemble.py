@@ -4,6 +4,7 @@ Test our assembly interpreter.
 """
 
 import sys
+import random
 sys.path.append("..")
 
 
@@ -12,6 +13,9 @@ from unittest import TestCase, main
 from assembler.global_data import gdata
 from assembler.assemble import assemble
 
+NUM_TESTS = 100
+BIG_NEG = -1000000
+BIG_POS = 1000000
 
 class AssembleTestCase(TestCase):
 
@@ -20,10 +24,14 @@ class AssembleTestCase(TestCase):
         self.assertEqual(gdata.registers["EAX"], 1)
 
     def test_add(self):
-        gdata.registers["EAX"] = 2
-        gdata.registers["EBX"] = 4
-        assemble("add eax, ebx", gdata)
-        self.assertEqual(gdata.registers["EAX"], 6)
+        for i in range(0, NUM_TESTS):
+            a = random.randint(BIG_NEG, BIG_POS)
+            b = random.randint(BIG_NEG, BIG_POS)
+            c = a + b
+            gdata.registers["EAX"] = a
+            gdata.registers["EBX"] = b
+            assemble("add eax, ebx", gdata)
+            self.assertEqual(gdata.registers["EAX"], c)
 
     def test_sub(self):
         gdata.registers["EAX"] = 2
