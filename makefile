@@ -26,3 +26,4 @@ prod: $(SRCS) $(OBJ)
 	$(TDIR)/test_assemble.py
 	git commit -a -m "Building master."
 	git push origin master
+	git checkout dev
