@@ -1,3 +1,4 @@
+ADIR = ansible
 SDIR = assembler
 ODIR = Emu86/templates
 UDIR = utils
@@ -19,6 +20,7 @@ dev: $(SRCS) $(OBJ)
 	$(TDIR)/test_assemble.py
 	git commit -a -m "Building development."
 	git push origin dev
+#	ansible-playbook -i $(ADIR)/inventories/hosts $(ADIR)/dev.yml
 
 prod: $(SRCS) $(OBJ)
 	git checkout master
