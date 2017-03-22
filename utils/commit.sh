@@ -1,2 +1,2 @@
 #!/bin/sh
-./manage.py migrate
+../manage.py migrate
