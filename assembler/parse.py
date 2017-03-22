@@ -100,7 +100,6 @@ def get_op(token, gdata):
 
     int_val = 0
 
-    print(token)
     if not token:
         return None
     elif token.upper() in gdata.registers:  # reg can be e.g. EAX or eax
