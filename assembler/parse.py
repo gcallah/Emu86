@@ -16,7 +16,7 @@ from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
 
 
-SYMBOL_RE = "^([A-Za-z]+)"
+SYMBOL_RE = "^([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYMBOL_RE)
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
@@ -87,9 +87,6 @@ def get_token(code, code_pos):
                 else:
                     break
             code_pos += count
-
-    token = token.upper()  # for now, a simple-minded way to allow input in
-                           # either case!
     return (token, code_pos)
 
 def get_op(token, gdata):
@@ -105,17 +102,17 @@ def get_op(token, gdata):
 
     if not token:
         return None
-    elif token in gdata.registers:
-        return Register(token, gdata.registers)
+    elif token.upper() in gdata.registers:  # reg can be e.g. EAX or eax
+        return Register(token.upper(), gdata.registers)
     elif token[0] == '[' and token[len(token) - 1] == ']':
         address = token[1:len(token) - 1]
         if address in gdata.memory:
             return Address(address, gdata.memory)
-        elif address in gdata.registers:
-            return RegAddress(address, gdata.registers, gdata.memory)
+        elif address.upper() in gdata.registers:
+            return RegAddress(address.upper(), gdata.registers, gdata.memory)
         else:
             raise InvalidAddress(address)
-    elif token.isalpha():
+    elif re.search(sym_match, token) is not None:
         return Symbol(token)
     else:
         try:
@@ -135,8 +132,9 @@ def get_instr(code, code_pos):
         (Throws an exception if the token is not an instruction.)
     """
     (token, code_pos) = get_token(code, code_pos)
-    if token in instructions:
-        instr = instructions[token]
+    uptok = token.upper()  # allow instructions in upper or lower
+    if uptok in instructions:
+        instr = instructions[uptok]
     else:
         raise InvalidInstruction(token)
     return (instr, code_pos)
@@ -186,7 +184,6 @@ def lex(code, gdata):
         label_match = re.search(p, line)
         if label_match is not None:
             label = label_match.group(1)
-            label = label.upper()
             labels[label] = i
             # now strip off the label:
             line = line.split(":", 1)[-1]
