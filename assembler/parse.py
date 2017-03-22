@@ -112,7 +112,7 @@ def get_op(token, gdata):
             return RegAddress(address.upper(), gdata.registers, gdata.memory)
         else:
             raise InvalidAddress(address)
-    elif token.isalpha():
+    elif re.search(sym_match, token) is not None:
         return Symbol(token)
     else:
         try:
