@@ -100,6 +100,7 @@ def get_op(token, gdata):
 
     int_val = 0
 
+    print(token)
     if not token:
         return None
     elif token.upper() in gdata.registers:  # reg can be e.g. EAX or eax
@@ -132,9 +133,9 @@ def get_instr(code, code_pos):
         (Throws an exception if the token is not an instruction.)
     """
     (token, code_pos) = get_token(code, code_pos)
-    token = token.upper()  # allow instructions in upper or lower
-    if token in instructions:
-        instr = instructions[token]
+    uptok = token.upper()  # allow instructions in upper or lower
+    if uptok in instructions:
+        instr = instructions[uptok]
     else:
         raise InvalidInstruction(token)
     return (instr, code_pos)
