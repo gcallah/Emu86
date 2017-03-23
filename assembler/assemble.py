@@ -83,7 +83,7 @@ def assemble(code, gdata):
     ip = 0   # instruction pointer
     count = 0
     while ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
-        (success, ip, output, error, debug) = exec(tok_lines, ip, 
+        (success, ip, output, err, debug) = exec(tok_lines, ip, 
                                                    gdata, output, debug, labels)
         if not success:
             return (output, err.msg, debug)
