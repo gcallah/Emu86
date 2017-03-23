@@ -21,12 +21,14 @@ dev: $(SRCS) $(OBJ)
 	git commit -a -m "Building development."
 	git push origin dev
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/utils/dev.sh'
-#	ansible-playbook -i $(ADIR)/inventories/hosts $(ADIR)/dev.yml
 
 prod: $(SRCS) $(OBJ)
 	git checkout master
 	git merge dev
 	$(TDIR)/test_assemble.py
-	git commit -a -m "Building master."
 	git push origin master
+	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/utils/prod.sh'
 	git checkout dev
+
+# for future use:
+#	ansible-playbook -i $(ADIR)/inventories/hosts $(ADIR)/dev.yml
