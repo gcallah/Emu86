@@ -40,9 +40,16 @@ class GlobalData:
         self.memory = OrderedDict()
         self.mem_init()
 
+        self.stack = OrderedDict()
+        self.stack_init()
+
     def mem_init(self):
         for i in range(0, MEM_SIZE):
-                self.memory[str(i)] = 0
+            self.memory[str(i)] = 0
+
+    def stack_init(self):
+        for i in range(MEM_SIZE, 0, -1):
+            self.stack[str(i)] = 0
 
     def re_init(self):
         self.nxt_key = 0
@@ -51,6 +58,7 @@ class GlobalData:
         for flag in self.flags:
             self.flags[flag] = 0
         self.mem_init()
+        self.stack_init()
         
 
 gdata = GlobalData()
