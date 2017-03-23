@@ -24,6 +24,32 @@ def add_debug(s):
 INSTR = 0
 OPS = 1
 
+def exec(tok_lines, ip, gdata, output, debug):
+    """
+        Executes a single instruction at location ip in tok_lines.
+        Returns:
+            success: was instruction valid?
+            ip: where are we now?
+            output: any output
+            err_msg: if no success, what went wrong?
+            debug: any debug info
+    """
+    curr_instr = tok_lines[ip]
+    ip = ip + 1
+    try:
+        output += curr_instr[INSTR].f(curr_instr[OPS], gdata)
+        return (True, ip, output, "", debug)
+    except FlowBreak as brk:
+        # we have hit one of the JUMP instructions: jump to that line.
+        label = brk.label
+        if label in labels:
+            ip = labels[label]  # set i to line num of label
+            return (True, ip, output, "", debug)
+        else:
+            return (False, ip, output, "Invalid label: " + label, debug)
+    except Error as err:
+        return (False, ip, output, err.msg, debug)
+
 def assemble(code, gdata):
     """
         Assembles and runs code.
@@ -54,21 +80,11 @@ def assemble(code, gdata):
     ip = 0   # instruction pointer
     count = 0
     while ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
-        curr_instr = tok_lines[ip]
-        ip += 1
-        count += 1
-        try:
-            output += curr_instr[INSTR].f(curr_instr[OPS], gdata)
-        except FlowBreak as brk:
-            # we have hit one of the JUMP instructions: jump to that line.
-            label = brk.label
-            if label in labels:
-                ip = labels[label]  # set i to line num of label
-            else:
-                return (output, "Invalid label: " + label, debug)
-        except Error as err:
+        (success, ip, output, error, debug) = exec(tok_lines, ip, gdata, output, debug)
+        if not success:
             return (output, err.msg, debug)
-    if count == MAX_INSTRUCTIONS:
+        count += 1
+    if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: instructions run has exceeded "
                  + str(MAX_INSTRUCTIONS))
     else:
