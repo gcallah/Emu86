@@ -72,6 +72,8 @@ def assemble(code, gdata):
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", debug)
 
+    labels = None
+
     # break the code into tokens:
     try:
         (tok_lines, labels) = lex(code, gdata)
