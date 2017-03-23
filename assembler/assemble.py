@@ -24,7 +24,7 @@ def add_debug(s):
 INSTR = 0
 OPS = 1
 
-def exec(tok_lines, ip, gdata, output, debug):
+def exec(tok_lines, ip, gdata, output, debug, labels):
     """
         Executes a single instruction at location ip in tok_lines.
         Returns:
@@ -65,11 +65,9 @@ def assemble(code, gdata):
             Error, if any.
     """
     global debug
-    global nxt_key
     debug = ''
     output = ''
     error = ''
-    nxt_key = 0
 
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", debug)
@@ -83,7 +81,8 @@ def assemble(code, gdata):
     ip = 0   # instruction pointer
     count = 0
     while ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
-        (success, ip, output, error, debug) = exec(tok_lines, ip, gdata, output, debug)
+        (success, ip, output, error, debug) = exec(tok_lines, ip, 
+                                                   gdata, output, debug, labels)
         if not success:
             return (output, err.msg, debug)
         count += 1
