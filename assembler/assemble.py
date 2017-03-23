@@ -75,7 +75,10 @@ def assemble(code, gdata):
         return ("", "Must submit code to run.", debug)
 
     # break the code into tokens:
-    (tok_lines, labels) = lex(code, gdata)
+    try:
+        (tok_lines, labels) = lex(code, gdata)
+    except Error as err:
+        return (output, err.msg, debug)
 
     ip = 0   # instruction pointer
     count = 0
