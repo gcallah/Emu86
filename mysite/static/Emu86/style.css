@@ -276,7 +276,8 @@ th {
 
 th#MemStack {
     text-align: center;
-    background: #baf;
+    background: #324;
+    color: #caf;
 }
 
 thead th,
