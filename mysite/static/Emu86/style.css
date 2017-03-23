@@ -274,6 +274,11 @@ th {
     background: #afd;
 }
 
+th#MemStack {
+    text-align: center;
+    background: #dfa;
+}
+
 thead th,
 tfoot td {
     color: #666;

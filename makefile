@@ -20,7 +20,7 @@ dev: $(SRCS) $(OBJ)
 	$(TDIR)/test_assemble.py
 	git commit -a -m "Building development."
 	git push origin dev
-	ssh emu86@ssh.pythonanywhere.com /home/emu86/Emu86/utils/dev.sh
+	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/utils/dev.sh'
 #	ansible-playbook -i $(ADIR)/inventories/hosts $(ADIR)/dev.yml
 
 prod: $(SRCS) $(OBJ)
