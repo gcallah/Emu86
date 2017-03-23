@@ -44,6 +44,7 @@ def main_page(request):
             gdata.nxt_key = 0
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
+            get_stack_contents(gdata.stack, request)
             get_flag_contents(gdata.flags, request)
             (output, error, debug) = assemble(request.POST['code'], gdata)
 
@@ -55,6 +56,7 @@ def main_page(request):
                    'error': error,
                    'mem_digits': mem_digits,
                    'memory': gdata.memory, 
+                   'stack': gdata.stack, 
                    'debug': debug,
                    'flags': gdata.flags})
 
@@ -69,6 +71,10 @@ def get_flag_contents(flags, request):
 def get_mem_contents(memory, request):
     for loc in memory:
         memory[loc] = request.POST[str(loc)]
+
+def get_stack_contents(stack, request):
+    for loc in stack:
+        stack[loc] = request.POST[str(loc)]
 
 def help(request):
     site_hdr = get_hdr()
