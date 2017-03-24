@@ -50,7 +50,7 @@ def exec(tok_lines, ip, gdata, output, debug, labels):
     except Error as err:
         return (False, ip, output, err.msg, debug)
 
-def assemble(code, gdata):
+def assemble(code, gdata, step=False):
     """
         Assembles and runs code.
         Args:
@@ -82,12 +82,18 @@ def assemble(code, gdata):
 
     ip = 0   # instruction pointer
     count = 0
-    while ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
+    if not step:
+        while ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
+            (success, ip, 
+             output, error, debug) = exec(tok_lines, ip, 
+                                          gdata, output, debug, labels)
+            if not success:
+                return (output, error, debug)
+            count += 1
+    else:  # step through code
         (success, ip, output, error, debug) = exec(tok_lines, ip, 
-                                                   gdata, output, debug, labels)
-        if not success:
-            return (output, error, debug)
-        count += 1
+                                      gdata, output, debug, labels)
+
     if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: instructions run has exceeded "
                  + str(MAX_INSTRUCTIONS))
