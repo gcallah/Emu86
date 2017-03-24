@@ -2,20 +2,28 @@
 Possible assembler errors.
 """
 
+# Error messages (or at least their beginnings):
+UNKNOWN_ERR = "Uknown parsing error."
+INVALID_INSTR = "Invalid instruction: "
+INVALID_OPRND = "Invalid operand: "
+INVALID_NUM_ARGS = "Invalid number of args: "
+INVALID_MEM_LOC = "Invalid memory location: "
+INVALID_REG = "Invalid register: "
+
 class Error(Exception):
     """
     Base class for all of our error exceptions.
     """
     def __init__(self, offender):
-        self.msg = "Uknown parsing error."
+        self.msg = UNKNOWN_ERR
 
 class InvalidInstruction(Error):
     def __init__(self, offender):
-        self.msg = "Invalid instruction: " + offender
+        self.msg = INVALID_INSTR + offender
 
 class InvalidOperand(Error):
     def __init__(self, offender):
-        self.msg = "Invalid operand: " + offender
+        self.msg = INVALID_OPRND + offender
 
 class InvalidNumArgs(Error):
     def __init__(self, offender, correct_num, actual_num,
@@ -24,18 +32,18 @@ class InvalidNumArgs(Error):
         if extra_arg is not None:
             extra = "; possible extra = " + str(extra_arg)
             print("Extra = " + extra)
-        self.msg = ("Invalid number of args: " + offender
+        self.msg = (INVALID_NUM_ARGS + offender
                     + " requires " + str(correct_num)
                     + " but we got " + str(actual_num)
                     + extra)
 
 class InvalidMemLoc(Error):
     def __init__(self, offender):
-        self.msg = "Invalid memory location: " + offender
+        self.msg = INVALID_MEM_LOC + offender
 
 class InvalidRegister(Error):
     def __init__(self, offender):
-        self.msg = "Invalid register: " + offender
+        self.msg = INVALID_REG + offender
 
 def check_num_args(instr, ops, correct_num):
     """

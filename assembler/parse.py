@@ -4,8 +4,7 @@ parse.py: creates parse tree.
 
 import re
 
-from .errors import *  # import * OK here:
-                       # these are *our* errors, after all!
+from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
 from .tokens import RegAddress
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
@@ -111,7 +110,7 @@ def get_op(token, gdata):
         elif address.upper() in gdata.registers:
             return RegAddress(address.upper(), gdata.registers, gdata.memory)
         else:
-            raise InvalidAddress(address)
+            raise InvalidMemLoc(address)
     elif re.search(sym_match, token) is not None:
         return Symbol(token)
     else:

@@ -18,6 +18,7 @@ help:
 dev: $(SRCS) $(OBJ)
 	git checkout dev
 	$(TDIR)/test_assemble.py
+	$(TDIR)/test_errors.py
 	git commit -a -m "Building development."
 	git push origin dev
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/utils/dev.sh'
@@ -26,6 +27,7 @@ prod: $(SRCS) $(OBJ)
 	git checkout master
 	git merge dev
 	$(TDIR)/test_assemble.py
+	$(TDIR)/test_errors.py
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/utils/prod.sh'
 	git checkout dev
