@@ -39,9 +39,9 @@ class Interrupt(Instruction):
     def f(self, ops, gdata):
         check_num_args(self.get_nm(), ops, 2)
         if type(ops[0]) != IntOp:
-            raise InvalidOperand(ops[0])
+            raise InvalidOperand(str(ops[0]))
         if type(ops[1]) != IntOp:
-            raise InvalidOperand(ops[1])
+            raise InvalidOperand(str(ops[1]))
         interrupt_class = int_vectors[ops[0].get_val()]
         interrupt_handler = interrupt_class[ops[1].get_val()]
         c = interrupt_handler(gdata)

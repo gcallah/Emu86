@@ -31,7 +31,6 @@ class InvalidNumArgs(Error):
         extra = ""
         if extra_arg is not None:
             extra = "; possible extra = " + str(extra_arg)
-            print("Extra = " + extra)
         self.msg = (INVALID_NUM_ARGS + offender
                     + " requires " + str(correct_num)
                     + " but we got " + str(actual_num)
