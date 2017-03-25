@@ -763,12 +763,14 @@ a.deletelink:focus, a.deletelink:hover {
 #run-button {
     text-align: center;
     margin: 10px 20px 20px 60px;
+    background: #085;
 }
 
 #step-button {
     float: right;
     margin: 10px 20px 20px 48px;
-    background: #184;
+    color: #285D91;
+    background: #ffcc33;
 }
 
 #clear-button {
