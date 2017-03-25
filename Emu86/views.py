@@ -24,7 +24,7 @@ def get_hdr():
         break   # since we only expect a single site record!
     return site_hdr
 
-def dump_request(req):
+def dump_req(req):
     for key, val in request.POST:
         add_debug(key + ": " + val)
 
