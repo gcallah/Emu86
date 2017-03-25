@@ -46,7 +46,9 @@ def main_page(request):
             get_mem_contents(gdata.memory, request)
             get_stack_contents(gdata.stack, request)
             get_flag_contents(gdata.flags, request)
-            (output, error, debug) = assemble(request.POST['code'], gdata)
+            step = 'clear' in request.POST:
+            (output, error, debug) = assemble(request.POST['code'],
+                                              gdata, step)
 
     return render(request, 'main.html',
                   {'form': form,
