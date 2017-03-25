@@ -91,13 +91,14 @@ def assemble(code, gd, step=False):
                 return (output, error, debug)
             count += 1
     else:  # step through code
-        add_debug("ip = " + str(gd.ip))
+        add_debug("In step, ip = " + str(gd.ip))
         (success, output, error, debug) = exec(tok_lines, 
                                       gd, output, debug, labels)
         return (output, error, debug)
 
     if count >= MAX_INSTRUCTIONS:
-        error = ("Possible infinite loop detected: instructions run has exceeded "
+        error = ("Possible infinite loop detected: "
+                 + "instructions run has exceeded "
                  + str(MAX_INSTRUCTIONS))
     else:
         error = ''
