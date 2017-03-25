@@ -47,6 +47,7 @@ def exec(tok_lines, gd, output, debug, labels):
         return (True, output, "", debug)
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
+        add_debug("In FlowBreak")
         dump_flags(gd)
         label = brk.label
         if label in labels:
