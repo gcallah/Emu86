@@ -25,6 +25,7 @@ def get_hdr():
     return site_hdr
 
 def dump_dict(d):
+    add_debug(str(d))
     for key, val in d.items():
         add_debug(str(key) + ": " + str(val))
 
