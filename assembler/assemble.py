@@ -23,6 +23,9 @@ def add_debug(s):
 INSTR = 0
 OPS = 1
 
+def dump_flags(gd):
+    for flag, val in gd.flags:
+        add_debug("Flag = " + flag + "; val = " + str(val))
 
 def exec(tok_lines, gd, output, debug, labels):
     """
@@ -44,6 +47,7 @@ def exec(tok_lines, gd, output, debug, labels):
         return (True, output, "", debug)
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
+        dump_flags(gd)
         label = brk.label
         if label in labels:
             ip = labels[label]  # set i to line num of label

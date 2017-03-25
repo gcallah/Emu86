@@ -9,7 +9,7 @@ INVALID_OPRND = "Invalid operand: "
 INVALID_NUM_ARGS = "Invalid number of args: "
 INVALID_MEM_LOC = "Invalid memory location: "
 INVALID_REG = "Invalid register: "
-REG_UNWRITABLE = "Write attempt to unwriteable register."
+REG_UNWRITABLE = "Write attempt to unwriteable register:"
 
 class Error(Exception):
     """

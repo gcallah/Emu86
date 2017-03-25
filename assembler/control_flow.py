@@ -43,7 +43,8 @@ class Cmpf(Instruction):
         </syntax>
         <descr>
             Compares op1 and op2, and sets (right now) the SF and ZF flags.
-            It is not clear at this moment how to treat the OF and CF flags in Python,
+            It is not clear at this moment how to 
+            treat the OF and CF flags in Python,
             since Python integer arithmetic never carries or overflows!
         </descr>
     """
