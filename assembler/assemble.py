@@ -6,8 +6,7 @@ Executes assembly code typed in.
 import re
 
 from .control_flow import FlowBreak
-from .errors import *  # import * OK here:
-                       # these are *our* errors, after all!
+from .errors import Error, InvalidInstruction
 from .parse import lex
 from .tokens import Instruction
 
@@ -34,9 +33,13 @@ def exec(tok_lines, gd, output, debug, labels):
             err_msg: if no success, what went wrong?
             debug: any debug info
     """
-    curr_instr = tok_lines[gd.get_ip()]
-    gd.inc_ip()
     try:
+        ip = gd.get_ip()
+        if ip >= len(tok_lines):
+            raise InvalidInstruction("Past end of code.")
+
+        curr_instr = tok_lines[ip]
+        gd.inc_ip()
         output += curr_instr[INSTR].f(curr_instr[OPS], gd)
         return (True, output, "", debug)
     except FlowBreak as brk:
