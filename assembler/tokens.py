@@ -13,7 +13,7 @@ class Token:
         self.value = val
 
     def __str__(self):
-        return self.name + ": " + str(self.value)
+        return str(self.value)
 
     def get_val(self):
         return self.value
