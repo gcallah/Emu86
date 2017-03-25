@@ -6,8 +6,7 @@ Executes assembly code typed in.
 import re
 
 from .control_flow import FlowBreak
-from .errors import *  # import * OK here:
-                       # these are *our* errors, after all!
+from .errors import Error, InvalidInstruction
 from .parse import lex
 from .tokens import Instruction
 
@@ -24,25 +23,36 @@ def add_debug(s):
 INSTR = 0
 OPS = 1
 
+def dump_flags(gd):
+    for flag, val in gd.flags:
+        add_debug("Flag = " + flag + "; val = " + str(val))
+
 def exec(tok_lines, gd, output, debug, labels):
     """
-        Executes a single instruction at location gd.ip in tok_lines.
+        Executes a single instruction at location reg[EIP] in tok_lines.
         Returns:
             success: was instruction valid?
             output: any output
             err_msg: if no success, what went wrong?
             debug: any debug info
     """
-    curr_instr = tok_lines[gd.ip]
-    gd.ip = gd.ip + 1
     try:
-        output += curr_instr[INSTR].f(curr_instr[OPS], gd)
+        ip = gd.get_ip()
+        if ip >= len(tok_lines):
+            raise InvalidInstruction("Past end of code.")
+
+        curr_instr = tok_lines[ip]
+        gd.inc_ip()
+        output = curr_instr[INSTR].f(curr_instr[OPS], gd)
         return (True, output, "", debug)
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
+        add_debug("In FlowBreak")
+        dump_flags(gd)
         label = brk.label
         if label in labels:
-            gd.ip = labels[label]  # set i to line num of label
+            ip = labels[label]  # set i to line num of label
+            gd.set_ip(ip)
             return (True, output, "", debug)
         else:
             return (False, output, "Invalid label: " + label, debug)
@@ -72,28 +82,37 @@ def assemble(code, gd, step=False):
         return ("", "Must submit code to run.", debug)
 
     labels = None
+    tok_lines = None
 
     # break the code into tokens:
     try:
         (tok_lines, labels) = lex(code, gd)
+        for lbl in labels:
+            add_debug(lbl + " = " + str(labels[lbl]))
     except Error as err:
         return (output, err.msg, debug)
 
     if not step:
         add_debug("Setting ip to 0")
-        gd.ip = 0   # instruction pointer reset for 'run'
+        gd.set_ip(0)   # instruction pointer reset for 'run'
         count = 0
-        while gd.ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
-            add_debug("ip = " + str(gd.ip))
+        while gd.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
+            add_debug("ip = " + str(gd.get_ip()))
             (success, output, error, debug) = exec(tok_lines, gd, 
                                                    output, debug, labels)
             if not success:
                 return (output, error, debug)
             count += 1
     else:  # step through code
-        add_debug("In step, ip = " + str(gd.ip))
-        (success, output, error, debug) = exec(tok_lines, 
-                                      gd, output, debug, labels)
+        ip = gd.get_ip()
+        if ip < len(tok_lines):
+            add_debug("In step, ip = " + str(gd.get_ip()))
+            (success, output, error, debug) = exec(tok_lines, gd,
+                                                   output, debug, labels)
+        else:
+            output = "Reached end of executable code."
+            # rewind:
+            gd.set_ip(0)
         return (output, error, debug)
 
     if count >= MAX_INSTRUCTIONS:

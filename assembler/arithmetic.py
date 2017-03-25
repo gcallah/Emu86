@@ -33,7 +33,7 @@ class Add(Instruction):
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.add)
-        return ''
+        return super().f(ops, gdata)
 
 class Sub(Instruction):
     """
@@ -48,7 +48,7 @@ class Sub(Instruction):
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.sub)
-        return ''
+        return super().f(ops, gdata)
 
 class Imul(Instruction):
     """
@@ -138,7 +138,7 @@ class Shr(Instruction):
     """
     def f(self, ops, gdata):
         two_op_arith(ops, gdata, self.name, opfunc.rshift)
-        return ''
+        return super().f(ops, gdata)
 
 class Notf(Instruction):
     """
@@ -151,7 +151,7 @@ class Notf(Instruction):
     """
     def f(self, ops, gdata):
         one_op_arith(ops, gdata, self.name, opfunc.inv)
-        return ''
+        return super().f(ops, gdata)
 
 class Inc(Instruction):
     """
@@ -165,7 +165,7 @@ class Inc(Instruction):
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() + 1)
-        return ''
+        return super().f(ops, gdata)
 
 class Dec(Instruction):
     """
@@ -179,7 +179,7 @@ class Dec(Instruction):
     def f(self, ops, gdata):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() - 1)
-        return ''
+        return super().f(ops, gdata)
 
 class Neg(Instruction):
     """

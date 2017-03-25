@@ -43,7 +43,8 @@ class Cmpf(Instruction):
         </syntax>
         <descr>
             Compares op1 and op2, and sets (right now) the SF and ZF flags.
-            It is not clear at this moment how to treat the OF and CF flags in Python,
+            It is not clear at this moment how to 
+            treat the OF and CF flags in Python,
             since Python integer arithmetic never carries or overflows!
         </descr>
     """
@@ -61,7 +62,7 @@ class Cmpf(Instruction):
             gdata.flags['SF'] = 1
         else:
             gdata.flags['SF'] = 0
-        return ''
+        return super().f(ops, gdata)
 
 class Jmp(Instruction):
     """
@@ -92,7 +93,7 @@ class Je(Instruction):
         target = get_one_op(self.get_nm(), ops)
         if gdata.flags['ZF']:
             raise Jump(target.name)
-        return ''
+        return super().f(ops, gdata)
 
 class Jne(Instruction):
     """
@@ -110,7 +111,7 @@ class Jne(Instruction):
         target = get_one_op(self.get_nm(), ops)
         if not gdata.flags['ZF']:
             raise Jump(target.name)
-        return ''
+        return super().f(ops, gdata)
 
 class Jg(Instruction):
     """
@@ -128,7 +129,7 @@ class Jg(Instruction):
         target = get_one_op(self.get_nm(), ops)
         if not gdata.flags['SF'] and not gdata.flags['ZF']:
             raise Jump(target.name)
-        return ''
+        return super().f(ops, gdata)
 
 class Jge(Instruction):
     """

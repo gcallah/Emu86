@@ -4,7 +4,7 @@ tokens.py: contains classes we tokenize into.
 
 from abc import abstractmethod
 
-from .errors import InvalidMemLoc
+from .errors import InvalidMemLoc, RegUnwritable
                       
 
 class Token:
@@ -13,7 +13,7 @@ class Token:
         self.value = val
 
     def __str__(self):
-        return self.name + ": " + str(self.value)
+        return str(self.name) + ": " + str(self.value)
 
     def get_val(self):
         return self.value
@@ -30,7 +30,11 @@ class Instruction(Token):
         super().__init__(name)
 
     def f(self, ops, gdata):
-        return None
+        s = self.name + " "
+        for op in ops:
+            s += str(op)
+            s += " "
+        return s
 
 
 class Operand(Token):
@@ -92,15 +96,22 @@ class RegAddress(Address):
 
 
 class Register(Location):
+    unwritable = ['EIP']
+
     def __init__(self, name, registers):
         super().__init__(name)
         self.registers = registers
+        self.val = registers[self.name]
+        self.writable = True
 
     def get_val(self):
         return int(self.registers[self.name])
 
     def set_val(self, val):
-        self.registers[self.name] = val
+        if self.name not in self.unwritable:
+            self.registers[self.name] = val
+        else:
+            raise RegUnwritable(self.name)
 
 
 class Symbol(Location):
