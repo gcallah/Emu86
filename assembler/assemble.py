@@ -82,6 +82,8 @@ def assemble(code, gd, step=False):
     # break the code into tokens:
     try:
         (tok_lines, labels) = lex(code, gd)
+        for lbl in labels:
+            add_debug(lbl + " = " + str(labels[lbl]))
     except Error as err:
         return (output, err.msg, debug)
 
