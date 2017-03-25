@@ -30,7 +30,11 @@ class Instruction(Token):
         super().__init__(name)
 
     def f(self, ops, gdata):
-        return None
+        s = self.name + " "
+        for op in ops:
+            s += str(op)
+            s += " "
+        return s
 
 
 class Operand(Token):

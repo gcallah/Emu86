@@ -22,7 +22,7 @@ class Mov(Instruction):
     def f(self, ops, gdata):
         check_num_args(self.get_nm(), ops, 2)
         ops[0].set_val(ops[1].get_val())
-        return ''
+        return super().f(ops, gdata)
 
 
 class Pop(Instruction):

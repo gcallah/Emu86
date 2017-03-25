@@ -43,7 +43,7 @@ def exec(tok_lines, gd, output, debug, labels):
 
         curr_instr = tok_lines[ip]
         gd.inc_ip()
-        output += curr_instr[INSTR].f(curr_instr[OPS], gd)
+        output = curr_instr[INSTR].f(curr_instr[OPS], gd)
         return (True, output, "", debug)
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
