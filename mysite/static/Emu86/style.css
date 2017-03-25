@@ -761,6 +761,11 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 #run-button {
+    text-align: center;
+    margin: 10px 160px 20px 20px;
+}
+
+#step-button {
     float: right;
     margin: 10px 160px 20px 20px;
 }
