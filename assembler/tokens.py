@@ -101,6 +101,7 @@ class Register(Location):
     def __init__(self, name, registers):
         super().__init__(name)
         self.registers = registers
+        self.val = registers[self.name]
         self.writable = True
 
     def get_val(self):
