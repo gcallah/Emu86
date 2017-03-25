@@ -64,7 +64,7 @@ def main_page(request):
                    'registers': gdata.registers,
                    'memory': gdata.memory, 
                    'stack': gdata.stack, 
-                   'flags': gdata.flags
+                   'flags': gdata.flags,
                    'ip': gdata.ip, 
                   })
 
