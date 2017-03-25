@@ -24,38 +24,37 @@ def add_debug(s):
 INSTR = 0
 OPS = 1
 
-def exec(tok_lines, ip, gdata, output, debug, labels):
+def exec(tok_lines, gd, output, debug, labels):
     """
-        Executes a single instruction at location ip in tok_lines.
+        Executes a single instruction at location gd.ip in tok_lines.
         Returns:
             success: was instruction valid?
-            ip: where are we now?
             output: any output
             err_msg: if no success, what went wrong?
             debug: any debug info
     """
-    curr_instr = tok_lines[ip]
-    ip = ip + 1
+    curr_instr = tok_lines[gd.ip]
+    gd.ip = gd.ip + 1
     try:
-        output += curr_instr[INSTR].f(curr_instr[OPS], gdata)
-        return (True, ip, output, "", debug)
+        output += curr_instr[INSTR].f(curr_instr[OPS], gd)
+        return (True, output, "", debug)
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
         label = brk.label
         if label in labels:
-            ip = labels[label]  # set i to line num of label
-            return (True, ip, output, "", debug)
+            gd.ip = labels[label]  # set i to line num of label
+            return (True, output, "", debug)
         else:
-            return (False, ip, output, "Invalid label: " + label, debug)
+            return (False, output, "Invalid label: " + label, debug)
     except Error as err:
-        return (False, ip, output, err.msg, debug)
+        return (False, output, err.msg, debug)
 
-def assemble(code, gdata, step=False):
+def assemble(code, gd, step=False):
     """
         Assembles and runs code.
         Args:
             code: code to assemble.
-            gdata:
+            gd:
                 Contains:
                 registers: current register values.
                 memory: current memory values.
@@ -76,23 +75,22 @@ def assemble(code, gdata, step=False):
 
     # break the code into tokens:
     try:
-        (tok_lines, labels) = lex(code, gdata)
+        (tok_lines, labels) = lex(code, gd)
     except Error as err:
         return (output, err.msg, debug)
 
-    ip = 0   # instruction pointer
-    count = 0
     if not step:
-        while ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
-            (success, ip, 
-             output, error, debug) = exec(tok_lines, ip, 
-                                          gdata, output, debug, labels)
+        gd.ip = 0   # instruction pointer reset for 'run'
+        count = 0
+        while gd.ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
+            (success, output, error, debug) = exec(tok_lines, gd, 
+                                                   output, debug, labels)
             if not success:
                 return (output, error, debug)
             count += 1
     else:  # step through code
-        (success, ip, output, error, debug) = exec(tok_lines, ip, 
-                                      gdata, output, debug, labels)
+        (success, output, error, debug) = exec(tok_lines, 
+                                      gd, output, debug, labels)
         return (output, error, debug)
 
     if count >= MAX_INSTRUCTIONS:

@@ -42,6 +42,7 @@ def main_page(request):
             gdata.re_init()
         else:
             gdata.nxt_key = 0
+            gdata.ip = request.POST['ip']
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
             get_stack_contents(gdata.stack, request)
@@ -59,6 +60,7 @@ def main_page(request):
                    'mem_digits': mem_digits,
                    'memory': gdata.memory, 
                    'stack': gdata.stack, 
+                   'ip': gdata.ip, 
                    'debug': debug,
                    'flags': gdata.flags})
 

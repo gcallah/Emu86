@@ -49,7 +49,7 @@ class GlobalData:
             self.memory[str(i)] = 0
 
     def stack_init(self):
-        for i in range(MEM_SIZE * 2, MEM_SIZE, -1):
+        for i in range((MEM_SIZE * 2) - 1, MEM_SIZE - 1, -1):
             self.stack[str(i)] = 0
 
     def re_init(self):
