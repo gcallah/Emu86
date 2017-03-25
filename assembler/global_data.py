@@ -15,6 +15,7 @@ class GlobalData:
     def __init__(self):
         # the x86 registers
         self.nxt_key = 0
+        self.ip = 0
         self.ret_str = "Time to finish!"
         self.registers = OrderedDict(
                     [
@@ -48,11 +49,12 @@ class GlobalData:
             self.memory[str(i)] = 0
 
     def stack_init(self):
-        for i in range(MEM_SIZE, 0, -1):
+        for i in range(MEM_SIZE * 2, MEM_SIZE, -1):
             self.stack[str(i)] = 0
 
     def re_init(self):
         self.nxt_key = 0
+        self.ip = 0
         for reg in self.registers:
             self.registers[reg] = 0
         for flag in self.flags:
