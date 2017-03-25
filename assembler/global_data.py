@@ -6,6 +6,7 @@ from collections import OrderedDict
 
 MEM_DIGITS = 2
 MEM_SIZE = 32
+INSTR_PTR = "EIP"
 
 class GlobalData:
     """
@@ -15,7 +16,6 @@ class GlobalData:
     def __init__(self):
         # the x86 registers
         self.nxt_key = 0
-        self.ip = 0
         self.ret_str = "Time to finish!"
         self.registers = OrderedDict(
                     [
@@ -27,6 +27,7 @@ class GlobalData:
                         ('EDI', 0),
                         ('ESP', 0),
                         ('EBP', 0),
+                        ('EIP', 0),
                     ])
         
         # for now we only need four of the flags
@@ -62,5 +63,16 @@ class GlobalData:
         self.mem_init()
         self.stack_init()
         
+    def inc_ip(self):
+        ip = self.get_ip()
+        ip += 1
+        self.set_ip(ip)
+    
+    def set_ip(self, val):
+        self.registers[INSTR_PTR] = val
+    
+    def get_ip(self):
+        return int(self.registers[INSTR_PTR])
+
 
 gdata = GlobalData()

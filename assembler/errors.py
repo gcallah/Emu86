@@ -9,6 +9,7 @@ INVALID_OPRND = "Invalid operand: "
 INVALID_NUM_ARGS = "Invalid number of args: "
 INVALID_MEM_LOC = "Invalid memory location: "
 INVALID_REG = "Invalid register: "
+REG_UNWRITABLE = "Write attempt to unwriteable register."
 
 class Error(Exception):
     """
@@ -16,6 +17,10 @@ class Error(Exception):
     """
     def __init__(self, offender):
         self.msg = UNKNOWN_ERR
+
+class RegUnwritable(Error):
+    def __init__(self, offender):
+        self.msg = REG_UNWRITABLE + offender
 
 class InvalidInstruction(Error):
     def __init__(self, offender):

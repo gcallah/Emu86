@@ -24,17 +24,18 @@ def add_debug(s):
 INSTR = 0
 OPS = 1
 
+
 def exec(tok_lines, gd, output, debug, labels):
     """
-        Executes a single instruction at location gd.ip in tok_lines.
+        Executes a single instruction at location reg[EIP] in tok_lines.
         Returns:
             success: was instruction valid?
             output: any output
             err_msg: if no success, what went wrong?
             debug: any debug info
     """
-    curr_instr = tok_lines[gd.ip]
-    gd.ip = gd.ip + 1
+    curr_instr = tok_lines[gd.get_ip()]
+    gd.inc_ip()
     try:
         output += curr_instr[INSTR].f(curr_instr[OPS], gd)
         return (True, output, "", debug)
@@ -42,7 +43,8 @@ def exec(tok_lines, gd, output, debug, labels):
         # we have hit one of the JUMP instructions: jump to that line.
         label = brk.label
         if label in labels:
-            gd.ip = labels[label]  # set i to line num of label
+            ip = labels[label]  # set i to line num of label
+            gd.set_ip(ip)
             return (True, output, "", debug)
         else:
             return (False, output, "Invalid label: " + label, debug)
@@ -81,17 +83,17 @@ def assemble(code, gd, step=False):
 
     if not step:
         add_debug("Setting ip to 0")
-        gd.ip = 0   # instruction pointer reset for 'run'
+        gd.set_ip(0)   # instruction pointer reset for 'run'
         count = 0
-        while gd.ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
-            add_debug("ip = " + str(gd.ip))
+        while gd.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
+            add_debug("ip = " + str(gd.get_ip()))
             (success, output, error, debug) = exec(tok_lines, gd, 
                                                    output, debug, labels)
             if not success:
                 return (output, error, debug)
             count += 1
     else:  # step through code
-        add_debug("In step, ip = " + str(gd.ip))
+        add_debug("In step, ip = " + str(gd.get_ip()))
         (success, output, error, debug) = exec(tok_lines, 
                                       gd, output, debug, labels)
         return (output, error, debug)

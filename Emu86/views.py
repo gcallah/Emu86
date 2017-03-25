@@ -47,12 +47,6 @@ def main_page(request):
             gdata.re_init()
         else:
             gdata.nxt_key = 0
-            if 'ip' in request.POST:
-                gdata.ip = request.POST['ip']
-                add_debug("In POST, ip = " + gdata.ip)
-            else:
-                gdata.ip = 0
-                dump_dict(request.POST)
 
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
@@ -73,7 +67,6 @@ def main_page(request):
                    'memory': gdata.memory, 
                    'stack': gdata.stack, 
                    'flags': gdata.flags,
-                   'ip': gdata.ip, 
                   })
 
 def get_reg_contents(registers, request):
