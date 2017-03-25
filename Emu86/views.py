@@ -42,7 +42,10 @@ def main_page(request):
             gdata.re_init()
         else:
             gdata.nxt_key = 0
-            gdata.ip = request.POST['ip']
+            if 'ip' in request.[POST]:
+                gdata.ip = request.POST['ip']
+            else
+                gdata.ip = 0
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
             get_stack_contents(gdata.stack, request)
@@ -54,15 +57,16 @@ def main_page(request):
     return render(request, 'main.html',
                   {'form': form,
                    'header': site_hdr,
-                   'registers': gdata.registers,
                    'output': output,
                    'error': error,
+                   'debug': debug,
                    'mem_digits': mem_digits,
+                   'registers': gdata.registers,
                    'memory': gdata.memory, 
                    'stack': gdata.stack, 
+                   'flags': gdata.flags
                    'ip': gdata.ip, 
-                   'debug': debug,
-                   'flags': gdata.flags})
+                  })
 
 def get_reg_contents(registers, request):
     for reg in registers:
