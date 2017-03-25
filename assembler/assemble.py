@@ -106,6 +106,8 @@ def assemble(code, gd, step=False):
                                                    output, debug, labels)
         else:
             output = "Reached end of executable code."
+            # rewind:
+            gd.set_ip(0)
         return (output, error, debug)
 
     if count >= MAX_INSTRUCTIONS:
