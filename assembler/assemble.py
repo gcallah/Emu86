@@ -99,9 +99,13 @@ def assemble(code, gd, step=False):
                 return (output, error, debug)
             count += 1
     else:  # step through code
-        add_debug("In step, ip = " + str(gd.get_ip()))
-        (success, output, error, debug) = exec(tok_lines, 
-                                      gd, output, debug, labels)
+        ip = gd.get_ip()
+        if ip < len(tok_lines):
+            add_debug("In step, ip = " + str(gd.get_ip()))
+            (success, output, error, debug) = exec(tok_lines, gd,
+                                                   output, debug, labels)
+        else:
+            output = "Reached end of executable code."
         return (output, error, debug)
 
     if count >= MAX_INSTRUCTIONS:
