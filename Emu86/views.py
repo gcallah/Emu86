@@ -42,9 +42,9 @@ def main_page(request):
             gdata.re_init()
         else:
             gdata.nxt_key = 0
-            if 'ip' in request.[POST]:
+            if 'ip' in request.POST:
                 gdata.ip = request.POST['ip']
-            else
+            else:
                 gdata.ip = 0
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
