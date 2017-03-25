@@ -10,7 +10,7 @@ from .models import AdminEmail
 from .models import Site
 from .forms import MainForm
 from assembler.global_data import gdata
-from assembler.assemble import assemble
+from assembler.assemble import assemble, add_debug
 
 # next is for possible later use:
 mem_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
@@ -44,6 +44,7 @@ def main_page(request):
             gdata.nxt_key = 0
             if 'ip' in request.POST:
                 gdata.ip = request.POST['ip']
+                add_debug("In POST, ip = " + gdata.ip)
             else:
                 gdata.ip = 0
             get_reg_contents(gdata.registers, request)
