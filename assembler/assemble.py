@@ -80,15 +80,18 @@ def assemble(code, gd, step=False):
         return (output, err.msg, debug)
 
     if not step:
+        add_debug("Setting ip to 0")
         gd.ip = 0   # instruction pointer reset for 'run'
         count = 0
         while gd.ip < len(tok_lines) and count < MAX_INSTRUCTIONS:
+            add_debug("ip = " + str(gd.ip))
             (success, output, error, debug) = exec(tok_lines, gd, 
                                                    output, debug, labels)
             if not success:
                 return (output, error, debug)
             count += 1
     else:  # step through code
+        add_debug("ip = " + str(gd.ip))
         (success, output, error, debug) = exec(tok_lines, 
                                       gd, output, debug, labels)
         return (output, error, debug)
