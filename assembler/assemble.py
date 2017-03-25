@@ -77,6 +77,7 @@ def assemble(code, gd, step=False):
         return ("", "Must submit code to run.", debug)
 
     labels = None
+    tok_lines = None
 
     # break the code into tokens:
     try:
