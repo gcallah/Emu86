@@ -24,6 +24,10 @@ def get_hdr():
         break   # since we only expect a single site record!
     return site_hdr
 
+def dump_request(req):
+    for key, val in request.POST:
+        add_debug(key + ": " + val)
+
 def main_page(request):
     global mem_digits
     global gdata
@@ -47,6 +51,8 @@ def main_page(request):
                 add_debug("In POST, ip = " + gdata.ip)
             else:
                 gdata.ip = 0
+                dump_req(request.POST)
+
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
             get_stack_contents(gdata.stack, request)
