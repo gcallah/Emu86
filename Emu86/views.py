@@ -49,7 +49,7 @@ def main_page(request):
             if not step:
                 gdata.nxt_key = 0
             else:
-                gdata.nxt_key = request.POST[nxt_key]
+                gdata.nxt_key = request.POST['nxt_key']
 
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
