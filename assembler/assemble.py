@@ -12,6 +12,8 @@ from .tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 
+JMP_STR = "A jump instruction."
+
 debug = ""
 
 
@@ -53,9 +55,9 @@ def exec(tok_lines, gd, last_instr, debug, labels):
         if label in labels:
             ip = labels[label]  # set i to line num of label
             gd.set_ip(ip)
-            return (True, last_instr, "", debug)
+            return (True, JMP_STR, "", debug)
         else:
-            return (False, last_instr, "Invalid label: " + label, debug)
+            return (False, JMP_STR, "Invalid label: " + label, debug)
     except Error as err:
         return (False, last_instr, err.msg, debug)
 

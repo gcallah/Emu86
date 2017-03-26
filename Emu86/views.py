@@ -54,9 +54,12 @@ def main_page(request):
             step = (STEP in request.POST)
             gdata.nxt_key = 0
             if step:
-                gdata.nxt_key = request.POST.get(NXT_KEY, 0)
-                if not isinstance(gdata.nxt_key, int):
+                nxt_key = None
+                nxt_key = request.POST.get(NXT_KEY, 0)
+                if not nxt_key:
                     gdata.nxt_key = 0
+                else:
+                    gdata.nxt_key = int(nxt_key)
 
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
