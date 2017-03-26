@@ -764,7 +764,8 @@ a.deletelink:focus, a.deletelink:hover {
     text-align: center;
     margin: 10px 20px 20px 54px;
     background: #075;
-    border: 4px groove #3866A3;
+    border-radius: 10px;
+    border: 1px solid #003366;
 }
 
 #step-button {
@@ -772,14 +773,16 @@ a.deletelink:focus, a.deletelink:hover {
     margin: 10px 20px 20px 48px;
     color: #285D91;
     background: #ffcc33;
-    border: 4px groove #3866A3;
+    border-radius: 10px;
+    border: 1px solid #003366;
 }
 
 #clear-button {
     float: left;
     margin: 10px 40px 20px 20px;
     background: #91285d;
-    border: 4px groove #3866A3;
+    border-radius: 10px;
+    border: 1px solid #003366;
 }
 
 td#flag, td#register, td#mem-loc {
