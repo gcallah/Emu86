@@ -15,6 +15,12 @@ from assembler.assemble import assemble, add_debug
 # next is for possible later use:
 mem_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
 
+CODE = 'code'
+NXT_KEY = 'nxt_key'
+STEP = 'step'
+CLEAR = 'clear'
+HEADER = 'header'
+
 
 def get_hdr():
     site_hdr = "Emu86: an x86 assembly emulator."
@@ -42,30 +48,30 @@ def main_page(request):
         form = MainForm()
     else:
         form = MainForm(request.POST)
-        if 'clear' in request.POST:
+        if CLEAR in request.POST:
             gdata.re_init()
         else:
-            step = ('step' in request.POST)
-            if not step:
-                gdata.nxt_key = 0
-            else:
-                gdata.nxt_key = request.POST['nxt_key']
+            step = (STEP in request.POST)
+            gdata.nxt_key = 0
+            if step:
+                if NXT_KEY in request.POST:
+                    gdata.nxt_key = request.POST[NXT_KEY]
 
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
             get_stack_contents(gdata.stack, request)
             get_flag_contents(gdata.flags, request)
-            (output, error, debug) = assemble(request.POST['code'],
+            (output, error, debug) = assemble(request.POST[CODE],
                                               gdata, step)
 
     return render(request, 'main.html',
                   {'form': form,
-                   'header': site_hdr,
+                   HEADER: site_hdr,
                    'output': output,
                    'error': error,
                    'debug': debug,
                    'mem_digits': mem_digits,
-                   'nxt_key': gdata.nxt_key,
+                   NXT_KEY: gdata.nxt_key,
                    'registers': gdata.registers,
                    'memory': gdata.memory, 
                    'stack': gdata.stack, 
@@ -90,7 +96,7 @@ def get_stack_contents(stack, request):
 
 def help(request):
     site_hdr = get_hdr()
-    return render(request, 'help.html', {'header': site_hdr})
+    return render(request, 'help.html', {HEADER: site_hdr})
 
 def feedback(request):
     site_hdr = get_hdr()
@@ -100,4 +106,4 @@ def feedback(request):
         comma_del_emails = comma_del_emails + email.email_addr + ","
     comma_del_emails = comma_del_emails[:-1]
     return render(request, 'feedback.html', {'emails': comma_del_emails,
-        'header': site_hdr})
+        HEADER: site_hdr})
