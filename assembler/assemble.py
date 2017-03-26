@@ -107,7 +107,7 @@ def assemble(code, gd, step=False):
             count += 1
     else:  # step through code
         ip = gd.get_ip()
-        add_debug("Nxt_key = " + str(gd.nxt_key))
+        add_debug("Next key = " + str(gd.nxt_key))
         if ip < len(tok_lines):
             add_debug("In step, ip = " + str(gd.get_ip()))
             (success, last_instr, error, debug) = exec(tok_lines, gd,
