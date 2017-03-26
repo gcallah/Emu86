@@ -36,7 +36,7 @@ class Interrupt(Instruction):
         </descr>
     """
 
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         check_num_args(self.get_nm(), ops, 2)
         if type(ops[0]) != IntOp:
             raise InvalidOperand(str(ops[0]))

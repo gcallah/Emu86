@@ -48,7 +48,7 @@ class Cmpf(Instruction):
             since Python integer arithmetic never carries or overflows!
         </descr>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         (op1, op2) = get_two_ops(self.get_nm(), ops)
         res = op1.get_val() - op2.get_val()
         # set the proper flags
@@ -62,7 +62,6 @@ class Cmpf(Instruction):
             gdata.flags['SF'] = 1
         else:
             gdata.flags['SF'] = 0
-        return super().f(ops, gdata)
 
 class Jmp(Instruction):
     """
@@ -73,7 +72,7 @@ class Jmp(Instruction):
             JMP lbl
         </syntax>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(target.name)
 
@@ -89,11 +88,10 @@ class Je(Instruction):
             Jumps if ZF is one.
         </descr>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
         if gdata.flags['ZF']:
             raise Jump(target.name)
-        return super().f(ops, gdata)
 
 class Jne(Instruction):
     """
@@ -107,11 +105,10 @@ class Jne(Instruction):
             Jumps if ZF is zero.
         </descr>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
         if not gdata.flags['ZF']:
             raise Jump(target.name)
-        return super().f(ops, gdata)
 
 class Jg(Instruction):
     """
@@ -125,11 +122,10 @@ class Jg(Instruction):
             Jumps if SF == 0 and ZF == 0.
         </descr>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
         if not gdata.flags['SF'] and not gdata.flags['ZF']:
             raise Jump(target.name)
-        return super().f(ops, gdata)
 
 class Jge(Instruction):
     """
@@ -143,7 +139,7 @@ class Jge(Instruction):
             Jumps if SF == 0.
         </descr>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
         if not gdata.flags['SF']:
             raise Jump(target.name)
@@ -161,7 +157,7 @@ class Jl(Instruction):
             Jumps if SF == 1.
         </descr>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
         if gdata.flags['SF']:
             raise Jump(target.name)
@@ -179,7 +175,7 @@ class Jle(Instruction):
             Jumps if SF == 1 or ZF == 1.
         </descr>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
         if gdata.flags['SF'] or gdata.flags['ZF']:
             raise Jump(target.name)

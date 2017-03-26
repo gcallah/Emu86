@@ -30,12 +30,16 @@ class Instruction(Token):
         super().__init__(name)
 
     def f(self, ops, gdata):
+        self.fhook(ops, gdata)
         s = self.name + " "
         for op in ops:
             s += str(op)
             s += " "
         return s
 
+    @abstractmethod
+    def fhook(self, ops, gdata):
+        pass
 
 class Operand(Token):
     """

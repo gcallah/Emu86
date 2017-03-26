@@ -19,10 +19,9 @@ class Mov(Instruction):
             MOV mem, mem
         </syntax>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         check_num_args(self.get_nm(), ops, 2)
         ops[0].set_val(ops[1].get_val())
-        return super().f(ops, gdata)
 
 
 class Pop(Instruction):
@@ -33,10 +32,9 @@ class Pop(Instruction):
         <syntax>
         </syntax>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         check_num_args("POP", ops, 1)
         # TBD!
-        return ''
 
 
 class Push(Instruction):
@@ -47,10 +45,9 @@ class Push(Instruction):
         <syntax>
         </syntax>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         check_num_args("PUSH", ops, 1)
         # TBD!
-        return ''
 
 
 class Lea(Instruction):
@@ -61,7 +58,6 @@ class Lea(Instruction):
         <syntax>
         </syntax>
     """
-    def f(self, ops, gdata):
+    def fhook(self, ops, gdata):
         check_num_args("LEA", ops, 2)
         # TBD!
-        return ''
