@@ -27,12 +27,12 @@ def dump_flags(gd):
     for flag, val in gd.flags:
         add_debug("Flag = " + flag + "; val = " + str(val))
 
-def exec(tok_lines, gd, output, debug, labels):
+def exec(tok_lines, gd, last_instr, debug, labels):
     """
         Executes a single instruction at location reg[EIP] in tok_lines.
         Returns:
             success: was instruction valid?
-            output: any output
+            last_instr: any last_instr
             err_msg: if no success, what went wrong?
             debug: any debug info
     """
@@ -43,8 +43,8 @@ def exec(tok_lines, gd, output, debug, labels):
 
         curr_instr = tok_lines[ip]
         gd.inc_ip()
-        output = curr_instr[INSTR].f(curr_instr[OPS], gd)
-        return (True, output, "", debug)
+        last_instr = curr_instr[INSTR].f(curr_instr[OPS], gd)
+        return (True, last_instr, "", debug)
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
         add_debug("In FlowBreak")
@@ -53,11 +53,11 @@ def exec(tok_lines, gd, output, debug, labels):
         if label in labels:
             ip = labels[label]  # set i to line num of label
             gd.set_ip(ip)
-            return (True, output, "", debug)
+            return (True, last_instr, "", debug)
         else:
-            return (False, output, "Invalid label: " + label, debug)
+            return (False, last_instr, "Invalid label: " + label, debug)
     except Error as err:
-        return (False, output, err.msg, debug)
+        return (False, last_instr, err.msg, debug)
 
 def assemble(code, gd, step=False):
     """
@@ -70,12 +70,12 @@ def assemble(code, gd, step=False):
                 memory: current memory values.
                 flags: current values of flags.
         Returns:
-            Output, if any.
+            next 
             Error, if any.
     """
     global debug
     debug = ''
-    output = ''
+    last_instr = ''
     error = ''
 
     if code is None or len(code) == 0:
@@ -90,7 +90,7 @@ def assemble(code, gd, step=False):
         for lbl in labels:
             add_debug(lbl + " = " + str(labels[lbl]))
     except Error as err:
-        return (output, err.msg, debug)
+        return (last_instr, err.msg, debug)
 
     if not step:
         add_debug("Setting ip to 0")
@@ -98,22 +98,23 @@ def assemble(code, gd, step=False):
         count = 0
         while gd.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
             add_debug("ip = " + str(gd.get_ip()))
-            (success, output, error, debug) = exec(tok_lines, gd, 
-                                                   output, debug, labels)
+            (success, last_instr, error, debug) = exec(tok_lines, gd, 
+                                                   last_instr, debug, labels)
             if not success:
-                return (output, error, debug)
+                return (last_instr, error, debug)
             count += 1
     else:  # step through code
         ip = gd.get_ip()
+        add_debug("Nxt_key = " + str(gd.nxt_key))
         if ip < len(tok_lines):
             add_debug("In step, ip = " + str(gd.get_ip()))
-            (success, output, error, debug) = exec(tok_lines, gd,
-                                                   output, debug, labels)
+            (success, last_instr, error, debug) = exec(tok_lines, gd,
+                                                   last_instr, debug, labels)
         else:
-            output = "Reached end of executable code."
+            last_instr = "Reached end of executable code."
             # rewind:
             gd.set_ip(0)
-        return (output, error, debug)
+        return (last_instr, error, debug)
 
     if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: "
@@ -121,4 +122,4 @@ def assemble(code, gd, step=False):
                  + str(MAX_INSTRUCTIONS))
     else:
         error = ''
-    return (output, error, debug)
+    return (last_instr, error, debug)

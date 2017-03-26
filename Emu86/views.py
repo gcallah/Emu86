@@ -45,13 +45,16 @@ def main_page(request):
         if 'clear' in request.POST:
             gdata.re_init()
         else:
-            gdata.nxt_key = 0
+            step = ('step' in request.POST)
+            if not step:
+                gdata.nxt_key = 0
+            else:
+                gdata.nxt_key = request.POST[nxt_key]
 
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
             get_stack_contents(gdata.stack, request)
             get_flag_contents(gdata.flags, request)
-            step = ('step' in request.POST)
             (output, error, debug) = assemble(request.POST['code'],
                                               gdata, step)
 
@@ -62,6 +65,7 @@ def main_page(request):
                    'error': error,
                    'debug': debug,
                    'mem_digits': mem_digits,
+                   'nxt_key': gdata.nxt_key,
                    'registers': gdata.registers,
                    'memory': gdata.memory, 
                    'stack': gdata.stack, 
