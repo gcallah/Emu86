@@ -29,6 +29,9 @@ class Instruction(Token):
     def __init__(self, name):
         super().__init__(name)
 
+    def __str__(self):
+        return str(self.name)
+
     def f(self, ops, gdata):
         self.fhook(ops, gdata)
         s = self.name + " "
@@ -53,6 +56,9 @@ class IntOp(Operand):
     def __init__(self, val=0):
         super().__init__("IntOp", val)
 
+    def __str__(self):
+        return str(self.value)
+
 
 class Location(Operand):
     """
@@ -68,6 +74,9 @@ class Address(Location):
     def __init__(self, name, memory, val=0):
         super().__init__(name)
         self.mem = memory
+
+    def __str__(self):
+        return "[" + str(self.name) + "]"
 
     def get_val(self):
         return int(self.mem[self.name])
@@ -107,6 +116,9 @@ class Register(Location):
         self.registers = registers
         self.val = registers[self.name]
         self.writable = True
+
+    def __str__(self):
+        return str(self.name)
 
     def get_val(self):
         return int(self.registers[self.name])
