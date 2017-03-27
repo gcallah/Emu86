@@ -23,7 +23,7 @@ INSTR = 0
 OPS = 1
 
 def dump_flags(gd):
-    for flag, val in gd.flags:
+    for flag, val in gd.flags.items():
         add_debug("Flag = " + flag + "; val = " + str(val), gd)
 
 def exec(tok_lines, gd, last_instr, labels):
