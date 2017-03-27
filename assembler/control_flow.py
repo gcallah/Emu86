@@ -110,7 +110,7 @@ class Jne(Instruction):
     """
     def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
-        if not gdata.flags['ZF']:
+        if int(gdata.flags['ZF']) == 0:
             raise Jump(target.name)
 
 class Jg(Instruction):
@@ -127,7 +127,8 @@ class Jg(Instruction):
     """
     def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
-        if not gdata.flags['SF'] and not gdata.flags['ZF']:
+        if (int(gdata.flags['SF']) == 0 
+            and int(gdata.flags['ZF']) == 0):
             raise Jump(target.name)
 
 class Jge(Instruction):
@@ -144,7 +145,7 @@ class Jge(Instruction):
     """
     def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
-        if not gdata.flags['SF']:
+        if int(gdata.flags['SF']) == 0:
             raise Jump(target.name)
         return ''
 
@@ -162,7 +163,7 @@ class Jl(Instruction):
     """
     def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
-        if gdata.flags['SF']:
+        if int(gdata.flags['SF']) == 1:
             raise Jump(target.name)
         return ''
 
@@ -180,7 +181,8 @@ class Jle(Instruction):
     """
     def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
-        if gdata.flags['SF'] or gdata.flags['ZF']:
+        if (int(gdata.flags['SF']) == 1
+            or int(gdata.flags['ZF']) == 1):
             raise Jump(target.name)
         return ''
 
