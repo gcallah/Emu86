@@ -33,7 +33,7 @@ def dump_dict(d, gdata):
 
 def main_page(request):
     global gdata
-    output = ""
+    last_instr = ""
     error = ""
 
     site_hdr = get_hdr()
@@ -60,12 +60,12 @@ def main_page(request):
             get_mem_contents(gdata.memory, request)
             get_stack_contents(gdata.stack, request)
             get_flag_contents(gdata.flags, request)
-            (output, error) = assemble(request.POST[CODE], gdata, step)
+            (last_instr, error) = assemble(request.POST[CODE], gdata, step)
 
     return render(request, 'main.html',
                   {'form': form,
                    HEADER: site_hdr,
-                   'output': output,
+                   'last_instr': last_instr,
                    'error': error,
                    'debug': gdata.debug,
                    NXT_KEY: gdata.nxt_key,
