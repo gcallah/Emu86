@@ -91,7 +91,7 @@ class Je(Instruction):
     def fhook(self, ops, gdata):
         target = get_one_op(self.get_nm(), ops)
         gdata.debug += ("In JE; ZF = " + str(gdata.flags['ZF']) + "\n")
-        if gdata.flags['ZF']:
+        if int(gdata.flags['ZF']) == 1:
             gdata.debug += ("About to raise Jump; ZF = " 
                             + str(gdata.flags['ZF']) + "\n")
             raise Jump(target.name)
