@@ -83,8 +83,6 @@ def assemble(code, gd, step=False):
     # break the code into tokens:
     try:
         (tok_lines, labels) = lex(code, gd)
-        for lbl in labels:
-            add_debug(lbl + " = " + str(labels[lbl]), gd)
     except Error as err:
         return (last_instr, err.msg)
 
@@ -103,7 +101,6 @@ def assemble(code, gd, step=False):
         ip = gd.get_ip()
         add_debug("Next key = " + str(gd.nxt_key), gd)
         if ip < len(tok_lines):
-            add_debug("In step, ip = " + str(gd.get_ip()), gd)
             (success, last_instr, error) = exec(tok_lines, gd,
                                                 last_instr, labels)
         else:
