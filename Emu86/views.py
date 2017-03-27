@@ -50,7 +50,10 @@ def main_page(request):
             gdata.nxt_key = 0
             if step:
                 add_debug("Getting next key", gdata)
-                gdata.nxt_key = int(request.POST.get(NXT_KEY, 0))
+                try:
+                    gdata.nxt_key = int(request.POST.get(NXT_KEY, 0))
+                except Exception:
+                    gdata.nxt_key = 0
 
             get_reg_contents(gdata.registers, request)
             get_mem_contents(gdata.memory, request)
