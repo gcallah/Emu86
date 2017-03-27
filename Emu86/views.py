@@ -49,7 +49,7 @@ def main_page(request):
             step = (STEP in request.POST)
             gdata.nxt_key = 0
             if step:
-                add_debug("Getting next key")
+                add_debug("Getting next key", gdata)
                 gdata.nxt_key = int(request.POST.get(NXT_KEY, 0))
 
             get_reg_contents(gdata.registers, request)
