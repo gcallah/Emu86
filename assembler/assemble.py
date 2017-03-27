@@ -91,7 +91,6 @@ def assemble(code, gd, step=False):
         gd.set_ip(0)   # instruction pointer reset for 'run'
         count = 0
         while gd.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
-            add_debug("ip = " + str(gd.get_ip()), gd)
             (success, last_instr, error) = exec(tok_lines, gd, 
                                                    last_instr, labels)
             if not success:
@@ -100,6 +99,7 @@ def assemble(code, gd, step=False):
     else:  # step through code
         ip = gd.get_ip()
         add_debug("Next key = " + str(gd.nxt_key), gd)
+        add_debug("Ret str = " + str(gd.ret_str), gd)
         if ip < len(tok_lines):
             (success, last_instr, error) = exec(tok_lines, gd,
                                                 last_instr, labels)
