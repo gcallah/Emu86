@@ -14,12 +14,9 @@ MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 
 JMP_STR = "A jump instruction."
 
-debug = ""
 
-
-def add_debug(s):
-    global debug
-    debug += (s + "\n")
+def add_debug(s, gd):
+    gd.debug += (s + "\n")
 
 
 INSTR = 0
@@ -27,16 +24,15 @@ OPS = 1
 
 def dump_flags(gd):
     for flag, val in gd.flags:
-        add_debug("Flag = " + flag + "; val = " + str(val))
+        add_debug("Flag = " + flag + "; val = " + str(val), gd)
 
-def exec(tok_lines, gd, last_instr, debug, labels):
+def exec(tok_lines, gd, last_instr, labels):
     """
         Executes a single instruction at location reg[EIP] in tok_lines.
         Returns:
             success: was instruction valid?
             last_instr: any last_instr
             err_msg: if no success, what went wrong?
-            debug: any debug info
     """
     try:
         ip = gd.get_ip()
@@ -46,20 +42,20 @@ def exec(tok_lines, gd, last_instr, debug, labels):
         curr_instr = tok_lines[ip]
         gd.inc_ip()
         last_instr = curr_instr[INSTR].f(curr_instr[OPS], gd)
-        return (True, last_instr, "", debug)
+        return (True, last_instr, "")
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
-        add_debug("In FlowBreak")
+        add_debug("In FlowBreak", gd)
         dump_flags(gd)
         label = brk.label
         if label in labels:
             ip = labels[label]  # set i to line num of label
             gd.set_ip(ip)
-            return (True, JMP_STR, "", debug)
+            return (True, JMP_STR, "")
         else:
-            return (False, JMP_STR, "Invalid label: " + label, debug)
+            return (False, JMP_STR, "Invalid label: " + label)
     except Error as err:
-        return (False, last_instr, err.msg, debug)
+        return (False, last_instr, err.msg)
 
 def assemble(code, gd, step=False):
     """
@@ -75,13 +71,11 @@ def assemble(code, gd, step=False):
             next 
             Error, if any.
     """
-    global debug
-    debug = ''
     last_instr = ''
     error = ''
 
     if code is None or len(code) == 0:
-        return ("", "Must submit code to run.", debug)
+        return ("", "Must submit code to run.")
 
     labels = None
     tok_lines = None
@@ -90,33 +84,33 @@ def assemble(code, gd, step=False):
     try:
         (tok_lines, labels) = lex(code, gd)
         for lbl in labels:
-            add_debug(lbl + " = " + str(labels[lbl]))
+            add_debug(lbl + " = " + str(labels[lbl]), gd)
     except Error as err:
-        return (last_instr, err.msg, debug)
+        return (last_instr, err.msg)
 
     if not step:
-        add_debug("Setting ip to 0")
+        add_debug("Setting ip to 0", gd)
         gd.set_ip(0)   # instruction pointer reset for 'run'
         count = 0
         while gd.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
-            add_debug("ip = " + str(gd.get_ip()))
-            (success, last_instr, error, debug) = exec(tok_lines, gd, 
-                                                   last_instr, debug, labels)
+            add_debug("ip = " + str(gd.get_ip()), gd)
+            (success, last_instr, error) = exec(tok_lines, gd, 
+                                                   last_instr, labels)
             if not success:
-                return (last_instr, error, debug)
+                return (last_instr, error)
             count += 1
     else:  # step through code
         ip = gd.get_ip()
-        add_debug("Next key = " + str(gd.nxt_key))
+        add_debug("Next key = " + str(gd.nxt_key), gd)
         if ip < len(tok_lines):
-            add_debug("In step, ip = " + str(gd.get_ip()))
-            (success, last_instr, error, debug) = exec(tok_lines, gd,
-                                                   last_instr, debug, labels)
+            add_debug("In step, ip = " + str(gd.get_ip()), gd)
+            (success, last_instr, error) = exec(tok_lines, gd,
+                                                last_instr, labels)
         else:
             last_instr = "Reached end of executable code."
             # rewind:
             gd.set_ip(0)
-        return (last_instr, error, debug)
+        return (last_instr, error)
 
     if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: "
@@ -124,4 +118,4 @@ def assemble(code, gd, step=False):
                  + str(MAX_INSTRUCTIONS))
     else:
         error = ''
-    return (last_instr, error, debug)
+    return (last_instr, error)

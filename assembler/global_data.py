@@ -17,6 +17,7 @@ class GlobalData:
         # the x86 registers
         self.nxt_key = 0
         self.ret_str = "Time to finish!"
+        self.debug = ""
         self.registers = OrderedDict(
                     [
                         ('EAX', 0),

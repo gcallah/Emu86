@@ -12,9 +12,6 @@ from .forms import MainForm
 from assembler.global_data import gdata
 from assembler.assemble import assemble, add_debug
 
-# next is for possible later use:
-mem_digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
-
 CODE = 'code'
 NXT_KEY = 'nxt_key'
 STEP = 'step'
@@ -30,16 +27,14 @@ def get_hdr():
         break   # since we only expect a single site record!
     return site_hdr
 
-def dump_dict(d):
+def dump_dict(d, gdata):
     for key, val in d.items():
-        add_debug(str(key) + ": " + str(val))
+        add_debug(str(key) + ": " + str(val), gdata)
 
 def main_page(request):
-    global mem_digits
     global gdata
     output = ""
     error = ""
-    debug = ""
 
     site_hdr = get_hdr()
 
@@ -65,16 +60,14 @@ def main_page(request):
             get_mem_contents(gdata.memory, request)
             get_stack_contents(gdata.stack, request)
             get_flag_contents(gdata.flags, request)
-            (output, error, debug) = assemble(request.POST[CODE],
-                                              gdata, step)
+            (output, error) = assemble(request.POST[CODE], gdata, step)
 
     return render(request, 'main.html',
                   {'form': form,
                    HEADER: site_hdr,
                    'output': output,
                    'error': error,
-                   'debug': debug,
-                   'mem_digits': mem_digits,
+                   'debug': gdata.debug,
                    NXT_KEY: gdata.nxt_key,
                    'registers': gdata.registers,
                    'memory': gdata.memory, 
