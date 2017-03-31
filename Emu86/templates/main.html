@@ -39,7 +39,11 @@
                                     </td>
                                     <td id="contents">
                                         <input
-                                            id="reg-cont"
+                                            {% if reg in unwritable %}
+                                                id="unwr-cont"
+                                            {% else %}
+                                                id="reg-cont"
+                                            {% endif %}
                                             value="{{ cont }}"
                                             name="{{ reg }}"
                                             size="10"

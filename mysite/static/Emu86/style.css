@@ -802,6 +802,10 @@ td#contents, input#reg-cont, input#flag-cont {
     background: #eff;
 }
 
+input#unwr-cont {
+    background: #eee;
+}
+
 input#reg-cont, input#mem-cont, input#flag-cont {
     border: none;
     padding: 0px, 0px, 0px, 0px
