@@ -792,6 +792,12 @@ td#flag, td#register, td#mem-loc {
     vertical-align: middle
 }
 
+td#unwritable {
+    color: #ffc;
+    background: #966;
+    vertical-align: middle
+}
+
 td#contents, input#reg-cont, input#flag-cont {
     background: #eff;
 }

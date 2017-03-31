@@ -9,7 +9,8 @@ INVALID_OPRND = "Invalid operand: "
 INVALID_NUM_ARGS = "Invalid number of args: "
 INVALID_MEM_LOC = "Invalid memory location: "
 INVALID_REG = "Invalid register: "
-REG_UNWRITABLE = "Write attempt to unwriteable register:"
+REG_UNWRITABLE = "Write attempt to unwriteable register: "
+INT_OUT_OF_RNG = "Integer out of range: "
 
 class Error(Exception):
     """
@@ -48,6 +49,14 @@ class InvalidMemLoc(Error):
 class InvalidRegister(Error):
     def __init__(self, offender):
         self.msg = INVALID_REG + offender
+
+class RegUnwritable(Error):
+    def __init__(self, offender):
+        self.msg = REG_UNWRITABLE + offender
+
+class IntOutOfRng(Error):
+    def __init__(self, offender):
+        self.msg = INT_OUT_OF_RNG + offender
 
 def check_num_args(instr, ops, correct_num):
     """

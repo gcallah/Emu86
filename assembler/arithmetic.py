@@ -9,15 +9,25 @@ from .tokens import Instruction
 
 
 BITS = 32  # for now we assume 32-bit ints
+MAX_POS_INT = 2**32 / 2
+MAX_NEG_INT = -2**32 / 2
 
 
-def one_op_arith(ops, gdata, instr, f):
+def one_op_arith(ops, gdata, instr, operator):
+    """
+        operator: this is the functional version of Python's
+            +, -, *, etc.
+    """
     check_num_args(instr, ops, 1)
-    ops[0].set_val(f(ops[0].get_val()))
+    ops[0].set_val(operator(ops[0].get_val()))
 
-def two_op_arith(ops, gdata, instr, f):
+def two_op_arith(ops, gdata, instr, operator):
+    """
+        operator: this is the functional version of Python's
+            +, -, *, etc.
+    """
     check_num_args(instr, ops, 2)
-    ops[0].set_val(f(ops[0].get_val(), ops[1].get_val()))
+    ops[0].set_val(operator(ops[0].get_val(), ops[1].get_val()))
 
 
 class Add(Instruction):

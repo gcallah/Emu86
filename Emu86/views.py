@@ -66,6 +66,7 @@ def main_page(request):
                    HEADER: site_hdr,
                    'last_instr': last_instr,
                    'error': error,
+                   'unwritable': gdata.unwritable,
                    'debug': gdata.debug,
                    NXT_KEY: gdata.nxt_key,
                    'registers': gdata.registers,

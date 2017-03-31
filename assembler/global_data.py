@@ -18,6 +18,9 @@ class GlobalData:
         self.nxt_key = 0
         self.ret_str = "Time to finish!"
         self.debug = ""
+    
+        self.unwritable = [INSTR_PTR]
+
         self.registers = OrderedDict(
                     [
                         ('EAX', 0),
@@ -28,7 +31,7 @@ class GlobalData:
                         ('EDI', 0),
                         ('ESP', 0),
                         ('EBP', 0),
-                        ('EIP', 0),
+                        (INSTR_PTR, 0),
                     ])
         
         # for now we only need four of the flags
