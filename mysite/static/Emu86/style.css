@@ -802,14 +802,14 @@ td#contents, input#reg-cont, input#flag-cont {
     background: #eff;
 }
 
+input#reg-cont, input#mem-cont, input#flag-cont, input#unwr-cont {
+    border: none;
+    padding: 0px, 0px, 0px, 0px
+}
+
 input#unwr-cont {
     background: #eff;
     color: #936;
-}
-
-input#reg-cont, input#mem-cont, input#flag-cont {
-    border: none;
-    padding: 0px, 0px, 0px, 0px
 }
 
 td#form-cell {
