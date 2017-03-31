@@ -803,7 +803,8 @@ td#contents, input#reg-cont, input#flag-cont {
 }
 
 input#unwr-cont {
-    background: #eee;
+    background: #eff;
+    color: #936;
 }
 
 input#reg-cont, input#mem-cont, input#flag-cont {
