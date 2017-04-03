@@ -7,6 +7,7 @@ import sys
 import random
 sys.path.append("..")
 
+import operator as opfunc
 
 from unittest import TestCase, main
 
@@ -14,8 +15,8 @@ from assembler.global_data import gdata
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
-BIG_NEG = -1000000
-BIG_POS = 1000000
+BIG_NEG = -10000
+BIG_POS = 10000
 
 class AssembleTestCase(TestCase):
 
@@ -23,52 +24,43 @@ class AssembleTestCase(TestCase):
         assemble("mov eax, 1", gdata)
         self.assertEqual(gdata.registers["EAX"], 1)
 
-    def test_add(self):
+    def two_op_test(self, operator, instr):
         for i in range(0, NUM_TESTS):
             a = random.randint(BIG_NEG, BIG_POS)
             b = random.randint(BIG_NEG, BIG_POS)
-            c = a + b
+            correct = operator(a, b)
             gdata.registers["EAX"] = a
             gdata.registers["EBX"] = b
-            assemble("add eax, ebx", gdata)
-            self.assertEqual(gdata.registers["EAX"], c)
+            assemble(instr + " eax, ebx", gdata)
+            self.assertEqual(gdata.registers["EAX"], correct)
+
+    def test_add(self):
+        self.two_op_test(opfunc.add, "add")
 
     def test_sub(self):
-        gdata.registers["EAX"] = 2
-        gdata.registers["EBX"] = 4
-        assemble("sub eax, ebx", gdata)
-        self.assertEqual(gdata.registers["EAX"], -2)
+        self.two_op_test(opfunc.sub, "sub")
 
     def test_imul(self):
-        gdata.registers["EAX"] = 2
-        gdata.registers["EBX"] = 4
-        assemble("imul eax, ebx", gdata)
-        self.assertEqual(gdata.registers["EAX"], 8)
+        self.two_op_test(opfunc.mul, "imul")
 
     def test_and(self):
-        gdata.registers["EAX"] = 27                     #...011011
-        assemble("and eax, 23", gdata)                  #...001111
-        self.assertEqual(gdata.registers["EAX"], 19)    #...001011
+        self.two_op_test(opfunc.and_, "and")
 
     def test_or(self):
-        gdata.registers["EAX"] = 18                      #...010010
-        assemble("or eax, 24", gdata)                    #...011000
-        self.assertEqual(gdata.registers["EAX"], 26)     #...011010
+        self.two_op_test(opfunc.or_, "or")
 
     def test_xor(self):
-        gdata.registers["EAX"] = 18                      #...010010
-        assemble("xor eax, 24", gdata)                   #...011000
-        self.assertEqual(gdata.registers["EAX"], 10)     #...001010
+        self.two_op_test(opfunc.xor, "xor")
 
     def test_shl(self):
-        gdata.registers["EAX"] = 18                      #...010010
+        gdata.registers["EAX"] = 18                      
         assemble("shl eax, 2", gdata)
-        self.assertEqual(gdata.registers["EAX"], 72)     #..1001000
+        self.assertEqual(gdata.registers["EAX"], 72)     
 
     def test_shr(self):
-        gdata.registers["EAX"] = 18                      #...010010
+        gdata.registers["EAX"] = 18                      
         assemble("shr eax, 2", gdata)
-        self.assertEqual(gdata.registers["EAX"], 4)      #...000100
+        self.assertEqual(gdata.registers["EAX"], 4)      
 
     def test_neg(self):
         gdata.registers["EAX"] = 18
