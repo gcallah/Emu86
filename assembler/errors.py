@@ -12,6 +12,9 @@ INVALID_REG = "Invalid register: "
 REG_UNWRITABLE = "Write attempt to unwriteable register: "
 INT_OUT_OF_RNG = "Integer out of range: "
 
+INT_MAX=(2**31)-1
+INT_MIN=-(2**31)
+
 class Error(Exception):
     """
     Base class for all of our error exceptions.
@@ -69,3 +72,6 @@ def check_num_args(instr, ops, correct_num):
             extra_arg = ops[l - 1]
         raise InvalidNumArgs(instr, correct_num, len(ops),
                              extra_arg)
+    for i in range(0,l-1):
+        if(ops[i].get_val()>INT_MAX or ops[i].get_val()<INT_MIN ):
+            raise IntOutOfRng(instr)
