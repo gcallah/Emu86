@@ -16,7 +16,7 @@ class GlobalData:
     def __init__(self):
         # the x86 registers
         self.nxt_key = 0
-        self.ret_str = "Time to finish!"
+        self.ret_str = "Hi Shaivi and Sneha!"
         self.debug = ""
     
         self.unwritable = [INSTR_PTR]
