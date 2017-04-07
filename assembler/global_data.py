@@ -67,6 +67,8 @@ class GlobalData:
         self.ip = 0
         for reg in self.registers:
             self.registers[reg] = 0
+        # one gets a unique value:
+        self.registers[STACK_PTR] = STACK_TOP
         for flag in self.flags:
             self.flags[flag] = 0
         self.mem_init()
