@@ -8,6 +8,8 @@ INVALID_INSTR = "Invalid instruction: "
 INVALID_OPRND = "Invalid operand: "
 INVALID_NUM_ARGS = "Invalid number of args: "
 INVALID_MEM_LOC = "Invalid memory location: "
+STACK_FULL = "Stack is full: "
+STACK_EMPTY = "Stack is empty: "
 INVALID_REG = "Invalid register: "
 REG_UNWRITABLE = "Write attempt to unwriteable register: "
 INT_OUT_OF_RNG = "Integer out of range: "
@@ -47,6 +49,14 @@ class InvalidNumArgs(Error):
 class InvalidMemLoc(Error):
     def __init__(self, offender):
         self.msg = INVALID_MEM_LOC + offender
+
+class StackFull(Error):
+    def __init__(self, offender):
+        self.msg = STACK_FULL + offender
+
+class StackEmpty(Error):
+    def __init__(self,offender):
+        self.msg = STACK_EMPTY + offender
 
 class InvalidRegister(Error):
     def __init__(self, offender):
