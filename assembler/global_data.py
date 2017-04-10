@@ -98,9 +98,9 @@ class GlobalData:
         self.set_sp(sp)
     
     def set_sp(self, val):
-        if val > STACK_BOTTOM:
+        if val < STACK_BOTTOM:
             raise StackOverflow()
-        if val < STACK_TOP:
+        if val > STACK_TOP:
             raise StackUnderflow()
 
         self.registers[STACK_PTR] = val
