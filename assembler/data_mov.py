@@ -5,7 +5,7 @@ data_mov.py: data movement instructions.
 from .errors import check_num_args
 from .tokens import Instruction
 
-
+EMPTY_CELL = 0
 class Mov(Instruction):
     """
         <instr>
@@ -37,7 +37,7 @@ class Pop(Instruction):
         gdata.inc_sp()
         val = gdata.stack[str(gdata.get_sp())]
         ops[0].set_val(val)
-        gdata.stack[str(gdata.get_sp())] = 0
+        gdata.stack[str(gdata.get_sp())] = EMPTY_CELL
 
 
 class Push(Instruction):
