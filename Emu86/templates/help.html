@@ -83,6 +83,12 @@
 <li>            MOV mem, reg
 <li>            MOV mem, mem
 </ul>
+<h5>Description</h5>
+
+<p>
+            Stores/Copies the value of op2 to the loaction mentioned in op1. 
+            Callable for register values, memory values and constants.
+</p>
 <hr>
 <h4>
              pop
@@ -91,7 +97,17 @@
 <h5>Syntax</h5>
 
 <ul>
+<li>            POP reg
+<li>            POP mem
 </ul>
+<h5>Description</h5>
+
+<p>
+            POPS the topmost value out of the stack with reference to 
+            the stack pointer position (ESP). Decrements the stack pointer 
+            automatically, everytime a POP is called. Callable to store 
+            the stack value to a memory location and register.
+</p>
 <hr>
 <h4>
              push
@@ -100,7 +116,18 @@
 <h5>Syntax</h5>
 
 <ul>
+<li>            PUSH reg
+<li>            PUSH con
+<li>            PUSH mem
 </ul>
+<h5>Description</h5>
+
+<p>
+            PUSHES the value into the stack with reference to the stack 
+            pointer position (ESP). Increments the stack pointer automatically,
+            everytime a PUSH is called. Callable to store a memory value,
+            register value, and constant value to the stack.
+</p>
 <hr>
 <h4>
              lea
