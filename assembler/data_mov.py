@@ -34,7 +34,7 @@ class Pop(Instruction):
     def fhook(self, ops, gdata):
         check_num_args("POP", ops, 1)
         gdata.inc_sp()
-        val = gdata.stack[str(gdata.get_sp())]
+        val = int(gdata.stack[str(gdata.get_sp())])
         ops[0].set_val(val)
         gdata.stack[str(gdata.get_sp())] = gdata.empty_cell()
 
@@ -49,7 +49,7 @@ class Push(Instruction):
     """
     def fhook(self, ops, gdata):
         check_num_args("PUSH", ops, 1)
-        gdata.stack[str(gdata.get_sp())] = ops[0]
+        gdata.stack[str(gdata.get_sp())] = ops[0].get_val()
         gdata.dec_sp()
 
 
