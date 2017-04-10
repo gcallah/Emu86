@@ -18,7 +18,7 @@ class Mov(Instruction):
             MOV mem, mem
         </syntax>
         <descr>
-            Stores/Copies the value of op2 to the loaction mentioned in op1. 
+            Stores/Copies the value of op2 to the location mentioned in op1. 
             Callable for register values, memory values and constants.
         </descr>
     """
