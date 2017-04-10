@@ -11,7 +11,7 @@ MEM_DIGITS = 2
 MEM_SIZE = 32
 STACK_TOP = (MEM_SIZE * 2) - 1
 STACK_BOTTOM = MEM_SIZE
-
+EMPTY_CELL = 0
 INSTR_PTR = "EIP"
 STACK_PTR = "ESP"
 
@@ -98,9 +98,9 @@ class GlobalData:
         self.set_sp(sp)
     
     def set_sp(self, val):
-        if val > STACK_BOTTOM:
+        if val < STACK_BOTTOM:
             raise StackOverflow()
-        if val < STACK_TOP:
+        if val > STACK_TOP:
             raise StackUnderflow()
 
         self.registers[STACK_PTR] = val
@@ -108,5 +108,6 @@ class GlobalData:
     def get_sp(self):
         return int(self.registers[STACK_PTR])
 
-
+    def empty_cell(self):
+        return EMPTY_CELL
 gdata = GlobalData()
