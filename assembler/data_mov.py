@@ -17,6 +17,10 @@ class Mov(Instruction):
             MOV mem, reg
             MOV mem, mem
         </syntax>
+        <descr>
+            Stores/Copies the value of op2 in op1. Callable for registers, 
+            memory values and constants.
+        </descr>
     """
     def fhook(self, ops, gdata):
         check_num_args(self.get_nm(), ops, 2)
@@ -32,6 +36,12 @@ class Pop(Instruction):
             POP reg
             POP mem
         </syntax>
+        <descr>
+            POPS the topmost value out of the stack with reference to 
+            the stack pointer position (ESP). Decrements the stack pointer 
+            automatically. Callable to store the stack value to a memory 
+            location and register.
+        </descr>
     """
     def fhook(self, ops, gdata):
         check_num_args("POP", ops, 1)
@@ -51,6 +61,12 @@ class Push(Instruction):
             PUSH con
             PUSH mem
         </syntax>
+        <descr>
+            PUSHES the value into the stack with reference to the stack 
+            pointer position (ESP). Increments the stack pointer automatically. 
+            Callable to store a memory value, register value, and constant 
+            value to the stack.
+        </descr>
     """
     def fhook(self, ops, gdata):
         check_num_args("PUSH", ops, 1)
