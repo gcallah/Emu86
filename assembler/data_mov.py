@@ -29,6 +29,8 @@ class Pop(Instruction):
              pop
         </instr>
         <syntax>
+            POP reg
+            POP mem
         </syntax>
     """
     def fhook(self, ops, gdata):
@@ -45,6 +47,9 @@ class Push(Instruction):
              push
         </instr>
         <syntax>
+            PUSH reg
+            PUSH con
+            PUSH mem
         </syntax>
     """
     def fhook(self, ops, gdata):
