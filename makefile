@@ -19,7 +19,7 @@ dev: $(SRCS) $(OBJ)
 	git checkout dev
 	$(TDIR)/test_assemble.py
 	$(TDIR)/test_errors.py
-	git commit -a -m "Building development."
+	-git commit -a -m "Building development."
 	git push origin dev
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/utils/dev.sh'
 

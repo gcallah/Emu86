@@ -11,6 +11,8 @@ INVALID_MEM_LOC = "Invalid memory location: "
 INVALID_REG = "Invalid register: "
 REG_UNWRITABLE = "Write attempt to unwriteable register: "
 INT_OUT_OF_RNG = "Integer out of range: "
+STACK_OVERFLOW = "Stack overflow."
+STACK_UNDERFLOW = "Stack underflow."
 
 INT_MAX=(2**31)-1
 INT_MIN=-(2**31)
@@ -60,6 +62,14 @@ class RegUnwritable(Error):
 class IntOutOfRng(Error):
     def __init__(self, offender):
         self.msg = INT_OUT_OF_RNG + offender
+
+class StackOverflow(Error):
+    def __init__(self):
+        self.msg = STACK_OVERFLOW
+
+class StackUnderflow(Error):
+    def __init__(self):
+        self.msg = STACK_UNDERFLOW
 
 def check_num_args(instr, ops, correct_num):
     """
