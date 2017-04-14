@@ -4,9 +4,11 @@ tokens.py: contains classes we tokenize into.
 
 from abc import abstractmethod
 
-from .errors import InvalidMemLoc, RegUnwritable
+from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng
 from .global_data import gdata
 
+MAX_POS_INT=(2**31)-1
+MIN_POS_INT=-(2**31)
 
 class Token:
     def __init__(self, name, val=0):
@@ -55,10 +57,14 @@ class Operand(Token):
 
 class IntOp(Operand):
     def __init__(self, val=0):
+
         super().__init__("IntOp", val)
 
     def __str__(self):
-        return str(self.value)
+        if(self.value>MAX_POS_INT or self.value<MIN_POS_INT):
+            raise IntOutOfRng(str(self.value))
+        else:
+            return str(self.value)
 
 
 class Location(Operand):
