@@ -17,8 +17,7 @@ from assembler.assemble import assemble
 NUM_TESTS = 100
 BIG_NEG = -10000
 BIG_POS = 10000
-LEFT = -1
-RIGHT = 1
+MAX_SHIFT = 32
 
 class AssembleTestCase(TestCase):
 
@@ -38,10 +37,12 @@ class AssembleTestCase(TestCase):
 # Two Operand Tests #
 #####################
 
-    def two_op_test(self, operator, instr):
+    def two_op_test(self, operator, instr,
+                    low1=BIG_NEG, high1=BIG_POS,
+                    low2=BIG_NEG, high2=BIG_POS):
         for i in range(0, NUM_TESTS):
-            a = random.randint(BIG_NEG, BIG_POS)
-            b = random.randint(BIG_NEG, BIG_POS)
+            a = random.randint(low1, high1)
+            b = random.randint(low2, high2)
             correct = operator(a, b)
             gdata.registers["EAX"] = a
             gdata.registers["EBX"] = b
@@ -66,25 +67,15 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
 
-#####################
-#  Shift Operators  #
-#####################
-
-    def shift_test(self, operator, instr):
-        for i in range(0, NUM_TESTS):
-            a = random.randint(BIG_NEG, BIG_POS)
-            b = random.randint(0, BIG_POS)
-            correct = operator(a, b)
-            gdata.registers["EAX"] = a
-            gdata.registers["EBX"] = b
-            assemble(instr + " eax, ebx", gdata)
-            self.assertEqual(gdata.registers["EAX"], correct)
-
     def test_shl(self):
-        self.shift_test(opfunc.lshift, "shl")
+        self.two_op_test(opfunc.lshift, "shl",
+                         low1=BIG_NEG, high1=BIG_POS,
+                         low2=0, high2=MAX_SHIFT)
 
     def test_shr(self):
-        self.shift_test(opfunc.rshift, "shr")
+        self.two_op_test(opfunc.rshift, "shr",
+                         low1=BIG_NEG, high1=BIG_POS,
+                         low2=0, high2=MAX_SHIFT)
 
     def test_neg(self):
         gdata.registers["EAX"] = 18
