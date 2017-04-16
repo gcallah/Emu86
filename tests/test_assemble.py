@@ -15,9 +15,11 @@ from assembler.global_data import gdata
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
-BIG_NEG = -10000
-BIG_POS = 10000
+BIG_NEG = -1000000
+BIG_POS = 1000000
 MAX_SHIFT = 32
+MAX_MUL = 10000  # right now we don't want to overflow!
+MIN_MUL = -10000  # right now we don't want to overflow!
 
 class AssembleTestCase(TestCase):
 
@@ -56,7 +58,9 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.sub, "sub")
 
     def test_imul(self):
-        self.two_op_test(opfunc.mul, "imul")
+        self.two_op_test(opfunc.mul, "imul",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=MIN_MUL, high2=MAX_MUL)
 
     def test_and(self):
         self.two_op_test(opfunc.and_, "and")
