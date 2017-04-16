@@ -17,12 +17,26 @@ from assembler.assemble import assemble
 NUM_TESTS = 100
 BIG_NEG = -10000
 BIG_POS = 10000
+LEFT = -1
+RIGHT = 1
 
 class AssembleTestCase(TestCase):
 
     def test_mov(self):
         assemble("mov eax, 1", gdata)
         self.assertEqual(gdata.registers["EAX"], 1)
+
+    def test_not(self):
+        gdata.registers["EAX"] = 18
+        assemble("not eax", gdata)
+        self.assertEqual(gdata.registers["EAX"], -19)
+        gdata.registers["EAX"] = 18
+        assemble("not eax", gdata)
+        self.assertEqual(gdata.registers["EAX"], -19)
+
+#####################
+# Two Operand Tests #
+#####################
 
     def two_op_test(self, operator, instr):
         for i in range(0, NUM_TESTS):
@@ -52,25 +66,31 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
 
+#####################
+#  Shift Operators  #
+#####################
+
+    def shift_test(self, operator, instr):
+        for i in range(0, NUM_TESTS):
+            a = random.randint(BIG_NEG, BIG_POS)
+            b = random.randint(0, BIG_POS)
+            correct = operator(a, b)
+            gdata.registers["EAX"] = a
+            gdata.registers["EBX"] = b
+            assemble(instr + " eax, ebx", gdata)
+            self.assertEqual(gdata.registers["EAX"], correct)
+
     def test_shl(self):
-        gdata.registers["EAX"] = 18                      
-        assemble("shl eax, 2", gdata)
-        self.assertEqual(gdata.registers["EAX"], 72)     
+        self.shift_test(opfunc.lshift, "shl")
 
     def test_shr(self):
-        gdata.registers["EAX"] = 18                      
-        assemble("shr eax, 2", gdata)
-        self.assertEqual(gdata.registers["EAX"], 4)      
+        self.shift_test(opfunc.rshift, "shr")
 
     def test_neg(self):
         gdata.registers["EAX"] = 18
         assemble("neg eax", gdata)
         self.assertEqual(gdata.registers["EAX"], -18)
 
-    def test_not(self):
-        gdata.registers["EAX"] = 18
-        assemble("not eax", gdata)
-        self.assertEqual(gdata.registers["EAX"], -19)
  
     def test_inc(self):
         gdata.registers["EAX"] = 18
