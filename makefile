@@ -8,14 +8,14 @@ INTER1 = $(ODIR)/arithmetic.txt $(ODIR)/control_flow.txt $(ODIR)/data_mov.txt $(
 INTER2 = $(ODIR)/help.ptml
 OBJ = $(ODIR)/help.html
 
-help:
+help.html: $(SRCS)
 	extract_doc.awk <$(SDIR)/arithmetic.py | $(UDIR)/doc2html.awk >arithmetic.txt
 	extract_doc.awk <$(SDIR)/control_flow.py | $(UDIR)/doc2html.awk >control_flow.txt
 	extract_doc.awk <$(SDIR)/data_mov.py | $(UDIR)/doc2html.awk >data_mov.txt
 	extract_doc.awk <$(SDIR)/interrupts.py | $(UDIR)/doc2html.awk >interrupts.txt
 	html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
 
-dev: $(SRCS) $(OBJ)
+dev: $(SRCS) $(OBJ) help.html
 	git checkout dev
 	$(TDIR)/test_assemble.py
 	$(TDIR)/test_errors.py
