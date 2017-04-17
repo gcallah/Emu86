@@ -8,6 +8,7 @@ import random
 sys.path.append("..")
 
 import operator as opfunc
+import functools
 
 from unittest import TestCase, main
 
@@ -15,33 +16,26 @@ from assembler.global_data import gdata
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
-BIG_NEG = -10000
-BIG_POS = 10000
-LEFT = -1
-RIGHT = 1
+BIG_NEG = -1000000
+BIG_POS = 1000000
+MAX_SHIFT = 32
+MAX_MUL = 10000  # right now we don't want to overflow!
+MIN_MUL = -10000  # right now we don't want to overflow!
+ADD_ONE = 1
+SUB_ONE = -1
 
 class AssembleTestCase(TestCase):
-
-    def test_mov(self):
-        assemble("mov eax, 1", gdata)
-        self.assertEqual(gdata.registers["EAX"], 1)
-
-    def test_not(self):
-        gdata.registers["EAX"] = 18
-        assemble("not eax", gdata)
-        self.assertEqual(gdata.registers["EAX"], -19)
-        gdata.registers["EAX"] = 18
-        assemble("not eax", gdata)
-        self.assertEqual(gdata.registers["EAX"], -19)
 
 #####################
 # Two Operand Tests #
 #####################
 
-    def two_op_test(self, operator, instr):
+    def two_op_test(self, operator, instr,
+                    low1=BIG_NEG, high1=BIG_POS,
+                    low2=BIG_NEG, high2=BIG_POS):
         for i in range(0, NUM_TESTS):
-            a = random.randint(BIG_NEG, BIG_POS)
-            b = random.randint(BIG_NEG, BIG_POS)
+            a = random.randint(low1, high1)
+            b = random.randint(low2, high2)
             correct = operator(a, b)
             gdata.registers["EAX"] = a
             gdata.registers["EBX"] = b
@@ -55,7 +49,9 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.sub, "sub")
 
     def test_imul(self):
-        self.two_op_test(opfunc.mul, "imul")
+        self.two_op_test(opfunc.mul, "imul",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=MIN_MUL, high2=MAX_MUL)
 
     def test_and(self):
         self.two_op_test(opfunc.and_, "and")
@@ -66,41 +62,52 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
 
-#####################
-#  Shift Operators  #
-#####################
-
-    def shift_test(self, operator, instr):
-        for i in range(0, NUM_TESTS):
-            a = random.randint(BIG_NEG, BIG_POS)
-            b = random.randint(0, BIG_POS)
-            correct = operator(a, b)
-            gdata.registers["EAX"] = a
-            gdata.registers["EBX"] = b
-            assemble(instr + " eax, ebx", gdata)
-            self.assertEqual(gdata.registers["EAX"], correct)
-
     def test_shl(self):
-        self.shift_test(opfunc.lshift, "shl")
+        self.two_op_test(opfunc.lshift, "shl",
+                         low1=BIG_NEG, high1=BIG_POS,
+                         low2=0, high2=MAX_SHIFT)
 
     def test_shr(self):
-        self.shift_test(opfunc.rshift, "shr")
+        self.two_op_test(opfunc.rshift, "shr",
+                         low1=BIG_NEG, high1=BIG_POS,
+                         low2=0, high2=MAX_SHIFT)
+###################
+# Single Op Tests #
+###################
+
+    def one_op_test(self, operator, instr):
+        for i in range(NUM_TESTS):
+            a = random.randint(BIG_NEG, BIG_POS)
+            correct = operator(a)
+            gdata.registers["EAX"] = a
+            assemble(instr + " eax", gdata)
+            self.assertEqual(gdata.registers["EAX"], correct)
+
+    def test_not(self):
+        self.one_op_test(opfunc.inv, "not")
 
     def test_neg(self):
-        gdata.registers["EAX"] = 18
-        assemble("neg eax", gdata)
-        self.assertEqual(gdata.registers["EAX"], -18)
+        self.one_op_test(opfunc.neg, "neg")
 
- 
     def test_inc(self):
-        gdata.registers["EAX"] = 18
-        assemble("inc eax", gdata)
-        self.assertEqual(gdata.registers["EAX"], 19)
+        inc = functools.partial(opfunc.add, ADD_ONE)
+        self.one_op_test(inc, "inc")
 
     def test_dec(self):
-        gdata.registers["EAX"] = 18
-        assemble("dec eax", gdata)
-        self.assertEqual(gdata.registers["EAX"], 17)
+        dec = functools.partial(opfunc.add, SUB_ONE)
+        self.one_op_test(dec, "dec")
+
+##################
+# Other          #
+##################
+
+    def test_mov(self):
+        for i in range(0, NUM_TESTS):
+            a = random.randint(BIG_NEG, BIG_POS)
+            correct = a
+            gdata.registers["EAX"] = a
+            assemble("mov eax, " + str(a), gdata)
+            self.assertEqual(gdata.registers["EAX"], correct)
 
     def test_idiv(self):
         gdata.registers["EAX"] = 1
