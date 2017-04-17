@@ -23,6 +23,8 @@ MAX_MUL = 10000  # right now we don't want to overflow!
 MIN_MUL = -10000  # right now we don't want to overflow!
 ADD_ONE = 1
 SUB_ONE = -1
+STACK_SIZE = 32
+STACK_HEAD = 64
 
 class AssembleTestCase(TestCase):
 
@@ -96,6 +98,22 @@ class AssembleTestCase(TestCase):
     def test_dec(self):
         dec = functools.partial(opfunc.add, SUB_ONE)
         self.one_op_test(dec, "dec")
+
+##################
+# Push / Pop     #
+##################
+    def test_push(self):
+        correct_stack = [None]*STACK_SIZE
+        for i in range(0,STACK_SIZE):
+            a = random.randint(BIG_NEG, BIG_POS)
+            correct_stack[i] = a
+            gdata.registers["EAX"] = a
+            assemble("push eax", gdata)
+
+        gdata.registers["ESP"] = STACK_HEAD
+        for i in range(0, STACK_SIZE):
+            gdata.dec_sp()
+            self.assertEqual(gdata.stack[str(gdata.get_sp())], correct_stack[i])
 
 ##################
 # Other          #
