@@ -102,6 +102,7 @@ class AssembleTestCase(TestCase):
 ##################
 # Push / Pop     #
 ##################
+
     def test_push(self):
         correct_stack = [None]*STACK_SIZE
         for i in range(0,STACK_SIZE):
