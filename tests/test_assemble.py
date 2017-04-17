@@ -23,6 +23,7 @@ MAX_MUL = 10000  # right now we don't want to overflow!
 MIN_MUL = -10000  # right now we don't want to overflow!
 ADD_ONE = 1
 SUB_ONE = -1
+REGISTER_SIZE = 32
 STACK_SIZE = 32
 STACK_HEAD = 64
 
@@ -129,12 +130,20 @@ class AssembleTestCase(TestCase):
             self.assertEqual(gdata.registers["EAX"], correct)
 
     def test_idiv(self):
-        gdata.registers["EAX"] = 1
-        gdata.registers["EDX"] = 1
-        gdata.registers["EBX"] = 2
-        assemble("idiv ebx", gdata)
-        self.assertEqual(gdata.registers["EAX"], 2147483648)
-        self.assertEqual(gdata.registers["EDX"], 1)
+        for i in range(0, NUM_TESTS):
+            a = random.randint(BIG_NEG, BIG_POS)
+            d = random.randint(BIG_NEG, BIG_POS)
+            b = 0
+            while(b == 0): # Divisor can't be zero.
+                b = random.randint(BIG_NEG, BIG_POS)
+            correct_quotient = (opfunc.lshift(d,REGISTER_SIZE) + a) // b
+            correct_remainder = (opfunc.lshift(d,REGISTER_SIZE) + a) % b
+            gdata.registers["EAX"] = a
+            gdata.registers["EDX"] = d
+            gdata.registers["EBX"] = b
+            assemble("idiv ebx", gdata)
+            self.assertEqual(gdata.registers["EAX"], correct_quotient)
+            self.assertEqual(gdata.registers["EBX"], correct_remainder)
 
     def test_cmp_eq(self):
         gdata.registers["EAX"] = 1
