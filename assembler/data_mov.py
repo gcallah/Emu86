@@ -4,7 +4,6 @@ data_mov.py: data movement instructions.
 
 from .errors import check_num_args
 from .tokens import Instruction
-
 class Mov(Instruction):
     """
         <instr>
@@ -18,7 +17,7 @@ class Mov(Instruction):
             MOV mem, mem
         </syntax>
         <descr>
-            Stores/Copies the value of op2 to the loaction mentioned in op1. 
+            Stores/Copies the value of op2 to the location mentioned in op1. 
             Callable for register values, memory values and constants.
         </descr>
     """
@@ -45,11 +44,10 @@ class Pop(Instruction):
     """
     def fhook(self, ops, gdata):
         check_num_args("POP", ops, 1)
-        gdata.inc_sp()
         val = int(gdata.stack[str(gdata.get_sp())])
         ops[0].set_val(val)
         gdata.stack[str(gdata.get_sp())] = gdata.empty_cell()
-
+        gdata.inc_sp()
 
 class Push(Instruction):
     """

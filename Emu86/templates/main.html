@@ -37,6 +37,7 @@
                                     {% endif %}
                                         {{ reg }}
                                     </td>
+
                                     <td id="contents">
                                         <input
                                             {% if reg in unwritable %}
@@ -48,7 +49,7 @@
                                             name="{{ reg }}"
                                             size="10"
                                             readonly="readonly"
-                                        >
+                                        onclick=alert("hELLO"+value)>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -96,7 +97,8 @@
                 size="64" readonly="readonly" value="{{ last_instr }}">
             <br>
             <br>
-            Error Message (if any): 
+            Error Message (if any):
+
             <input type="text" name="error" max_length="64"
                 size="64" readonly="readonly" value="{{ error }}"
                 id="error">
@@ -177,6 +179,22 @@
         <br>
         Debug Information:
         <br>
+
+      <script>
+            {
+
+                var raised=document.getElementById("error").value;
+
+                if(raised)
+                {
+                    alert(raised);
+
+
+                }
+
+            }
+
+        </script>
         <textarea rows="12" cols="60" readonly="readonly">
             {{ debug }}
         </textarea>
