@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['emu86.pythonanywhere.com', 
                  'NathanConroy.pythonanywhere.com',
-                 'www.emu86.org','127.0.0.1'
+                 'www.emu86.org'
                 ]
 
 
