@@ -15,8 +15,11 @@ from assembler.global_data import gdata
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
-BIG_NEG = -10000
-BIG_POS = 10000
+BIG_NEG = -1000000
+BIG_POS = 1000000
+MAX_SHIFT = 32
+MAX_MUL = 10000  # right now we don't want to overflow!
+MIN_MUL = -10000  # right now we don't want to overflow!
 
 class AssembleTestCase(TestCase):
 
@@ -24,10 +27,24 @@ class AssembleTestCase(TestCase):
         assemble("mov eax, 1", gdata)
         self.assertEqual(gdata.registers["EAX"], 1)
 
-    def two_op_test(self, operator, instr):
+    def test_not(self):
+        gdata.registers["EAX"] = 18
+        assemble("not eax", gdata)
+        self.assertEqual(gdata.registers["EAX"], -19)
+        gdata.registers["EAX"] = 18
+        assemble("not eax", gdata)
+        self.assertEqual(gdata.registers["EAX"], -19)
+
+#####################
+# Two Operand Tests #
+#####################
+
+    def two_op_test(self, operator, instr,
+                    low1=BIG_NEG, high1=BIG_POS,
+                    low2=BIG_NEG, high2=BIG_POS):
         for i in range(0, NUM_TESTS):
-            a = random.randint(BIG_NEG, BIG_POS)
-            b = random.randint(BIG_NEG, BIG_POS)
+            a = random.randint(low1, high1)
+            b = random.randint(low2, high2)
             correct = operator(a, b)
             gdata.registers["EAX"] = a
             gdata.registers["EBX"] = b
@@ -41,7 +58,9 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.sub, "sub")
 
     def test_imul(self):
-        self.two_op_test(opfunc.mul, "imul")
+        self.two_op_test(opfunc.mul, "imul",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=MIN_MUL, high2=MAX_MUL)
 
     def test_and(self):
         self.two_op_test(opfunc.and_, "and")
@@ -53,24 +72,20 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.xor, "xor")
 
     def test_shl(self):
-        gdata.registers["EAX"] = 18                      
-        assemble("shl eax, 2", gdata)
-        self.assertEqual(gdata.registers["EAX"], 72)     
+        self.two_op_test(opfunc.lshift, "shl",
+                         low1=BIG_NEG, high1=BIG_POS,
+                         low2=0, high2=MAX_SHIFT)
 
     def test_shr(self):
-        gdata.registers["EAX"] = 18                      
-        assemble("shr eax, 2", gdata)
-        self.assertEqual(gdata.registers["EAX"], 4)      
+        self.two_op_test(opfunc.rshift, "shr",
+                         low1=BIG_NEG, high1=BIG_POS,
+                         low2=0, high2=MAX_SHIFT)
 
     def test_neg(self):
         gdata.registers["EAX"] = 18
         assemble("neg eax", gdata)
         self.assertEqual(gdata.registers["EAX"], -18)
 
-    def test_not(self):
-        gdata.registers["EAX"] = 18
-        assemble("not eax", gdata)
-        self.assertEqual(gdata.registers["EAX"], -19)
  
     def test_inc(self):
         gdata.registers["EAX"] = 18
