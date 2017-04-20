@@ -57,14 +57,13 @@ class Operand(Token):
 
 class IntOp(Operand):
     def __init__(self, val=0):
+        if(val > MAX_POS_INT or val < MIN_POS_INT):
+            raise IntOutOfRng(str(self.value))
 
         super().__init__("IntOp", val)
 
     def __str__(self):
-        if(self.value>MAX_POS_INT or self.value<MIN_POS_INT):
-            raise IntOutOfRng(str(self.value))
-        else:
-            return str(self.value)
+        return str(self.value)
 
 
 class Location(Operand):
