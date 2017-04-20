@@ -58,7 +58,7 @@ class Operand(Token):
 class IntOp(Operand):
     def __init__(self, val=0):
         if(val > MAX_POS_INT or val < MIN_POS_INT):
-            raise IntOutOfRng(str(self.value))
+            raise IntOutOfRng(str(val))
 
         super().__init__("IntOp", val)
 
