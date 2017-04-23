@@ -49,7 +49,7 @@
                                             name="{{ reg }}"
                                             size="10"
                                             readonly="readonly"
-                                        onclick=alert("hELLO"+value)>
+                                        onclick=convert(value)>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -188,6 +188,23 @@
                 if(raised)
                 {
                     alert(raised);
+
+
+                }
+
+                function convert(value)
+
+                {
+                    var value1=parseInt(value)
+                    if(value1>=0) {
+                        alert((value1).toString(2));
+                    }
+                    else
+                    {
+                        alert((value1>>>0).toString(2));
+
+
+                    }
 
 
                 }
