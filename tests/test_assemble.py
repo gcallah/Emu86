@@ -12,12 +12,11 @@ import functools
 
 from unittest import TestCase, main
 
+from assembler.arithmetic import INT_MIN, INT_MAX
 from assembler.global_data import gdata
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
-BIG_NEG = -1000000
-BIG_POS = 1000000
 MAX_SHIFT = 32
 MAX_MUL = 10000  # right now we don't want to overflow!
 MIN_MUL = -10000  # right now we don't want to overflow!
@@ -25,6 +24,7 @@ ADD_ONE = 1
 SUB_ONE = -1
 REGISTER_SIZE = 32
 STACK_SIZE = 32
+STACK_BASE = 32
 STACK_HEAD = 64
 
 class AssembleTestCase(TestCase):
@@ -34,8 +34,8 @@ class AssembleTestCase(TestCase):
 #####################
 
     def two_op_test(self, operator, instr,
-                    low1=BIG_NEG, high1=BIG_POS,
-                    low2=BIG_NEG, high2=BIG_POS):
+                    low1=INT_MIN, high1=INT_MAX,
+                    low2=INT_MIN, high2=INT_MAX):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
@@ -67,12 +67,12 @@ class AssembleTestCase(TestCase):
 
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
-                         low1=BIG_NEG, high1=BIG_POS,
+                         low1=INT_MIN, high1=INT_MAX,
                          low2=0, high2=MAX_SHIFT)
 
     def test_shr(self):
         self.two_op_test(opfunc.rshift, "shr",
-                         low1=BIG_NEG, high1=BIG_POS,
+                         low1=INT_MIN, high1=INT_MAX,
                          low2=0, high2=MAX_SHIFT)
 ###################
 # Single Op Tests #
@@ -80,7 +80,7 @@ class AssembleTestCase(TestCase):
 
     def one_op_test(self, operator, instr):
         for i in range(NUM_TESTS):
-            a = random.randint(BIG_NEG, BIG_POS)
+            a = random.randint(INT_MIN, INT_MAX)
             correct = operator(a)
             gdata.registers["EAX"] = a
             assemble(instr + " eax", gdata)
@@ -104,18 +104,6 @@ class AssembleTestCase(TestCase):
 # Push / Pop     #
 ##################
 
-    def test_push(self):
-        correct_stack = [None]*STACK_SIZE
-        for i in range(0,STACK_SIZE):
-            a = random.randint(BIG_NEG, BIG_POS)
-            correct_stack[i] = a
-            gdata.registers["EAX"] = a
-            assemble("push eax", gdata)
-
-        gdata.registers["ESP"] = STACK_HEAD
-        for i in range(0, STACK_SIZE):
-            gdata.dec_sp()
-            self.assertEqual(gdata.stack[str(gdata.get_sp())], correct_stack[i])
 
 ##################
 # Other          #
@@ -123,7 +111,7 @@ class AssembleTestCase(TestCase):
 
     def test_mov(self):
         for i in range(0, NUM_TESTS):
-            a = random.randint(BIG_NEG, BIG_POS)
+            a = random.randint(INT_MIN, INT_MAX)
             correct = a
             gdata.registers["EAX"] = a
             assemble("mov eax, " + str(a), gdata)
@@ -131,11 +119,11 @@ class AssembleTestCase(TestCase):
 
     def test_idiv(self):
         for i in range(0, NUM_TESTS):
-            a = random.randint(BIG_NEG, BIG_POS)
-            d = random.randint(BIG_NEG, BIG_POS)
+            a = random.randint(INT_MIN, INT_MAX)
+            d = random.randint(INT_MIN, INT_MAX)
             b = 0
             while(b == 0): # Divisor can't be zero.
-                b = random.randint(BIG_NEG, BIG_POS)
+                b = random.randint(INT_MIN, INT_MAX)
             correct_quotient = (opfunc.lshift(d,REGISTER_SIZE) + a) // b
             correct_remainder = (opfunc.lshift(d,REGISTER_SIZE) + a) % b
             gdata.registers["EAX"] = a
