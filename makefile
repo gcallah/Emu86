@@ -1,6 +1,7 @@
 ADIR = ansible
 SDIR = assembler
 ODIR = Emu86/templates
+MUDIR = myutils
 UDIR = utils
 TDIR = tests
 SRCS = $(SDIR)/arithmetic.py $(SDIR)/control_flow.py $(SDIR)/data_mov.py $(SDIR)/interrupts.py 
