@@ -1,6 +1,7 @@
 ADIR = ansible
 SDIR = assembler
 ODIR = Emu86/templates
+MUDIR = myutils
 UDIR = utils
 TDIR = tests
 SRCS = $(SDIR)/arithmetic.py $(SDIR)/control_flow.py $(SDIR)/data_mov.py $(SDIR)/interrupts.py 
@@ -21,7 +22,7 @@ dev: $(SRCS) $(OBJ) help.html
 	$(TDIR)/test_errors.py
 	-git commit -a -m "Building development."
 	git push origin dev
-	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/utils/dev.sh'
+	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
 prod: $(SRCS) $(OBJ)
 	git checkout master
@@ -29,7 +30,7 @@ prod: $(SRCS) $(OBJ)
 	$(TDIR)/test_assemble.py
 	$(TDIR)/test_errors.py
 	git push origin master
-	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/utils/prod.sh'
+	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'
 	git checkout dev
 
 # for future use:
