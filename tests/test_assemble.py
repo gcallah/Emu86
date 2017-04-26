@@ -12,10 +12,11 @@ import functools
 
 from unittest import TestCase, main
 
-from assembler.arithmetic import INT_MIN, INT_MAX
 from assembler.global_data import gdata
 from assembler.assemble import assemble
 
+from assembler.global_data import STACK_TOP, STACK_BOTTOM, MEM_SIZE
+from assembler.arithmetic import INT_MIN, INT_MAX
 NUM_TESTS = 100
 MAX_SHIFT = 32
 MAX_MUL = 10000  # right now we don't want to overflow!
@@ -23,9 +24,6 @@ MIN_MUL = -10000  # right now we don't want to overflow!
 ADD_ONE = 1
 SUB_ONE = -1
 REGISTER_SIZE = 32
-STACK_SIZE = 32
-STACK_BASE = 32
-STACK_HEAD = 64
 
 class AssembleTestCase(TestCase):
 
@@ -104,6 +102,13 @@ class AssembleTestCase(TestCase):
 # Push / Pop     #
 ##################
 
+    def test_push_and_pop(self):
+        correct_stack = [None]*(STACK_TOP+1)
+        for i in range(STACK_TOP, STACK_BOTTOM-10, -1):
+            a = random.randint(INT_MIN, INT_MAX)
+            correct_stack[i] = a
+            gdata.registers["EAX"] = a
+            assemble("push eax", gdata)
 
 ##################
 # Other          #
