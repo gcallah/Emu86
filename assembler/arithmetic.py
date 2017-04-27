@@ -5,12 +5,7 @@ arithmetic.py: arithmetic and logic instructions.
 import operator as opfunc
 
 from .errors import *
-from .tokens import Instruction
-
-
-
-
-INT_MAX_CARRY=(2**32)-1  #32 BITS max value
+from .tokens import Instruction, MAX_INT
 
 
 def one_op_arith(ops, gdata, instr, operator):
@@ -21,21 +16,26 @@ def one_op_arith(ops, gdata, instr, operator):
     check_num_args(instr, ops, 1)
     ops[0].set_val(operator(ops[0].get_val()))
 
+
 def two_op_arith(ops, gdata, instr, operator):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
     check_num_args(instr, ops, 2)
-    ops[0].set_val(checkflag(operator(ops[0].get_val(), ops[1].get_val()),gdata))
+    ops[0].set_val(
+        checkflag(operator(ops[0].get_val(),
+                           ops[1].get_val()), 
+                           gdata))
 
 
-
-def checkflag(value,gdata):
-    if(value>0):
-        if(value>INT_MAX):
-            gdata.flags['CF'] = 1
-            return value-INT_MAX
+def checkflag(val, gdata):
+    if(val > MAX_INT):
+        gdata.flags['CF'] = 1
+        val = val - MAX_INT
+    else:
+        gdata.flags['CF'] = 0
+    return val
 
 
 class Add(Instruction):
