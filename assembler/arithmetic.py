@@ -8,9 +8,9 @@ from .errors import *
 from .tokens import Instruction
 
 
-BITS = 32  # for now we assume 32-bit ints
 
-INT_MAX_CARRY=(2**32)-1
+
+INT_MAX_CARRY=(2**32)-1  #32 BITS max value
 
 
 def one_op_arith(ops, gdata, instr, operator):
