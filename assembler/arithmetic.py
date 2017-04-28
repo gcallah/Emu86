@@ -32,7 +32,7 @@ def two_op_arith(ops, gdata, instr, operator):
 def checkflag(val, gdata):
     if(val > MAX_INT):
         gdata.flags['CF'] = 1
-        val = val - MAX_INT
+        val = val - MAX_INT+1
     else:
         gdata.flags['CF'] = 0
     return val
