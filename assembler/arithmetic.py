@@ -35,7 +35,7 @@ def checkflag(value,gdata):
     if(value>0):
         if(value>INT_MAX):
             gdata.flags['CF'] = 1
-            return value-INT_MAX
+            return (value-INT_MAX+1)
 
 
 class Add(Instruction):

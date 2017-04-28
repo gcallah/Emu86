@@ -183,6 +183,24 @@
       <script>
             {
 
+                window.onunload=saveprompt;
+
+                function saveprompt()
+                {
+                    var choice=confirm("Do You want to Save your code?");
+                    if(choice)
+                    {
+                        localStorage.setItem("Code",document.getElementById("id_code").value)
+                        console.log(document.getElementById("id_code").value);
+
+                    }
+
+
+
+
+                }
+
+
                 var raised=document.getElementById("error").value;
 
                 if(raised)
@@ -218,4 +236,6 @@
             {{ debug }}
         </textarea>
     </div>
+
+
 {% endblock content %}
