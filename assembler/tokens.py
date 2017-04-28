@@ -7,8 +7,9 @@ from abc import abstractmethod
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng
 from .global_data import gdata
 
-MAX_POS_INT=(2**31)-1
-MIN_POS_INT=-(2**31)
+BITS = 32   # we are on a 32-bit machine
+MAX_INT = (2**31) - 1
+MIN_INT = -(2**31)
 
 class Token:
     def __init__(self, name, val=0):
@@ -57,14 +58,13 @@ class Operand(Token):
 
 class IntOp(Operand):
     def __init__(self, val=0):
+        if(val > MAX_INT or val < MIN_INT):
+            raise IntOutOfRng(str(val))
 
         super().__init__("IntOp", val)
 
     def __str__(self):
-        if(self.value>MAX_POS_INT or self.value<MIN_POS_INT):
-            raise IntOutOfRng(str(self.value))
-        else:
-            return str(self.value)
+        return str(self.value)
 
 
 class Location(Operand):
