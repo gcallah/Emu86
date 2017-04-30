@@ -13,7 +13,7 @@ import functools
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
-from assembler.global_data import gdata
+from assembler.global_data import gdata, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
@@ -101,6 +101,19 @@ class AssembleTestCase(TestCase):
 # Push / Pop     #
 ##################
 
+#    def test_push_and_pop(self):
+#        correct_stack = [None]*(STACK_TOP+1) # Arrays 
+#        for i in range(STACK_TOP, STACK_BOTTOM, -1):
+#            a = random.randint(MIN_TEST, MAX_TEST)
+#            print(i)
+#            correct_stack[i] = a
+#            gdata.registers["EAX"] = a
+#            assemble("push eax", gdata)
+#
+#        for i in range(STACK_BOTTOM+1, STACK_TOP):
+#            print(i)
+#            assemble("pop ebx", gdata)
+#            self.assertEqual(gdata.registers["EBX"], correct_stack[i])
 
 ##################
 # Other          #
