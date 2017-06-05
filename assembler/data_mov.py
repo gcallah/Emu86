@@ -1,7 +1,6 @@
 """
 data_mov.py: data movement instructions.
 """
-
 from .errors import check_num_args
 from .tokens import Instruction
 class Mov(Instruction):
@@ -43,11 +42,11 @@ class Pop(Instruction):
         </descr>
     """
     def fhook(self, ops, gdata):
+        gdata.inc_sp()
         check_num_args("POP", ops, 1)
         val = int(gdata.stack[str(gdata.get_sp())])
         ops[0].set_val(val)
         gdata.stack[str(gdata.get_sp())] = gdata.empty_cell()
-        gdata.inc_sp()
 
 class Push(Instruction):
     """
@@ -67,9 +66,9 @@ class Push(Instruction):
         </descr>
     """
     def fhook(self, ops, gdata):
-        check_num_args("PUSH", ops, 1)
-        gdata.stack[str(gdata.get_sp())] = ops[0].get_val()
         gdata.dec_sp()
+        check_num_args("PUSH", ops, 1)
+        gdata.stack[str(gdata.get_sp()+1)] = ops[0].get_val()
 
 
 class Lea(Instruction):
