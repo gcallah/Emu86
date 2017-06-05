@@ -8,8 +8,8 @@ from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng
 from .global_data import gdata
 
 BITS = 32   # we are on a 32-bit machine
-MAX_INT = (2**31) - 1
-MIN_INT = -(2**31)
+MAX_INT = (2**(BITS-1)) - 1
+MIN_INT = -(2**(BITS-1))
 
 class Token:
     def __init__(self, name, val=0):
