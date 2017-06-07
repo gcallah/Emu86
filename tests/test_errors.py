@@ -45,9 +45,10 @@ class ErrorTestCase(TestCase):
             (output, error) = assemble("push " + str(i), gdata)
         self.assertTrue(error.startswith(STACK_OVERFLOW))
 
-#    def test_stack_underflow(self):
-#        (output, error) = assemble("pop ebx", gdata)
-#        self.assertTrue(error.startswith(STACK_UNDERFLOW))
+    def test_stack_underflow(self):
+        gdata.registers["ESP"] = 63
+        (output, error) = assemble("pop ebx", gdata)
+        self.assertTrue(error.startswith(STACK_UNDERFLOW))
 
 if __name__ == '__main__':
     main()
