@@ -12,20 +12,17 @@ import functools
 
 from unittest import TestCase, main
 
-from assembler.arithmetic import INT_MIN, INT_MAX
-from assembler.global_data import gdata
+from assembler.tokens import MAX_INT, MIN_INT, BITS
+from assembler.global_data import gdata, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
-MAX_SHIFT = 32
+MAX_SHIFT = BITS // 2
+MIN_TEST = MIN_INT // 10   # right now we don't want to overflow!
+MAX_TEST = MAX_INT // 10   # right now we don't want to overflow!
 MAX_MUL = 10000  # right now we don't want to overflow!
 MIN_MUL = -10000  # right now we don't want to overflow!
-ADD_ONE = 1
-SUB_ONE = -1
-REGISTER_SIZE = 32
-STACK_SIZE = 32
-STACK_BASE = 32
-STACK_HEAD = 64
+REGISTER_SIZE = BITS
 
 class AssembleTestCase(TestCase):
 
@@ -34,8 +31,8 @@ class AssembleTestCase(TestCase):
 #####################
 
     def two_op_test(self, operator, instr,
-                    low1=INT_MIN, high1=INT_MAX,
-                    low2=INT_MIN, high2=INT_MAX):
+                    low1=MIN_TEST, high1=MAX_TEST,
+                    low2=MIN_TEST, high2=MAX_TEST):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
@@ -67,12 +64,12 @@ class AssembleTestCase(TestCase):
 
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
-                         low1=INT_MIN, high1=INT_MAX,
+                         low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
 
     def test_shr(self):
         self.two_op_test(opfunc.rshift, "shr",
-                         low1=INT_MIN, high1=INT_MAX,
+                         low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
 ###################
 # Single Op Tests #
@@ -80,7 +77,7 @@ class AssembleTestCase(TestCase):
 
     def one_op_test(self, operator, instr):
         for i in range(NUM_TESTS):
-            a = random.randint(INT_MIN, INT_MAX)
+            a = random.randint(MIN_TEST, MAX_TEST)
             correct = operator(a)
             gdata.registers["EAX"] = a
             assemble(instr + " eax", gdata)
@@ -93,17 +90,30 @@ class AssembleTestCase(TestCase):
         self.one_op_test(opfunc.neg, "neg")
 
     def test_inc(self):
-        inc = functools.partial(opfunc.add, ADD_ONE)
+        inc = functools.partial(opfunc.add, 1)
         self.one_op_test(inc, "inc")
 
     def test_dec(self):
-        dec = functools.partial(opfunc.add, SUB_ONE)
+        dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
 
 ##################
 # Push / Pop     #
 ##################
 
+#    def test_push_and_pop(self):
+#        correct_stack = [None]*(STACK_TOP+1) # Arrays 
+#        for i in range(STACK_TOP, STACK_BOTTOM, -1):
+#            a = random.randint(MIN_TEST, MAX_TEST)
+#            print(i)
+#            correct_stack[i] = a
+#            gdata.registers["EAX"] = a
+#            assemble("push eax", gdata)
+#
+#        for i in range(STACK_BOTTOM+1, STACK_TOP):
+#            print(i)
+#            assemble("pop ebx", gdata)
+#            self.assertEqual(gdata.registers["EBX"], correct_stack[i])
 
 ##################
 # Other          #
@@ -111,7 +121,7 @@ class AssembleTestCase(TestCase):
 
     def test_mov(self):
         for i in range(0, NUM_TESTS):
-            a = random.randint(INT_MIN, INT_MAX)
+            a = random.randint(MIN_TEST, MAX_TEST)
             correct = a
             gdata.registers["EAX"] = a
             assemble("mov eax, " + str(a), gdata)
@@ -119,11 +129,11 @@ class AssembleTestCase(TestCase):
 
     def test_idiv(self):
         for i in range(0, NUM_TESTS):
-            a = random.randint(INT_MIN, INT_MAX)
-            d = random.randint(INT_MIN, INT_MAX)
+            a = random.randint(MIN_TEST, MAX_TEST)
+            d = random.randint(MIN_TEST, MAX_TEST)
             b = 0
             while(b == 0): # Divisor can't be zero.
-                b = random.randint(INT_MIN, INT_MAX)
+                b = random.randint(MIN_TEST, MAX_TEST)
             correct_quotient = (opfunc.lshift(d,REGISTER_SIZE) + a) // b
             correct_remainder = (opfunc.lshift(d,REGISTER_SIZE) + a) % b
             gdata.registers["EAX"] = a

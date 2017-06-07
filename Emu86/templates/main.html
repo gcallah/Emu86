@@ -49,7 +49,7 @@
                                             name="{{ reg }}"
                                             size="10"
                                             readonly="readonly"
-                                        onclick=convert(value)>
+                                        onclick=convert(name,value)>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -192,16 +192,18 @@
 
                 }
 
-                function convert(value)
+                function convert(name,value)
 
-                {
+                {   var message= "Binary Value of"+" "+name+": ";
                     var value1=parseInt(value)
                     if(value1>=0) {
-                        alert((value1).toString(2));
+
+                        message=message+((value1).toString(2));
+                        alert(message);
                     }
                     else
-                    {
-                        alert((value1>>>0).toString(2));
+                    {   message=message+((value1>>>0).toString(2));
+                        alert(message);
 
 
                     }
