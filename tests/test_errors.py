@@ -41,13 +41,14 @@ class ErrorTestCase(TestCase):
         self.assertTrue(error.startswith(REG_UNWRITABLE))
 
     def test_stack_overflow(self):
-        for i in range(STACK_BOTTOM, STACK_TOP+1):
-            (output, error) = assemble("push " + str(i), gdata)
+        gdata.registers["ESP"] = STACK_BOTTOM-1
+        (output, error) = assemble("push 1", gdata)
         self.assertTrue(error.startswith(STACK_OVERFLOW))
 
-#    def test_stack_underflow(self):
-#        (output, error) = assemble("pop ebx", gdata)
-#        self.assertTrue(error.startswith(STACK_UNDERFLOW))
+    def test_stack_underflow(self):
+        gdata.registers["ESP"] = STACK_TOP
+        (output, error) = assemble("pop ebx", gdata)
+        self.assertTrue(error.startswith(STACK_UNDERFLOW))
 
 if __name__ == '__main__':
     main()
