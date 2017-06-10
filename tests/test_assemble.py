@@ -101,19 +101,17 @@ class AssembleTestCase(TestCase):
 # Push / Pop     #
 ##################
 
-#    def test_push_and_pop(self):
-#        correct_stack = [None]*(STACK_TOP+1) # Arrays 
-#        for i in range(STACK_TOP, STACK_BOTTOM, -1):
-#            a = random.randint(MIN_TEST, MAX_TEST)
-#            print(i)
-#            correct_stack[i] = a
-#            gdata.registers["EAX"] = a
-#            assemble("push eax", gdata)
-#
-#        for i in range(STACK_BOTTOM+1, STACK_TOP):
-#            print(i)
-#            assemble("pop ebx", gdata)
-#            self.assertEqual(gdata.registers["EBX"], correct_stack[i])
+    def test_push_and_pop(self):
+        correct_stack = [None]*(STACK_TOP+1) # Note: size(correct_stack) = size(stack + memory)
+        for i in range(STACK_TOP, STACK_BOTTOM-1, -1): # Traverse the stack registers.
+            a = random.randint(MIN_TEST, MAX_TEST)
+            correct_stack[i] = a
+            gdata.registers["EAX"] = a
+            assemble("push eax", gdata)
+
+        for i in range(STACK_BOTTOM, STACK_TOP+1):
+            assemble("pop ebx", gdata)
+            self.assertEqual(gdata.registers["EBX"], correct_stack[i])
 
 ##################
 # Other          #
