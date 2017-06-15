@@ -110,4 +110,5 @@ class GlobalData:
 
     def empty_cell(self):
         return EMPTY_CELL
+
 gdata = GlobalData()
