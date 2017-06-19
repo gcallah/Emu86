@@ -675,7 +675,7 @@ a.deletelink:focus, a.deletelink:hover {
 
 #content-related {
     float: right;
-    width: 260px;
+    width: 360px;
     position: relative;
     margin-right: -300px;
 }
@@ -761,26 +761,40 @@ a.deletelink:focus, a.deletelink:hover {
     text-align: center;
 }
 
+
+
 #run-button {
     text-align: center;
-    margin: 10px 20px 20px 46px;
+    font-size: 13px;
+    margin: 10px 5px 20px 5px;
     background: #075;
     border-radius: 10px;
     border: 1px solid #003366;
 }
 
 #step-button {
-    float: right;
-    margin: 10px 12px 20px 28px;
+    margin: 10px 5px 20px 5px;
+    font-size: 13px;
     color: #285D91;
     background: #ffcc33;
     border-radius: 10px;
     border: 1px solid #003366;
 }
 
+#save-button {
+    
+    font-size: 13px;
+    margin: 10px 1px 20px 2px;
+    color:#ffcc33;
+    background: blue;;
+    border-radius: 10px;
+    border: 1px solid #003366;
+}
+
 #clear-button {
     float: left;
-    margin: 10px 28px 20px 12px;
+    font-size: 13px;
+    margin: 10px 10px 20px 15px;
     background: #91285d;
     border-radius: 10px;
     border: 1px solid #003366;

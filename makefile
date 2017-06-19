@@ -5,9 +5,8 @@ MUDIR = myutils
 UDIR = utils
 TDIR = tests
 SRCS = $(SDIR)/arithmetic.py $(SDIR)/control_flow.py $(SDIR)/data_mov.py $(SDIR)/interrupts.py 
-INTER1 = $(ODIR)/arithmetic.txt $(ODIR)/control_flow.txt $(ODIR)/data_mov.txt $(ODIR)/interrupts.txt
 INTER2 = $(ODIR)/help.ptml
-OBJ = $(ODIR)/help.html
+OBJS = $(ODIR)/help.html
 
 help.html: $(SRCS)
 	extract_doc.awk <$(SDIR)/arithmetic.py | $(UDIR)/doc2html.awk >arithmetic.txt
@@ -16,7 +15,7 @@ help.html: $(SRCS)
 	extract_doc.awk <$(SDIR)/interrupts.py | $(UDIR)/doc2html.awk >interrupts.txt
 	html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
 
-dev: $(SRCS) $(OBJ) help.html
+dev: $(SRCS) $(OBJS) 
 	git checkout dev
 	$(TDIR)/test_assemble.py
 	$(TDIR)/test_errors.py
