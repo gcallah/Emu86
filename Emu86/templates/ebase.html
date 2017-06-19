@@ -5,12 +5,15 @@
         {{ header }}
         {% endblock title %}
     </title>
+{%  load static %}
     {% block stylesheets %}
         <link rel="stylesheet" type="text/css" href="/static/Emu86/style.css">
+
     {% endblock stylesheets %}
+<script type="text/javascript" src="/static/Emu86/main.js"></script>
 </head>
 
-<body class="dashboard">
+<body class="dashboard" onload="loadcode()">
     <div id="container">
         <div id="top-image">
             <img src="/static/Emu86/logo.png" alt="Logo"/>

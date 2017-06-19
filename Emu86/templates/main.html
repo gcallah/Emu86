@@ -1,6 +1,9 @@
 {% extends "ebase.html" %}
 
 {% block content %}
+
+
+
     <div class="module">
         <form action="{% url 'Emu86:main_page' %}" method="post">
             <input type="hidden" name="nxt_key">
@@ -10,12 +13,15 @@
                     <td id="form-cell">
                             {% csrf_token %}
                             {{ form.as_p }}
+
                             <input type="submit" name="clear"
-                                value="Clear Mem" id="clear-button">
+                                value="Clear Mem" title="Clear the contents of the memory" id="clear-button">
                             <input type="submit" name="run"
-                                value="Run Code" id="run-button">
+                                value="Run Code" title="Execute all lines of Code" id="run-button">
                             <input type="submit" name="step"
-                                value="Step Code" id="step-button">
+                                value="Step Code" title="Press to execute one instruction at a time starting from first instruction" id="step-button">
+                            <input type="button" name="save"
+                                value="Save Code" id="save-button" title="Saves the Code " onclick="Savecode()">
                             <br>
                     </td>
                     <td id="registers-cell">
@@ -180,42 +186,10 @@
         Debug Information:
         <br>
 
-      <script>
-            {
 
-                var raised=document.getElementById("error").value;
-
-                if(raised)
-                {
-                    alert(raised);
-
-
-                }
-
-                function convert(name,value)
-
-                {   var message= "Binary Value of"+" "+name+": ";
-                    var value1=parseInt(value)
-                    if(value1>=0) {
-
-                        message=message+((value1).toString(2));
-                        alert(message);
-                    }
-                    else
-                    {   message=message+((value1>>>0).toString(2));
-                        alert(message);
-
-
-                    }
-
-
-                }
-
-            }
-
-        </script>
         <textarea rows="12" cols="60" readonly="readonly">
             {{ debug }}
         </textarea>
     </div>
+
 {% endblock content %}
