@@ -15,13 +15,22 @@
                             {{ form.as_p }}
 
                             <input type="submit" name="clear"
-                                value="Clear Mem" title="Clear the contents of the memory" id="clear-button">
+                                value="Clear Mem"
+                                title="Clear the contents of memory and the stack."
+                                id="clear-button">
                             <input type="submit" name="run"
-                                value="Run Code" title="Execute all lines of Code" id="run-button">
+                                value="Run Code"
+                                title="Execute all lines of code"
+                                id="run-button">
                             <input type="submit" name="step"
-                                value="Step Code" title="Press to execute one instruction at a time starting from first instruction" id="step-button">
+                                value="Step Code"
+                                title="Execute one instruction at a time."
+                                id="step-button">
                             <input type="button" name="save"
-                                value="Save Code" id="save-button" title="Saves the Code " onclick="Savecode()">
+                                value="Save Code"
+                                id="save-button"
+                                title="Saves the code "
+                                onclick="Savecode()">
                             <br>
                     </td>
                     <td id="registers-cell">
