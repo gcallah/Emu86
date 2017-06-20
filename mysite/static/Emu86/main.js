@@ -5,12 +5,14 @@
 
 
              function loadcode()
-                {   if(sessionStorage.loadonce)
                 {
-                     return;
-                }
-                else
-                {   sessionStorage.loadonce=1;
+                    if(sessionStorage.loadonce)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        sessionStorage.loadonce=1;
 
 
                     code = localStorage.Code;
@@ -19,35 +21,34 @@
                     }
                 }
                     }
+
                 function Savecode()
-
-
-                {     if(confirm("Do you want to Save this code?")) {
-                    data = document.getElementById("id_code").value;
-                    try {
-                        localStorage.Code=data;
-                        alert("Your Code was Saved Successfully!");
-                    }
-                    catch(exception)
+                {
+                    if(confirm("Do you want to save this code?")) {
+                        data = document.getElementById("id_code").value;
+                        try {
+                            localStorage.Code=data;
+                            alert("Your code was saved successfully.");
+                        }
+                        catch(exception)
                         {
-                            alert("An Unknown Error occured, Please try again");
+                            alert("An unknown error occured, please try again.");
 
                         }
-                }
+                    }
                 }
 
                 var raised=document.getElementById("error")
 
                 if(raised)
-                {   raised=raised.value;
+                {
+                    raised=raised.value;
                     alert(raised);
-
-
                 }
 
                 function convert(name,value)
-
-                {   var message= "Binary Value of"+" "+name+": ";
+                {
+                    var message= "Binary value of " + " " + name + ": ";
                     var value1=parseInt(value)
                     if(value1>=0) {
 
@@ -55,14 +56,9 @@
                         alert(message);
                     }
                     else
-                    {   message=message+((value1>>>0).toString(2));
+                    {
+                        message=message+((value1>>>0).toString(2));
                         alert(message);
-
-
                     }
-
-
                 }
-
-
 
