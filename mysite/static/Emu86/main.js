@@ -15,12 +15,13 @@
                         sessionStorage.loadonce=1;
 
 
-                    code = localStorage.Code;
-                    if(code!=undefined || code!=null) {
-                        document.getElementById("id_code").value = code;
+                        code = localStorage.Code;
+                        if(code!=undefined || code!=null) {
+                            document.getElementById("id_code").value = code;
+                        }
                     }
                 }
-                    }
+
 
                 function Savecode()
                 {
