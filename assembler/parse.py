@@ -9,7 +9,7 @@ from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
 from .tokens import RegAddress
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak
+from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
@@ -37,6 +37,8 @@ instructions = {
         'JGE': Jge('JGE'),
         'JL': Jl('JL'),
         'JLE': Jle('JLE'),
+        'CALL': Call('CALL'),
+        'RET' : Ret('RET'),
         # data movement:
         'MOV': Mov('MOV'),
         'PUSH': Push('PUSH'),
