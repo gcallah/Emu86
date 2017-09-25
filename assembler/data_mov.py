@@ -37,7 +37,7 @@ class Pop(Instruction):
         <descr>
             POPS the topmost value out of the stack with reference to 
             the stack pointer position (ESP). Decrements the stack pointer 
-            automatically, everytime a POP is called. Callable to store 
+            automatically, every time a POP is called. Callable to store
             the stack value to a memory location and register.
         </descr>
     """

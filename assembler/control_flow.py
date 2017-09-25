@@ -193,10 +193,10 @@ class Call(Instruction):
              call
         </instr>
         <syntax>
-            call <label>
+            CALL <label>
         </syntax>
         <descr>
-
+            Pushes value of EIP to stack and jumps to the internal subroutine.
         </descr>
     """
     def fhook(self, ops, gdata):
@@ -212,10 +212,10 @@ class Ret(Instruction):
              ret
         </instr>
         <syntax>
-            ret <label>
+            RET
         </syntax>
         <descr>
-
+            Pops value from stack to EIP and returns control to the calling program.
         </descr>
     """
     def fhook(self, ops, gdata):
