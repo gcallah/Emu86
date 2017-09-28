@@ -215,7 +215,8 @@ class Ret(Instruction):
             RET
         </syntax>
         <descr>
-            Pops value from stack to EIP and returns control to the calling program.
+            Pops value from stack to EIP and returns control to the 
+            the line after the subroutine call.
         </descr>
     """
     def fhook(self, ops, gdata):
