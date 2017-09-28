@@ -23,7 +23,7 @@ class GlobalData:
     def __init__(self):
         # the x86 registers
         self.nxt_key = 0
-        self.ret_str = "Some keys for int 22 to return."
+        self.ret_str = "GIRONAGIRONAGETSGETS"
         self.debug = ""
     
         self.unwritable = [INSTR_PTR, STACK_PTR]

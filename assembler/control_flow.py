@@ -8,6 +8,7 @@ from .errors import check_num_args
 from .tokens import Instruction
 
 
+
 class FlowBreak(Exception):
     """
     Base class for all of our flow break exceptions.
@@ -15,7 +16,7 @@ class FlowBreak(Exception):
     def __init__(self, label):
         super().__init__("Flow break")
         self.label = label
-        self.msg = "Uknown control flow exception."
+        self.msg = "Unknown control flow exception."
 
 def get_one_op(instr, ops):
     check_num_args(instr, ops, 1)
@@ -186,3 +187,39 @@ class Jle(Instruction):
             raise Jump(target.name)
         return ''
 
+class Call(Instruction):
+    """
+        <instr>
+             call
+        </instr>
+        <syntax>
+            CALL <label>
+        </syntax>
+        <descr>
+            Pushes value of EIP to stack and jumps to the internal subroutine.
+        </descr>
+    """
+    def fhook(self, ops, gdata):
+        check_num_args("CALL", ops, 1)
+        gdata.dec_sp()
+        gdata.stack[str(gdata.get_sp() + 1)] = gdata.get_ip()
+        target = get_one_op(self.get_nm(), ops)
+        raise Jump(target.name)
+
+class Ret(Instruction):
+    """
+        <instr>
+             ret
+        </instr>
+        <syntax>
+            RET
+        </syntax>
+        <descr>
+            Pops value from stack to EIP and returns control to the calling program.
+        </descr>
+    """
+    def fhook(self, ops, gdata):
+        check_num_args("RET", ops, 0)
+        gdata.inc_sp()
+        gdata.set_ip(int(gdata.stack[str(gdata.get_sp())]))
+        gdata.stack[str(gdata.get_sp())] = gdata.empty_cell()
