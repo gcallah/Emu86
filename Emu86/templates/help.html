@@ -104,7 +104,7 @@
 <p>
             POPS the topmost value out of the stack with reference to 
             the stack pointer position (ESP). Decrements the stack pointer 
-            automatically, everytime a POP is called. Callable to store 
+            automatically, every time a POP is called. Callable to store
             the stack value to a memory location and register.
 </p>
 <hr>
@@ -259,6 +259,36 @@
 
 <p>
             Jumps if SF == 1 or ZF == 1.
+</p>
+<hr>
+<h4>
+             call
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            CALL <label>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Pushes value of EIP to stack and jumps to the internal subroutine.
+</p>
+<hr>
+<h4>
+             ret
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            RET
+</ul>
+<h5>Description</h5>
+
+<p>
+            Pops value from stack to EIP and returns control to the calling program.
 </p>
 
             <h3>
