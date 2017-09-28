@@ -1,0 +1,447 @@
+{% extends "ebase.html" %}
+{% block content %}
+    <div class="module">
+        <h2>
+            About Emu86
+        </h2>
+            <p>
+            This is an open source project written by Gene Callahan
+            and Nathan Conroy.
+            The goal is to create a simple learning tool to introduce students to
+            assembly language programming in a class on, say, operating systems
+            or compilers, where the focus is not assembly language, and actually
+            using an assembler would be a distraction from the main theme of the
+            course. It includes a (growing) subset of x86 assembler
+            instructions. (This is, by the way, Intel assembly language, and
+            not AT&amp;T assembly language.)
+            </p>
+
+            <p>
+                <a
+                href="https://www.cs.virginia.edu/~evans/cs216/guides/x86.html">
+                Guide to x86 assembly.
+                </a>
+            </p>
+
+        <h2>
+            Instructions Available
+        </h2>
+            <p>
+                Many of these are only partially done: for instance, as of yet,
+                there is no memory addressing available.
+                <br>
+                In the syntax descriptions, we have:
+            </p>
+            <ul>
+                <li>con: constant
+                <li>lbl: label
+                <li>mem: memory location
+                    <br>
+                    A memory location may be designated by [num], where
+                    <i>num</i> is the actual address, or by [reg], where
+                    <i>reg</i> holds the memory address.
+                <li>reg: register
+            </ul>
+
+            <h2>
+                Interrupts
+            </h2>
+<hr>
+<h4>
+             int
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            INT con, con
+</ul>
+<h5>Description</h5>
+
+<p>
+            We will build various "interrupt" handlers as needed.
+            At present, we only have INT 22, 0, to get a key from
+            the keyboard. And we only pretend the key is from the keyboard,
+            since we are running on the Internet, and can't read the user's
+            keyboard.
+</p>
+
+            <h2>
+                Data Movement
+            </h2>
+<hr>
+<h4>
+             mov
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            MOV reg, reg
+<li>            MOV reg, con
+<li>            MOV reg, mem
+<li>            MOV mem, reg
+<li>            MOV mem, mem
+</ul>
+<h5>Description</h5>
+
+<p>
+            Stores/Copies the value of op2 to the location mentioned in op1. 
+            Callable for register values, memory values and constants.
+</p>
+<hr>
+<h4>
+             pop
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            POP reg
+<li>            POP mem
+</ul>
+<h5>Description</h5>
+
+<p>
+            POPS the topmost value out of the stack with reference to 
+            the stack pointer position (ESP). Decrements the stack pointer 
+            automatically, every time a POP is called. Callable to store
+            the stack value to a memory location and register.
+</p>
+<hr>
+<h4>
+             push
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            PUSH reg
+<li>            PUSH con
+<li>            PUSH mem
+</ul>
+<h5>Description</h5>
+
+<p>
+            PUSHES the value into the stack with reference to the stack 
+            pointer position (ESP). Increments the stack pointer automatically,
+            everytime a PUSH is called. Callable to store a memory value,
+            register value, and constant value to the stack.
+</p>
+<hr>
+<h4>
+             lea
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+</ul>
+                
+            <h2>
+                Control Flow
+            </h2>
+<hr>
+<h4>
+             cmp
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            CMP reg, reg
+<li>            CMP reg, mem
+<li>            CMP reg, con
+</ul>
+<h5>Description</h5>
+
+<p>
+            Compares op1 and op2, and sets (right now) the SF and ZF flags.
+            It is not clear at this moment how to 
+            treat the OF and CF flags in Python,
+            since Python integer arithmetic never carries or overflows!
+</p>
+<hr>
+<h4>
+            jmp
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JMP lbl
+</ul>
+<hr>
+<h4>
+             je
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JE lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if ZF is one.
+</p>
+<hr>
+<h4>
+             jne
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JNE lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if ZF is zero.
+</p>
+<hr>
+<h4>
+             jg
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JG lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 0 and ZF == 0.
+</p>
+<hr>
+<h4>
+             jge
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JGE lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 0.
+</p>
+<hr>
+<h4>
+             jl
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JL lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 1.
+</p>
+<hr>
+<h4>
+             jle
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            JLE lbl
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 1 or ZF == 1.
+</p>
+<hr>
+<h4>
+             call
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            CALL <label>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Pushes value of EIP to stack and jumps to the internal subroutine.
+</p>
+<hr>
+<h4>
+             ret
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            RET
+</ul>
+<h5>Description</h5>
+
+<p>
+            Pops value from stack to EIP and returns control to the 
+            the line after the subroutine call.
+</p>
+
+            <h2>
+                Arithmetic and Logic
+            </h2>
+<hr>
+<h4>
+             add
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            ADD reg, reg
+<li>            ADD reg, mem
+<li>            ADD reg, con
+</ul>
+<hr>
+<h4>
+             sub
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            SUB reg, reg
+<li>            SUB reg, mem
+<li>            SUB reg, con
+</ul>
+<hr>
+<h4>
+             imul
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            IMUL reg, reg
+<li>            IMUL reg, mem
+<li>            IMUL reg, con
+</ul>
+<hr>
+<h4>
+             and
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            AND reg, reg
+<li>            AND reg, mem
+<li>            AND reg, con
+</ul>
+<hr>
+<h4>
+             or
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            OR reg, reg
+<li>            OR reg, mem
+<li>            OR reg, con
+</ul>
+<hr>
+<h4>
+             xor
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            XOR reg, reg
+<li>            XOR reg, mem
+<li>            XOR reg, con
+</ul>
+<hr>
+<h4>
+             shl
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            SHL reg, reg
+<li>            SHL reg, mem
+<li>            SHL reg, con
+</ul>
+<hr>
+<h4>
+             shr
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            SHR reg, reg
+<li>            SHR reg, mem
+<li>            SHR reg, con
+</ul>
+<hr>
+<h4>
+             not
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            NOT reg
+</ul>
+<hr>
+<h4>
+             inc
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            INC reg
+</ul>
+<hr>
+<h4>
+             dec
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            DEC reg
+</ul>
+<hr>
+<h4>
+             neg
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            NEG reg
+</ul>
+<hr>
+<h4>
+             idiv
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            IDIV reg
+</ul>
+
+    </div>
+{% endblock content %}
