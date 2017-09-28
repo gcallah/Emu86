@@ -13,7 +13,7 @@
             using an assembler would be a distraction from the main theme of the
             course. It includes a (growing) subset of x86 assembler
             instructions. (This is, by the way, Intel assembly language, and
-            not AT&T assembly language.)
+            not AT&amp;T assembly language.)
             </p>
 
             <p>
@@ -42,9 +42,10 @@
                     <i>reg</i> holds the memory address.
                 <li>reg: register
             </ul>
-            <h3>
+
+            <h2>
                 Interrupts
-            </h3>
+            </h2>
 <hr>
 <h4>
              int
@@ -65,9 +66,9 @@
             keyboard.
 </p>
 
-            <h3>
+            <h2>
                 Data Movement
-            </h3>
+            </h2>
 <hr>
 <h4>
              mov
@@ -104,7 +105,7 @@
 <p>
             POPS the topmost value out of the stack with reference to 
             the stack pointer position (ESP). Decrements the stack pointer 
-            automatically, everytime a POP is called. Callable to store 
+            automatically, every time a POP is called. Callable to store
             the stack value to a memory location and register.
 </p>
 <hr>
@@ -137,9 +138,9 @@
 <ul>
 </ul>
                 
-            <h3>
+            <h2>
                 Control Flow
-            </h3>
+            </h2>
 <hr>
 <h4>
              cmp
@@ -260,10 +261,40 @@
 <p>
             Jumps if SF == 1 or ZF == 1.
 </p>
+<hr>
+<h4>
+             call
+</h4>
 
-            <h3>
+<h5>Syntax</h5>
+
+<ul>
+<li>            CALL <label>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Pushes value of EIP to stack and jumps to the internal subroutine.
+</p>
+<hr>
+<h4>
+             ret
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            RET
+</ul>
+<h5>Description</h5>
+
+<p>
+            Pops value from stack to EIP and returns control to the calling program.
+</p>
+
+            <h2>
                 Arithmetic and Logic
-            </h3>
+            </h2>
 <hr>
 <h4>
              add

@@ -13,7 +13,7 @@
             using an assembler would be a distraction from the main theme of the
             course. It includes a (growing) subset of x86 assembler
             instructions. (This is, by the way, Intel assembly language, and
-            not AT&T assembly language.)
+            not AT&amp;T assembly language.)
             </p>
 
             <p>
@@ -42,24 +42,25 @@
                     <i>reg</i> holds the memory address.
                 <li>reg: register
             </ul>
-            <h3>
+
+            <h2>
                 Interrupts
-            </h3>
+            </h2>
 <!--include interrupts.txt -->
 
-            <h3>
+            <h2>
                 Data Movement
-            </h3>
+            </h2>
 <!--include data_mov.txt -->
                 
-            <h3>
+            <h2>
                 Control Flow
-            </h3>
+            </h2>
 <!--include control_flow.txt -->
 
-            <h3>
+            <h2>
                 Arithmetic and Logic
-            </h3>
+            </h2>
 <!--include arithmetic.txt -->
 
     </div>
