@@ -27,8 +27,9 @@
             Instructions Available
         </h2>
             <p>
-                Many of these are only partially done: for instance, as of yet,
-                there is no memory addressing available.
+                Some of these are only partially done, i.e., some variant of
+                an instruciton may not work. We will do our best to note that
+                where possible.
                 <br>
                 In the syntax descriptions, we have:
             </p>
