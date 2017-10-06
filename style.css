@@ -126,7 +126,7 @@ h5 {
     width: auto;
     height: 60;
     padding: 10 2.5em;
-    line-height: 2.5em;
+    line-height: 4em;
     background-color: #245;
     color: #dff;
     overflow: hidden;
@@ -186,7 +186,7 @@ figcaption {
 }
 
 #logo {
-    float: left;
+    float: center;
     margin: .1em 1.25em 0 1.25em;
 }
 
