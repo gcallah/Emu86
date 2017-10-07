@@ -74,7 +74,9 @@ blockquote {
 }
 
 p.authors {
+    font-size: 1.7em;
     text-align: center;
+    color: #b06;
 }
 
 h1,h2 {
@@ -82,7 +84,7 @@ h1,h2 {
 }
 
 h1 {
-    margin: 0 0 1.5em 0;
+    margin: 0 0 1em 0;
     padding-bottom: 1em;
     text-align: center;
     font-weight: 300;
