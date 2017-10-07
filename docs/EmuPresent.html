@@ -8,6 +8,13 @@
     </head>
 
     <body>
+            
+        <div id="header">
+            <div id="logo">
+                <img src="../graphics/logo.png">
+            </div>
+    	</div>
+            
         <h1>
             Emu86: an x86 emulator for teaching assembler
         </h1>
@@ -94,14 +101,24 @@
                 Making a RESTful interpreter        
             </summary>
 
+            <p>
+                The "machine" state moves back and forth from sever to client
+                to server.
+            </p>
+
             <figure>
                 <img src="gdata.png"
-                        height="520" width="640">
+                        height="500" width="600">
                 <figcaption>
                     The data that gets past back-and-forth from client to
-                    server to maintain state.
+                    server.
                 </figcaption>
             </figure>
+
+            <p>
+                We are able to do something like "Step" the code because
+                the instruction pointer is part of the machine state.
+            </p>
 
         </details>
 
@@ -117,7 +134,7 @@
 
                 <figure>
                     <img src="ipython_session.png"
-                        height="500" width="600">
+                        height="360" width="480">
                     <figcaption>
                     An iPython session
                     </figcaption>
@@ -133,13 +150,19 @@
 
             <details>
                 <summary class="sum2">
-                    An iPython version
+                    Other interfaces
                 </summary>
-                <p>
-                    We are working on making the interpreter an
-                    iPython kernel, so we can simply type assembly code
-                    straight into the shell.
-                </p>
+                <ul>
+                    <li>
+                        We are working on making the interpreter an
+                        iPython kernel, so we can simply type assembly code
+                        straight into the shell.
+                    </li>
+                    <li>
+                        We could create an assembler microservice that allows
+                        any interface one wishes.
+                    </li>
+                </ul>
 
             </details>
 
@@ -149,12 +172,131 @@
             <summary class="sum1">
                 Implementation details        
             </summary>
+
+            <details>
+                <summary class="sum2">
+                    Using operators as functions.
+                </summary>
+                <p>
+                    This was very handy with arithmetic instructions:
+                </p>
+
+                <figure>
+                    <img src="func_ops.png"
+                        height="360" width="500">
+                    <figcaption>
+                        Using the functional version of operators.
+                    </figcaption>
+                </figure>
+            </details>
+
+            <details>
+                <summary class="sum2">
+                    Use classes to reflect the language structure
+                </summary>
+
+                <figure>
+                    <img src="tokens.png"
+                        height="340" width="440">
+                    <figcaption>
+                        The base class for all tokens (instructions, registers,
+                        numbers, etc.
+                    </figcaption>
+                </figure>
+            </details>
+
+            <details>
+                <summary class="sum2">
+                    Make instructions classes
+                </summary>
+                <figure>
+                    <img src="instructions.png"
+                        height="420" width="360">
+                    <figcaption>
+                        The base class for all instructions.
+                    </figcaption>
+                </figure>
+            </details>
+
+            <details>
+                <summary class="sum2">
+                    Other types of tokens are subclassed from Token as well.
+                </summary>
+
+                <figure>
+                    <img src="locations.png"
+                        height="540" width="440">
+                    <figcaption>
+                        The classes for all things addressable.
+                        <br />
+                        (Registers and Symbols are locations, but not
+                        addresses.)
+                    </figcaption>
+                </figure>
+            </details>
+
+            <details>
+                <summary class="sum2">
+                    These classes let us create the jump table quite easily.
+                </summary>
+                <figure>
+                    <img src="jump_table.png"
+                        height="420" width="440">
+                    <figcaption>
+                        The first few lines of the jump table.
+                    </figcaption>
+                </figure>
+                <p>
+                    We use this to execute instructions by calling the f()
+                    method of whatever the current instruction is:
+                    <br />
+                    <code>
+                        last_instr = curr_instr[INSTR].f(curr_instr[OPS], gd)
+                    </code>
+                </p>
+
+            </details>
+
+            <details>
+                <summary class="sum2">
+                    Use exceptions to make jumps
+                </summary>
+
+                <figure>
+                    <img src="raise_jumps.png"
+                        height="460" width="360">
+                    <figcaption>
+                        How to jump with exceptions
+                    </figcaption>
+                </figure>
+            </details>
+
         </details>
 
         <details>
             <summary class="sum1">
                 The role of Django
             </summary>
+            <figure>
+                <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Django_Reinhardt_%28Gottlieb_07301%29.jpg/220px-Django_Reinhardt_%28Gottlieb_07301%29.jpg">
+                <figcaption>
+                    Can he help more?
+                </figcaption>
+            </figure>
+            <ul>
+                <li>
+                    Right now, it is mostly used for its template capabilities.
+                </li>
+                <li>
+                    But down the road, we could allow users to store source
+                    code, as well as storing sample programs.
+                </li>
+                <li>
+                    What else might we store?
+                </li>
+            </ul>
+
         </details>
 
         <details>
@@ -183,18 +325,48 @@
 
             <figure>
                 <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/62/Christmas_pudding.JPG">
+                src="https://upload.wikimedia.org/wikipedia/commons/6/62/Christmas_pudding.JPG"
+                    height="220" width="250">
                 <figcaption>
+                    The pudding of which we speak
                 </figcaption>
             </figure>
 
-            <h3>
+            <h4>
                 Lessons
-            </h3>
+            </h4>
 
             <ul>
                 <li>
-                    There is still "low-hanging fruit"
+                    Python is a great language for building "little languages."
+                </li>
+                <li>
+                    There is still "low-hanging fruit."
+                </li>
+                <li>
+                    Emu86 is now in use by ~300 students at NYU.
+                </li>
+                <li>
+                    This is all open source: please feel free to join in the
+                    fun!
+                    <br />
+                    Our repo:
+                    <a href="https://github.com/gcallah/Emu86">
+                        https://github.com/gcallah/Emu86
+                    </a>
+                    <br />
+                    We still need:
+                    <ul class="nested">
+                        <li>
+                            A data section.
+                        </li>
+                        <li>
+                            System calls.
+                        </li>
+                        <li>
+                            Better stepping.
+                        </li>
+                    </ul>
                 </li>
             </ul>
 
