@@ -5,6 +5,7 @@ parse.py: creates parse tree.
 import re
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
+from .errors import UnknownName
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
 from .tokens import RegAddress
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
@@ -15,8 +16,10 @@ from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
 
 
-SYMBOL_RE = "^([A-Za-z_][A-Za-z0-9_]*)"
-sym_match = re.compile(SYMBOL_RE)
+LABEL_RE = "^([A-Za-z_][A-Za-z0-9_]*):"
+label_match = re.compile(LABEL_RE)
+SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
+sym_match = re.compile(SYM_RE)
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
@@ -90,15 +93,18 @@ def get_token(code, code_pos):
             code_pos += count
     return (token, code_pos)
 
-def get_op(token, gdata):
+def get_op(token, gdata, symbols):
     """
     Returns int value of operand: direct int or reg val
     Args:
-        op: operand to evaluate
+        token: string to evaluate
+        gdata: global data
+        symbols: the symbol table
     Returns:
-        int value
+        The object representing this operand.
     """
 
+    global sym_match
     int_val = 0
 
     if not token:
@@ -114,6 +120,8 @@ def get_op(token, gdata):
         else:
             raise InvalidMemLoc(address)
     elif re.search(sym_match, token) is not None:
+        if token not in symbols:
+            raise UnknownName(token)
         return Symbol(token)
     else:
         try:
@@ -140,13 +148,14 @@ def get_instr(code, code_pos):
         raise InvalidInstruction(token)
     return (instr, code_pos)
 
-def get_ops(code, code_pos, gdata):
+def get_ops(code, code_pos, gdata, symbols):
     """
+    Collect our operands.
     """
     ops = []
     while code_pos < len(code):
         (token, code_pos) = get_token(code, code_pos)
-        op = get_op(token, gdata)
+        op = get_op(token, gdata, symbols)
         ops.append(op)
 
     return (ops, code_pos)
@@ -155,13 +164,16 @@ def lex(code, gdata):
     """
     Lexical phase: tokenizes the code.
     Args:
-        code: The code.
+        code: The code to lexically analyze.
+
     Returns:
         tok_lines: the tokenized version
         labels: jump locations for code labels
     """
+    global label_match
     code_pos = 0
     labels = {}
+    symbols = {}
     lines = code.split("\n")
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
@@ -181,10 +193,9 @@ def lex(code, gdata):
             continue
 
         # labels:
-        p = re.compile(SYMBOL_RE + ":")
-        label_match = re.search(p, line)
-        if label_match is not None:
-            label = label_match.group(1)
+        label_present = re.search(label_match, line)
+        if label_present is not None:
+            label = label_present.group(1)
             labels[label] = i
             # now strip off the label:
             line = line.split(":", 1)[-1]
@@ -195,7 +206,7 @@ def lex(code, gdata):
         this_line = []
         (instr, code_pos) = get_instr(line, code_pos)
         this_line.append(instr)
-        (ops, code_pos) = get_ops(line, code_pos, gdata)
+        (ops, code_pos) = get_ops(line, code_pos, gdata, symbols)
         this_line.append(ops)
         tok_lines.append(this_line)
         i += 1

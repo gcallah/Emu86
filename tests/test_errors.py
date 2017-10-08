@@ -16,6 +16,7 @@ from assembler.assemble import assemble
 from assembler.errors import UNKNOWN_ERR, INVALID_INSTR, INVALID_OPRND
 from assembler.errors import INVALID_NUM_ARGS, INVALID_MEM_LOC, INVALID_REG
 from assembler.errors import REG_UNWRITABLE, STACK_OVERFLOW, STACK_UNDERFLOW
+from assembler.errors import UNKNOWN_NM
 
 
 class ErrorTestCase(TestCase):
@@ -33,8 +34,8 @@ class ErrorTestCase(TestCase):
         self.assertTrue(error.startswith(INVALID_NUM_ARGS))
 
     def test_invalid_oprnd(self):
-        (output, error) = assemble("int fred, wilma", gdata)
-        self.assertTrue(error.startswith(INVALID_OPRND))
+        (output, error) = assemble("add fred, wilma", gdata)
+        self.assertTrue(error.startswith(UNKNOWN_NM))
 
     def test_reg_unwritable(self):
         (output, error) = assemble("mov EIP, 10", gdata)

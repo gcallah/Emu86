@@ -92,7 +92,7 @@ def assemble(code, gd, step=False):
         count = 0
         while gd.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
             (success, last_instr, error) = exec(tok_lines, gd, 
-                                                   last_instr, labels)
+                                                last_instr, labels)
             if not success:
                 return (last_instr, error)
             count += 1

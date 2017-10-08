@@ -16,21 +16,21 @@ help.html: $(SRCS)
 	html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
 
 dev: $(SRCS) $(OBJS) 
-	git checkout dev
 	$(TDIR)/test_assemble.py
 	$(TDIR)/test_errors.py
 	-git commit -a -m "Building development."
-	git push origin dev
+	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
 prod: $(SRCS) $(OBJ)
-	git checkout master
-	git merge dev
+# we are dropping the two branch system for now.
+#	git checkout master
+#	git merge dev
 	$(TDIR)/test_assemble.py
 	$(TDIR)/test_errors.py
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'
-	git checkout dev
+#	git checkout dev
 
 # for future use:
 #	ansible-playbook -i $(ADIR)/inventories/hosts $(ADIR)/dev.yml

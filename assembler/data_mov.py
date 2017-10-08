@@ -16,8 +16,7 @@ class Mov(Instruction):
             MOV mem, mem
         </syntax>
         <descr>
-            Stores/Copies the value of op2 to the location mentioned in op1. 
-            Callable for register values, memory values and constants.
+            Copies the value of op2 to the location mentioned in op1. 
         </descr>
     """
     def fhook(self, ops, gdata):
@@ -35,10 +34,9 @@ class Pop(Instruction):
             POP mem
         </syntax>
         <descr>
-            POPS the topmost value out of the stack with reference to 
-            the stack pointer position (ESP). Decrements the stack pointer 
-            automatically, every time a POP is called. Callable to store
-            the stack value to a memory location and register.
+            POPS the topmost value out of the stack.
+            Decrements the stack pointer.
+            Can move the stack value to a memory location or register.
         </descr>
     """
     def fhook(self, ops, gdata):
