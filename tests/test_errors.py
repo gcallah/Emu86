@@ -33,7 +33,7 @@ class ErrorTestCase(TestCase):
         (output, error) = assemble("add eax, 10, 22, 34", gdata)
         self.assertTrue(error.startswith(INVALID_NUM_ARGS))
 
-    def test_invalid_oprnd(self):
+    def test_unknown_name(self):
         (output, error) = assemble("add fred, wilma", gdata)
         self.assertTrue(error.startswith(UNKNOWN_NM))
 
