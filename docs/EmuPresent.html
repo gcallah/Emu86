@@ -241,6 +241,21 @@
                     <figcaption>
                     </figcaption>
                 </figure>
+
+                <p>
+                    This structure makes parsing simple: is the next token we
+                    get of the right class to be in that place? In a line of
+                    assembler code, the first item must be an instruction: so
+                    we can just check if the first token is an instance of
+                    <i>Instruction</i>, without worrying about what exact
+                    instruction it is. The following items must be operands...
+                    again, we can just check if they are instances of the
+                    high-level class <i>Operand</i> and not worry about their
+                    specific class. If we are trying to move a value, the first
+                    operand must be a location (we can't move into a
+                    constant!), and we just check if the token is an instance
+                    of <i>Location</i>.
+                </p>
             </details>
 
             <details>
