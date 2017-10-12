@@ -56,6 +56,9 @@ class VirtualMachine:
         self.stack = OrderedDict()
         self.stack_init()
 
+        self.labels = {}
+
+
     def __str__(self):
         return ("Registers: " + str(self.registers) + "\n"
                 + "Flags: " + str(self.flags) + "\n"

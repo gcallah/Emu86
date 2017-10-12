@@ -139,7 +139,7 @@ class Register(Location):
 
 class Symbol(Location):
     """
-    Class to hold symbols such as labels.
+    Class to hold symbols such as variable names.
     """
     def __init__(self, name):
         super().__init__(name)

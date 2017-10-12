@@ -26,10 +26,10 @@ def dump_flags(vm):
     for flag, val in vm.flags.items():
         add_debug("Flag = " + flag + "; val = " + str(val), vm)
 
-def jump_to_label(label, labels):
+def jump_to_label(label, vm):
     pass
 
-def exec(tok_lines, vm, last_instr, labels):
+def exec(tok_lines, vm, last_instr):
     """
         Executes a single instruction at location reg[EIP] in tok_lines.
         Returns:
@@ -51,8 +51,8 @@ def exec(tok_lines, vm, last_instr, labels):
         add_debug("In FlowBreak", vm)
         dump_flags(vm)
         label = brk.label
-        if label in labels:
-            ip = labels[label]  # set i to line num of label
+        if label in vm.labels:
+            ip = vm.labels[label]  # set i to line num of label
             vm.set_ip(ip)
             return (True, JMP_STR, "")
         else:
@@ -80,12 +80,11 @@ def assemble(code, vm, step=False):
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.")
 
-    labels = None
     tok_lines = None
 
     # break the code into tokens:
     try:
-        (tok_lines, labels) = lex(code, vm)
+        tok_lines = lex(code, vm)
     except Error as err:
         return (last_instr, err.msg)
 
@@ -95,7 +94,7 @@ def assemble(code, vm, step=False):
         count = 0
         while vm.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
             (success, last_instr, error) = exec(tok_lines, vm, 
-                                                last_instr, labels)
+                                                last_instr)
             if not success:
                 return (last_instr, error)
             count += 1
@@ -105,7 +104,7 @@ def assemble(code, vm, step=False):
         add_debug("Ret str = " + str(vm.ret_str), vm)
         if ip < len(tok_lines):
             (success, last_instr, error) = exec(tok_lines, vm,
-                                                last_instr, labels)
+                                                last_instr)
         else:
             last_instr = "Reached end of executable code."
             # rewind:

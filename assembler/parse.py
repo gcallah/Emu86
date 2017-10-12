@@ -168,11 +168,9 @@ def lex(code, vm):
 
     Returns:
         tok_lines: the tokenized version
-        labels: jump locations for code labels
     """
     global label_match
     code_pos = 0
-    labels = {}
     symbols = {}
     lines = code.split("\n")
     tok_lines = []  # this will hold the tokenized version of the code
@@ -196,7 +194,7 @@ def lex(code, vm):
         label_present = re.search(label_match, line)
         if label_present is not None:
             label = label_present.group(1)
-            labels[label] = i
+            vm.labels[label] = i
             # now strip off the label:
             line = line.split(":", 1)[-1]
         # we've stripped extra whitespace, comments, and labels: now store
@@ -210,4 +208,4 @@ def lex(code, vm):
         this_line.append(ops)
         tok_lines.append(this_line)
         i += 1
-    return (tok_lines, labels)
+    return (tok_lines)
