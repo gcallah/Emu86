@@ -19,7 +19,7 @@ Step through code until result happens.
 
 
 At the moment test after the arithmetic instructions are
-tested.
+tested, as these tests depend on those.
 """
 class TestControlFlow(TestCase):
 
