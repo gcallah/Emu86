@@ -5,6 +5,7 @@ sys.path.append("..")
 
 import operator as opfunc
 import functools
+from assembler.virtual_machine import vmachine
 
 from unittest import TestCase, main
 
@@ -18,7 +19,7 @@ Step through code until result happens.
 
 
 At the moment test after the arithmetic instructions are
-tested.
+tested, as these tests depend on those.
 """
 class TestControlFlow(TestCase):
 
@@ -29,9 +30,30 @@ class TestControlFlow(TestCase):
                 dec eax
                 label: inc eax
                 """
-        assemble(test_code, gdata)
-        self.assertEqual(gdata.registers["EAX"], 1)
+        assemble(test_code, vmachine)
+        self.assertEqual(vmachine.registers["EAX"], 1)
 
+
+    def test_je(self):
+        test_code = """
+                mov eax, 0
+                cmp eax, 0
+                je label
+                dec eax
+                label: inc eax
+                """
+        assemble(test_code, vmachine)
+        self.assertEqual(vmachine.registers["EAX"], 1)
+
+        test_code = """
+                mov eax, 1
+                cmp eax, 0
+                je label
+                dec eax
+                label: inc eax
+                """
+        assemble(test_code, vmachine)
+        self.assertEqual(vmachine.registers["EAX"], 1)
 """
 A thought for testing.
 
