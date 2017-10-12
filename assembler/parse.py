@@ -64,6 +64,10 @@ instructions = {
         }
 
 
+def add_debug(s, vm):
+    vm.debug += (s + "\n")
+
+
 def get_token(code, code_pos):
     """
         Gets the next token.

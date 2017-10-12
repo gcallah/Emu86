@@ -7,16 +7,12 @@ import re
 
 from .control_flow import FlowBreak
 from .errors import Error, InvalidInstruction
-from .parse import lex
+from .parse import lex, add_debug
 from .tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 
 JMP_STR = "A jump instruction."
-
-
-def add_debug(s, vm):
-    vm.debug += (s + "\n")
 
 
 INSTR = 0
