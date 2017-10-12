@@ -1,6 +1,7 @@
 *~
 *.pyc
 migrations/
+ansible/
 .*swp
 *.log
 *.txt
