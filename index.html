@@ -9,13 +9,15 @@
 
     <body>
             
+        <div id="header">
+            <div id="logo">
+                <img src="graphics/logo.png">
+            </div>
+    	</div>
+
 		<h1>
 			Emu86 Assembly Language Emulator
 		</h1>
-
-            <figure>
-                <img src="graphics/logo.png">
-            </figure>
 
             <p>
                 Emu86 is a browser-based interpreter for x86 assembly language
@@ -40,10 +42,42 @@
                         </a>
                     </li>
                     <li>
-                        <a href="docs/talk_outline.html">
-                            Outline for PyGotham talk
+                        <a href="docs/EmuPresent.html">
+                            PyGotham 2017 talk
                         </a>
                     </li>
+                    <li>
+                        Some sample assembly language programs that currently
+                        work:
+                        <ul class="nested">
+                            <li>
+                                <a
+                                    href="https://github.com/gcallah/Emu86/blob/master/tests/gt.asm">
+                                Loop until the value in one register exceeds
+                                that in another.
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://github.com/gcallah/Emu86/blob/master/tests/key_test.asm">
+                                    Testing our "keyboard interrupt".
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://github.com/gcallah/Emu86/blob/master/tests/test.asm">
+                                    Some arithmetic instructions.
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://github.com/gcallah/Emu86/blob/master/tests/loop.asm">
+                                    Looping until two registers are equal.
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
 
     </body>

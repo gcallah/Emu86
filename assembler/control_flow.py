@@ -49,20 +49,20 @@ class Cmpf(Instruction):
             since Python integer arithmetic never carries or overflows!
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         (op1, op2) = get_two_ops(self.get_nm(), ops)
         res = op1.get_val() - op2.get_val()
         # set the proper flags
         # zero flag:
         if res == 0:
-            gdata.flags['ZF'] = 1
+            vm.flags['ZF'] = 1
         else:
-            gdata.flags['ZF'] = 0
+            vm.flags['ZF'] = 0
         # sign flag:
         if res < 0:
-            gdata.flags['SF'] = 1
+            vm.flags['SF'] = 1
         else:
-            gdata.flags['SF'] = 0
+            vm.flags['SF'] = 0
 
 class Jmp(Instruction):
     """
@@ -73,7 +73,7 @@ class Jmp(Instruction):
             JMP lbl
         </syntax>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(target.name)
 
@@ -89,12 +89,9 @@ class Je(Instruction):
             Jumps if ZF is one.
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        gdata.debug += ("In JE; ZF = " + str(gdata.flags['ZF']) + "\n")
-        if int(gdata.flags['ZF']) == 1:
-            gdata.debug += ("About to raise Jump; ZF = " 
-                            + str(gdata.flags['ZF']) + "\n")
+        if int(vm.flags['ZF']) == 1:
             raise Jump(target.name)
 
 class Jne(Instruction):
@@ -109,9 +106,9 @@ class Jne(Instruction):
             Jumps if ZF is zero.
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        if int(gdata.flags['ZF']) == 0:
+        if int(vm.flags['ZF']) == 0:
             raise Jump(target.name)
 
 class Jg(Instruction):
@@ -126,10 +123,10 @@ class Jg(Instruction):
             Jumps if SF == 0 and ZF == 0.
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        if (int(gdata.flags['SF']) == 0 
-            and int(gdata.flags['ZF']) == 0):
+        if (int(vm.flags['SF']) == 0 
+            and int(vm.flags['ZF']) == 0):
             raise Jump(target.name)
 
 class Jge(Instruction):
@@ -144,9 +141,9 @@ class Jge(Instruction):
             Jumps if SF == 0.
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        if int(gdata.flags['SF']) == 0:
+        if int(vm.flags['SF']) == 0:
             raise Jump(target.name)
         return ''
 
@@ -162,9 +159,9 @@ class Jl(Instruction):
             Jumps if SF == 1.
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        if int(gdata.flags['SF']) == 1:
+        if int(vm.flags['SF']) == 1:
             raise Jump(target.name)
         return ''
 
@@ -180,10 +177,10 @@ class Jle(Instruction):
             Jumps if SF == 1 or ZF == 1.
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        if (int(gdata.flags['SF']) == 1
-            or int(gdata.flags['ZF']) == 1):
+        if (int(vm.flags['SF']) == 1
+            or int(vm.flags['ZF']) == 1):
             raise Jump(target.name)
         return ''
 
@@ -199,10 +196,10 @@ class Call(Instruction):
             Pushes value of EIP to stack and jumps to the internal subroutine.
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         check_num_args("CALL", ops, 1)
-        gdata.dec_sp()
-        gdata.stack[str(gdata.get_sp() + 1)] = gdata.get_ip()
+        vm.dec_sp()
+        vm.stack[str(vm.get_sp() + 1)] = vm.get_ip()
         target = get_one_op(self.get_nm(), ops)
         raise Jump(target.name)
 
@@ -219,8 +216,8 @@ class Ret(Instruction):
             the line after the subroutine call.
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         check_num_args("RET", ops, 0)
-        gdata.inc_sp()
-        gdata.set_ip(int(gdata.stack[str(gdata.get_sp())]))
-        gdata.stack[str(gdata.get_sp())] = gdata.empty_cell()
+        vm.inc_sp()
+        vm.set_ip(int(vm.stack[str(vm.get_sp())]))
+        vm.stack[str(vm.get_sp())] = vm.empty_cell()

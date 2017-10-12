@@ -8,7 +8,7 @@ from .errors import *
 from .tokens import Instruction, MAX_INT
 
 
-def one_op_arith(ops, gdata, instr, operator):
+def one_op_arith(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
@@ -17,7 +17,7 @@ def one_op_arith(ops, gdata, instr, operator):
     ops[0].set_val(operator(ops[0].get_val()))
 
 
-def two_op_arith(ops, gdata, instr, operator):
+def two_op_arith(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
@@ -26,15 +26,15 @@ def two_op_arith(ops, gdata, instr, operator):
     ops[0].set_val(
         checkflag(operator(ops[0].get_val(),
                            ops[1].get_val()), 
-                           gdata))
+                           vm))
 
 
-def checkflag(val, gdata):
+def checkflag(val, vm):
     if(val > MAX_INT):
-        gdata.flags['CF'] = 1
+        vm.flags['CF'] = 1
         val = val - MAX_INT+1
     else:
-        gdata.flags['CF'] = 0
+        vm.flags['CF'] = 0
     return val
 
 
@@ -49,8 +49,8 @@ class Add(Instruction):
             ADD reg, con
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfunc.add)
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.add)
 
 class Sub(Instruction):
     """
@@ -63,8 +63,8 @@ class Sub(Instruction):
             SUB reg, con
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfunc.sub)
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.sub)
 
 class Imul(Instruction):
     """
@@ -77,8 +77,8 @@ class Imul(Instruction):
             IMUL reg, con
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfunc.mul)
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.mul)
         return ''
 
 class Andf(Instruction):
@@ -92,8 +92,8 @@ class Andf(Instruction):
             AND reg, con
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfunc.and_)
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.and_)
         return ''
 
 class Orf(Instruction):
@@ -107,8 +107,8 @@ class Orf(Instruction):
             OR reg, con
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfunc.or_)
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.or_)
         return ''
 
 class Xor(Instruction):
@@ -122,8 +122,8 @@ class Xor(Instruction):
             XOR reg, con
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfunc.xor)
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.xor)
         return ''
 
 class Shl(Instruction):
@@ -137,8 +137,8 @@ class Shl(Instruction):
             SHL reg, con
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfunc.lshift)
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.lshift)
         return ''
 
 class Shr(Instruction):
@@ -152,8 +152,8 @@ class Shr(Instruction):
             SHR reg, con
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        two_op_arith(ops, gdata, self.name, opfunc.rshift)
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.rshift)
 
 class Notf(Instruction):
     """
@@ -164,8 +164,8 @@ class Notf(Instruction):
             NOT reg
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        one_op_arith(ops, gdata, self.name, opfunc.inv)
+    def fhook(self, ops, vm):
+        one_op_arith(ops, vm, self.name, opfunc.inv)
 
 class Inc(Instruction):
     """
@@ -176,7 +176,7 @@ class Inc(Instruction):
             INC reg
         </syntax>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() + 1)
 
@@ -189,7 +189,7 @@ class Dec(Instruction):
             DEC reg
         </syntax>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() - 1)
 
@@ -202,8 +202,8 @@ class Neg(Instruction):
             NEG reg
         </syntax>
     """
-    def fhook(self, ops, gdata):
-        one_op_arith(ops, gdata, self.name, opfunc.neg)
+    def fhook(self, ops, vm):
+        one_op_arith(ops, vm, self.name, opfunc.neg)
         return ''
 
 class Idiv(Instruction):
@@ -215,12 +215,12 @@ class Idiv(Instruction):
             IDIV reg
         </syntax>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
     
-        hireg = int(gdata.registers['EDX']) << 32
-        lowreg = int(gdata.registers['EAX'])
+        hireg = int(vm.registers['EDX']) << 32
+        lowreg = int(vm.registers['EAX'])
         dividend = hireg + lowreg
-        gdata.registers['EAX'] = dividend // ops[0].get_val()
-        gdata.registers['EBX'] = dividend % ops[0].get_val()
+        vm.registers['EAX'] = dividend // ops[0].get_val()
+        vm.registers['EBX'] = dividend % ops[0].get_val()
         return ''

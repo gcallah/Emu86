@@ -13,7 +13,7 @@ import functools
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
-from assembler.global_data import gdata, STACK_TOP, STACK_BOTTOM
+from assembler.virtual_machine import vmachine, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
@@ -37,10 +37,10 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             correct = operator(a, b)
-            gdata.registers["EAX"] = a
-            gdata.registers["EBX"] = b
-            assemble(instr + " eax, ebx", gdata)
-            self.assertEqual(gdata.registers["EAX"], correct)
+            vmachine.registers["EAX"] = a
+            vmachine.registers["EBX"] = b
+            assemble(instr + " eax, ebx", vmachine)
+            self.assertEqual(vmachine.registers["EAX"], correct)
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
@@ -79,9 +79,9 @@ class AssembleTestCase(TestCase):
         for i in range(NUM_TESTS):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct = operator(a)
-            gdata.registers["EAX"] = a
-            assemble(instr + " eax", gdata)
-            self.assertEqual(gdata.registers["EAX"], correct)
+            vmachine.registers["EAX"] = a
+            assemble(instr + " eax", vmachine)
+            self.assertEqual(vmachine.registers["EAX"], correct)
 
     def test_not(self):
         self.one_op_test(opfunc.inv, "not")
@@ -106,12 +106,12 @@ class AssembleTestCase(TestCase):
         for i in range(STACK_TOP, STACK_BOTTOM-1, -1): # Traverse the stack registers.
             a = random.randint(MIN_TEST, MAX_TEST)
             correct_stack[i] = a
-            gdata.registers["EAX"] = a
-            assemble("push eax", gdata)
+            vmachine.registers["EAX"] = a
+            assemble("push eax", vmachine)
 
         for i in range(STACK_BOTTOM, STACK_TOP+1):
-            assemble("pop ebx", gdata)
-            self.assertEqual(gdata.registers["EBX"], correct_stack[i])
+            assemble("pop ebx", vmachine)
+            self.assertEqual(vmachine.registers["EBX"], correct_stack[i])
 
 ##################
 # Other          #
@@ -121,9 +121,9 @@ class AssembleTestCase(TestCase):
         for i in range(0, NUM_TESTS):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct = a
-            gdata.registers["EAX"] = a
-            assemble("mov eax, " + str(a), gdata)
-            self.assertEqual(gdata.registers["EAX"], correct)
+            vmachine.registers["EAX"] = a
+            assemble("mov eax, " + str(a), vmachine)
+            self.assertEqual(vmachine.registers["EAX"], correct)
 
     def test_idiv(self):
         for i in range(0, NUM_TESTS):
@@ -134,30 +134,30 @@ class AssembleTestCase(TestCase):
                 b = random.randint(MIN_TEST, MAX_TEST)
             correct_quotient = (opfunc.lshift(d,REGISTER_SIZE) + a) // b
             correct_remainder = (opfunc.lshift(d,REGISTER_SIZE) + a) % b
-            gdata.registers["EAX"] = a
-            gdata.registers["EDX"] = d
-            gdata.registers["EBX"] = b
-            assemble("idiv ebx", gdata)
-            self.assertEqual(gdata.registers["EAX"], correct_quotient)
-            self.assertEqual(gdata.registers["EBX"], correct_remainder)
+            vmachine.registers["EAX"] = a
+            vmachine.registers["EDX"] = d
+            vmachine.registers["EBX"] = b
+            assemble("idiv ebx", vmachine)
+            self.assertEqual(vmachine.registers["EAX"], correct_quotient)
+            self.assertEqual(vmachine.registers["EBX"], correct_remainder)
 
     def test_cmp_eq(self):
-        gdata.registers["EAX"] = 1
-        gdata.registers["EBX"] = 1
-        gdata.flags["ZF"] = 0
-        gdata.flags["SF"] = 0
-        assemble("cmp eax, ebx", gdata)
-        self.assertEqual(gdata.flags["ZF"], 1)
-        self.assertEqual(gdata.flags["SF"], 0)
+        vmachine.registers["EAX"] = 1
+        vmachine.registers["EBX"] = 1
+        vmachine.flags["ZF"] = 0
+        vmachine.flags["SF"] = 0
+        assemble("cmp eax, ebx", vmachine)
+        self.assertEqual(vmachine.flags["ZF"], 1)
+        self.assertEqual(vmachine.flags["SF"], 0)
 
     def test_cmp_l(self):
-        gdata.registers["EAX"] = 0
-        gdata.registers["EBX"] = 1
-        gdata.flags["ZF"] = 0
-        gdata.flags["SF"] = 0
-        assemble("cmp eax, ebx", gdata)
-        self.assertEqual(gdata.flags["ZF"], 0)
-        self.assertEqual(gdata.flags["SF"], 1)
+        vmachine.registers["EAX"] = 0
+        vmachine.registers["EBX"] = 1
+        vmachine.flags["ZF"] = 0
+        vmachine.flags["SF"] = 0
+        assemble("cmp eax, ebx", vmachine)
+        self.assertEqual(vmachine.flags["ZF"], 0)
+        self.assertEqual(vmachine.flags["SF"], 1)
         
 if __name__ == '__main__':
     main()

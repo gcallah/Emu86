@@ -13,6 +13,7 @@ REG_UNWRITABLE = "Write attempt to unwriteable register: "
 INT_OUT_OF_RNG = "Integer out of range: "
 STACK_OVERFLOW = "Stack overflow."
 STACK_UNDERFLOW = "Stack underflow."
+UNKNOWN_NM = "Unknown name: "
 
 INT_MAX=(2**31)-1
 INT_MIN=-(2**31)
@@ -31,6 +32,10 @@ class RegUnwritable(Error):
 class InvalidInstruction(Error):
     def __init__(self, offender):
         self.msg = INVALID_INSTR + offender
+
+class UnknownName(Error):
+    def __init__(self, offender):
+        self.msg = UNKNOWN_NM + offender
 
 class InvalidOperand(Error):
     def __init__(self, offender):
