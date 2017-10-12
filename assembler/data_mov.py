@@ -19,7 +19,7 @@ class Mov(Instruction):
             Copies the value of op2 to the location mentioned in op1. 
         </descr>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 2)
         ops[0].set_val(ops[1].get_val())
 
@@ -39,12 +39,12 @@ class Pop(Instruction):
             Can move the stack value to a memory location or register.
         </descr>
     """
-    def fhook(self, ops, gdata):
-        gdata.inc_sp()
+    def fhook(self, ops, vm):
+        vm.inc_sp()
         check_num_args("POP", ops, 1)
-        val = int(gdata.stack[str(gdata.get_sp())])
+        val = int(vm.stack[str(vm.get_sp())])
         ops[0].set_val(val)
-        gdata.stack[str(gdata.get_sp())] = gdata.empty_cell()
+        vm.stack[str(vm.get_sp())] = vm.empty_cell()
 
 class Push(Instruction):
     """
@@ -63,10 +63,10 @@ class Push(Instruction):
             register value, and constant value to the stack.
         </descr>
     """
-    def fhook(self, ops, gdata):
-        gdata.dec_sp()
+    def fhook(self, ops, vm):
+        vm.dec_sp()
         check_num_args("PUSH", ops, 1)
-        gdata.stack[str(gdata.get_sp()+1)] = ops[0].get_val()
+        vm.stack[str(vm.get_sp() + 1)] = ops[0].get_val()
 
 
 class Lea(Instruction):
@@ -77,6 +77,6 @@ class Lea(Instruction):
         <syntax>
         </syntax>
     """
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         check_num_args("LEA", ops, 2)
         # TBD!

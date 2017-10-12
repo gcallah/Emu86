@@ -93,12 +93,12 @@ def get_token(code, code_pos):
             code_pos += count
     return (token, code_pos)
 
-def get_op(token, gdata, symbols):
+
+def get_op(token, vm, symbols):
     """
-    Returns int value of operand: direct int or reg val
     Args:
         token: string to evaluate
-        gdata: global data
+        vm: our virtual machine
         symbols: the symbol table
     Returns:
         The object representing this operand.
@@ -109,14 +109,14 @@ def get_op(token, gdata, symbols):
 
     if not token:
         return None
-    elif token.upper() in gdata.registers:  # reg can be e.g. EAX or eax
-        return Register(token.upper(), gdata.registers)
+    elif token.upper() in vm.registers:  # reg can be e.g. EAX or eax
+        return Register(token.upper(), vm.registers)
     elif token[0] == '[' and token[len(token) - 1] == ']':
         address = token[1:len(token) - 1]
-        if address in gdata.memory:
-            return Address(address, gdata.memory)
-        elif address.upper() in gdata.registers:
-            return RegAddress(address.upper(), gdata.registers, gdata.memory)
+        if address in vm.memory:
+            return Address(address, vm.memory)
+        elif address.upper() in vm.registers:
+            return RegAddress(address.upper(), vm.registers, vm.memory)
         else:
             raise InvalidMemLoc(address)
     elif re.search(sym_match, token) is not None:
@@ -148,19 +148,19 @@ def get_instr(code, code_pos):
         raise InvalidInstruction(token)
     return (instr, code_pos)
 
-def get_ops(code, code_pos, gdata, symbols):
+def get_ops(code, code_pos, vm, symbols):
     """
     Collect our operands.
     """
     ops = []
     while code_pos < len(code):
         (token, code_pos) = get_token(code, code_pos)
-        op = get_op(token, gdata, symbols)
+        op = get_op(token, vm, symbols)
         ops.append(op)
 
     return (ops, code_pos)
 
-def lex(code, gdata):
+def lex(code, vm):
     """
     Lexical phase: tokenizes the code.
     Args:
@@ -206,7 +206,7 @@ def lex(code, gdata):
         this_line = []
         (instr, code_pos) = get_instr(line, code_pos)
         this_line.append(instr)
-        (ops, code_pos) = get_ops(line, code_pos, gdata, symbols)
+        (ops, code_pos) = get_ops(line, code_pos, vm, symbols)
         this_line.append(ops)
         tok_lines.append(this_line)
         i += 1

@@ -4,13 +4,13 @@ interrupts.py: data movement instructions.
 
 from .errors import check_num_args, InvalidOperand
 from .tokens import Instruction, IntOp
-from .global_data import gdata
 
-def read_key(gdata):
+
+def read_key(vm):
     # we are faking 'reading' from the keyboard
-    c = gdata.ret_str[gdata.nxt_key]
-    gdata.nxt_key = (gdata.nxt_key + 1) % len(gdata.ret_str)
-    gdata.registers['EAX'] = ord(c)
+    c = vm.ret_str[vm.nxt_key]
+    vm.nxt_key = (vm.nxt_key + 1) % len(vm.ret_str)
+    vm.registers['EAX'] = ord(c)
     return ""
 
 
@@ -36,7 +36,7 @@ class Interrupt(Instruction):
         </descr>
     """
 
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 2)
         if type(ops[0]) != IntOp:
             raise InvalidOperand(str(ops[0]))
@@ -44,5 +44,5 @@ class Interrupt(Instruction):
             raise InvalidOperand(str(ops[1]))
         interrupt_class = int_vectors[ops[0].get_val()]
         interrupt_handler = interrupt_class[ops[1].get_val()]
-        c = interrupt_handler(gdata)
+        c = interrupt_handler(vm)
         return str(c)

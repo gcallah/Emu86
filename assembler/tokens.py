@@ -5,7 +5,7 @@ tokens.py: contains classes we tokenize into.
 from abc import abstractmethod
 
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng
-from .global_data import gdata
+from .virtual_machine import vmachine
 
 BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1
@@ -36,8 +36,8 @@ class Instruction(Token):
     def __str__(self):
         return str(self.name)
 
-    def f(self, ops, gdata):
-        self.fhook(ops, gdata)
+    def f(self, ops, vmachine):
+        self.fhook(ops, vmachine)
         s = self.name + " "
         for op in ops:
             s += str(op)
@@ -45,7 +45,7 @@ class Instruction(Token):
         return s
 
     @abstractmethod
-    def fhook(self, ops, gdata):
+    def fhook(self, ops, vmachine):
         pass
 
 class Operand(Token):
@@ -121,7 +121,7 @@ class Register(Location):
         self.registers = registers
         self.val = registers[self.name]
         self.writable = True
-        if self.name in gdata.unwritable:
+        if self.name in vmachine.unwritable:
             self.writable = False
 
     def __str__(self):

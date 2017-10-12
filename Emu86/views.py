@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404, render
 from .models import AdminEmail
 from .models import Site
 from .forms import MainForm
-from assembler.global_data import gdata
+from assembler.virtual_machine import vmachine
 from assembler.assemble import assemble, add_debug
 
 CODE = 'code'
@@ -27,52 +27,52 @@ def get_hdr():
         break   # since we only expect a single site record!
     return site_hdr
 
-def dump_dict(d, gdata):
+def dump_dict(d, vmachine):
     for key, val in d.items():
-        add_debug(str(key) + ": " + str(val), gdata)
+        add_debug(str(key) + ": " + str(val), vmachine)
 
 def main_page(request):
-    global gdata
+    global vmachine
     last_instr = ""
     error = ""
 
     site_hdr = get_hdr()
 
     if request.method == 'GET':
-        gdata.re_init()
+        vmachine.re_init()
         form = MainForm()
     else:
         form = MainForm(request.POST)
         if CLEAR in request.POST:
-            gdata.re_init()
+            vmachine.re_init()
         else:
             step = (STEP in request.POST)
-            gdata.nxt_key = 0
+            vmachine.nxt_key = 0
             if step:
-                add_debug("Getting next key", gdata)
+                add_debug("Getting next key", vmachine)
                 try:
-                    gdata.nxt_key = int(request.POST.get(NXT_KEY, 0))
+                    vmachine.nxt_key = int(request.POST.get(NXT_KEY, 0))
                 except Exception:
-                    gdata.nxt_key = 0
+                    vmachine.nxt_key = 0
 
-            get_reg_contents(gdata.registers, request)
-            get_mem_contents(gdata.memory, request)
-            get_stack_contents(gdata.stack, request)
-            get_flag_contents(gdata.flags, request)
-            (last_instr, error) = assemble(request.POST[CODE], gdata, step)
+            get_reg_contents(vmachine.registers, request)
+            get_mem_contents(vmachine.memory, request)
+            get_stack_contents(vmachine.stack, request)
+            get_flag_contents(vmachine.flags, request)
+            (last_instr, error) = assemble(request.POST[CODE], vmachine, step)
 
     return render(request, 'main.html',
                   {'form': form,
                    HEADER: site_hdr,
                    'last_instr': last_instr,
                    'error': error,
-                   'unwritable': gdata.unwritable,
-                   'debug': gdata.debug,
-                   NXT_KEY: gdata.nxt_key,
-                   'registers': gdata.registers,
-                   'memory': gdata.memory, 
-                   'stack': gdata.stack, 
-                   'flags': gdata.flags,
+                   'unwritable': vmachine.unwritable,
+                   'debug': vmachine.debug,
+                   NXT_KEY: vmachine.nxt_key,
+                   'registers': vmachine.registers,
+                   'memory': vmachine.memory, 
+                   'stack': vmachine.stack, 
+                   'flags': vmachine.flags,
                   })
 
 def get_reg_contents(registers, request):

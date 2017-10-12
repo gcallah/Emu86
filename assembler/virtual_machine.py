@@ -15,7 +15,7 @@ EMPTY_CELL = 0
 INSTR_PTR = "EIP"
 STACK_PTR = "ESP"
 
-class GlobalData:
+class VirtualMachine:
     """
     Holds the memory, registers, flags, etc. that our assembly code
     will use. A singleton class.
@@ -55,6 +55,12 @@ class GlobalData:
 
         self.stack = OrderedDict()
         self.stack_init()
+
+    def __str__(self):
+        return ("Registers: " + str(self.registers) + "\n"
+                + "Flags: " + str(self.flags) + "\n"
+                + "Memory: " + str(self.memory) + "\n"
+                + "Stack: " + str(self.stack))
 
     def mem_init(self):
         for i in range(0, MEM_SIZE):
@@ -111,4 +117,4 @@ class GlobalData:
     def empty_cell(self):
         return EMPTY_CELL
 
-gdata = GlobalData()
+vmachine = VirtualMachine()
