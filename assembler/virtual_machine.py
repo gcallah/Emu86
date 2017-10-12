@@ -57,6 +57,7 @@ class VirtualMachine:
         self.stack_init()
 
         self.labels = {}
+        self.symbols = {}
 
 
     def __str__(self):

@@ -4,7 +4,7 @@ tokens.py: contains classes we tokenize into.
 
 from abc import abstractmethod
 
-from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng
+from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName
 from .virtual_machine import vmachine
 
 BITS = 32   # we are on a 32-bit machine
@@ -72,15 +72,19 @@ class Location(Operand):
     Class to give common type to memory and registers.
     Adds set_val(), not possible for ints!
     """
+    def __init__(self, name, vm, val=0):
+        super().__init__(name, val)
+        self.vm = vm
+
     @abstractmethod
     def set_val(self):
         pass
 
 
 class Address(Location):
-    def __init__(self, name, memory, val=0):
-        super().__init__(name)
-        self.mem = memory
+    def __init__(self, name, vm, val=0):
+        super().__init__(name, vm, val)
+        self.mem = vm.memory
 
     def __str__(self):
         return "[" + str(self.name) + "]"
@@ -93,9 +97,9 @@ class Address(Location):
 
 
 class RegAddress(Address):
-    def __init__(self, name, registers, memory, val=0):
-        super().__init__(name, memory)
-        self.regs = registers
+    def __init__(self, name, vm, val=0):
+        super().__init__(name, vm, val)
+        self.regs = vm.registers
 
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
@@ -116,12 +120,12 @@ class RegAddress(Address):
 
 
 class Register(Location):
-    def __init__(self, name, registers):
-        super().__init__(name)
-        self.registers = registers
-        self.val = registers[self.name]
+    def __init__(self, name, vm, val=0):
+        super().__init__(name, vm, val)
+        self.registers = vm.registers
+        self.val = self.registers[self.name]
         self.writable = True
-        if self.name in vmachine.unwritable:
+        if self.name in vm.unwritable:
             self.writable = False
 
     def __str__(self):
@@ -139,7 +143,17 @@ class Register(Location):
 
 class Symbol(Location):
     """
-    Class to hold symbols such as variable names.
+    Class to hold symbols such as variable names and labels.
     """
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, vm, val=0):
+        super().__init__(name, vm, val)
+        self.labels = vm.labels
+        self.symbols = vm.symbols
+
+    def set_val(self, val):
+        if self.name not in self.symbols:
+            raise UnknownName(self.name)
+
+    def get_val(self):
+        if self.name not in self.symbols:
+            raise UnknownName(self.name)

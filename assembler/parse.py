@@ -98,12 +98,11 @@ def get_token(code, code_pos):
     return (token, code_pos)
 
 
-def get_op(token, vm, symbols):
+def get_op(token, vm):
     """
     Args:
         token: string to evaluate
         vm: our virtual machine
-        symbols: the symbol table
     Returns:
         The object representing this operand.
     """
@@ -114,17 +113,17 @@ def get_op(token, vm, symbols):
     if not token:
         return None
     elif token.upper() in vm.registers:  # reg can be e.g. EAX or eax
-        return Register(token.upper(), vm.registers)
+        return Register(token.upper(), vm)
     elif token[0] == '[' and token[len(token) - 1] == ']':
         address = token[1:len(token) - 1]
         if address in vm.memory:
-            return Address(address, vm.memory)
+            return Address(address, vm)
         elif address.upper() in vm.registers:
-            return RegAddress(address.upper(), vm.registers, vm.memory)
+            return RegAddress(address.upper(), vm)
         else:
             raise InvalidMemLoc(address)
     elif re.search(sym_match, token) is not None:
-        return Symbol(token)
+        return Symbol(token, vm)
     else:
         try:
             int_val = int(token)
@@ -150,14 +149,14 @@ def get_instr(code, code_pos):
         raise InvalidInstruction(token)
     return (instr, code_pos)
 
-def get_ops(code, code_pos, vm, symbols):
+def get_ops(code, code_pos, vm):
     """
     Collect our operands.
     """
     ops = []
     while code_pos < len(code):
         (token, code_pos) = get_token(code, code_pos)
-        op = get_op(token, vm, symbols)
+        op = get_op(token, vm)
         ops.append(op)
 
     return (ops, code_pos)
@@ -173,7 +172,6 @@ def lex(code, vm):
     """
     global label_match
     code_pos = 0
-    symbols = {}
     lines = code.split("\n")
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
@@ -206,7 +204,7 @@ def lex(code, vm):
         this_line = []
         (instr, code_pos) = get_instr(line, code_pos)
         this_line.append(instr)
-        (ops, code_pos) = get_ops(line, code_pos, vm, symbols)
+        (ops, code_pos) = get_ops(line, code_pos, vm)
         this_line.append(ops)
         tok_lines.append(this_line)
         i += 1
