@@ -63,7 +63,8 @@ class VirtualMachine:
         return ("Registers: " + str(self.registers) + "\n"
                 + "Flags: " + str(self.flags) + "\n"
                 + "Memory: " + str(self.memory) + "\n"
-                + "Stack: " + str(self.stack))
+                + "Stack: " + str(self.stack) + "\n"
+                + "Labels: " + str(self.labels))
 
     def mem_init(self):
         for i in range(0, MEM_SIZE):

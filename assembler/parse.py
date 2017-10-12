@@ -64,6 +64,10 @@ instructions = {
         }
 
 
+def add_debug(s, vm):
+    vm.debug += (s + "\n")
+
+
 def get_token(code, code_pos):
     """
         Gets the next token.
@@ -120,9 +124,13 @@ def get_op(token, vm, symbols):
         else:
             raise InvalidMemLoc(address)
     elif re.search(sym_match, token) is not None:
-        if token not in symbols:
+        add_debug("Labels: " + str(vm.labels), vm)
+        if token in vm.labels:
+            return Symbol(token)
+        elif token in symbols:
+            pass   # code will go here to do symbol lookup to get location
+        else:
             raise UnknownName(token)
-        return Symbol(token)
     else:
         try:
             int_val = int(token)
