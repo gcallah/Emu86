@@ -1,5 +1,5 @@
 """
-Our x86 global data.
+Our x86 virtual machine representation.
 """
 
 from collections import OrderedDict

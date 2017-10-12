@@ -110,22 +110,11 @@
             </summary>
 
             <p>
-                The "machine" state moves back and forth from sever to client
-                to server.
-            </p>
-
-            <figure>
-                <img src="gdata.png"
-                        height="500" width="600">
-                <figcaption>
-                    The data that gets past back-and-forth from client to
-                    server.
-                </figcaption>
-            </figure>
-
-            <p>
-                We are able to do something like "Step" the code because
-                the instruction pointer is part of the machine state.
+                To make things like code stepping work,
+                we toss a "<a
+                    href="https://github.com/gcallah/Emu86/blob/master/assembler/virtual_machine.py">virtual
+                    machine</a>"
+                back and forth from sever to client to server.
             </p>
 
         </details>
