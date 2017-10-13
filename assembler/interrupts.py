@@ -13,13 +13,13 @@ def read_key(vm):
     vm.registers['EAX'] = ord(c)
     return ""
 
-def exit_prod(vm):
+def exit_prog(vm):
     exit(0)
 
 
 int_vectors = {
     22: {0: read_key },
-    33: {0: read_key },
+    33: {0: exit_prog },
 }
 
 
