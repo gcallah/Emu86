@@ -61,10 +61,13 @@
 
 <p>
             We will build various "interrupt" handlers as needed.
-            At present, we only have INT 22, 0, to get a key from
+            At present, we only have two:
+                INT 22, 0, to get a key from
             the keyboard. And we only pretend the key is from the keyboard,
             since we are running on the Internet, and can't read the user's
             keyboard.
+            <br />
+            And INT 33, 0, to exit the program.
 </p>
 
             <h2>
@@ -87,8 +90,7 @@
 <h5>Description</h5>
 
 <p>
-            Stores/Copies the value of op2 to the location mentioned in op1. 
-            Callable for register values, memory values and constants.
+            Copies the value of op2 to the location mentioned in op1. 
 </p>
 <hr>
 <h4>
@@ -104,10 +106,9 @@
 <h5>Description</h5>
 
 <p>
-            POPS the topmost value out of the stack with reference to 
-            the stack pointer position (ESP). Decrements the stack pointer 
-            automatically, every time a POP is called. Callable to store
-            the stack value to a memory location and register.
+            POPS the topmost value out of the stack.
+            Decrements the stack pointer.
+            Can move the stack value to a memory location or register.
 </p>
 <hr>
 <h4>

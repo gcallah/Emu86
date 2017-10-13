@@ -38,6 +38,7 @@ class Interrupt(Instruction):
             the keyboard. And we only pretend the key is from the keyboard,
             since we are running on the Internet, and can't read the user's
             keyboard.
+            <br />
             And INT 33, 0, to exit the program.
         </descr>
     """
