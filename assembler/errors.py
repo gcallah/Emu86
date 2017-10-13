@@ -14,6 +14,7 @@ INT_OUT_OF_RNG = "Integer out of range: "
 STACK_OVERFLOW = "Stack overflow."
 STACK_UNDERFLOW = "Stack underflow."
 UNKNOWN_NM = "Unknown name: "
+PROGRAM_EXIT = "Program exit"
 
 INT_MAX=(2**31)-1
 INT_MIN=-(2**31)
@@ -75,6 +76,10 @@ class StackOverflow(Error):
 class StackUnderflow(Error):
     def __init__(self):
         self.msg = STACK_UNDERFLOW
+
+class ExitProg(Error):
+    def __init__(self):
+        self.msg = PROGRAM_EXIT
 
 def check_num_args(instr, ops, correct_num):
     """

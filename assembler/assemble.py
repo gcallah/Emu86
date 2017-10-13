@@ -6,7 +6,7 @@ Executes assembly code typed in.
 import re
 
 from .control_flow import FlowBreak
-from .errors import Error, InvalidInstruction
+from .errors import Error, InvalidInstruction, ExitProg
 from .parse import lex, add_debug
 from .tokens import Instruction
 
@@ -52,6 +52,8 @@ def exec(tok_lines, vm, last_instr):
         add_debug("In FlowBreak", vm)
         dump_flags(vm)
         return jump_to_label(brk.label, vm)
+    except ExitProg as ep:
+        raise ExitProg
     except Error as err:
         return (False, last_instr, err.msg)
 
@@ -65,6 +67,7 @@ def assemble(code, vm, step=False):
                 registers: current register values.
                 memory: current memory values.
                 flags: current values of flags.
+            step: are we stepping through code or running continuously?
         Returns:
             next 
             Error, if any.
@@ -83,26 +86,29 @@ def assemble(code, vm, step=False):
     except Error as err:
         return (last_instr, err.msg)
 
-    if not step:
-        add_debug("Setting ip to 0", vm)
-        vm.set_ip(0)   # instruction pointer reset for 'run'
-        count = 0
-        while vm.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
-            (success, last_instr, error) = exec(tok_lines, vm, 
-                                                last_instr)
-            if not success:
-                return (last_instr, error)
-            count += 1
-    else:  # step through code
-        ip = vm.get_ip()
-        if ip < len(tok_lines):
-            (success, last_instr, error) = exec(tok_lines, vm,
-                                                last_instr)
-        else:
-            last_instr = "Reached end of executable code."
-            # rewind:
-            vm.set_ip(0)
-        return (last_instr, error)
+    try:
+        if not step:
+            add_debug("Setting ip to 0", vm)
+            vm.set_ip(0)   # instruction pointer reset for 'run'
+            count = 0
+            while vm.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
+                (success, last_instr, error) = exec(tok_lines, vm, 
+                                                    last_instr)
+                if not success:
+                    return (last_instr, error)
+                count += 1
+        else:  # step through code
+            ip = vm.get_ip()
+            if ip < len(tok_lines):
+                (success, last_instr, error) = exec(tok_lines, vm,
+                                                    last_instr)
+            else:
+                last_instr = "Reached end of executable code."
+                # rewind:
+                vm.set_ip(0)
+            return (last_instr, error)
+    except ExitProg as ep:
+        last_instr = "Exiting program"
 
     if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: "

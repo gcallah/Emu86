@@ -2,7 +2,7 @@
 interrupts.py: data movement instructions.
 """
 
-from .errors import check_num_args, InvalidOperand
+from .errors import check_num_args, InvalidOperand, ExitProg
 from .tokens import Instruction, IntOp
 
 
@@ -14,7 +14,7 @@ def read_key(vm):
     return ""
 
 def exit_prog(vm):
-    exit(0)
+    raise ExitProg()
 
 
 int_vectors = {
