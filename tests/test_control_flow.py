@@ -54,6 +54,28 @@ class TestControlFlow(TestCase):
                 """
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["EAX"], 1)
+
+
+    def test_jne(self):
+        test_code = """
+                mov eax, 0
+                cmp eax, 0
+                jne label
+                dec eax
+                label: inc eax
+                """
+        assemble(test_code, vmachine)
+        self.assertEqual(vmachine.registers["EAX"], 0)
+
+        test_code = """
+                mov eax, 1
+                cmp eax, 0
+                jne label
+                dec eax
+                label: inc eax
+                """
+        assemble(test_code, vmachine)
+        self.assertEqual(vmachine.registers["EAX"], 2)
 """
 A thought for testing.
 
