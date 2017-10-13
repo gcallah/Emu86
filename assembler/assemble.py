@@ -23,7 +23,12 @@ def dump_flags(vm):
         add_debug("Flag = " + flag + "; val = " + str(val), vm)
 
 def jump_to_label(label, vm):
-    pass
+    if label in vm.labels:
+        ip = vm.labels[label]  # set i to line num of label
+        vm.set_ip(ip)
+        return (True, JMP_STR, "")
+    else:
+        return (False, JMP_STR, "Invalid label: " + label)
 
 def exec(tok_lines, vm, last_instr):
     """
@@ -46,13 +51,7 @@ def exec(tok_lines, vm, last_instr):
         # we have hit one of the JUMP instructions: jump to that line.
         add_debug("In FlowBreak", vm)
         dump_flags(vm)
-        label = brk.label
-        if label in vm.labels:
-            ip = vm.labels[label]  # set i to line num of label
-            vm.set_ip(ip)
-            return (True, JMP_STR, "")
-        else:
-            return (False, JMP_STR, "Invalid label: " + label)
+        return jump_to_label(brk.label, vm)
     except Error as err:
         return (False, last_instr, err.msg)
 
