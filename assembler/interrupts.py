@@ -33,10 +33,12 @@ class Interrupt(Instruction):
         </syntax>
         <descr>
             We will build various "interrupt" handlers as needed.
-            At present, we only have INT 22, 0, to get a key from
+            At present, we only have two:
+                INT 22, 0, to get a key from
             the keyboard. And we only pretend the key is from the keyboard,
             since we are running on the Internet, and can't read the user's
             keyboard.
+            And INT 33, 0, to exit the program.
         </descr>
     """
 
