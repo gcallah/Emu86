@@ -1,13 +1,13 @@
       mov eax, 2
-      mov ecx, 2
       mov ebx, 16
-loop: call power
-      cmp ebx, 1 
-      je done
-      jmp loop 
+      call power
+      jmp done 
 
-power: imul eax, ecx
+power: mov ecx, eax
+loop: imul eax, ecx
       dec ebx
+      cmp ebx, 1
+      jne loop
       ret
 
 done: int 33, 0
