@@ -95,8 +95,6 @@ def assemble(code, vm, step=False):
             count += 1
     else:  # step through code
         ip = vm.get_ip()
-        add_debug("Next key = " + str(vm.nxt_key), vm)
-        add_debug("Ret str = " + str(vm.ret_str), vm)
         if ip < len(tok_lines):
             (success, last_instr, error) = exec(tok_lines, vm,
                                                 last_instr)
