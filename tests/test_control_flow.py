@@ -45,6 +45,23 @@ class TestControlFlow(TestCase):
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
 
+    def test_jne(self):
+        """
+        Jump iff zero flag is 1.
+        """
+        for i in range(NUM_TESTS):
+            vmachine.re_init()
+            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_loc
+            zero_flag = random.getrandbits(1)
+            vmachine.flags["ZF"] = zero_flag
+            assemble("jne test_label", vmachine)
+            if(not zero_flag):
+                self.assertEqual(vmachine.get_ip(), label_loc)
+            else:
+                self.assertEqual(vmachine.get_ip(), 1)
+
+
     def test_jl(self):
         """
         Jump iff sign flag is 1.
