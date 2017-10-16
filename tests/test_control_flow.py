@@ -4,79 +4,65 @@ import random
 import string
 sys.path.append("..")
 
-import operator as opfunc
-import functools
 from assembler.virtual_machine import vmachine
-
 from unittest import TestCase, main
+from assembler.assemble import assemble, MAX_INSTRUCTIONS
+from assembler.tokens import MAX_INT, MIN_INT
 
-from assembler.assemble import assemble
+
+
 NUM_TESTS=1000
 
-"""
-Semi Unit Tests
-
-Step through code until result happens.
-
-
-At the moment test after the arithmetic instructions are
-tested, as these tests depend on those.
-"""
 class TestControlFlow(TestCase):
 
+
     def test_jmp(self):
-        test_code = """
-                mov eax, 0
-                jmp label
-                dec eax
-                label: inc eax
-                """
-        assemble(test_code, vmachine)
-        self.assertEqual(vmachine.registers["EAX"], 1)
+        """
+        Jump to a random location from 0 to MAX_INSTRUCTIONS.
+        Assert IP is set to that location by jump.
+        """
+        for i in range(NUM_TESTS):
+            vmachine.re_init()
+            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_loc
+            assemble("jmp test_label", vmachine)
+            self.assertEqual(vmachine.get_ip(), label_loc)
 
 
     def test_je(self):
-        test_code = """
-                mov eax, 0
-                cmp eax, 0
-                je label
-                dec eax
-                label: inc eax
-                """
-        assemble(test_code, vmachine)
-        self.assertEqual(vmachine.registers["EAX"], 1)
+        """
+        Jump iff zero flag is 1.
+        """
+        for i in range(NUM_TESTS):
+            vmachine.re_init()
+            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_loc
+            zero_flag = random.getrandbits(1)
+            vmachine.flags["ZF"] = zero_flag
+            assemble("je test_label", vmachine)
+            if(zero_flag):
+                self.assertEqual(vmachine.get_ip(), label_loc)
+            else:
+                self.assertEqual(vmachine.get_ip(), 1)
 
-        test_code = """
-                mov eax, 1
-                cmp eax, 0
-                je label
-                dec eax
-                label: inc eax
-                """
-        assemble(test_code, vmachine)
-        self.assertEqual(vmachine.registers["EAX"], 1)
+    def test_jl(self):
+        """
+        Jump iff sign flag is 1.
+        """
+        for i in range(NUM_TESTS):
+            vmachine.re_init()
+            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_loc
+            sign_flag = random.getrandbits(1)
+            vmachine.flags["SF"] = sign_flag
+            assemble("jl test_label", vmachine)
+            if(sign_flag):
+                self.assertEqual(vmachine.get_ip(), label_loc)
+            else:
+                self.assertEqual(vmachine.get_ip(), 1)
 
+ 
 
-    def test_jne(self):
-        test_code = """
-                mov eax, 0
-                cmp eax, 0
-                jne label
-                dec eax
-                label: inc eax
-                """
-        assemble(test_code, vmachine)
-        self.assertEqual(vmachine.registers["EAX"], 0)
-
-        test_code = """
-                mov eax, 1
-                cmp eax, 0
-                jne label
-                dec eax
-                label: inc eax
-                """
-        assemble(test_code, vmachine)
-        self.assertEqual(vmachine.registers["EAX"], 2)
 """
 A thought for testing.
 
