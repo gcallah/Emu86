@@ -130,43 +130,6 @@ class TestControlFlow(TestCase):
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
 
-
-
-"""
-A thought for testing.
-
-INTENDED RESULT
-    { if Test_Label before JMP, then 1
-
-1 MOV EAX, 0
-2
-3
-4 Test_Label: INC EAX
-5
-6
-7
-8 JMP Test_Label
-9 DEC EAX 
-10 
-
-
-INTENDED RESULT
-    { if Test_Label after JMP, then 1
-
-1 MOV EAX, 0
-2
-3 JMP Test_Label
-4 
-5
-6 DEC EAX
-7 DEC EAX
-8
-9 Test_Label: INC EAX
-10 
-*** ASSEMBLE ***
-
-"""
-
 if __name__ == '__main__':
     main()
 
