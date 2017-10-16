@@ -47,7 +47,7 @@ class TestControlFlow(TestCase):
 
     def test_jne(self):
         """
-        Jump iff zero flag is 1.
+        Jump iff zero flag is 0.
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
@@ -60,6 +60,40 @@ class TestControlFlow(TestCase):
                 self.assertEqual(vmachine.get_ip(), label_loc)
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
+
+    def test_jg(self):
+        """
+        Jump iff both sign flag and zero flag are 0.
+        """
+        for i in range(NUM_TESTS):
+          vmachine.re_init()
+          label_loc = random.randint(0,MAX_INSTRUCTIONS)
+          vmachine.labels["test_label"] = label_loc
+          sign_flag = random.getrandbits(1)
+          zero_flag = random.getrandbits(1)
+          vmachine.flags["SF"] = sign_flag
+          vmachine.flags["ZF"] = zero_flag
+          assemble("jg test_label", vmachine)
+          if((not zero_flag) and (not sign_flag)):
+            self.assertEqual(vmachine.get_ip(), label_loc)
+          else:
+            self.assertEqual(vmachine.get_ip(), 1)
+       
+    def test_jge(self):
+        """
+        Jump iff sign flag is 0.
+        """
+        for i in range(NUM_TESTS):
+          vmachine.re_init()
+          label_loc = random.randint(0,MAX_INSTRUCTIONS)
+          vmachine.labels["test_label"] = label_loc
+          sign_flag = random.getrandbits(1)
+          vmachine.flags["SF"] = sign_flag
+          assemble("jge test_label", vmachine)
+          if(not sign_flag):
+            self.assertEqual(vmachine.get_ip(), label_loc)
+          else:
+            self.assertEqual(vmachine.get_ip(), 1)
 
 
     def test_jl(self):
@@ -78,7 +112,25 @@ class TestControlFlow(TestCase):
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
 
- 
+    def test_jle(self):
+        """
+        Jump iff either sign flag or zero flag are 1.
+        """
+        for i in range(NUM_TESTS):
+            vmachine.re_init()
+            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_loc
+            sign_flag = random.getrandbits(1)
+            zero_flag = random.getrandbits(1)
+            vmachine.flags["SF"] = sign_flag
+            vmachine.flags["ZF"] = zero_flag
+            assemble("jle test_label", vmachine)
+            if(zero_flag or sign_flag):
+                self.assertEqual(vmachine.get_ip(), label_loc)
+            else:
+                self.assertEqual(vmachine.get_ip(), 1)
+
+
 
 """
 A thought for testing.
