@@ -11,3 +11,8 @@ done: mov ecx, ebx  ; when done, store ebx in ecx
 
          mov edx, 27
          and edx, 23
+
+; edx
+; 11011
+; 10111
+; 10011 = 19

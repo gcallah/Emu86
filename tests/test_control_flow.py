@@ -4,13 +4,13 @@ import random
 import string
 sys.path.append("..")
 
-from assembler.virtual_machine import vmachine
+from assembler.virtual_machine import vmachine, STACK_TOP, STACK_BOTTOM
 from unittest import TestCase, main
 from assembler.assemble import assemble, MAX_INSTRUCTIONS
 from assembler.tokens import MAX_INT, MIN_INT
 
 
-
+FIRST_INST_ADDRESS = 1
 NUM_TESTS=1000
 
 class TestControlFlow(TestCase):
@@ -23,7 +23,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             vmachine.labels["test_label"] = label_loc
             assemble("jmp test_label", vmachine)
             self.assertEqual(vmachine.get_ip(), label_loc)
@@ -35,7 +35,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             vmachine.labels["test_label"] = label_loc
             zero_flag = random.getrandbits(1)
             vmachine.flags["ZF"] = zero_flag
@@ -51,7 +51,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             vmachine.labels["test_label"] = label_loc
             zero_flag = random.getrandbits(1)
             vmachine.flags["ZF"] = zero_flag
@@ -67,7 +67,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
           vmachine.re_init()
-          label_loc = random.randint(0,MAX_INSTRUCTIONS)
+          label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
           vmachine.labels["test_label"] = label_loc
           sign_flag = random.getrandbits(1)
           zero_flag = random.getrandbits(1)
@@ -85,7 +85,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
           vmachine.re_init()
-          label_loc = random.randint(0,MAX_INSTRUCTIONS)
+          label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
           vmachine.labels["test_label"] = label_loc
           sign_flag = random.getrandbits(1)
           vmachine.flags["SF"] = sign_flag
@@ -102,7 +102,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             vmachine.labels["test_label"] = label_loc
             sign_flag = random.getrandbits(1)
             vmachine.flags["SF"] = sign_flag
@@ -118,7 +118,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(0,MAX_INSTRUCTIONS)
+            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             vmachine.labels["test_label"] = label_loc
             sign_flag = random.getrandbits(1)
             zero_flag = random.getrandbits(1)
@@ -129,6 +129,21 @@ class TestControlFlow(TestCase):
                 self.assertEqual(vmachine.get_ip(), label_loc)
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
+
+    def test_call(self):
+        """
+        
+        """
+        for i in range(NUM_TESTS):
+            vmachine.re_init()
+            ip_before_jump = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+            vmachine.set_ip(ip_before_jump)
+            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_loc
+            assemble("call test_label", vmachine)
+            print(i)
+            self.assertEqual(vmachine.get_ip(), label_loc)
+            self.assertEqual(vmachine.stack[str(STACK_TOP)], ip_before_jump)
 
 if __name__ == '__main__':
     main()

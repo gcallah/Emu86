@@ -23,14 +23,22 @@ class TestPrograms(TestCase):
             return prog.read()
 
     def test_loop(self):
-        test_code = self.read_test_code("tests/loop.asm")
+        test_code = self.read_test_code("loop.asm")
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["ECX"], 16)
 
     def test_power(self):
-        test_code = self.read_test_code("tests/power.asm")
+        test_code = self.read_test_code("power.asm")
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["EAX"], 65536)
+
+    def test_gt(self):
+        test_code = self.read_test_code("gt.asm")
+        assemble(test_code, vmachine)
+        self.assertEqual(vmachine.registers["EAX"], 17)
+        self.assertEqual(vmachine.registers["EBX"], 16)
+        self.assertEqual(vmachine.registers["ECX"], 16)
+        self.assertEqual(vmachine.registers["EDX"], 19)
 
 if __name__ == '__main__':
     main()
