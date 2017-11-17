@@ -153,7 +153,11 @@ class Symbol(Location):
     def set_val(self, val):
         if self.name not in self.symbols:
             raise UnknownName(self.name)
+        else:
+            self.symbols[self.name] = val
 
     def get_val(self):
         if self.name not in self.symbols:
             raise UnknownName(self.name)
+        else:
+            return self.symbols[self.name]

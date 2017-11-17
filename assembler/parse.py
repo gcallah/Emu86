@@ -21,6 +21,9 @@ label_match = re.compile(LABEL_RE)
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
 
+DATA_SECT = ".data"
+TEXT_SECT = ".text"
+
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
 je = Je('JE')
@@ -161,11 +164,31 @@ def get_ops(code, code_pos, vm):
 
     return (ops, code_pos)
 
+def get_symbols(lines, vm):
+    # must handle blank lines and comments
+    found_data = False
+    lines_minus_data = []
+    line_no = 0
+    for line in lines:
+        if line.find(DATA_SECT):  # should make sure it is only thing on line
+           # something
+            found_data = True
+        line_no += 1
+        if line.find(TEXT_SECT): 
+            break;
+
+    if found_data:
+        # slice from line_no to end
+        return lines[line_no:]
+    else:
+        return lines
+
 def lex(code, vm):
     """
     Lexical phase: tokenizes the code.
     Args:
         code: The code to lexically analyze.
+        vm: virtual machine
 
     Returns:
         tok_lines: the tokenized version
@@ -175,6 +198,7 @@ def lex(code, vm):
     lines = code.split("\n")
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
+#    lines = get_symbols(lines, vm)
     for line in lines:
         code_pos = 0   # reset each line!
 
