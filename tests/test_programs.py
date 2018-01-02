@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-sys.path.append("..")
+sys.path.append(".")
 import random
 import string
 
@@ -24,19 +24,19 @@ class TestPrograms(TestCase):
 
     def test_loop(self):
         vmachine.re_init()
-        test_code = self.read_test_code("loop.asm")
+        test_code = self.read_test_code("tests/loop.asm")
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["ECX"], 16)
 
     def test_power(self):
         vmachine.re_init()
-        test_code = self.read_test_code("power.asm")
+        test_code = self.read_test_code("tests/power.asm")
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["EAX"], 65536)
 
     def test_gt(self):
         vmachine.re_init()
-        test_code = self.read_test_code("gt.asm")
+        test_code = self.read_test_code("tests/gt.asm")
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["EAX"], 17)
         self.assertEqual(vmachine.registers["EBX"], 16)
@@ -45,7 +45,7 @@ class TestPrograms(TestCase):
 
     def test_interrupt(self):
         vmachine.re_init()
-        test_code = self.read_test_code("test_interrupt.asm")
+        test_code = self.read_test_code("tests/test_interrupt.asm")
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["EAX"], 71)
         self.assertEqual(vmachine.registers["EBX"], 6)
@@ -55,7 +55,7 @@ class TestPrograms(TestCase):
 
     def test_key(self):
         vmachine.re_init()
-        test_code = self.read_test_code("key_test.asm")
+        test_code = self.read_test_code("tests/key_test.asm")
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["EAX"], 71)
         self.assertEqual(vmachine.registers["EBX"], 71)
@@ -65,7 +65,7 @@ class TestPrograms(TestCase):
 
     def test_arithmetic_shift(self):
         vmachine.re_init()
-        test_code = self.read_test_code("arithmetic_shift.asm")
+        test_code = self.read_test_code("tests/arithmetic_shift.asm")
         assemble(test_code, vmachine)
         self.assertEqual(vmachine.registers["EAX"], 4)
         self.assertEqual(vmachine.registers["EBX"], 10)

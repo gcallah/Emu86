@@ -5,7 +5,7 @@ Test our assembly interpreter.
 
 import sys
 import random
-sys.path.append("..")
+sys.path.append(".")
 
 import operator as opfunc
 import functools

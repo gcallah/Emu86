@@ -2,16 +2,17 @@
 import sys
 import random
 import string
-sys.path.append("..")
+sys.path.append(".")
 
 from assembler.virtual_machine import vmachine, STACK_TOP, STACK_BOTTOM
 from unittest import TestCase, main
 from assembler.assemble import assemble, MAX_INSTRUCTIONS
 from assembler.tokens import MAX_INT, MIN_INT
 
-
 FIRST_INST_ADDRESS = 1
-NUM_TESTS=1000
+NUM_TESTS = 1000
+NO_OP = "mov eax, eax\n"
+TEST_LABEL = "test_label"
 
 class TestControlFlow(TestCase):
 
@@ -132,18 +133,29 @@ class TestControlFlow(TestCase):
 
     def test_call(self):
         """
-        
+        Tests call by both checking it jumped correctly and pushed correctly. 
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            ip_before_jump = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-            vmachine.set_ip(ip_before_jump)
-            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-            vmachine.labels["test_label"] = label_loc
-            assemble("call test_label", vmachine)
-            print(i)
+            locations = range(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
+            call_instr_addr = random.choice(locations)
+            label_loc = random.choice(locations)
+
+            # At the time of writing this test, blank lines are skipped by the tokenizer.
+            # In order to have emu jump to the location of label_loc, we have to make
+            # no-op lines to assign the correct locations to the lines we test.
+            instructions = [NO_OP] * MAX_INSTRUCTIONS
+
+            instructions[call_instr_addr] = "call " + TEST_LABEL + "\n"
+            instructions[label_loc] = TEST_LABEL + ": " + instructions[label_loc]
+
+            vmachine.labels[TEST_LABEL] = label_loc
+            vmachine.set_ip(call_instr_addr)
+
+            assemble("".join(instructions), vmachine, True)
+
             self.assertEqual(vmachine.get_ip(), label_loc)
-            self.assertEqual(vmachine.stack[str(STACK_TOP)], ip_before_jump)
+            self.assertEqual(vmachine.stack[str(STACK_TOP)], call_instr_addr+1)
 
 if __name__ == '__main__':
     main()
