@@ -10,6 +10,7 @@ from assembler.assemble import assemble, MAX_INSTRUCTIONS
 from assembler.tokens import MAX_INT, MIN_INT
 
 FIRST_INST_ADDRESS = 1
+# Edge case (yet to deal with): for the below instructions, jumping around the 1000th instruction.
 NUM_TESTS = 1000
 NO_OP = "mov eax, eax\n"
 TEST_LABEL = "test_label"
@@ -137,14 +138,13 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            locations = range(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
-            call_instr_addr = random.choice(locations)
-            label_loc = random.choice(locations)
+            call_instr_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
+            label_loc = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
 
             # At the time of writing this test, blank lines are skipped by the tokenizer.
             # In order to have emu jump to the location of label_loc, we have to make
             # no-op lines to assign the correct locations to the lines we test.
-            instructions = [NO_OP] * MAX_INSTRUCTIONS
+            instructions = [NO_OP] * (MAX_INSTRUCTIONS+1)
 
             instructions[call_instr_addr] = "call " + TEST_LABEL + "\n"
             instructions[label_loc] = TEST_LABEL + ": " + instructions[label_loc]
