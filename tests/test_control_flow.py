@@ -10,8 +10,9 @@ from assembler.assemble import assemble, MAX_INSTRUCTIONS
 from assembler.tokens import MAX_INT, MIN_INT
 
 FIRST_INST_ADDRESS = 1
-# Edge case (yet to deal with): for the below instructions, jumping around the 1000th instruction.
-NUM_TESTS = 1000
+# Edge case (yet to deal with): for the below instructions,
+#  jumping around the 1000th instruction.
+NUM_TESTS = 100
 NO_OP = "mov eax, eax\n"
 TEST_LABEL = "test_label"
 
