@@ -98,10 +98,12 @@ def assemble(code, vm, step=False):
                     return (last_instr, error)
                 count += 1
         else:  # step through code
+            count = 0
             ip = vm.get_ip()
             if ip < len(tok_lines):
                 (success, last_instr, error) = exec(tok_lines, vm,
                                                     last_instr)
+                count += 1
             else:
                 last_instr = "Reached end of executable code."
                 # rewind:
