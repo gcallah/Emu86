@@ -1,7 +1,7 @@
-         int 22, 0
+         int 22
          mov [0], eax
          mov ebx, 1
-loop: int 22, 0
+loop: int 22
          mov [ebx], eax
          cmp [0], eax
          je done

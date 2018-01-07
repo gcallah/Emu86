@@ -1,7 +1,7 @@
       mov eax, 2
       mov ebx, 16
       call power
-      int 33, 0
+      int 33
 
 power: mov ecx, eax
 loop: imul eax, ecx
