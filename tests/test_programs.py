@@ -32,7 +32,7 @@ class TestPrograms(TestCase):
         vmachine.re_init()
         test_code = self.read_test_code("tests/power.asm")
         assemble(test_code, vmachine)
-        self.assertEqual(vmachine.registers["EAX"], 65536)
+        self.assertEqual(vmachine.registers["EDX"], 65536)
 
     def test_gt(self):
         vmachine.re_init()
