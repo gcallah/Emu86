@@ -29,7 +29,7 @@ class Error(Exception):
 
 class UnknownInt(Error):
     def __init__(self):
-        self.msg = UNKOWN_INT
+        self.msg = UNKNOWN_INT
 
 class RegUnwritable(Error):
     def __init__(self, offender):
