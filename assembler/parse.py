@@ -3,6 +3,7 @@ parse.py: creates parse tree.
 """
 
 import re
+import pdb
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName
@@ -183,6 +184,43 @@ def get_symbols(lines, vm):
     else:
         return lines
 
+def get_data_type_offset(type, value=0):
+    if type == "byte":
+        return [1, value]
+    elif type == "short":
+        return [2, value]
+    elif type == "long":
+        return [4, value]
+    elif type == "zero":
+        return [10, 0]
+    elif type == "string":
+        return [len(value) + 1, value]
+
+def parse_data_section(lines):
+    symbol_dict = {}
+    symbol = ""
+    for line in lines:
+        if ":" in line:
+            symbol = line[:-1]
+            offset = 0
+        else:
+            line_split = line.split(" ")
+            data_type = line_split[0][1:]
+            offset_value = get_data_type_offset(data_type, line_split[1])
+            symbol_dict[symbol + "+" + str(offset)] = offset_value[1]
+            offset = offset_value[0]
+
+def extract_data_section(code):
+    start = code.find(".data") + 5
+    end = code.find(".text") # .text IS PLACED TO KNOW WHEN .data SECTION ENDS FOR NOW
+
+    data_section = code[start:end]
+
+    parse_data_section(data_section)
+
+    return code[end+5:]
+
+
 def lex(code, vm):
     """
     Lexical phase: tokenizes the code.
@@ -195,6 +233,10 @@ def lex(code, vm):
     """
     global label_match
     code_pos = 0
+
+    data_section = False
+    data_lines = []
+
     lines = code.split("\n")
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
@@ -212,6 +254,18 @@ def lex(code, vm):
         # strip AFTER comments to handle blanks between code and ;
         line = line.strip()
         if len(line) == 0:  # blank lines ok; just skip 'em
+            continue
+
+        # data section       PROCESSING HERE TO PREVENT REDUNDANT READ OF lines
+        if line == ".data":
+            data_section = True
+            continue
+        elif line == ".text":
+            parse_data_section(data_lines)
+            data_section = False
+            continue
+        elif data_section == True:
+            data_lines.append(line)
             continue
 
         # labels:
