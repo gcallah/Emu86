@@ -49,6 +49,6 @@ class Interrupt(Instruction):
         if type(ops[0]) != IntOp:
             raise InvalidOperand(str(ops[0]))
         interrupt_class = int_vectors[ops[0].get_val()]
-        interrupt_handler = interrupt_class[vm.registers[EAX]]
+        interrupt_handler = interrupt_class[int(vm.registers[EAX])]
         c = interrupt_handler(vm)
         return str(c)
