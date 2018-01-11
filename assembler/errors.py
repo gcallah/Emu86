@@ -4,6 +4,7 @@ Possible assembler errors.
 
 # Error messages (or at least their beginnings):
 UNKNOWN_ERR = "Uknown parsing error."
+UNKNOWN_INT = "Uknown interrupt instruction"
 INVALID_INSTR = "Invalid instruction: "
 INVALID_OPRND = "Invalid operand: "
 INVALID_NUM_ARGS = "Invalid number of args: "
@@ -25,6 +26,10 @@ class Error(Exception):
     """
     def __init__(self, offender):
         self.msg = UNKNOWN_ERR
+
+class UnknownInt(Error):
+    def __init__(self):
+        self.msg = UNKOWN_INT
 
 class RegUnwritable(Error):
     def __init__(self, offender):

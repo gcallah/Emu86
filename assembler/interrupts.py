@@ -2,7 +2,7 @@
 interrupts.py: data movement instructions.
 """
 
-from .errors import check_num_args, InvalidOperand, ExitProg
+from .errors import check_num_args, InvalidOperand, ExitProg, UnknownInt
 from .tokens import Instruction, IntOp
 
 EAX = 'EAX'
@@ -50,5 +50,7 @@ class Interrupt(Instruction):
             raise InvalidOperand(str(ops[0]))
         interrupt_class = int_vectors[ops[0].get_val()]
         interrupt_handler = interrupt_class[vm.registers[EAX]]
+        if interrupt_handler is None:
+            raise UnknownInt()
         c = interrupt_handler(vm)
         return str(c)
