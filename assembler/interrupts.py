@@ -36,7 +36,7 @@ class Interrupt(Instruction):
             NOTE: The behavior of INT depends on both it's con operand
             as well as the value of the EAX register. See the descriptions
             of specific interrupt commands below.
-
+            <br />
             We will build various "interrupt" handlers as needed.
             At present, we only have two:
             <br />
