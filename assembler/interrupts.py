@@ -39,13 +39,22 @@ class Interrupt(Instruction):
 
             We will build various "interrupt" handlers as needed.
             At present, we only have two:
+<<<<<<< HEAD
                 INT 22, to get a key from
+=======
+            <br />
+                INT 22, with EAX set to 0, to get a key from
+>>>>>>> bcaf28b5e291b1cca6adf74d766f3c572e25eed6
             the keyboard. And we only pretend the key is from the keyboard,
             since we are running on the Internet, and can't read the user's
             keyboard. EAX must be 0.
             <br />
             And INT 33, to exit the program. EAX must be 0.
             <br />
+<<<<<<< HEAD
+=======
+            And INT 33, with EAX set to 0, to exit the program.
+>>>>>>> bcaf28b5e291b1cca6adf74d766f3c572e25eed6
         </descr>
     """
 
