@@ -3,7 +3,6 @@ parse.py: creates parse tree.
 """
 
 import re
-import pdb
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName
