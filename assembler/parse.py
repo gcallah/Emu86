@@ -27,6 +27,8 @@ TEXT_SECT = ".text"
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 
+symbol_dict = {}
+
 je = Je('JE')
 jne = Jne('JNE')
 instructions = {
@@ -165,39 +167,19 @@ def get_ops(code, code_pos, vm):
 
     return (ops, code_pos)
 
-def get_symbols(lines, vm):
-    # must handle blank lines and comments
-    found_data = False
-    lines_minus_data = []
-    line_no = 0
-    for line in lines:
-        if line.find(DATA_SECT):  # should make sure it is only thing on line
-           # something
-            found_data = True
-        line_no += 1
-        if line.find(TEXT_SECT): 
-            break;
-
-    if found_data:
-        # slice from line_no to end
-        return lines[line_no:]
-    else:
-        return lines
-
 def get_data_type_offset(type, value=0):
-    if type == "byte":
+    if type == ".byte":
         return [1, value]
-    elif type == "short":
+    elif type == ".short":
         return [2, value]
-    elif type == "long":
+    elif type == ".long":
         return [4, value]
-    elif type == "zero":
+    elif type == ".zero":
         return [10, 0]
-    elif type == "string":
+    elif type == ".string":
         return [len(value) + 1, value]
 
 def parse_data_section(lines):
-    symbol_dict = {}
     symbol = ""
     for line in lines:
         if ":" in line:
@@ -205,21 +187,10 @@ def parse_data_section(lines):
             offset = 0
         else:
             line_split = line.split(" ")
-            data_type = line_split[0][1:]
+            data_type = line_split[0]
             offset_value = get_data_type_offset(data_type, line_split[1])
             symbol_dict[symbol + "+" + str(offset)] = offset_value[1]
             offset = offset_value[0]
-
-def extract_data_section(code):
-    start = code.find(".data") + 5
-    end = code.find(".text") # .text IS PLACED TO KNOW WHEN .data SECTION ENDS FOR NOW
-
-    data_section = code[start:end]
-
-    parse_data_section(data_section)
-
-    return code[end+5:]
-
 
 def lex(code, vm):
     """
