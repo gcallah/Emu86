@@ -3,6 +3,7 @@ parse.py: creates parse tree.
 """
 
 import re
+import pdb
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName
@@ -178,18 +179,20 @@ def get_data_type_offset(type, value=0):
     elif type == ".string":
         return [len(value) + 1, value]
 
-def parse_data_section(lines):
+def parse_data_section(lines, vm):
     symbol = ""
     for line in lines:
         if ":" in line:
             symbol = line[:-1]
-            offset = 0
+            # offset = 0
         else:
             line_split = line.split(" ")
             data_type = line_split[0]
             offset_value = get_data_type_offset(data_type, line_split[1])
-            symbol_dict[symbol + "+" + str(offset)] = offset_value[1]
-            offset = offset_value[0]
+            # symbol_dict[symbol + "+" + str(offset)] = offset_value[1]
+            # vm.symbols[symbol] = offset_value[1]
+            vm.symbols[symbol] = line_split[1]
+            # offset = offset_value[0]
 
 def lex(code, vm):
     """
@@ -231,7 +234,7 @@ def lex(code, vm):
             data_section = True
             continue
         elif line == ".text":
-            parse_data_section(data_lines)
+            parse_data_section(data_lines, vm)
             data_section = False
             continue
         elif data_section == True:
