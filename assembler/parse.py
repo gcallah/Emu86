@@ -3,6 +3,7 @@ parse.py: creates parse tree.
 """
 
 import re
+import pdb
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName
@@ -25,6 +26,8 @@ DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
+
+symbol_dict = {}
 
 je = Je('JE')
 jne = Jne('JNE')
@@ -164,24 +167,32 @@ def get_ops(code, code_pos, vm):
 
     return (ops, code_pos)
 
-def get_symbols(lines, vm):
-    # must handle blank lines and comments
-    found_data = False
-    lines_minus_data = []
-    line_no = 0
-    for line in lines:
-        if line.find(DATA_SECT):  # should make sure it is only thing on line
-           # something
-            found_data = True
-        line_no += 1
-        if line.find(TEXT_SECT): 
-            break;
+def get_data_type_offset(type, value=0):
+    if type == ".byte":
+        return [1, value]
+    elif type == ".short":
+        return [2, value]
+    elif type == ".long":
+        return [4, value]
+    elif type == ".zero":
+        return [10, 0]
+    elif type == ".string":
+        return [len(value) + 1, value]
 
-    if found_data:
-        # slice from line_no to end
-        return lines[line_no:]
-    else:
-        return lines
+def parse_data_section(lines, vm):
+    symbol = ""
+    for line in lines:
+        if ":" in line:
+            symbol = line[:-1]
+            # offset = 0
+        else:
+            line_split = line.split(" ")
+            data_type = line_split[0]
+            offset_value = get_data_type_offset(data_type, line_split[1])
+            # symbol_dict[symbol + "+" + str(offset)] = offset_value[1]
+            # vm.symbols[symbol] = offset_value[1]
+            vm.symbols[symbol] = line_split[1]
+            # offset = offset_value[0]
 
 def lex(code, vm):
     """
@@ -195,6 +206,10 @@ def lex(code, vm):
     """
     global label_match
     code_pos = 0
+
+    data_section = False
+    data_lines = []
+
     lines = code.split("\n")
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
@@ -212,6 +227,18 @@ def lex(code, vm):
         # strip AFTER comments to handle blanks between code and ;
         line = line.strip()
         if len(line) == 0:  # blank lines ok; just skip 'em
+            continue
+
+        # data section       PROCESSING HERE TO PREVENT REDUNDANT READ OF lines
+        if line == ".data":
+            data_section = True
+            continue
+        elif line == ".text":
+            parse_data_section(data_lines, vm)
+            data_section = False
+            continue
+        elif data_section == True:
+            data_lines.append(line)
             continue
 
         # labels:
