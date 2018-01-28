@@ -1,3 +1,4 @@
+         mov eax, 0
          int 22
          mov [0], eax
          mov ebx, 1
