@@ -33,15 +33,16 @@ class Interrupt(Instruction):
             INT con
         </syntax>
         <descr>
+            The behavior of INT depends on both its "con" operand
+            as well as the value of the EAX register. See the descriptions
+            of specific interrupt commands below.
             We will build various "interrupt" handlers as needed.
             At present, we only have two:
-            <br />
                 INT 22, with EAX set to 0, to get a key from
             the keyboard. And we only pretend the key is from the keyboard,
             since we are running on the Internet, and can't read the user's
-            keyboard.
-            <br />
-            And INT 33, with EAX set to 0, to exit the program.
+            keyboard. EAX must be 0.
+            And INT 33, to exit the program. EAX must be 0.
         </descr>
     """
 

@@ -149,6 +149,10 @@ class Symbol(Location):
         super().__init__(name, vm, val)
         self.labels = vm.labels
         self.symbols = vm.symbols
+        if self.name in self.symbols:
+            self.symbols[self.name] = val
+        else:
+            raise UnknownName(self.name)
 
     def set_val(self, val):
         if self.name not in self.symbols:
