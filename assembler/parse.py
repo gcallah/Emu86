@@ -17,6 +17,7 @@ from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
 
 
+# we should not duplicate SYM_RE in two places!
 LABEL_RE = "^([A-Za-z_][A-Za-z0-9_]*):"
 label_match = re.compile(LABEL_RE)
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
