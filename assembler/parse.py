@@ -8,7 +8,7 @@ import pdb
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
-from .tokens import RegAddress
+from .tokens import RegAddress, Label
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
@@ -17,11 +17,10 @@ from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
 
 
-# we should not duplicate SYM_RE in two places!
-LABEL_RE = "^([A-Za-z_][A-Za-z0-9_]*):"
-label_match = re.compile(LABEL_RE)
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
+LABEL_RE = SYM_RE + ":"
+label_match = re.compile(LABEL_RE)
 
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
@@ -130,7 +129,11 @@ def get_op(token, vm):
         else:
             raise InvalidMemLoc(address)
     elif re.search(sym_match, token) is not None:
-        return Symbol(token, vm)
+        if token in vm.labels:
+            add_debug("Adding label " + token, vm)
+            return Label(token, vm)
+        else:
+            return Symbol(token, vm)
     else:
         try:
             int_val = int(token)
@@ -246,6 +249,7 @@ def lex(code, vm):
         label_present = re.search(label_match, line)
         if label_present is not None:
             label = label_present.group(1)
+            add_debug("Setting label " + label + " to val " + str(i), vm)
             vm.labels[label] = i
             # now strip off the label:
             line = line.split(":", 1)[-1]

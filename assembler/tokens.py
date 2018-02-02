@@ -141,13 +141,32 @@ class Register(Location):
             raise RegUnwritable(self.name)
 
 
-class Symbol(Location):
+class Label(Location):
     """
-    Class to hold symbols such as variable names and labels.
+    Class to hold labels for jumps.
     """
     def __init__(self, name, vm, val=0):
         super().__init__(name, vm, val)
         self.labels = vm.labels
+        if self.name not in self.labels and val != 0:
+            self.labels[self.name] = val
+
+    def get_val(self):
+        if self.name not in self.labels:
+            raise UnknownLabel(self.name)
+        else:
+            return self.labels[self.name]
+
+    def set_val(self, val):
+        raise LabelNotSettable
+
+
+class Symbol(Location):
+    """
+    Class to hold symbols such as variable names.
+    """
+    def __init__(self, name, vm, val=0):
+        super().__init__(name, vm, val)
         self.symbols = vm.symbols
         if self.name in self.symbols:
             self.symbols[self.name] = val

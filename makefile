@@ -18,7 +18,7 @@ help.html: $(SRCS)
 dev: $(SRCS) $(OBJS) 
 	$(TDIR)/test_assemble.py
 	$(TDIR)/test_errors.py
-#	$(TDIR)/test_control_flow.py
+	$(TDIR)/test_control_flow.py
 #	$(TDIR)/test_programs.py
 	-git commit -a -m "Building development."
 	git push origin master

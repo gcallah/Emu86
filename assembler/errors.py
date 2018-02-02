@@ -3,19 +3,21 @@ Possible assembler errors.
 """
 
 # Error messages (or at least their beginnings):
-UNKNOWN_ERR = "Uknown parsing error."
-UNKNOWN_INT = "Uknown interrupt instruction."
+INT_OUT_OF_RNG = "Integer out of range: "
 INVALID_INSTR = "Invalid instruction: "
 INVALID_OPRND = "Invalid operand: "
 INVALID_NUM_ARGS = "Invalid number of args: "
 INVALID_MEM_LOC = "Invalid memory location: "
 INVALID_REG = "Invalid register: "
+LABEL_NOT_SETTABLE = "Label values can't be reset."
+PROGRAM_EXIT = "Program exit"
 REG_UNWRITABLE = "Write attempt to unwriteable register: "
-INT_OUT_OF_RNG = "Integer out of range: "
 STACK_OVERFLOW = "Stack overflow."
 STACK_UNDERFLOW = "Stack underflow."
-UNKNOWN_NM = "Unknown name: "
-PROGRAM_EXIT = "Program exit"
+UNKNOWN_ERR = "Uknown parsing error."
+UNKNOWN_INT = "Uknown interrupt instruction."
+UNKNOWN_NM = "Unknown symbol: "
+UNKNOWN_NM = "Unknown label: "
 
 INT_MAX=(2**31)-1
 INT_MIN=-(2**31)
@@ -38,6 +40,14 @@ class RegUnwritable(Error):
 class InvalidInstruction(Error):
     def __init__(self, offender):
         self.msg = INVALID_INSTR + offender
+
+class LabelNotSettable(Error):
+    def __init__(self, offender):
+        self.msg = LABEL_NOT_SETTABLE + offender
+
+class UnknownLabel(Error):
+    def __init__(self, offender):
+        self.msg = UNKNOWN_LABEL + offender
 
 class UnknownName(Error):
     def __init__(self, offender):
