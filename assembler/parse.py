@@ -263,6 +263,7 @@ def lex(code, vm):
     # we've stripped extra whitespace, comments, and labels: 
     # now tokenize!
     for line in pre_processed_lines:
+        add_debug("Tokenizing line: " + line, vm)
         this_line = []
         (instr, code_pos) = get_instr(line, code_pos)
         this_line.append(instr)
