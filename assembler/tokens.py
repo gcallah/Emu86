@@ -5,6 +5,7 @@ tokens.py: contains classes we tokenize into.
 from abc import abstractmethod
 
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName
+from .errors import NotSettable
 from .virtual_machine import vmachine
 
 BITS = 32   # we are on a 32-bit machine
@@ -18,6 +19,9 @@ class Token:
 
     def __str__(self):
         return str(self.name) + ": " + str(self.value)
+
+    def set_val(self):
+        raise NotSettable(str(self))
 
     def get_val(self):
         return self.value

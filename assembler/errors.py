@@ -10,6 +10,7 @@ INVALID_NUM_ARGS = "Invalid number of args: "
 INVALID_MEM_LOC = "Invalid memory location: "
 INVALID_REG = "Invalid register: "
 LABEL_NOT_SETTABLE = "Label values can't be reset."
+NOT_SETTABLE = "This operand type can't have its value set."
 PROGRAM_EXIT = "Program exit"
 REG_UNWRITABLE = "Write attempt to unwriteable register: "
 STACK_OVERFLOW = "Stack overflow."
@@ -40,6 +41,10 @@ class RegUnwritable(Error):
 class InvalidInstruction(Error):
     def __init__(self, offender):
         self.msg = INVALID_INSTR + offender
+
+class NotSettable(Error):
+    def __init__(self, offender):
+        self.msg = NOT_SETTABLE + offender
 
 class LabelNotSettable(Error):
     def __init__(self, offender):
