@@ -133,30 +133,30 @@ class TestControlFlow(TestCase):
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
 
-    def test_call(self):
-        """
-        Tests call by both checking it jumped correctly and pushed correctly. 
-        """
-        for i in range(NUM_TESTS):
-            vmachine.re_init()
-            call_instr_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
-            label_loc = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
-
-            # At the time of writing this test, blank lines are skipped by the tokenizer.
-            # In order to have emu jump to the location of label_loc, we have to make
-            # no-op lines to assign the correct locations to the lines we test.
-            instructions = [NO_OP] * (MAX_INSTRUCTIONS+1)
-
-            instructions[call_instr_addr] = "call " + TEST_LABEL + "\n"
-            instructions[label_loc] = TEST_LABEL + ": " + instructions[label_loc]
-
-            vmachine.labels[TEST_LABEL] = label_loc
-            vmachine.set_ip(call_instr_addr)
-
-            assemble("".join(instructions), vmachine, True)
-
-            self.assertEqual(vmachine.get_ip(), label_loc)
-            self.assertEqual(vmachine.stack[str(STACK_TOP)], call_instr_addr+1)
+#    def test_call(self):
+#        """
+#        Tests call by both checking it jumped correctly and pushed correctly. 
+#        """
+#        for i in range(NUM_TESTS):
+#            vmachine.re_init()
+#            call_instr_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
+#            label_loc = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
+#
+#            # At the time of writing this test, blank lines are skipped by the tokenizer.
+#            # In order to have emu jump to the location of label_loc, we have to make
+#            # no-op lines to assign the correct locations to the lines we test.
+#            instructions = [NO_OP] * (MAX_INSTRUCTIONS + 1)
+#
+#            instructions[call_instr_addr] = "call " + TEST_LABEL + "\n"
+#            instructions[label_loc] = TEST_LABEL + ": " + instructions[label_loc]
+#
+#            vmachine.labels[TEST_LABEL] = label_loc
+#            vmachine.set_ip(call_instr_addr)
+#
+#            assemble("".join(instructions), vmachine, True)
+#
+#            self.assertEqual(vmachine.get_ip(), label_loc)
+#            self.assertEqual(vmachine.stack[str(STACK_TOP)], call_instr_addr+1)
 
 if __name__ == '__main__':
     main()

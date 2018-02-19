@@ -216,6 +216,7 @@ def lex(code, vm):
     data_lines = []
 
     lines = code.split("\n")
+    pre_processed_lines = []
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
     for line in lines:
@@ -253,15 +254,18 @@ def lex(code, vm):
             vm.labels[label] = i
             # now strip off the label:
             line = line.split(":", 1)[-1]
-        # we've stripped extra whitespace, comments, and labels: now store
-        # line:
-        lines[i] = line
-        # now tokenize!
+
+        pre_processed_lines.append(line)
+        # we count line numbers to store label jump locations:
+        i += 1
+
+    # we've stripped extra whitespace, comments, and labels: 
+    # now tokenize!
+    for line in pre_processed_lines:
         this_line = []
         (instr, code_pos) = get_instr(line, code_pos)
         this_line.append(instr)
         (ops, code_pos) = get_ops(line, code_pos, vm)
         this_line.append(ops)
         tok_lines.append(this_line)
-        i += 1
     return (tok_lines)
