@@ -256,6 +256,7 @@ def lex(code, vm):
             line = line.split(":", 1)[-1]
 
         pre_processed_lines.append(line)
+        add_debug("Added line: " + line + " to pp_lines", vm)
         # we count line numbers to store label jump locations:
         i += 1
 

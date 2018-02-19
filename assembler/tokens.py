@@ -152,13 +152,10 @@ class Label(Location):
     def __init__(self, name, vm, val=0):
         super().__init__(name, vm, val)
         self.labels = vm.labels
-        vm.debug += ("Creating a label" + "\n")
         if self.name not in self.labels and val != 0:
-            vm.debug += ("Setting label val" + "\n")
             self.labels[self.name] = val
 
     def get_val(self):
-        vm.debug += ("Getting label val" + "\n")
         if self.name not in self.labels:
             raise UnknownLabel(self.name)
         else:
