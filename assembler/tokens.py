@@ -20,7 +20,7 @@ class Token:
     def __str__(self):
         return str(self.name) + ": " + str(self.value)
 
-    def set_val(self):
+    def set_val(self, val):
         raise NotSettable(str(self))
 
     def get_val(self):
@@ -81,7 +81,7 @@ class Location(Operand):
         self.vm = vm
 
     @abstractmethod
-    def set_val(self):
+    def set_val(self, val):
         pass
 
 
