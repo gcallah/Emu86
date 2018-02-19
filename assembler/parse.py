@@ -129,6 +129,7 @@ def get_op(token, vm):
         else:
             raise InvalidMemLoc(address)
     elif re.search(sym_match, token) is not None:
+        add_debug("Matched a symbol-type token " + token, vm)
         if token in vm.labels:
             add_debug("Adding label " + token, vm)
             return Label(token, vm)
@@ -217,7 +218,6 @@ def lex(code, vm):
     lines = code.split("\n")
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
-#    lines = get_symbols(lines, vm)
     for line in lines:
         code_pos = 0   # reset each line!
 

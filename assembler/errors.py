@@ -14,8 +14,8 @@ PROGRAM_EXIT = "Program exit"
 REG_UNWRITABLE = "Write attempt to unwriteable register: "
 STACK_OVERFLOW = "Stack overflow."
 STACK_UNDERFLOW = "Stack underflow."
-UNKNOWN_ERR = "Uknown parsing error."
-UNKNOWN_INT = "Uknown interrupt instruction."
+UNKNOWN_ERR = "Unknown parsing error."
+UNKNOWN_INT = "Unknown interrupt instruction."
 UNKNOWN_NM = "Unknown symbol: "
 UNKNOWN_NM = "Unknown label: "
 
@@ -108,5 +108,5 @@ def check_num_args(instr, ops, correct_num):
         raise InvalidNumArgs(instr, correct_num, len(ops),
                              extra_arg)
     for i in range(0,l-1):
-        if(ops[i].get_val()>INT_MAX or ops[i].get_val()<INT_MIN ):
+        if(ops[i].get_val() > INT_MAX or ops[i].get_val() < INT_MIN ):
             raise IntOutOfRng(instr)
