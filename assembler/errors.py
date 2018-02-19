@@ -17,7 +17,7 @@ STACK_UNDERFLOW = "Stack underflow."
 UNKNOWN_ERR = "Unknown parsing error."
 UNKNOWN_INT = "Unknown interrupt instruction."
 UNKNOWN_NM = "Unknown symbol: "
-UNKNOWN_NM = "Unknown label: "
+UNKNOWN_LABEL = "Unknown label: "
 
 INT_MAX=(2**31)-1
 INT_MIN=-(2**31)
