@@ -220,8 +220,6 @@ def lex(code, vm):
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
     for line in lines:
-        code_pos = 0   # reset each line!
-
         # comments:
         comm_start = line.find(";")
         if comm_start > 0:  # -1 means not found
@@ -263,6 +261,7 @@ def lex(code, vm):
     # we've stripped extra whitespace, comments, and labels: 
     # now tokenize!
     for line in pre_processed_lines:
+        code_pos = 0   # reset each line!
         add_debug("Tokenizing line: " + line, vm)
         this_line = []
         (instr, code_pos) = get_instr(line, code_pos)
