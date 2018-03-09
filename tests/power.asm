@@ -1,7 +1,8 @@
       mov edx, 2
       mov ebx, 16
       call power
-      int 33
+      mov eax, 0
+      int 32
 
 power: mov ecx, edx
 loop: imul edx, ecx

@@ -20,7 +20,7 @@ def exit_prog(vm):
 
 int_vectors = {
     22: {0: read_key },
-    33: {0: exit_prog },
+    32: {0: exit_prog },
 }
 
 
@@ -41,8 +41,8 @@ class Interrupt(Instruction):
                 INT 22, with EAX set to 0, to get a key from
             the keyboard. And we only pretend the key is from the keyboard,
             since we are running on the Internet, and can't read the user's
-            keyboard. EAX must be 0.
-            And INT 33, to exit the program. EAX must be 0.
+            keyboard.
+            And INT 32, to exit the program. There should be a 0 in EAX.
         </descr>
     """
 
@@ -50,10 +50,11 @@ class Interrupt(Instruction):
         check_num_args(self.get_nm(), ops, 1)
         if type(ops[0]) != IntOp:
             raise InvalidOperand(str(ops[0]))
-        interrupt_class = int_vectors[ops[0].get_val()]
         try:
+            interrupt_class = int_vectors[ops[0].get_val()]
             interrupt_handler = interrupt_class[int(vm.registers[EAX])]
         except KeyError:
-            raise UnknownInt() 
+            raise UnknownInt(str(ops[0].get_val()) + ": "
+                            + vm.registers[EAX]) 
         c = interrupt_handler(vm)
         return str(c)

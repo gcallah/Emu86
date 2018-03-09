@@ -16,7 +16,7 @@ REG_UNWRITABLE = "Write attempt to unwriteable register: "
 STACK_OVERFLOW = "Stack overflow."
 STACK_UNDERFLOW = "Stack underflow."
 UNKNOWN_ERR = "Unknown parsing error."
-UNKNOWN_INT = "Unknown interrupt instruction."
+UNKNOWN_INT = "Unknown interrupt instruction: "
 UNKNOWN_NM = "Unknown symbol: "
 UNKNOWN_LABEL = "Unknown label: "
 
@@ -31,8 +31,8 @@ class Error(Exception):
         self.msg = UNKNOWN_ERR
 
 class UnknownInt(Error):
-    def __init__(self):
-        self.msg = UNKNOWN_INT
+    def __init__(self, offender):
+        self.msg = UNKNOWN_INT + offender
 
 class RegUnwritable(Error):
     def __init__(self, offender):
