@@ -233,10 +233,10 @@ def lex(code, vm):
             continue
 
         # data section       PROCESSING HERE TO PREVENT REDUNDANT READ OF lines
-        if line == ".data":
+        if line == DATA_SECT:
             data_section = True
             continue
-        elif line == ".text":
+        elif line == TEXT_SECT:
             parse_data_section(data_lines, vm)
             data_section = False
             continue
