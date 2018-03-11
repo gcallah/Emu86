@@ -24,6 +24,27 @@
             </p>
 
         <h2>
+            The Data Section
+        </h2>
+<hr>
+<h4>
+             .data
+</h4>
+
+<h5>Syntax</h5>
+
+<ul>
+<li>            var: .data_type value 
+</ul>
+<h5>Description</h5>
+
+<p>
+            After finding .data on a line, the parser will
+            place 'value' in 'var' with data type '.data_type'.
+            The data_type is not used at the moment.
+</p>
+
+        <h2>
             Instructions Available
         </h2>
             <p>
@@ -60,15 +81,16 @@
 <h5>Description</h5>
 
 <p>
+            The behavior of INT depends on both its "con" operand
+            as well as the value of the EAX register. See the descriptions
+            of specific interrupt commands below.
             We will build various "interrupt" handlers as needed.
             At present, we only have two:
-            <br />
                 INT 22, with EAX set to 0, to get a key from
             the keyboard. And we only pretend the key is from the keyboard,
             since we are running on the Internet, and can't read the user's
             keyboard.
-            <br />
-            And INT 33, with EAX set to 0, to exit the program.
+            And INT 32, to exit the program. There should be a 0 in EAX.
 </p>
 
             <h2>

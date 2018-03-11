@@ -9,6 +9,7 @@ INTER2 = $(ODIR)/help.ptml
 OBJS = $(ODIR)/help.html
 
 help.html: $(SRCS)
+	extract_doc.awk <$(SDIR)/parse.py | $(UDIR)/doc2html.awk >data.txt
 	extract_doc.awk <$(SDIR)/arithmetic.py | $(UDIR)/doc2html.awk >arithmetic.txt
 	extract_doc.awk <$(SDIR)/control_flow.py | $(UDIR)/doc2html.awk >control_flow.txt
 	extract_doc.awk <$(SDIR)/data_mov.py | $(UDIR)/doc2html.awk >data_mov.txt

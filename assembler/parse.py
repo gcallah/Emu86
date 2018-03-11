@@ -188,6 +188,17 @@ def parse_data_section(lines, vm):
         vm: virtual machine
 
     Returns: None
+        <instr>
+             .data
+        </instr>
+        <syntax>
+            var: .data_type value 
+        </syntax>
+        <descr>
+            After finding .data on a line, the parser will
+            place 'value' in 'var' with data type '.data_type'.
+            The data_type is not used at the moment.
+        </descr>
     """
     global label_match
     symbol = ""
