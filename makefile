@@ -20,7 +20,7 @@ dev: $(SRCS) $(OBJS)
 	$(TDIR)/test_errors.py
 	$(TDIR)/test_control_flow.py
 	$(TDIR)/test_programs.py
-	git commit -a
+	-git commit -a
 	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
