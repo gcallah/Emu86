@@ -12,6 +12,10 @@ BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1
 MIN_INT = -(2**(BITS-1))
 
+def add_debug(s, vm):
+    vm.debug += (s + "\n")
+
+
 class Token:
     def __init__(self, name, val=0):
         self.name = name
@@ -169,22 +173,21 @@ class Symbol(Location):
     """
     Class to hold symbols such as variable names.
     """
-    def __init__(self, name, vm, val=0):
-        super().__init__(name, vm, val)
-        self.symbols = vm.symbols
-        if self.name in self.symbols:
-            self.symbols[self.name] = val
-        else:
+    def __init__(self, name, vm):
+        super().__init__(name, vm)
+        self.vm = vm
+        self.check_nm()
+
+    def check_nm(self):
+        if self.name not in self.vm.symbols:
             raise UnknownName(self.name)
 
     def set_val(self, val):
-        if self.name not in self.symbols:
-            raise UnknownName(self.name)
-        else:
-            self.symbols[self.name] = val
+        self.check_nm()
+        self.vm.symbols[self.name] = val
 
     def get_val(self):
-        if self.name not in self.symbols:
-            raise UnknownName(self.name)
-        else:
-            return self.symbols[self.name]
+        self.check_nm()
+        add_debug("Symbol " + self.name + " = " +
+                  str(self.vm.symbols[self.name]), self.vm)
+        return self.vm.symbols[self.name]

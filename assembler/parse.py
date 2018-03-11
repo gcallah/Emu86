@@ -6,7 +6,7 @@ import re
 import pdb
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
-from .errors import UnknownName
+from .errors import UnknownName, InvalidDataType
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
 from .tokens import RegAddress, Label
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
@@ -15,6 +15,7 @@ from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
+from .virtual_machine import MEM_SIZE
 
 
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
@@ -26,8 +27,6 @@ DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
-
-symbol_dict = {}
 
 je = Je('JE')
 jne = Jne('JNE')
@@ -69,6 +68,11 @@ instructions = {
         'NEG': Neg('NEG'),
         }
 
+dtype_size = {
+    ".byte": 1,
+    ".short": MEM_SIZE / 16,
+    ".long": MEM_SIZE / 8,
+}
 
 def add_debug(s, vm):
     vm.debug += (s + "\n")
@@ -172,33 +176,50 @@ def get_ops(code, code_pos, vm):
 
     return (ops, code_pos)
 
-def get_data_type_offset(type, value=0):
-    if type == ".byte":
-        return [1, value]
-    elif type == ".short":
-        return [2, value]
-    elif type == ".long":
-        return [4, value]
-    elif type == ".zero":
-        return [10, 0]
-    elif type == ".string":
-        return [len(value) + 1, value]
 
 def parse_data_section(lines, vm):
     """
     Parses the lines in the data section.
     The syntax is:
     var_name: .data_type value
+    Multi-line declarations are not available yet.
+    Args:
+        lines: The lines containing the declarations.
+        vm: virtual machine
+
+    Returns: None
     """
+    global label_match
     symbol = ""
+    dsize = 0
     for line in lines:
-        if ":" in line:
-            symbol = line[:-1]
+        code_pos = 0
+
+# var name:
+        (token, code_pos) = get_token(line, code_pos)
+        # symbols in the data section look like labels 
+        # in the text section, so:
+        label_present = re.search(label_match, token)
+        if label_present is not None:
+            symbol = label_present.group(1)
         else:
-            line_split = line.split(" ")
-            data_type = line_split[0]
-            offset_value = get_data_type_offset(data_type, line_split[1])
-            vm.symbols[symbol] = line_split[1]
+            raise InvalidVarDeclaration(token)
+
+# data type (not yet used):
+        (token, code_pos) = get_token(line, code_pos)
+        try:
+            dsize = dtype_size[token]
+        except KeyError:
+            raise InvalidDataType(token)
+
+# value
+        (token, code_pos) = get_token(line, code_pos)
+        add_debug("Setting symbol " + symbol + " to val " + token, vm)
+        try:
+            vm.symbols[symbol] = int(token)
+            add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
+        except Exception:
+            raise InvalidDataVal(token)
 
 def lex(code, vm):
     """
@@ -233,7 +254,7 @@ def lex(code, vm):
         if len(line) == 0:  # blank lines ok; just skip 'em
             continue
 
-        # data section       PROCESSING HERE TO PREVENT REDUNDANT READ OF lines
+        # data section
         if line == DATA_SECT:
             data_section = True
             continue

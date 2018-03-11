@@ -9,6 +9,9 @@ INVALID_OPRND = "Invalid operand: "
 INVALID_NUM_ARGS = "Invalid number of args: "
 INVALID_MEM_LOC = "Invalid memory location: "
 INVALID_REG = "Invalid register: "
+INVALID_VAR_DECL = "Invalid variable declaration: "
+INVALID_DATA_TYPE = "Invalid data type: "
+INVALID_DATA_VAL = "Invalid data value: "
 LABEL_NOT_SETTABLE = "Label values can't be reset."
 NOT_SETTABLE = "This operand type can't have its value set: "
 PROGRAM_EXIT = "Program exit"
@@ -20,8 +23,8 @@ UNKNOWN_INT = "Unknown interrupt instruction: "
 UNKNOWN_NM = "Unknown symbol: "
 UNKNOWN_LABEL = "Unknown label: "
 
-INT_MAX=(2**31)-1
-INT_MIN=-(2**31)
+INT_MAX = (2**31)-1
+INT_MIN = -(2**31)
 
 class Error(Exception):
     """
@@ -37,6 +40,18 @@ class UnknownInt(Error):
 class RegUnwritable(Error):
     def __init__(self, offender):
         self.msg = REG_UNWRITABLE + offender
+
+class InvalidVarDeclaration(Error):
+    def __init__(self, offender):
+        self.msg = INVALID_VAR_DECL + offender
+
+class InvalidDataType(Error):
+    def __init__(self, offender):
+        self.msg = INVALID_DATA_TYPE + offender
+
+class InvalidDataVal(Error):
+    def __init__(self, offender):
+        self.msg = INVALID_DATA_VAL + offender
 
 class InvalidInstruction(Error):
     def __init__(self, offender):
