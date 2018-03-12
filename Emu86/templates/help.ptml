@@ -106,25 +106,33 @@
                 <li>reg: register
             </ul>
 
-            <h2>
-                Interrupts
-            </h2>
+        <h2>
+            Interrupts
+        </h2>
 <!--include interrupts.txt -->
 
-            <h2>
-                Data Movement
-            </h2>
+        <h2>
+            Data Movement
+        </h2>
 <!--include data_mov.txt -->
-                
-            <h2>
-                Control Flow
-            </h2>
+            
+        <h2>
+            Control Flow
+        </h2>
 <!--include control_flow.txt -->
 
-            <h2>
-                Arithmetic and Logic
-            </h2>
+        <h2>
+            Arithmetic and Logic
+        </h2>
 <!--include arithmetic.txt -->
+
+        <h2>
+            User Interface Features
+        </h2>
+
+            <p>
+                Clicking on any register will display its value in binary.
+            </p>
 
     </div>
 {% endblock content %}

@@ -122,9 +122,9 @@
                 <li>reg: register
             </ul>
 
-            <h2>
-                Interrupts
-            </h2>
+        <h2>
+            Interrupts
+        </h2>
 <hr>
 <h4>
              int
@@ -150,9 +150,9 @@
             And INT 32, to exit the program. There should be a 0 in EAX.
 </p>
 
-            <h2>
-                Data Movement
-            </h2>
+        <h2>
+            Data Movement
+        </h2>
 <hr>
 <h4>
              mov
@@ -219,10 +219,10 @@
 
 <ul>
 </ul>
-                
-            <h2>
-                Control Flow
-            </h2>
+            
+        <h2>
+            Control Flow
+        </h2>
 <hr>
 <h4>
              cmp
@@ -375,9 +375,9 @@
             the line after the subroutine call.
 </p>
 
-            <h2>
-                Arithmetic and Logic
-            </h2>
+        <h2>
+            Arithmetic and Logic
+        </h2>
 <hr>
 <h4>
              add
@@ -524,6 +524,25 @@
 <ul>
 <li>            IDIV reg
 </ul>
+<h5>Description</h5>
+
+<p>
+            The idiv instruction divides the contents of
+            the 64 bit integer EDX:EAX (constructed by viewing
+            EDX as the most significant four bytes and EAX
+            as the least significant four bytes) by the
+            specified operand value. The quotient result
+            of the division is stored into EAX, while the
+            remainder is placed in EDX.
+</p>
+
+        <h2>
+            User Interface Features
+        </h2>
+
+            <p>
+                Clicking on any register will display its value in binary.
+            </p>
 
     </div>
 {% endblock content %}

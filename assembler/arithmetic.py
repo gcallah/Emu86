@@ -214,6 +214,15 @@ class Idiv(Instruction):
         <syntax>
             IDIV reg
         </syntax>
+        <descr>
+            The idiv instruction divides the contents of
+            the 64 bit integer EDX:EAX (constructed by viewing
+            EDX as the most significant four bytes and EAX
+            as the least significant four bytes) by the
+            specified operand value. The quotient result
+            of the division is stored into EAX, while the
+            remainder is placed in EDX.
+        </descr>
     """
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
