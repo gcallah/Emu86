@@ -22,7 +22,7 @@ class Token:
         self.value = val
 
     def __str__(self):
-        return str(self.name) + ": " + str(self.value)
+        return str(self.name)
 
     def set_val(self, val):
         raise NotSettable(str(self))
