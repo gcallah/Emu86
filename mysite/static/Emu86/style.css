@@ -104,6 +104,10 @@ li ul {
     margin-bottom: 0;
 }
 
+ol.nested, ul.nested, dl.nested {
+    font-size: 1em;
+}
+
 li, dt, dd {
     font-size: 1.3em;
     line-height: 20px;
