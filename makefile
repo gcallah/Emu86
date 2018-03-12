@@ -1,3 +1,7 @@
+# Need to export as ENV var
+export TEMPLATE_DIR = templates
+
+PTML_DIR = html_src
 ADIR = ansible
 SDIR = assembler
 ODIR = Emu86/templates
@@ -7,15 +11,17 @@ TDIR = tests
 SRCS = $(SDIR)/arithmetic.py $(SDIR)/control_flow.py $(SDIR)/data_mov.py $(SDIR)/interrupts.py 
 INTER2 = $(ODIR)/help.ptml
 OBJS = $(ODIR)/help.html
+EXTR = $(UDIR)/extract_doc.awk
+D2HTML = $(UDIR)/doc2html.awk
 
 help.html: $(SRCS)
-	extract_doc.awk <$(SDIR)/parse.py | $(UDIR)/doc2html.awk >data.txt
-	extract_doc.awk <$(SDIR)/arithmetic.py | $(UDIR)/doc2html.awk >arithmetic.txt
-	extract_doc.awk <$(SDIR)/control_flow.py | $(UDIR)/doc2html.awk >control_flow.txt
-	extract_doc.awk <$(SDIR)/data_mov.py | $(UDIR)/doc2html.awk >data_mov.txt
-	extract_doc.awk <$(SDIR)/interrupts.py | $(UDIR)/doc2html.awk >interrupts.txt
-	html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
-	-git commit $(ODIR)/help.*
+	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
+	$(EXTR) <$(SDIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
+	$(EXTR) <$(SDIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
+	$(EXTR) <$(SDIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/data_mov.txt
+	$(EXTR) <$(SDIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/interrupts.txt
+	$(UDIR)/html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
+	-git commit $(ODIR)/help.html
 
 dev: $(SRCS) $(OBJS) 
 	$(TDIR)/test_assemble.py
@@ -27,9 +33,6 @@ dev: $(SRCS) $(OBJS)
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
 prod: $(SRCS) $(OBJ)
-# we are dropping the two branch system for now.
-#	git checkout master
-#	git merge dev
 	$(TDIR)/test_assemble.py
 	$(TDIR)/test_errors.py
 	$(TDIR)/test_control_flow.py
