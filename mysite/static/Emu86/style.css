@@ -60,7 +60,7 @@ h1,h2,h3,h4,h5 {
 h1 {
     margin: 0 0 20px;
     font-weight: 300;
-    font-size: 2.4em;
+    font-size: 2.2em;
     color: #666;
 }
 
@@ -742,7 +742,7 @@ a.deletelink:focus, a.deletelink:hover {
     padding: 0;
     margin: 0 20px 0 0;
     font-weight: 300;
-    font-size: 24px;
+    font-size: 2.2em;
     color: #ffcc33;
 }
 
@@ -844,7 +844,7 @@ td#registers-cell {
     padding: 0;
     margin: 0 0 0 20px;
     font-weight: 300;
-    font-size: 11px;
+    font-size: 1.1em;
     letter-spacing: 0.5px;
     text-transform: uppercase;
     text-align: right;
