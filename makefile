@@ -15,6 +15,7 @@ help.html: $(SRCS)
 	extract_doc.awk <$(SDIR)/data_mov.py | $(UDIR)/doc2html.awk >data_mov.txt
 	extract_doc.awk <$(SDIR)/interrupts.py | $(UDIR)/doc2html.awk >interrupts.txt
 	html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
+	-git commit $(ODIR)/help.*
 
 dev: $(SRCS) $(OBJS) 
 	$(TDIR)/test_assemble.py
