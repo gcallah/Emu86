@@ -1,9 +1,11 @@
 {% extends "ebase.html" %}
 {% block content %}
     <div class="module">
-        <h2>
+        <details>
+            <summary class="sum2">
             About Emu86
-        </h2>
+            </summary>
+
             <p>
             This is an open source project written by Gene Callahan,
             Abhishek Ramchandran, Varun Chopra, Nathan Conroy,
@@ -17,23 +19,27 @@
             not AT&amp;T assembly language.)
             </p>
 
-            <h3>
-                x86 Assembly Guide
-            </h3>
-            <p>
-                Here is a page from the University of Virginia Computer Science
-                Department that gives a basic guide to x86 assembly language,
-                which we have followed in creating our emulator:
-                <br />
-                <a
-                href="https://www.cs.virginia.edu/~evans/cs216/guides/x86.html">
-                Guide to Intel x86 assembly.
-                </a>
-            </p>
+            <details>
+                <summary class="sum3">
+                    x86 Assembly Guide
+                </summary>
+                <p>
+                    Here is a page from the University of Virginia Computer Science
+                    Department that gives a basic guide to x86 assembly language,
+                    which we have followed in creating our emulator:
+                    <br />
+                    <a
+                    href="https://www.cs.virginia.edu/~evans/cs216/guides/x86.html">
+                    Guide to Intel x86 assembly.
+                    </a>
+                </p>
+            </details>
+        </details>
 
-        <h2>
+        <details>
+            <summary class="sum2">
             Sample Programs
-        </h2>
+            </summary>
 
             <p>
                 Here are some sample programs written in our emulator, as
@@ -78,16 +84,28 @@
                     </a>
                 </li>
             </ul>
+        </details>
 
-
-        <h2>
+        <details>
+            <summary class="sum2">
             The Data Section
-        </h2>
-<!--include data.txt -->
+            </summary>
+        
+            <p>
+                This section is preceded by the directive ".data". <i>If</i>
+                you have a data section, you must start the program section
+                with the directive ".text". The data section allows the
+                declaration of names for memory locations.
+            </p>
 
-        <h2>
+<!--include data.txt -->
+        </details>
+
+        <details>
+            <summary class="sum2">
             Instructions Available
-        </h2>
+            </summary>
+
             <p>
                 Some of these are only partially done, i.e., some variant of
                 an instruciton may not work. We will do our best to note that
@@ -106,33 +124,45 @@
                 <li>reg: register
             </ul>
 
-        <h2>
-            Interrupts
-        </h2>
+            <details>
+                <summary class="sum3">
+                Interrupts
+                </summary>
 <!--include interrupts.txt -->
+            </details>
 
-        <h2>
-            Data Movement
-        </h2>
+            <details>
+                <summary class="sum3">
+                Data Movement
+                </summary>
 <!--include data_mov.txt -->
-            
-        <h2>
-            Control Flow
-        </h2>
+            </details>
+                
+            <details>
+                <summary class="sum3">
+                Control Flow
+                </summary>
 <!--include control_flow.txt -->
+            </details>
 
-        <h2>
-            Arithmetic and Logic
-        </h2>
+            <details>
+                <summary class="sum3">
+                Arithmetic and Logic
+                </summary>
 <!--include arithmetic.txt -->
+            </details>
+        </details>
 
-        <h2>
+        <details>
+            <summary class="sum2">
             User Interface Features
-        </h2>
+            </summary>
 
             <p>
                 Clicking on any register will display its value in binary.
             </p>
+        </details>
+
 
     </div>
 {% endblock content %}

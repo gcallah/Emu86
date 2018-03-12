@@ -7,7 +7,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-size: 14px;
+    font-size: 100%;
     font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
     color: #333;
     background: #fff;
@@ -44,6 +44,7 @@ a.section:focus, a.section:hover {
 /* GLOBAL DEFAULTS */
 
 p, ol, ul, dl {
+    font-size: 1.2em;
     margin: .2em 0 .8em 0;
 }
 
@@ -59,12 +60,12 @@ h1,h2,h3,h4,h5 {
 h1 {
     margin: 0 0 20px;
     font-weight: 300;
-    font-size: 24px;
+    font-size: 2.4em;
     color: #666;
 }
 
 h2 {
-    font-size: 22px;
+    font-size: 2em;
     margin: 1em 0 .5em 0;
 }
 
@@ -74,20 +75,20 @@ h2.subhead {
 }
 
 h3 {
-    font-size: 20px;
+    font-size: 1.8em;
     margin: 48px 12px 12px 12px;
     color: #945;
     font-weight: bold;
 }
 
 h4 {
-    font-size: 18px;
+    font-size: 1.7em;
     margin: 1em 0 .8em 0;
     padding-bottom: 3px;
 }
 
 h5 {
-    font-size: 16px;
+    font-size: 1.6em;
     margin: 1.5em 0 .5em 0;
     color: #666;
     text-transform: uppercase;
@@ -104,7 +105,7 @@ li ul {
 }
 
 li, dt, dd {
-    font-size: 16px;
+    font-size: 1.3em;
     line-height: 20px;
 }
 
@@ -130,7 +131,7 @@ fieldset {
 }
 
 blockquote {
-    font-size: 11px;
+    font-size: 1em;
     color: #777;
     margin-left: 2px;
     padding-left: 10px;
@@ -140,7 +141,7 @@ blockquote {
 code, pre {
     font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
     color: #666;
-    font-size: 12px;
+    font-size: 1.1em;
 }
 
 pre.literal-block {
@@ -945,4 +946,34 @@ td#registers-cell {
     padding: 10px 20px;
 }
 
-/* RECENT ACTIONS MODULE */
+/* summary tags */
+summary.sum1 {
+    font-size: 2em;
+    color: #903;
+    margin: 1em 1.2em 1em 1.2em;
+}
+
+summary.sum2 {
+    font-size: 1.6em;
+    color: #937;
+    font-weight: 500;
+    margin: .8em 1.2em .8em 2em;
+}
+
+summary.sum3 {
+    font-size: 1.5em;
+    color: #339;
+    margin: .6em 1.2em .6em 2.8em;
+}
+
+summary.sum4 {
+    font-size: 1.4em;
+    color: #825;
+    margin: .4em 1.2em .4em 2.8em;
+}
+
+summary.menu_sum {
+    font-size: 1.4em;
+    color: #639;
+    margin: .5em 0em .5em 0em;
+}
