@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-size: 100%;
+    font-size: 120%;
     color: #333;
     background: #dff;
     font-family: initial;
@@ -67,7 +67,7 @@ p, summary.sum4 {
 }
 
 blockquote {
-    font-size: 1.1em;
+    font-size: 1.2em;
     margin: .75em 4.5em .75em 4.5em;
     padding: 0;
     line-height: 140%;
