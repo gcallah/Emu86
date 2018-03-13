@@ -13,6 +13,21 @@ INTER2 = $(ODIR)/help.ptml
 OBJS = $(ODIR)/help.html
 EXTR = $(UDIR)/extract_doc.awk
 D2HTML = $(UDIR)/doc2html.awk
+INCS = $(TEMPLATE_DIR)/head.txt
+
+HTMLFILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
+
+%.html: $(PTML_DIR)/%.ptml $(INCS)
+	python3 $(UDIR)/html_checker.py $<
+	$(UDIR)/html_include.awk <$< >$@
+	git add $@
+
+local: $(HTMLFILES)
+
+website: $(INCS) $(HTMLFILES)
+	-git commit -a 
+	git pull origin master
+	git push origin master
 
 help.html: $(SRCS)
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt

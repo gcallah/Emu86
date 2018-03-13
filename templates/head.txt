@@ -1,0 +1,24 @@
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="style.css">
+
+        <!-- jQuery CDN -->
+         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+         <!-- Bootstrap Js CDN -->
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+         <script type="text/javascript">
+             var status = 'on';
+             $(document).ready(function () {
+                 $('#sidebarCollapse').on('click', function () {
+                     $('#sidebar').toggleClass('active');
+                     if (status == 'on') {
+                         $('#sidebarText').text("Expand Side Nav");
+                         status = 'off';
+                     } else {
+                         $('#sidebarText').text("Collapse Side Nav");
+                         status = 'on';
+                     }
+                 });
+             });
+         </script>
