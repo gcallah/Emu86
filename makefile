@@ -13,7 +13,7 @@ INTER2 = $(ODIR)/help.ptml
 OBJS = $(ODIR)/help.html
 EXTR = $(UDIR)/extract_doc.awk
 D2HTML = $(UDIR)/doc2html.awk
-INCS = $(TEMPLATE_DIR)/head.txt
+INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 
 HTMLFILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 

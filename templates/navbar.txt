@@ -1,0 +1,35 @@
+<!-- Sidebar Holder -->
+<nav id="sidebar">
+    <div id="sidebarCollapse">
+        <div class="sidebar-header">
+            <h1>Emu86</h1>
+        </div>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li>
+            <a href="https://gcallah.github.io/Emu86/index.html">
+                <i class="glyphicon glyphicon-home"></i>
+                Home
+            </a>
+        </li>
+        <li>
+            <a href="#serverSubmenu" data-toggle="collapse" aria-expanded="false">
+                <i class="glyphicon glyphicon-duplicate"></i>
+                Servers
+            </a>
+            <ul class="collapse list-unstyled" id="serverSubmenu">
+                <li>
+                    <a href="http://www.emu86.org/Emu86/">
+                        Emu86 Production Server
+                    </a>
+                </li>
+                <li>
+                    <a href="http://emu86.pythonanywhere.com/Emu86/">
+                        Emu86 Development Server
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

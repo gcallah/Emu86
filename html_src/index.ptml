@@ -8,34 +8,35 @@
     </head>
 
     <body>
-<!--include header.txt -->
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
 
-        <h1>
-            Emu86 Assembly Language Emulator
-        </h1>
+                <h1>
+                    Emu86 Assembly Language Emulator
+                </h1>
+        
+                    <figure>
+                        <img src="graphics/logo.png">
+                        <figcaption>
+                            (Source:
+                            https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tasmanian_Emu.jpg/440px-Tasmanian_Emu.jpg)
+                        </figcaption>
+                    </figure>
 
-            <p>
-                Emu86 is a browser-based interpreter for x86 assembly language
-                written in Python, using the Django framework. It allows
-                code-stepping, displays registers, flags, memory, and the
-                stack, and provides online help for all instructions. It is a
-                great learning tool for introducing students to assembler.
-            </p>
+                    <p>
+                        Emu86 is a browser-based interpreter for x86 assembly
+                        language written in Python, using the Django framework.
+                        It allows code-stepping, displays registers, flags,
+                        memory, and the stack, and provides online help for all
+                        instructions. It is intended as a learning tool for
+                        introducing students to assembler.
+                    </p>
 
+            <!--
             <h2>
                 Links
             </h2>
-                <ul>
-                    <li>
-                        <a href="http://www.emu86.org/Emu86/">
-                            Emu86 Production Server
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://emu86.pythonanywhere.com/Emu86/">
-                            Emu86 Development Server
-                        </a>
-                    </li>
                     <li>
                         <a href="EmuPresent.html">
                             PyGotham 2017 talk on Emu86
@@ -80,6 +81,9 @@
                     </li>
 
                 </ul>
+-->
+            </div>
+        </div>
 
     </body>
 </html>

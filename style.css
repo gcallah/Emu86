@@ -1,10 +1,12 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
 body {
     margin: 0;
     padding: 0;
-    font-size: 120%;
+    font-size: 100%;
     color: #333;
     background: #dff;
-    font-family: initial;
+    font-family: 'Poppins', sans-serif;
 }
 
 table {
@@ -85,12 +87,10 @@ h1,h2 {
 
 h1 {
     margin: 0 0 1em 0;
-    padding-bottom: 1em;
     text-align: center;
     font-weight: 300;
     font-size: 2.5em;
-    background-color: #245;
-    color: #dff;
+    color: #245;
 }
 
 h1.toc-head {
@@ -129,7 +129,7 @@ h5 {
     height: 60;
     padding: 10 2.5em;
     line-height: 4em;
-    background-color: #245;
+    background: #245;
     color: #dff;
     overflow: hidden;
 }
@@ -245,3 +245,254 @@ p.lead-quote {
     margin: 0 auto;
 }
 
+
+/*****
+The Wrapped div in which content will be filled
+***/
+#content {
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+    font-size: 174%;
+}
+
+/****** Nav Bar *****/
+.navbar {
+    padding: 15px 10px;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+i, span {
+    display: inline-block;
+}
+
+
+
+/******** Side Bar Style *********/
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 300px;
+    max-width: 300px;
+    background: #699;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    min-width: 80px;
+    max-width: 80px;
+    text-align: center;
+}
+
+#sidebar.active .sidebar-header h1, #sidebar.active .CTAs {
+    display: none;
+}
+
+#sidebar.active .sidebar-header strong {
+    display: block;
+}
+
+#sidebar.active ul li a {
+    padding: 20px 10px;
+    text-align: center;
+    font-size: 0.85em;
+}
+
+#sidebar.active ul li a i {
+    margin-right:  0;
+    display: block;
+    font-size: 1.8em;
+    margin-bottom: 5px;
+}
+
+#sidebar.active ul ul a {
+    padding: 1em 1em;
+    font-size: 0.8em;
+}
+
+#sidebar.active a[aria-expanded="false"]::before, #sidebar.active a[aria-expanded="true"]::before {
+    top: auto;
+    bottom: 5px;
+    right: 50%;
+    -webkit-transform: translateX(50%);
+    -ms-transform: translateX(50%);
+    transform: translateX(50%);
+}
+
+#sidebar.active ul ul ul a {
+    padding: 1em 1em;
+    font-size: 0.6em;
+}
+
+#sidebar .sidebar-header {
+    padding-bottom: 2.8em;
+    padding-top: .8em;
+    padding-left: 1.6em;
+    background: #245;
+}
+
+#sidebar .sidebar-header strong {
+    display: none;
+    font-size: 2.0em;
+    text-align: center;
+    padding-top: 0.8em;
+    padding-right: 0.8em;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul li a {
+    padding: 0.8em;
+    text-align: left;
+    color: #fff;
+    font-size: 1.4em;
+    display: block;
+}
+
+#sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#sidebar ul li a i {
+    margin-right: 10px;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+
+#sidebar ul ul a {
+    padding-left: 3.0em;
+    text-align: left;
+    color: #fff;
+    font-size: 1.1em;
+    display: block;
+}
+
+#sidebar ul ul ul a {
+    padding-left: 4.0em;
+    text-align: left;
+    color: #fff;
+    font-size: 0.8em;
+    display: block;
+}
+
+#sidebar h1 {
+    color: #dff;
+    background-color: transparent;
+    text-align: left;
+    margin: 1em 0em 0em 0em;
+    padding: 0em;
+}
+
+#sidebar ul {
+    margin: 0em;
+}
+
+#sidebar ul li {
+    margin: 0em;
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
+    content: '\e259';
+    display: block;
+    position: absolute;
+    right: 20px;
+    font-family: 'Glyphicons Halflings';
+    font-size: 0.6em;
+}
+
+a[aria-expanded="true"]::before {
+    content: '\e260';
+}
+
+/*******
+The Nav sidebar media effect
+*****/
+
+@media (max-width: 768px) {
+    #sidebar {
+        min-width: 80px;
+        max-width: 80px;
+        text-align: center;
+        margin-left: -80px !important ;
+    }
+    a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
+        top: auto;
+        bottom: 5px;
+        right: 50%;
+        -webkit-transform: translateX(50%);
+        -ms-transform: translateX(50%);
+        transform: translateX(50%);
+    }
+    #sidebar.active {
+        margin-left: 0 !important;
+    }
+
+    #sidebar .sidebar-header h3, #sidebar .CTAs {
+        display: none;
+    }
+
+    #sidebar .sidebar-header strong {
+        display: block;
+    }
+
+    #sidebar ul li a {
+        padding: 20px 10px;
+    }
+
+    #sidebar ul li a span {
+        font-size: 0.85em;
+    }
+
+    #sidebar ul li a i {
+        margin-right:  0;
+        display: block;
+    }
+
+    #sidebar ul ul a {
+        padding: 10px !important;
+    }
+
+    #sidebar ul li a i {
+        font-size: 1.3em;
+    }
+
+    #sidebar {
+        margin-left: 0;
+    }
+
+    #sidebarCollapse span {
+        display: none;
+    }
+}
