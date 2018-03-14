@@ -76,9 +76,9 @@ blockquote {
 }
 
 p.authors {
-    font-size: 1.7em;
+    font-size: 1.5em;
     text-align: center;
-    color: #b06;
+    color: #60b;
 }
 
 h1,h2 {
@@ -221,13 +221,13 @@ summary.sum1 {
 
 summary.sum2 {
     font-size: 1.8em;
-    color: #633;
+    color: #239;
     margin: .75em 1.5em .75em 2.5em;
 }
 
 summary.sum3 {
     font-size: 1.6em;
-    color: #339;
+    color: #284;
     margin: .5em 1.5em .5em 3.5em;
 }
 
@@ -253,7 +253,7 @@ The Wrapped div in which content will be filled
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
-    font-size: 174%;
+    font-size: 144%;
 }
 
 /****** Nav Bar *****/

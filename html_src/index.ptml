@@ -17,7 +17,7 @@
                 </h1>
         
                     <figure>
-                        <img src="graphics/logo.png">
+                        <img src="graphics/logo.png" width="33%">
                         <figcaption>
                             (Source:
                             https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tasmanian_Emu.jpg/440px-Tasmanian_Emu.jpg)
@@ -38,20 +38,9 @@
                 Links
             </h2>
                     <li>
-                        <a href="EmuPresent.html">
-                            PyGotham 2017 talk on Emu86
-                        </a>
-                    </li>
-                    <li>
                         Some sample assembly language programs that currently
                         work:
                         <ul class="nested">
-                            <li>
-                                <a
-                            href="https://github.com/gcallah/Emu86/blob/master/tests/power.asm">
-                                    Raise a number to a power.
-                                </a>
-                            </li>
                             <li>
                                 <a
                                     href="https://github.com/gcallah/Emu86/blob/master/tests/gt.asm">
