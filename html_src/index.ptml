@@ -19,8 +19,6 @@
                     <figure>
                         <img src="graphics/logo.png" width="33%">
                         <figcaption>
-                            (Source:
-                            https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tasmanian_Emu.jpg/440px-Tasmanian_Emu.jpg)
                         </figcaption>
                     </figure>
 
@@ -71,6 +69,15 @@
 
                 </ul>
 -->
+
+            <hr>
+            <h5>
+                Sources
+            </h5>
+            <p class="sources">
+                Emu graphic:
+                https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tasmanian_Emu.jpg/440px-Tasmanian_Emu.jpg)
+            </p>
             </div>
         </div>
 

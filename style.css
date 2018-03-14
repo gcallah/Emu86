@@ -9,6 +9,10 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+hr {
+    color: #245;
+}
+
 table {
     font-size: 1.4em;
     margin: .5em 2.5em .5em 2.5em;
@@ -76,9 +80,15 @@ blockquote {
 }
 
 p.authors {
-    font-size: 1.5em;
+    font-size: 1.4em;
     text-align: center;
     color: #60b;
+}
+
+p.sources {
+    font-size: 1.1em;
+    text-align: center;
+    color: #30a;
 }
 
 h1,h2 {
@@ -100,13 +110,13 @@ h1.toc-head {
 h2 {
     font-size: 2.2em;
     margin: 1.25em 1em 1.25em 1em;
-    color: #245;
+    color: #427;
 }
 
 h3 {
     font-size: 2em;
     margin: 1.15em 1.5em 1em 1.5em;
-    color: #633;
+    color: #263;
     font-weight: bold;
 }
 
