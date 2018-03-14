@@ -2,6 +2,9 @@
 # this file processes asm files to turn them into ptml files
 
 BEGIN {
+    INDENT1 = "    "
+    INDENT2 = INDENT1 INDENT1
+    INDENT3 = INDENT2 INDENT1
     in_comments = 1
     error = 0
     if (ARGC < 2) {
@@ -13,29 +16,28 @@ BEGIN {
     title = a[2]
     print "<!DOCTYPE html>"
     print "<html>"
-    print "    <head>"
+    print INDENT1 "<head>"
     print "<!--include head.txt -->"
-    print "        <title>"
-    print "            " title
-    print "        </title>"
-    print "    </head>"
+    print INDENT2 "<title>"
+    print INDENT3 "" title
+    print INDENT2 "</title>"
+    print INDENT1 "</head>"
     print ""
-    print "    <body>"
-    print "        <div class=\"wrapper\">"
+    print INDENT1 "<body>"
+    print INDENT2 "<div class=\"wrapper\">"
     print "<!--include navbar.txt -->"
-    print "            <div id=\"content\">"
-    print "            <h1>"
-    print "            " title
-    print "            </h1>"
+    print INDENT3 "<div id=\"content\">"
+    print INDENT3 "<h1>"
+    print INDENT3 "" title
+    print INDENT3 "</h1>"
 }
 
 END {
     if(!error) {
-        print "            </code>"
-        print "            </pre>"
-        print "            </div>"
-        print "        </div>"
-        print "    </body>"
+        leave_codeblock()
+        print INDENT3 "</div>"
+        print INDENT2 "</div>"
+        print INDENT1 "</body>"
         print "</html>"
     }
 }
@@ -44,20 +46,25 @@ END {
     sub(/; /, "")
     if(!in_comments) {
         in_comments = 1
-        print "            </code>"
-        print "            </pre>"
+        leave_codeblock()
     }
-    print "            <p>"
+    print INDENT3 "<p>"
     print
-    print "            </p>"
+    print INDENT3 "</p>"
     next
 }
 
 { 
     if(in_comments) {
         in_comments = 0
-        print "            <pre>"
-        print "            <code>"
+        print INDENT3 "<pre>"
+        print INDENT3 "<code>"
     }
     print
+}
+
+function leave_codeblock()
+{
+    print INDENT3 "</code>"
+    print INDENT3 "</pre>"
 }
