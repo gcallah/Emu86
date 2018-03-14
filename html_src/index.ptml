@@ -12,7 +12,7 @@
 <!--include navbar.txt -->
             <div id="content">
 
-                <h1>
+                <h1 class="home">
                     Emu86 Assembly Language Emulator
                 </h1>
         
@@ -37,7 +37,7 @@
             </h5>
             <p class="sources">
                 Emu graphic:
-                https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tasmanian_Emu.jpg/440px-Tasmanian_Emu.jpg)
+                https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tasmanian_Emu.jpg/440px-Tasmanian_Emu.jpg
             </p>
             </div>
         </div>

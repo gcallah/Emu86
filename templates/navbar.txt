@@ -79,5 +79,12 @@
                 </li>
             </ul>
         </li>
+
+        <li>
+            <a href="https://github.com/gcallah/Emu86">
+                <i class="glyphicon glyphicon-list-alt"></i>
+                Source Code
+            </a>
+        </li>
     </ul>
 </nav>
