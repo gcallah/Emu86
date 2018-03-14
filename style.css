@@ -133,7 +133,7 @@ h4 {
 h5 {
     font-size: 1.6em;
     margin: 1em 2em .75em 2em;
-    color: #488;
+    color: #388;
 }
 
 #header {
@@ -147,7 +147,7 @@ h5 {
 }
 
 #header a:link, #header a:visited {
-    color: #fff;
+    color: #dff;
 }
 
 #header a:focus , #header a:hover {
@@ -305,8 +305,8 @@ i, span {
 #sidebar {
     min-width: 300px;
     max-width: 300px;
-    background: #488;
-    color: #fff;
+    background: #388;
+    color: #dff;
     transition: all 0.3s;
 }
 
@@ -379,14 +379,14 @@ i, span {
 #sidebar ul li a {
     padding: 0.8em;
     text-align: left;
-    color: #fff;
+    color: #dff;
     font-size: 1.4em;
     display: block;
 }
 
 #sidebar ul li a:hover {
     color: #7386D5;
-    background: #fff;
+    background: #dff;
 }
 
 #sidebar ul li a i {
@@ -394,14 +394,14 @@ i, span {
 }
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
-    color: #fff;
+    color: #dff;
     background: #6d7fcc;
 }
 
 #sidebar ul ul a {
     padding-left: 3.0em;
     text-align: left;
-    color: #fff;
+    color: #dff;
     font-size: 1.1em;
     display: block;
 }
@@ -409,7 +409,7 @@ i, span {
 #sidebar ul ul ul a {
     padding-left: 4.0em;
     text-align: left;
-    color: #fff;
+    color: #dff;
     font-size: 0.8em;
     display: block;
 }
