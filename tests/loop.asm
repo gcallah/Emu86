@@ -1,7 +1,7 @@
       mov eax, 16
       mov ebx, 0
 
-; compare eax and ebx and loop until equal
+; Compare eax and ebx and loop until equal
 loop: cmp eax, ebx
       jz done
       inc ebx
