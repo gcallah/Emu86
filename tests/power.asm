@@ -1,3 +1,4 @@
+; In edx, we put the number to raise to the power we put in ebx.
       mov edx, 2
       mov ebx, 16
       call power
