@@ -10,7 +10,7 @@ body {
 }
 
 hr {
-    color: #245;
+    color: #255;
 }
 
 table {
@@ -34,12 +34,12 @@ td {
 
 td#languages {
     color: #dff;
-    background: #245;
+    background: #255;
 }
 
 th#chapter-head {
     font-size: 1.4em;
-    color: #245;
+    color: #255;
     background: #cff;
 }
 
@@ -100,7 +100,7 @@ h1 {
     text-align: center;
     font-weight: 300;
     font-size: 2.5em;
-    color: #245;
+    color: #255;
 }
 
 h1.toc-head {
@@ -137,7 +137,7 @@ h5 {
     height: 60;
     padding: 10 2.5em;
     line-height: 4em;
-    background: #245;
+    background: #255;
     color: #dff;
     overflow: hidden;
 }
@@ -223,7 +223,7 @@ figcaption {
 
 summary.sum1 {
     font-size: 2em;
-    color: #245;
+    color: #255;
     margin: 1em 1.5em 1em 1.5em;
 }
 
@@ -357,7 +357,7 @@ i, span {
     padding-bottom: 2.8em;
     padding-top: .8em;
     padding-left: 1.6em;
-    background: #245;
+    background: #255;
 }
 
 #sidebar .sidebar-header strong {
