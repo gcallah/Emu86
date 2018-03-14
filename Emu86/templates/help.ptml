@@ -114,14 +114,22 @@
                 In the syntax descriptions, we have:
             </p>
             <ul class="nested">
-                <li>con: constant
-                <li>lbl: label
-                <li>mem: memory location
+                <li>
+                con: constant
+                </li>
+                <li>
+                lbl: label
+                </li>
+                <li>
+                mem: memory location
                     <br>
                     A memory location may be designated by [num], where
                     <i>num</i> is the actual address, or by [reg], where
                     <i>reg</i> holds the memory address.
-                <li>reg: register
+                </li>
+                <li>
+                reg: register
+                </li>
             </ul>
 
             <details>

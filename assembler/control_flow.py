@@ -190,7 +190,7 @@ class Call(Instruction):
              call
         </instr>
         <syntax>
-            CALL <label>
+            CALL lbl
         </syntax>
         <descr>
             Pushes value of EIP to stack and jumps to the internal subroutine.

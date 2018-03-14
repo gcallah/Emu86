@@ -37,13 +37,14 @@ website: $(INCS) $(HTML_FILES)
 	git pull origin master
 	git push origin master
 
-help.html: $(SRCS)
+help: $(SRCS)
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
 	$(EXTR) <$(SDIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
 	$(EXTR) <$(SDIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
 	$(EXTR) <$(SDIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/data_mov.txt
 	$(EXTR) <$(SDIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/interrupts.txt
 	$(UDIR)/html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
+	$(UDIR)/django2ptml.awk <$(ODIR)/help.html title="Language Description" >$(PTML_DIR)/help.ptml
 	-git commit $(ODIR)/help.html
 
 dev: $(SRCS) $(OBJS) 
