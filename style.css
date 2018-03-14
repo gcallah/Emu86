@@ -124,14 +124,12 @@ h4 {
     font-size: 1.8em;
     margin: 1em 2em .75em 2em;
     color: #339;
-    font-weight: bold;
 }
 
 h5 {
     font-size: 1.6em;
     margin: 1em 2em .75em 2em;
-    color: #366;
-    font-weight: bold;
+    color: #488;
 }
 
 #header {
@@ -304,7 +302,7 @@ i, span {
 #sidebar {
     min-width: 300px;
     max-width: 300px;
-    background: #699;
+    background: #488;
     color: #fff;
     transition: all 0.3s;
 }
