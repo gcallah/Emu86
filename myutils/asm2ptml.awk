@@ -2,6 +2,7 @@
 # this file processes asm files to turn them into ptml files
 
 BEGIN {
+    in_comments = 1
     error = 0
     if (ARGC < 2) {
         print "Must pass file to process" > "/dev/stderr"
@@ -26,8 +27,6 @@ BEGIN {
     print "            <h1>"
     print "            " title
     print "            </h1>"
-    print "            <pre>"
-    print "            <code>"
 }
 
 END {
@@ -43,14 +42,22 @@ END {
 
 /^;/ {
     sub(/; /, "")
-    print "            </code>"
-    print "            </pre>"
+    if(!in_comments) {
+        in_comments = 1
+        print "            </code>"
+        print "            </pre>"
+    }
     print "            <p>"
     print
     print "            </p>"
-    print "            <pre>"
-    print "            <code>"
     next
 }
 
-{ print }
+{ 
+    if(in_comments) {
+        in_comments = 0
+        print "            <pre>"
+        print "            <code>"
+    }
+    print
+}
