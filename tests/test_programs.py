@@ -15,7 +15,10 @@ NUM_TESTS=1000
 
 """
 Test entire programs.
+
+tests/arithmetic_shift.asm  tests/data.asm  tests/gt.asm  tests/key_test.asm  tests/loop.asm  tests/power.asm  tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
 """
+
 class TestPrograms(TestCase):
 
     def read_test_code(self, filenm):
@@ -72,7 +75,20 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["ECX"], 8)
         self.assertEqual(vmachine.registers["EDX"], 8)
         self.assertEqual(vmachine.memory["4"], 4)
-       
+
+    def test_jump(self):
+        vmachine.re_init()
+        test_code = self.read_test_code("tests/test_jump.asm")
+        assemble(test_code, vmachine)
+        self.assertEqual(vmachine.registers["EAX"], 3)
+
+    def test_data(self):
+        vmachine.re_init()
+        test_code = self.read_test_code("tests/data.asm")
+        assemble(test_code, vmachine)
+        self.assertEqual(vmachine.registers["EAX"],  8)
+        self.assertEqual(vmachine.registers["EBX"], 16)
+        self.assertEqual(vmachine.registers["ECX"], 32)
         
 if __name__ == '__main__':
     main()
