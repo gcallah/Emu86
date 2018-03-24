@@ -11,7 +11,7 @@ from assembler.tokens import MAX_INT, MIN_INT
 
 FIRST_INST_ADDRESS = 1
 # Edge case (yet to deal with): for the below instructions,
-#  jumping around the 1000th instruction.
+# jumping around the 1000th instruction.
 NUM_TESTS = 100
 NO_OP = "mov eax, eax\n"
 TEST_LABEL = "test_label"
@@ -26,10 +26,10 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-            vmachine.labels["test_label"] = label_loc
+            label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_addr
             assemble("jmp test_label", vmachine)
-            self.assertEqual(vmachine.get_ip(), label_loc)
+            self.assertEqual(vmachine.get_ip(), label_addr)
 
 
     def test_je(self):
@@ -38,13 +38,13 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-            vmachine.labels["test_label"] = label_loc
+            label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_addr
             zero_flag = random.getrandbits(1)
             vmachine.flags["ZF"] = zero_flag
             assemble("je test_label", vmachine)
             if(zero_flag):
-                self.assertEqual(vmachine.get_ip(), label_loc)
+                self.assertEqual(vmachine.get_ip(), label_addr)
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
 
@@ -54,13 +54,13 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-            vmachine.labels["test_label"] = label_loc
+            label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_addr
             zero_flag = random.getrandbits(1)
             vmachine.flags["ZF"] = zero_flag
             assemble("jne test_label", vmachine)
             if(not zero_flag):
-                self.assertEqual(vmachine.get_ip(), label_loc)
+                self.assertEqual(vmachine.get_ip(), label_addr)
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
 
@@ -70,15 +70,15 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
           vmachine.re_init()
-          label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-          vmachine.labels["test_label"] = label_loc
+          label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+          vmachine.labels["test_label"] = label_addr
           sign_flag = random.getrandbits(1)
           zero_flag = random.getrandbits(1)
           vmachine.flags["SF"] = sign_flag
           vmachine.flags["ZF"] = zero_flag
           assemble("jg test_label", vmachine)
           if((not zero_flag) and (not sign_flag)):
-            self.assertEqual(vmachine.get_ip(), label_loc)
+            self.assertEqual(vmachine.get_ip(), label_addr)
           else:
             self.assertEqual(vmachine.get_ip(), 1)
        
@@ -88,13 +88,13 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
           vmachine.re_init()
-          label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-          vmachine.labels["test_label"] = label_loc
+          label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+          vmachine.labels["test_label"] = label_addr
           sign_flag = random.getrandbits(1)
           vmachine.flags["SF"] = sign_flag
           assemble("jge test_label", vmachine)
           if(not sign_flag):
-            self.assertEqual(vmachine.get_ip(), label_loc)
+            self.assertEqual(vmachine.get_ip(), label_addr)
           else:
             self.assertEqual(vmachine.get_ip(), 1)
 
@@ -105,13 +105,13 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-            vmachine.labels["test_label"] = label_loc
+            label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
             vmachine.flags["SF"] = sign_flag
             assemble("jl test_label", vmachine)
             if(sign_flag):
-                self.assertEqual(vmachine.get_ip(), label_loc)
+                self.assertEqual(vmachine.get_ip(), label_addr)
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
 
@@ -121,42 +121,43 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             vmachine.re_init()
-            label_loc = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
-            vmachine.labels["test_label"] = label_loc
+            label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
+            vmachine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
             zero_flag = random.getrandbits(1)
             vmachine.flags["SF"] = sign_flag
             vmachine.flags["ZF"] = zero_flag
             assemble("jle test_label", vmachine)
             if(zero_flag or sign_flag):
-                self.assertEqual(vmachine.get_ip(), label_loc)
+                self.assertEqual(vmachine.get_ip(), label_addr)
             else:
                 self.assertEqual(vmachine.get_ip(), 1)
 
-#    def test_call(self):
-#        """
-#        Tests call by both checking it jumped correctly and pushed correctly. 
-#        """
-#        for i in range(NUM_TESTS):
-#            vmachine.re_init()
-#            call_instr_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
-#            label_loc = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
-#
-#            # At the time of writing this test, blank lines are skipped by the tokenizer.
-#            # In order to have emu jump to the location of label_loc, we have to make
-#            # no-op lines to assign the correct locations to the lines we test.
-#            instructions = [NO_OP] * (MAX_INSTRUCTIONS + 1)
-#
-#            instructions[call_instr_addr] = "call " + TEST_LABEL + "\n"
-#            instructions[label_loc] = TEST_LABEL + ": " + instructions[label_loc]
-#
-#            vmachine.labels[TEST_LABEL] = label_loc
-#            vmachine.set_ip(call_instr_addr)
-#
-#            assemble("".join(instructions), vmachine, True)
-#
-#            self.assertEqual(vmachine.get_ip(), label_loc)
-#            self.assertEqual(vmachine.stack[str(STACK_TOP)], call_instr_addr+1)
+    def test_call(self):
+        """
+        Tests call by both checking it jumped correctly and pushed correctly. 
+
+        At the time of writing this test, blank lines are skipped by the tokenizer.
+        In order to have emu jump to the location of label_addr, we have to make
+        no-op lines to assign the correct locations to the lines we test.
+        """
+        for i in range(NUM_TESTS):
+            vmachine.re_init()
+            call_instr_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
+            label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
+
+            code_to_run = [NO_OP] * (MAX_INSTRUCTIONS + 1)
+
+            code_to_run[call_instr_addr] = "call " + TEST_LABEL + "\n"
+            code_to_run[label_addr] = TEST_LABEL + ": " + code_to_run[label_addr]
+
+            vmachine.labels[TEST_LABEL] = label_addr
+            vmachine.set_ip(call_instr_addr)
+
+            assemble("".join(code_to_run), vmachine, True)
+
+            self.assertEqual(vmachine.get_ip(), label_addr)
+            self.assertEqual(vmachine.stack[str(STACK_TOP)], call_instr_addr+1)
 
 if __name__ == '__main__':
     main()
