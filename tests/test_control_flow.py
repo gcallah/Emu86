@@ -147,17 +147,16 @@ class TestControlFlow(TestCase):
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
 
             code_to_run = [NO_OP] * (MAX_INSTRUCTIONS + 1)
-
             code_to_run[call_instr_addr] = "call " + TEST_LABEL + "\n"
             code_to_run[label_addr] = TEST_LABEL + ": " + code_to_run[label_addr]
 
             vmachine.labels[TEST_LABEL] = label_addr
             vmachine.set_ip(call_instr_addr)
 
-            assemble("".join(code_to_run), vmachine, True)
+            # We step once through the code, executing only `call`.
+            assemble("".join(code_to_run), vmachine, step=True)
 
             self.assertEqual(vmachine.get_ip(), label_addr)
-            self.assertEqual(vmachine.stack[str(STACK_TOP)], call_instr_addr+1)
 
 if __name__ == '__main__':
     main()
