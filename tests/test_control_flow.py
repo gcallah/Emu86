@@ -21,7 +21,7 @@ class TestControlFlow(TestCase):
 
     def test_jmp(self):
         """
-        Jump to a random location from 0 to MAX_INSTRUCTIONS.
+        Jump to a random location from 1 to MAX_INSTRUCTIONS.
         Assert IP is set to that location by jump.
         """
         for i in range(NUM_TESTS):
@@ -135,7 +135,7 @@ class TestControlFlow(TestCase):
 
     def test_call(self):
         """
-        Tests call by both checking it jumped correctly and pushed correctly. 
+        Tests call. 
 
         At the time of writing this test, blank lines are skipped by the tokenizer.
         In order to have emu jump to the location of label_addr, we have to make
