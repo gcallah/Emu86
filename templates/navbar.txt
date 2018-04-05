@@ -39,6 +39,11 @@
             </a>
             <ul class="collapse list-unstyled nested" id="documentSubmenu">
                 <li>
+                    <a href="help.html">
+                        Language Description
+                    </a>
+                </li>
+                <li>
                     <a href="EmuPresent.html">
                         Emu86 Presentation
                     </a>
@@ -73,6 +78,13 @@
                     </a>
                 </li>
             </ul>
+        </li>
+
+        <li>
+            <a href="https://github.com/gcallah/Emu86">
+                <i class="glyphicon glyphicon-list-alt"></i>
+                Source Code
+            </a>
         </li>
     </ul>
 </nav>
