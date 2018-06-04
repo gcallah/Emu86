@@ -1,8 +1,8 @@
 ; First comes the data section, where we declare some names.
 .data
-    x: .byte 8
-    y: .short 16
-    z: .long 32
+    x DB 8
+    y DW 16
+    z DD 32
 
 ; Next is the .text section, where we use them:
 .text

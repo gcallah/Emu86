@@ -209,7 +209,7 @@ def parse_data_section(lines, vm):
             place 'value' in 'var' with data type 'data_type'.
         </descr>
     """
-    global label_match
+    global sym_match
     symbol = ""
     dsize = 0
     for line in lines:
@@ -219,9 +219,9 @@ def parse_data_section(lines, vm):
         (token, code_pos) = get_token(line, code_pos)
         # symbols in the data section look like labels 
         # in the text section, so:
-        label_present = re.search(label_match, token)
-        if label_present is not None:
-            symbol = label_present.group(1)
+        symbol_present = re.search(sym_match, token)
+        if symbol_present is not None:
+            symbol = symbol_present.group(1)
         else:
             raise InvalidVarDeclaration(token)
 
@@ -297,8 +297,8 @@ def lex(code, vm):
             add_debug("Setting label " + label + " to val " + str(i), vm)
             vm.labels[label] = i
             # now strip off the label:
-            line = line.split(":", 1)[-1]
-
+            line = line.split (":", 1)[-1]
+            
         pre_processed_lines.append(line)
         # we count line numbers to store label jump locations:
         i += 1
