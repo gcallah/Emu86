@@ -79,9 +79,9 @@ instructions = {
 BYTES = 0
 MAX_VAL = 1
 dtype_info = {
-    ".byte": (1, MAX_BYTE),
-    ".short": (MEM_SIZE / 16, MAX_SHORT),   # we should revisit this choice
-    ".long": (MEM_SIZE / 8, MAX_LONG)
+    "DB": (1, MAX_BYTE),
+    "DW": (MEM_SIZE / 16, MAX_SHORT),   # we should revisit this choice
+    "DD": (MEM_SIZE / 8, MAX_LONG)
 }
 
 def add_debug(s, vm):
@@ -191,7 +191,7 @@ def parse_data_section(lines, vm):
     """
     Parses the lines in the data section.
     The syntax is:
-    var_name: .data_type value
+    var_name data_type value
     Multi-line declarations are not available yet.
     Args:
         lines: The lines containing the declarations.
@@ -202,12 +202,11 @@ def parse_data_section(lines, vm):
              .data
         </instr>
         <syntax>
-            var: .data_type value 
+            var data_type value 
         </syntax>
         <descr>
             After finding .data on a line, the parser will
-            place 'value' in 'var' with data type '.data_type'.
-            The data_type is not used at the moment.
+            place 'value' in 'var' with data type 'data_type'.
         </descr>
     """
     global label_match
