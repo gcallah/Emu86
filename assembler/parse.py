@@ -4,6 +4,7 @@ parse.py: creates parse tree.
 
 import re
 import pdb
+from random import randrange
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType
@@ -27,6 +28,13 @@ DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
+
+DONT_INIT = "?"
+
+MAX_BYTE = 255
+MAX_SHORT = 65535
+MAX_LONG = 4294967295
+
 
 je = Je('JE')
 jne = Jne('JNE')
@@ -68,10 +76,12 @@ instructions = {
         'NEG': Neg('NEG'),
         }
 
-dtype_size = {
-    ".byte": 1,
-    ".short": MEM_SIZE / 16,
-    ".long": MEM_SIZE / 8,
+BYTES = 0
+MAX_VAL = 1
+dtype_info = {
+    ".byte": (1, MAX_BYTE),
+    ".short": (MEM_SIZE / 16, MAX_SHORT),   # we should revisit this choice
+    ".long": (MEM_SIZE / 8, MAX_LONG)
 }
 
 def add_debug(s, vm):
@@ -217,20 +227,24 @@ def parse_data_section(lines, vm):
             raise InvalidVarDeclaration(token)
 
 # data type (not yet used):
-        (token, code_pos) = get_token(line, code_pos)
+        (data_type, code_pos) = get_token(line, code_pos)
         try:
-            dsize = dtype_size[token]
+            dsize = dtype_info[data_type][BYTES]
         except KeyError:
-            raise InvalidDataType(token)
+            raise InvalidDataType(date_type)
 
 # value
-        (token, code_pos) = get_token(line, code_pos)
+        (val, code_pos) = get_token(line, code_pos)
         add_debug("Setting symbol " + symbol + " to val " + token, vm)
-        try:
-            vm.symbols[symbol] = int(token)
+        if (val == DONT_INIT):
+            vm.symbols[symbol] = randrange (0, dtype_info[data_type][MAX_VAL])
             add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
-        except Exception:
-            raise InvalidDataVal(token)
+        else: 
+            try:
+                vm.symbols[symbol] = int(val)
+                add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
+            except Exception:
+                raise InvalidDataVal(val)
 
 def lex(code, vm):
     """
