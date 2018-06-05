@@ -262,6 +262,16 @@ def parse_data_section(lines, vm):
 # value
         (val, code_pos) = get_token_array(line, code_pos)
         add_debug("Setting symbol " + symbol + " to val " + val, vm)
+        if val.find("'") != -1:
+            begin_index = val.find("'")
+            end_index = val.find("'", begin_index + 1)
+            val_string = ""
+            for index in range(begin_index + 1, end_index):
+                val_string += str(ord(val[index]))
+                if (index != end_index - 1):
+                    val_string += ","
+            val_string += val[end_index + 1:]
+            val = val_string
         if (val.find(",") != -1 or val.find("DUP") != -1): 
             vm.symbols[symbol] = []
             if (val.find(",") != -1):
@@ -270,7 +280,7 @@ def parse_data_section(lines, vm):
                 while (comma < val.count(",") + 1):
                     second_index = val.find(",", first_index)
                     if (second_index == -1):
-                        second_index = len (val)
+                        second_index = len(val)
                     if (val[first_index:second_index] == DONT_INIT):
                         vm.symbols[symbol].append(randrange(0, dtype_info[data_type][MAX_VAL]))
                     else: 
