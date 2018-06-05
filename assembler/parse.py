@@ -118,15 +118,15 @@ def get_token(code, code_pos):
             code_pos += count
     return (token, code_pos)
 
-def get_token_array(code, code_pos):
+def get_string_values(code, code_pos):
     """
         Gets the next token.
         Args:
             The string of code, set to current pos.
         Returns:
-            The next token from string.
+            The string values after symbol.
     """
-    token = ''
+    values = ''
     if code_pos <= len(code):
         count = 0
         for char in code[code_pos:]:  # eat leading delimiters
@@ -141,9 +141,9 @@ def get_token_array(code, code_pos):
             for char in code[code_pos:]:
                 count += 1
                 if char not in DELINSIDERS:
-                    token = token + char
+                    values = values + char
             code_pos += count
-    return (token, code_pos)
+    return (values, code_pos)
 
 def get_op(token, vm):
     """
@@ -223,6 +223,56 @@ def get_ops(code, code_pos, vm):
 
     return (ops, code_pos)
 
+def convert_string_to_ascii (values):
+    """
+    Converts a string into a string of its ASCII values
+    """
+    if values.find("'") != -1:
+        val_string = ""
+        begin_index = values.find("'")
+        end_index = values.find("'", begin_index + 1)
+        for index in range(begin_index + 1, end_index):
+            val_string += str(ord(values[index]))
+            if index != end_index - 1:
+                val_string += ","
+        val_string += values[end_index + 1:]
+        values = val_string
+    return values
+
+def store_values_array (values, data_type):
+    """
+    Returns the array of data
+    """
+    if values.find(",") != -1:
+        values_list = values.split(",")
+        for index in range(len(values_list)):
+            if values_list[index] == DONT_INIT:
+                values_list[index] = randrange(0, dtype_info[data_type]
+                                                            [MAX_VAL])
+            else: 
+                try:
+                    values_list[index] = int(values_list[index])
+                except Exception:
+                    raise InvalidDataVal(values)
+        return values_list
+    else:
+        try:
+            values_list = []
+            count = int(values[:values.find("DUP")])
+            for counter in range(count):
+                if values[values.find("(") + 1:
+                          values.find(")")] == DONT_INIT:
+                    values_list.append(randrange(0, 
+                                       dtype_info[data_type][MAX_VAL]))
+                else:
+                    try:
+                        values_list.append(int(values[values.find("(") + 1:
+                                                      values.find(")")]))
+                    except Exception:
+                        raise InvalidDataVal(values)
+            return values_list
+        except Exception:
+            raise InvalidDataVal(values)
 
 def parse_data_section(lines, vm):
     """
@@ -270,49 +320,18 @@ def parse_data_section(lines, vm):
             raise InvalidDataType(date_type)
 
 # value
-        (val, code_pos) = get_token_array(line, code_pos)
+        (val, code_pos) = get_string_values(line, code_pos)
         add_debug("Setting symbol " + symbol + " to val " + val, vm)
-        if val.find("'") != -1:
-            begin_index = val.find("'")
-            end_index = val.find("'", begin_index + 1)
-            val_string = val[:begin_index]
-            for index in range(begin_index + 1, end_index):
-                val_string += str(ord(val[index]))
-                if index != end_index - 1:
-                    val_string += ","
-            val_string += val[end_index + 1:]
-            val = val_string
-        if val.find(",") != -1 or val.find("DUP") != -1: 
-            if val.find(",") != -1:
-                values_list = val.split(",")
-                for index in range(len(values_list)):
-                    if values_list[index] == DONT_INIT:
-                        values_list[index] = randrange(0, dtype_info[data_type][MAX_VAL])
-                    else: 
-                        try:
-                            values_list[index] = int(values_list[index])
-                        except Exception:
-                            raise InvalidDataVal(val)
-                vm.symbols[symbol] = values_list
-            else:
-                try:
-                    values_list = []
-                    count = int(val[:val.find("DUP")])
-                    for counter in range(count):
-                        if val[val.find("(") + 1:val.find(")")] == DONT_INIT:
-                            values_list.append(randrange(0, dtype_info[data_type][MAX_VAL]))
-                        else:
-                            try:
-                                values_list.append(int(val[val.find("(") + 1:val.find(")")]))
-                            except Exception:
-                                raise InvalidDataVal(val)
-                    vm.symbols[symbol] = values_list
-                except Exception:
-                    raise InvalidDataVal(val)
+        # if val contains a string word
+        # update val's sring word to be
+        # the ASCII version of the word
+        val = convert_string_to_ascii (val);
+        if val.find (",") != -1 or val.find ("DUP") != -1:
+            vm.symbols[symbol] = store_values_array (val, data_type)  
             debug_string = "Symbol table now holds "
             for int_values in vm.symbols[symbol]:
                 debug_string += str(int_values) + ","
-            add_debug(debug_string, vm)
+            add_debug(debug_string, vm)  
         else:
             if val == DONT_INIT:
                 vm.symbols[symbol] = randrange(0, dtype_info[data_type][MAX_VAL])
