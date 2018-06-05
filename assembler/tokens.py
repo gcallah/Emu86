@@ -173,7 +173,7 @@ class Symbol(Location):
     """
     Class to hold symbols such as variable names.
     """
-    def __init__(self, name, vm, index = 0):
+    def __init__(self, name, vm, index = None):
         super().__init__(name, vm)
         self.vm = vm
         self.check_nm()
@@ -183,13 +183,21 @@ class Symbol(Location):
         if self.name not in self.vm.symbols:
             raise UnknownName(self.name)
 
-    def set_val(self, val, index = 0):
+    def set_val(self, val, index = None):
         self.check_nm()
-        self.vm.symbols[self.name][index] = val
+        if index == None:
+            self.vm.symbols[self.name] = val
+        else:
+            self.vm.symbols[self.name][index] = val
 
     def get_val(self):
         self.check_nm()
-        if (self.index == 0):
+        if self.index == None:
+            add_debug("Symbol " + self.name + " = "
+                      + str(self.vm.symbols[self.name]),
+                      self.vm)
+            return self.vm.symbols[self.name]
+        elif self.index == 0:
             add_debug("Symbol " + self.name + " = "
                       + str(self.vm.symbols[self.name][self.index]),
                       self.vm)
