@@ -28,6 +28,7 @@ DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
 DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
+DELINSIDERS = set([' ', '\n', '\r', '\t',])
 
 DONT_INIT = "?"
 
@@ -117,6 +118,32 @@ def get_token(code, code_pos):
             code_pos += count
     return (token, code_pos)
 
+def get_token_array(code, code_pos):
+    """
+        Gets the next token.
+        Args:
+            The string of code, set to current pos.
+        Returns:
+            The next token from string.
+    """
+    token = ''
+    if code_pos <= len(code):
+        count = 0
+        for char in code[code_pos:]:  # eat leading delimiters
+            if char in DELIMITERS:
+                count += 1
+            else:
+                break
+        code_pos += count
+
+        if code_pos <= len(code):
+            count = 0
+            for char in code[code_pos:]:
+                count += 1
+                if char not in DELINSIDERS:
+                    token = token + char
+            code_pos += count
+    return (token, code_pos)
 
 def get_op(token, vm):
     """
@@ -233,17 +260,40 @@ def parse_data_section(lines, vm):
             raise InvalidDataType(date_type)
 
 # value
-        (val, code_pos) = get_token(line, code_pos)
-        add_debug("Setting symbol " + symbol + " to val " + token, vm)
-        if (val == DONT_INIT):
-            vm.symbols[symbol] = randrange (0, dtype_info[data_type][MAX_VAL])
-            add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
-        else: 
-            try:
-                vm.symbols[symbol] = int(val)
+        (val, code_pos) = get_token_array(line, code_pos)
+        add_debug("Setting symbol " + symbol + " to val " + val, vm)
+        if (val.find(",") != -1): 
+            vm.symbols[symbol] = []
+            comma = 0
+            first_index = 0
+            while (comma < val.count(",") + 1):
+                second_index = val.find(",", first_index)
+                if (second_index == -1):
+                    second_index = len (val)
+                if (val[first_index:second_index] == DONT_INIT):
+                    vm.symbols[symbol].append(randrange(0, dtype_info[data_type][MAX_VAL]))
+                else: 
+                    add_debug (val[first_index:second_index], vm)
+                    try:
+                        vm.symbols[symbol].append(int(val[first_index:second_index]))
+                    except Exception:
+                        raise InvalidDataVal(val)
+                first_index = second_index + 1
+                comma += 1
+            debug_string = "Symbol table now holds "
+            for int_values in vm.symbols[symbol]:
+                debug_string += str (int_values) + ","
+            add_debug(debug_string, vm)
+        else:
+            if (val == DONT_INIT):
+                vm.symbols[symbol] = randrange (0, dtype_info[data_type][MAX_VAL])
                 add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
-            except Exception:
-                raise InvalidDataVal(val)
+            else: 
+                try:
+                    vm.symbols[symbol] = int(val)
+                    add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
+                except Exception:
+                    raise InvalidDataVal(val)
 
 def lex(code, vm):
     """
