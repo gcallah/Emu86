@@ -190,8 +190,11 @@ class Symbol(Location):
     def get_val(self):
         self.check_nm()
         if (self.index == 0):
-            add_debug("Symbol " + self.name + " = " + str(self.vm.symbols[self.name][self.index]), self.vm)
+            add_debug("Symbol " + self.name + " = "
+                      + str(self.vm.symbols[self.name][self.index]),
+                      self.vm)
         else:
-            add_debug("Symbol " + self.name + "[" + str(self.index) + "] = " + 
-                str(self.vm.symbols[self.name][self.index]), self.vm)
+            add_debug("Symbol " + self.name + "["
+                      + str(self.index) + "] = " + 
+                      str(self.vm.symbols[self.name][self.index]), self.vm)
         return self.vm.symbols[self.name][self.index]
