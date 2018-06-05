@@ -262,45 +262,41 @@ def parse_data_section(lines, vm):
 # value
         (val, code_pos) = get_token_array(line, code_pos)
         add_debug("Setting symbol " + symbol + " to val " + val, vm)
-        if val.find("'") != -1:
+        while val.find("'") != -1:
             begin_index = val.find("'")
             end_index = val.find("'", begin_index + 1)
-            val_string = ""
+            val_string = val[:begin_index]
             for index in range(begin_index + 1, end_index):
                 val_string += str(ord(val[index]))
-                if (index != end_index - 1):
+                if index != end_index - 1:
                     val_string += ","
             val_string += val[end_index + 1:]
             val = val_string
-        if (val.find(",") != -1 or val.find("DUP") != -1): 
-            vm.symbols[symbol] = []
-            if (val.find(",") != -1):
-                comma = 0
-                first_index = 0
-                while (comma < val.count(",") + 1):
-                    second_index = val.find(",", first_index)
-                    if (second_index == -1):
-                        second_index = len(val)
-                    if (val[first_index:second_index] == DONT_INIT):
-                        vm.symbols[symbol].append(randrange(0, dtype_info[data_type][MAX_VAL]))
+        if val.find(",") != -1 or val.find("DUP") != -1: 
+            if val.find(",") != -1:
+                values_list = val.split(",")
+                for index in range(len(values_list)):
+                    if values_list[index] == DONT_INIT:
+                        values_list[index] = randrange(0, dtype_info[data_type][MAX_VAL])
                     else: 
                         try:
-                            vm.symbols[symbol].append(int(val[first_index:second_index]))
+                            values_list[index] = int(values_list[index])
                         except Exception:
                             raise InvalidDataVal(val)
-                    first_index = second_index + 1
-                    comma += 1
+                vm.symbols[symbol] = values_list
             else:
                 try:
+                    values_list = []
                     count = int(val[:val.find("DUP")])
                     for counter in range(count):
                         if val[val.find("(") + 1:val.find(")")] == DONT_INIT:
-                            vm.symbols[symbol].append(randrange(0, dtype_info[data_type][MAX_VAL]))
+                            values_list.append(randrange(0, dtype_info[data_type][MAX_VAL]))
                         else:
                             try:
-                                vm.symbols[symbol].append(int(val[val.find("(") + 1:val.find(")")]))
+                                values_list.append(int(val[val.find("(") + 1:val.find(")")]))
                             except Exception:
                                 raise InvalidDataVal(val)
+                    vm.symbols[symbol] = values_list
                 except Exception:
                     raise InvalidDataVal(val)
             debug_string = "Symbol table now holds "
@@ -308,8 +304,8 @@ def parse_data_section(lines, vm):
                 debug_string += str(int_values) + ","
             add_debug(debug_string, vm)
         else:
-            if (val == DONT_INIT):
-                vm.symbols[symbol] = randrange (0, dtype_info[data_type][MAX_VAL])
+            if val == DONT_INIT:
+                vm.symbols[symbol] = randrange(0, dtype_info[data_type][MAX_VAL])
                 add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
             else: 
                 try:
