@@ -169,6 +169,11 @@ def get_op(token, vm):
             return RegAddress(address.upper(), vm)
         else:
             raise InvalidMemLoc(address)
+    elif re.search (sym_match, token[0]) is not None and token[len(token) - 1] == ']':
+        locate_bracket = token.find("[")
+        add_debug("Matched a symbol-type token " + token[0] + "[" + 
+            token[locate_bracket + 1:len(token) - 1] + "]", vm)
+        return Symbol (token[0], vm, int (token[locate_bracket + 1:len(token) - 1]))
     elif re.search(sym_match, token) is not None:
         add_debug("Matched a symbol-type token " + token, vm)
         if token in vm.labels:
@@ -262,7 +267,7 @@ def parse_data_section(lines, vm):
 # value
         (val, code_pos) = get_token_array(line, code_pos)
         add_debug("Setting symbol " + symbol + " to val " + val, vm)
-        while val.find("'") != -1:
+        if val.find("'") != -1:
             begin_index = val.find("'")
             end_index = val.find("'", begin_index + 1)
             val_string = val[:begin_index]
