@@ -106,5 +106,10 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["EDX"], 2)
         self.assertEqual(vmachine.registers["EBX"], 5)
 
+    def test_log(self):
+        self.run_test_code("tests/log.asm")
+        self.assertEqual(vmachine.registers["EAX"], 1024)
+        self.assertEqual(vmachine.registers["ECX"], 9)
+        
 if __name__ == '__main__':
     main()
