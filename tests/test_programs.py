@@ -86,5 +86,24 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["ECX"], ord ('l'))
         self.assertEqual(vmachine.registers["EDX"], 5)
 
+    def test_sum_calculation(self):
+        self.run_test_code("tests/sum_test.asm")
+        self.assertEqual(vmachine.registers["EAX"],  53)
+        self.assertEqual(vmachine.symbols["sum"], 53)
+
+    def test_arithmetic_expression(self):
+        self.run_test_code("tests/arithmetic_expression.asm")
+        self.assertEqual(vmachine.registers["EAX"],  -31)
+        self.assertEqual(vmachine.registers["EBX"],  52)
+
+    def test_area(self):
+        self.run_test_code("tests/area.asm")
+        self.assertEqual(vmachine.registers["EAX"],  35 * 27)
+
+    def test_celsius_conversion(self):
+        self.run_test_code("tests/cel_to_fah.asm")
+        self.assertEqual(vmachine.registers["EAX"], 95)
+        self.assertEqual(vmachine.registers["EBX"], 5)
+
 if __name__ == '__main__':
     main()
