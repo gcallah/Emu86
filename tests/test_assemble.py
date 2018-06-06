@@ -139,7 +139,7 @@ class AssembleTestCase(TestCase):
             vmachine.registers["EBX"] = b
             assemble("idiv ebx", vmachine)
             self.assertEqual(vmachine.registers["EAX"], correct_quotient)
-            self.assertEqual(vmachine.registers["EBX"], correct_remainder)
+            self.assertEqual(vmachine.registers["EDX"], correct_remainder)
 
     def test_cmp_eq(self):
         vmachine.registers["EAX"] = 1
