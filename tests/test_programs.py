@@ -110,6 +110,13 @@ class TestPrograms(TestCase):
         self.run_test_code("tests/log.asm")
         self.assertEqual(vmachine.registers["EAX"], 1024)
         self.assertEqual(vmachine.registers["ECX"], 9)
+
+    def test_mem_register(self):
+        self.run_test_code("tests/mem_register_test.asm")
+        self.assertEqual(vmachine.registers["EAX"], 6)
+        self.assertEqual(vmachine.memory["6"], 3)
+        self.assertEqual(vmachine.memory["8"], 8)
+        self.assertEqual(vmachine.memory["0"], 50)
         
 if __name__ == '__main__':
     main()
