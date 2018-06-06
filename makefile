@@ -1,5 +1,6 @@
 # Need to export as ENV var
 export TEMPLATE_DIR = templates
+export QUIZ_DIR = templates
 
 PTML_DIR = html_src
 ADIR = ansible
