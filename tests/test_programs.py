@@ -103,6 +103,7 @@ class TestPrograms(TestCase):
     def test_celsius_conversion(self):
         self.run_test_code("tests/cel_to_fah.asm")
         self.assertEqual(vmachine.registers["EAX"], 95)
+        self.assertEqual(vmachine.registers["EDX"], 2)
         self.assertEqual(vmachine.registers["EBX"], 5)
 
 if __name__ == '__main__':
