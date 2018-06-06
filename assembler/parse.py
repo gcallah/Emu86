@@ -39,6 +39,8 @@ MAX_LONG = 4294967295
 
 je = Je('JE')
 jne = Jne('JNE')
+jg = Jg ('JG')
+jl = Jl ('JL')
 instructions = {
         # interrupts:
         'INT': Interrupt('INT'),
@@ -50,9 +52,12 @@ instructions = {
         # the next two instructions are just synonyms for the previous two.
         'JZ': je,
         'JNZ': jne,
-        'JG': Jg('JG'),
+        jg.get_nm(): jg,
+        jl.get_nm(): jl,
+        # JNLE synonymous to JG, JNGE synonymous to JL
+        'JNLE': jg,
+        'JNGE': jl,
         'JGE': Jge('JGE'),
-        'JL': Jl('JL'),
         'JLE': Jle('JLE'),
         'CALL': Call('CALL'),
         'RET' : Ret('RET'),
@@ -167,6 +172,17 @@ def get_op(token, vm):
             return Address(address, vm)
         elif address.upper() in vm.registers:
             return RegAddress(address.upper(), vm)
+        elif address.find("+") != -1:
+            plus_location = address.find("+")
+            first_param = address[:plus_location]
+            second_param = address[plus_location + 1:]
+            if first_param.upper() in vm.registers: 
+                try:
+                    placement = int(second_param)
+                    return RegAddress (first_param.upper(), vm, 
+                                       int (second_param))
+                except:
+                    raise InvalidMemLoc(address)
         else:
             raise InvalidMemLoc(address)
     elif (re.search (sym_match, token[0]) is not None 

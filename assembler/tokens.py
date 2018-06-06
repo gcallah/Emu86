@@ -105,13 +105,16 @@ class Address(Location):
 
 
 class RegAddress(Address):
-    def __init__(self, name, vm, val=0):
+    def __init__(self, name, vm, displacement = 0, val=0):
         super().__init__(name, vm, val)
         self.regs = vm.registers
+        self.displacement = displacement
 
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
         address = str(self.regs[self.name])
+        if self.displacement != 0:
+            address = str(int(self.regs[self.name]) + self.displacement)
         if address in self.mem:
             return address
         else:
