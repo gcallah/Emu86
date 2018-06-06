@@ -84,6 +84,13 @@
 
                 <li>
                     <a
+                        href="https://github.com/gcallah/Emu86/blob/master/tests/mem_register_test.asm">
+                        Store values into memory using register arithmetic
+                    </a>
+                </li>
+
+                <li>
+                    <a
                         href="https://github.com/gcallah/Emu86/blob/master/tests/array.asm">
                         Declare an array
                     </a>
