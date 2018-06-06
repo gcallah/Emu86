@@ -121,15 +121,14 @@
             
             <ul class="nested">
             <li>
-                        var: .data_type value 
+                        var data_type value 
             </li>
             </ul>
             <h5>Description</h5>
             
             <p>
                         After finding .data on a line, the parser will
-                        place 'value' in 'var' with data type '.data_type'.
-                        The data_type is not used at the moment.
+                        place 'value' in 'var' with data type 'data_type'.
             </p>
                     </details>
             
