@@ -43,6 +43,7 @@ website: $(INCS) $(HTML_FILES) help
 
 # build instruction help material from python source:
 help: $(SRCS) samples
+	python3 write_sample_programs.py
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
 	$(EXTR) <$(SDIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
 	$(EXTR) <$(SDIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
