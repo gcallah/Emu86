@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            Emu86 Assembly Language Emulator
+            mem_register_test.asm
         </title>
     </head>
 
@@ -159,36 +159,33 @@
     </ul>
 </nav>
             <div id="content">
-
-                <h1 class="home">
-                    Emu86 Assembly Language Emulator
-                </h1>
-        
-                    <figure>
-                        <img src="graphics/logo.png" width="28%">
-                        <figcaption>
-                        </figcaption>
-                    </figure>
-
-                    <p>
-                        Emu86 is a browser-based interpreter for x86 assembly
-                        language written in Python, using the Django framework.
-                        It allows code-stepping, displays registers, flags,
-                        memory, and the stack, and provides online help for all
-                        instructions. It is intended as a learning tool for
-                        introducing students to assembler.
-                    </p>
-
-            <hr>
-            <h5>
-                Sources
-            </h5>
-            <p class="sources">
-                Emu graphic:
-                https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tasmanian_Emu.jpg/440px-Tasmanian_Emu.jpg)
+            <h1>
+            mem_register_test.asm
+            </h1>
+            <p>
+Declaring names   
             </p>
+            <pre>
+            <code>
+    .data
+        x DB 1, 2, 3, 4, 5
+        y DW 2, 54, 32, 8
+        z DD 10 DUP (50)
+            </code>
+            </pre>
+            <p>
+Storing values into memory
+            </p>
+            <pre>
+            <code>
+    .text
+        mov eax, 6
+        mov [eax], x[2]
+        mov [eax+2], y[3]
+        mov [ebx], z
+            </code>
+            </pre>
             </div>
         </div>
-
     </body>
 </html>

@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            Emu86 Assembly Language Emulator
+            cel_to_fah.asm
         </title>
     </head>
 
@@ -159,36 +159,32 @@
     </ul>
 </nav>
             <div id="content">
-
-                <h1 class="home">
-                    Emu86 Assembly Language Emulator
-                </h1>
-        
-                    <figure>
-                        <img src="graphics/logo.png" width="28%">
-                        <figcaption>
-                        </figcaption>
-                    </figure>
-
-                    <p>
-                        Emu86 is a browser-based interpreter for x86 assembly
-                        language written in Python, using the Django framework.
-                        It allows code-stepping, displays registers, flags,
-                        memory, and the stack, and provides online help for all
-                        instructions. It is intended as a learning tool for
-                        introducing students to assembler.
-                    </p>
-
-            <hr>
-            <h5>
-                Sources
-            </h5>
-            <p class="sources">
-                Emu graphic:
-                https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tasmanian_Emu.jpg/440px-Tasmanian_Emu.jpg)
+            <h1>
+            cel_to_fah.asm
+            </h1>
+            <pre>
+            <code>
+    .data
+        cTemp DW 35
+        fTemp DW ?
+            </code>
+            </pre>
+            <p>
+    Convert from Celsius to Fahrenheit
             </p>
+            <pre>
+            <code>
+    .text
+        mov eax, cTemp
+        imul eax, 9
+        add eax, 2
+        mov ebx, 5
+        idiv ebx 
+        add eax, 32
+        mov fTemp, eax
+            </code>
+            </pre>
             </div>
         </div>
-
     </body>
 </html>
