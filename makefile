@@ -21,6 +21,7 @@ HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's
 ASM_FILES = $(shell ls $(TDIR)/*.asm)
 ASM_PTMLS = $(shell ls $(TDIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
 
+# rule for making html files from ptml files:
 %.html: $(PTML_DIR)/%.ptml $(INCS)
 	python3 $(UDIR)/html_checker.py $<
 	$(UDIR)/html_include.awk <$< >$@
@@ -34,12 +35,13 @@ $(PTML_DIR)/%.ptml: $(TDIR)/%.asm
 
 samples: $(ASM_PTMLS)
 	
+# build the static website describing the project:
 website: $(INCS) $(HTML_FILES) help
 	-git commit -a 
 	git pull origin master
 	git push origin master
 
-# build instruciton help material from python source:
+# build instruction help material from python source:
 help: $(SRCS) samples
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
 	$(EXTR) <$(SDIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
