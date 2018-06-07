@@ -28,17 +28,19 @@ ASM_PTMLS = $(shell ls $(TDIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/
 
 local: $(HTML_FILES)
 
+# build sample asm web pages for project web site:
 $(PTML_DIR)/%.ptml: $(TDIR)/%.asm
 	$(MUDIR)/asm2ptml.awk $< >$@
 
 samples: $(ASM_PTMLS)
 	
-website: $(INCS) $(HTML_FILES)
+website: $(INCS) $(HTML_FILES) help
 	-git commit -a 
 	git pull origin master
 	git push origin master
 
-help: $(SRCS)
+# build instruciton help material from python source:
+help: $(SRCS) samples
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
 	$(EXTR) <$(SDIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
 	$(EXTR) <$(SDIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
@@ -58,6 +60,3 @@ prod: $(SRCS) $(OBJ)
 	./all_tests.sh
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'
-
-# for future use:
-#	ansible-playbook -i $(ADIR)/inventories/hosts $(ADIR)/dev.yml
