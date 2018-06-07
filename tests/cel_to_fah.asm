@@ -1,5 +1,5 @@
 ; Declare a Celsius temperature
-; Unitialized ftemp 
+; Uninitialized ftemp 
 .data
     cTemp DW 35
     fTemp DW ?
