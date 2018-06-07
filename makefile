@@ -19,6 +19,7 @@ INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
 ASM_FILES = $(shell ls $(TDIR)/*.asm)
+ASM_PTMLS = $(shell ls $(TDIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
 
 %.html: $(PTML_DIR)/%.ptml $(INCS)
 	python3 $(UDIR)/html_checker.py $<
@@ -27,11 +28,10 @@ ASM_FILES = $(shell ls $(TDIR)/*.asm)
 
 local: $(HTML_FILES)
 
-samples: $(ASM_FILES)
-	$(MUDIR)/asm2ptml.awk $(TDIR)/power.asm > $(PTML_DIR)/power.ptml
-	$(MUDIR)/asm2ptml.awk $(TDIR)/key_test.asm > $(PTML_DIR)/key_test.ptml
-	$(MUDIR)/asm2ptml.awk $(TDIR)/loop.asm > $(PTML_DIR)/loop.ptml
-	$(MUDIR)/asm2ptml.awk $(TDIR)/data.asm > $(PTML_DIR)/data.ptml
+$(PTML_DIR)/%.ptml: $(TDIR)/*.asm
+	$(MUDIR)/asm2ptml.awk $< >$@
+
+samples: $(ASM_PTMLS)
 	
 website: $(INCS) $(HTML_FILES)
 	-git commit -a 
