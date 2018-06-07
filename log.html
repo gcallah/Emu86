@@ -180,14 +180,6 @@ Calculating log (base 2) of a number
 .text
     mov ecx, 0
     mov eax, 1
-
-            </code>
-            </pre>
-            <p>
-Loop until EAX is greater than number
-            </p>
-            <pre>
-            <code>
 whileLE: cmp eax, number
          jnle endWhileLE
 body: add eax, eax

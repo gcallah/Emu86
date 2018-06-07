@@ -6,10 +6,7 @@
     y DW 13 DUP (50)
     z DD 'hello', 0
 
-; Store first element of x into EAX 
-; Store fifth element of y into EBX
-; Store fourth element of z into ECX 
-; Store third element of x into EDX
+; Store array valus
 .text
     mov eax, x 
     mov ebx, y[4]

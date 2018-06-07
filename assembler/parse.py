@@ -187,11 +187,12 @@ def get_op(token, vm):
             raise InvalidMemLoc(address)
     elif (re.search (sym_match, token[0]) is not None 
           and token[len(token) - 1] == ']'):
+        # no spaces in token, bracket at index 1
         locate_bracket = token.find("[")
         add_debug("Matched a symbol-type token " + token[0] + "[" + 
                    token[locate_bracket + 1:len(token) - 1] + "]", vm)
         return Symbol (token[0], vm, 
-                       int (token[locate_bracket + 1:len(token) - 1]))
+                       int(token[locate_bracket + 1:len(token) - 1]))
     elif re.search(sym_match, token) is not None:
         add_debug("Matched a symbol-type token " + token, vm)
         if token in vm.labels:
