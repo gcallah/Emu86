@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            area.asm
+            arithmetic_shift.asm
         </title>
     </head>
 
@@ -160,24 +160,19 @@
 </nav>
             <div id="content">
             <h1>
-            area.asm
+            arithmetic_shift.asm
             </h1>
             <pre>
             <code>
-.data
-    long DW 35
-    wide DW 27
-
-            </code>
-            </pre>
-            <p>
-Calculating area of rectangle
-            </p>
-            <pre>
-            <code>
-.text
-    mov eax, long
-    imul eax, wide
+mov [4], 1
+mov eax, 4
+mov ebx, 2
+mov ecx, 8
+mov edx, 16
+add ebx, ecx
+sub edx, ecx
+imul eax, [4]
+shl [4], 2
             </code>
             </pre>
             </div>

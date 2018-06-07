@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            area.asm
+            gt.asm
         </title>
     </head>
 
@@ -160,24 +160,35 @@
 </nav>
             <div id="content">
             <h1>
-            area.asm
+            gt.asm
             </h1>
             <pre>
             <code>
-.data
-    long DW 35
-    wide DW 27
+         mov eax, 0
+         mov ebx, 16
 
             </code>
             </pre>
             <p>
-Calculating area of rectangle
+compare eax and ebx and loop until eax greater than ebx
             </p>
             <pre>
             <code>
-.text
-    mov eax, long
-    imul eax, wide
+loop: cmp eax, ebx
+         jg done
+         inc eax
+         jmp loop
+
+            </code>
+            </pre>
+            <p>
+when done, store ebx in ecx
+            </p>
+            <pre>
+            <code>
+done: mov ecx, ebx
+         mov edx, 27
+         and edx, 23
             </code>
             </pre>
             </div>

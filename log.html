@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            area.asm
+            log.asm
         </title>
     </head>
 
@@ -160,24 +160,31 @@
 </nav>
             <div id="content">
             <h1>
-            area.asm
+            log.asm
             </h1>
             <pre>
             <code>
 .data
-    long DW 35
-    wide DW 27
+    number DW 759
 
             </code>
             </pre>
             <p>
-Calculating area of rectangle
+Calculating log (base 2) of a number
             </p>
             <pre>
             <code>
 .text
-    mov eax, long
-    imul eax, wide
+    mov ecx, 0
+    mov eax, 1
+
+whileLE: cmp eax, number
+         jnle endWhileLE
+body: add eax, eax
+      inc ecx
+      jmp whileLE
+
+endWhileLE:	dec ecx 
             </code>
             </pre>
             </div>

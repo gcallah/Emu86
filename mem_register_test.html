@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            area.asm
+            mem_register_test.asm
         </title>
     </head>
 
@@ -160,24 +160,30 @@
 </nav>
             <div id="content">
             <h1>
-            area.asm
+            mem_register_test.asm
             </h1>
+            <p>
+Declaring names
+            </p>
             <pre>
             <code>
 .data
-    long DW 35
-    wide DW 27
+    x DB 1, 2, 3, 4, 5
+    y DW 2, 54, 32, 8
+    z DD 10 DUP (50)
 
             </code>
             </pre>
             <p>
-Calculating area of rectangle
+Storing values into memory
             </p>
             <pre>
             <code>
 .text
-    mov eax, long
-    imul eax, wide
+	mov eax, 6
+	mov [eax], x[2]
+	mov [eax+2], y[3]
+	mov [ebx], z
             </code>
             </pre>
             </div>

@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            area.asm
+            test_interrupt.asm
         </title>
     </head>
 
@@ -160,24 +160,24 @@
 </nav>
             <div id="content">
             <h1>
-            area.asm
+            test_interrupt.asm
             </h1>
             <pre>
             <code>
-.data
-    long DW 35
-    wide DW 27
+         mov eax, 0
+         int 22
+         mov [0], eax
+         mov ebx, 1
 
-            </code>
-            </pre>
-            <p>
-Calculating area of rectangle
-            </p>
-            <pre>
-            <code>
-.text
-    mov eax, long
-    imul eax, wide
+loop:    mov edx, eax
+         mov eax, 0
+         int 22
+         mov [ebx], eax
+         cmp [0], eax
+         je done
+         inc ebx
+         jmp loop
+done: mov ecx, 1
             </code>
             </pre>
             </div>

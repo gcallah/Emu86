@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            area.asm
+            array.asm
         </title>
     </head>
 
@@ -160,24 +160,30 @@
 </nav>
             <div id="content">
             <h1>
-            area.asm
+            array.asm
             </h1>
+            <p>
+First comes the data section, where we declare some names.
+            </p>
             <pre>
             <code>
 .data
-    long DW 35
-    wide DW 27
+    x DB 3, 8, 5, 2
+    y DW 13 DUP (50)
+    z DD 'hello', 0
 
             </code>
             </pre>
             <p>
-Calculating area of rectangle
+Next is the .text section, where we use them:
             </p>
             <pre>
             <code>
 .text
-    mov eax, long
-    imul eax, wide
+    mov eax, x 
+    mov ebx, y[4]
+    mov ecx, z[3]
+    mov edx, x[2]
             </code>
             </pre>
             </div>

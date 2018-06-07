@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            area.asm
+            sum_test.asm
         </title>
     </head>
 
@@ -160,24 +160,34 @@
 </nav>
             <div id="content">
             <h1>
-            area.asm
+            sum_test.asm
             </h1>
+            <p>
+Declare number and sum.
+            </p>
             <pre>
             <code>
 .data
-    long DW 35
-    wide DW 27
+    number DW -105
+    sum DW ?
 
             </code>
             </pre>
             <p>
-Calculating area of rectangle
+Store first number to EAX
+            </p>
+            <p>
+Add 158 to value in EAX
+            </p>
+            <p>
+Store total to sum
             </p>
             <pre>
             <code>
 .text
-    mov eax, long
-    imul eax, wide
+    mov eax, number		
+    add eax, 158	
+    mov sum, eax
             </code>
             </pre>
             </div>

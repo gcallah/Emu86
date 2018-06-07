@@ -28,7 +28,7 @@ ASM_PTMLS = $(shell ls $(TDIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/
 
 local: $(HTML_FILES)
 
-$(PTML_DIR)/%.ptml: $(TDIR)/*.asm
+$(PTML_DIR)/%.ptml: $(TDIR)/%.asm
 	$(MUDIR)/asm2ptml.awk $< >$@
 
 samples: $(ASM_PTMLS)

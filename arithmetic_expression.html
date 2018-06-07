@@ -27,7 +27,7 @@
              });
          </script>
         <title>
-            area.asm
+            arithmetic_expression.asm
         </title>
     </head>
 
@@ -160,24 +160,30 @@
 </nav>
             <div id="content">
             <h1>
-            area.asm
+            arithmetic_expression.asm
             </h1>
             <pre>
             <code>
 .data
-    long DW 35
-    wide DW 27
+    x DW 35
+    y DW 47
+    z DW 26
 
             </code>
             </pre>
             <p>
-Calculating area of rectangle
+Calculating -(x + y - 2 * z + 1)
             </p>
             <pre>
             <code>
 .text
-    mov eax, long
-    imul eax, wide
+    mov eax, x		
+    add eax, y	
+    mov ebx, z
+    add ebx, ebx
+    sub eax, ebx
+    inc eax 
+    neg eax
             </code>
             </pre>
             </div>
