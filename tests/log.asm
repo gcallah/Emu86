@@ -1,3 +1,4 @@
+; Declare a number
 .data
     number DW 759
 
@@ -6,6 +7,7 @@
     mov ecx, 0
     mov eax, 1
 
+; Loop until EAX is greater than number
 whileLE: cmp eax, number
          jnle endWhileLE
 body: add eax, eax
