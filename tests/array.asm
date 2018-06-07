@@ -6,7 +6,7 @@
     y DW 13 DUP (50)
     z DD 'hello', 0
 
-; Store array valus
+; Store array values
 .text
     mov eax, x 
     mov ebx, y[4]

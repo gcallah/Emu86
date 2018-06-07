@@ -1,11 +1,11 @@
 ; Declare a Celsius temperature
-; Uninitialized ftemp 
+; Uninitialized fTemp 
 .data
     cTemp DW 35
     fTemp DW ?
 
 ; Convert from Celsius to Fahrenheit
-; Store result in ftemp
+; Store result in fTemp
 .text
     mov eax, cTemp
     imul eax, 9
