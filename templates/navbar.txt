@@ -98,7 +98,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="arithmetic.html">
+                    <a href="arithmetic_expression.html">
                         Calculate an arithmetic expression
                     </a>
                 </li>
