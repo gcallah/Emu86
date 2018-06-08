@@ -18,7 +18,6 @@ BEGIN {
     print "<html>"
     print INDENT1 "<head>"
     print "<!--include head.txt -->"
-    print "<!--include sample_programs_side.txt -->"
     print INDENT2 "<title>"
     print INDENT3 "" title
     print INDENT2 "</title>"
