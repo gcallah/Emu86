@@ -56,4 +56,6 @@
                 <i class="glyphicon glyphicon-duplicate"></i>
                 Sample Programs
             </a>
+
+<!--include sample_programs_side.txt -->
         
