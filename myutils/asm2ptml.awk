@@ -26,6 +26,7 @@ BEGIN {
     print INDENT1 "<body>"
     print INDENT2 "<div class=\"wrapper\">"
     print "<!--include navbar.txt -->"
+    print "<!--include sample_programs_side.txt -->"
     print INDENT3 "<div id=\"content\">"
     print INDENT3 "<h1>"
     print INDENT3 "" title
