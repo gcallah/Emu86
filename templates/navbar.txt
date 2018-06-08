@@ -56,9 +56,7 @@
                 <i class="glyphicon glyphicon-duplicate"></i>
                 Sample Programs
             </a>
-
-<!--include sample_programs_side.txt -->
-        			<ul class="collapse list-unstyled nested" id="programsSubmenu">
+			<ul class="collapse list-unstyled nested" id="programsSubmenu">
 				<li>
 					<a href ="array.html">
 						Declare an array
