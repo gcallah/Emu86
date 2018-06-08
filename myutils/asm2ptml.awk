@@ -23,7 +23,6 @@ BEGIN {
     print INDENT2 "</title>"
     print INDENT1 "</head>"
     print INDENT1 "<body>"
-    print "<!--include sample_programs_side.txt -->"
     print INDENT2 "<div class=\"wrapper\">"
     print "<!--include navbar.txt -->"
     print INDENT3 "<div id=\"content\">"
