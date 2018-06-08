@@ -87,6 +87,7 @@ class Je(Instruction):
         </syntax>
         <descr>
             Jumps if ZF is one.
+            Equivalent name: JZ
         </descr>
     """
     def fhook(self, ops, vm):
@@ -104,6 +105,7 @@ class Jne(Instruction):
         </syntax>
         <descr>
             Jumps if ZF is zero.
+            Equivalent name: JNZ
         </descr>
     """
     def fhook(self, ops, vm):
@@ -121,6 +123,7 @@ class Jg(Instruction):
         </syntax>
         <descr>
             Jumps if SF == 0 and ZF == 0.
+            Equivalent name: JLNE
         </descr>
     """
     def fhook(self, ops, vm):
@@ -157,6 +160,7 @@ class Jl(Instruction):
         </syntax>
         <descr>
             Jumps if SF == 1.
+            Equivalent name: JGNE
         </descr>
     """
     def fhook(self, ops, vm):

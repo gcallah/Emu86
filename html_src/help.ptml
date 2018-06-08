@@ -370,6 +370,7 @@
             
             <p>
                         Jumps if ZF is one.
+                        Equivalent name: JZ
             </p>
             <hr>
             <h4>
@@ -387,6 +388,7 @@
             
             <p>
                         Jumps if ZF is zero.
+                        Equivalent name: JNZ
             </p>
             <hr>
             <h4>
@@ -404,6 +406,7 @@
             
             <p>
                         Jumps if SF == 0 and ZF == 0.
+                        Equivalent name: JLNE
             </p>
             <hr>
             <h4>
@@ -438,6 +441,7 @@
             
             <p>
                         Jumps if SF == 1.
+                        Equivalent name: JGNE
             </p>
             <hr>
             <h4>
