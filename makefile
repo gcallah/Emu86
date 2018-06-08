@@ -23,6 +23,7 @@ ASM_PTMLS = $(shell ls $(TDIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/
 
 navbar:
 	$(UDIR)/html_include.awk <$(TEMPLATE_DIR)/navbar.pre >$(TEMPLATE_DIR)/navbar.txt
+	python3 write_sample_programs.py
 
 # rule for making html files from ptml files:
 %.html: $(PTML_DIR)/%.ptml $(INCS)

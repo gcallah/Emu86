@@ -86,7 +86,7 @@ class Je(Instruction):
             JE lbl
         </syntax>
         <descr>
-            Jumps if ZF is one.
+            Jumps if ZF is one. <br>
             Equivalent name: JZ
         </descr>
     """
@@ -104,7 +104,7 @@ class Jne(Instruction):
             JNE lbl
         </syntax>
         <descr>
-            Jumps if ZF is zero.
+            Jumps if ZF is zero. <br>
             Equivalent name: JNZ
         </descr>
     """
@@ -122,7 +122,7 @@ class Jg(Instruction):
             JG lbl
         </syntax>
         <descr>
-            Jumps if SF == 0 and ZF == 0.
+            Jumps if SF == 0 and ZF == 0. <br>
             Equivalent name: JLNE
         </descr>
     """
@@ -159,7 +159,7 @@ class Jl(Instruction):
             JL lbl
         </syntax>
         <descr>
-            Jumps if SF == 1.
+            Jumps if SF == 1. <br>
             Equivalent name: JGNE
         </descr>
     """
