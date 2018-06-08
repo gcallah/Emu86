@@ -185,13 +185,14 @@ def get_op(token, vm):
                     raise InvalidMemLoc(address)
         else:
             raise InvalidMemLoc(address)
-    elif (re.search (sym_match, token[0]) is not None 
-          and token[len(token) - 1] == ']'):
-        # no spaces in token, bracket at index 1
+    elif  token[len(token) - 1] == ']':
         locate_bracket = token.find("[")
-        add_debug("Matched a symbol-type token " + token[0] + "[" + 
-                   token[locate_bracket + 1:len(token) - 1] + "]", vm)
-        return Symbol (token[0], vm, 
+        if re.search (sym_match, token[:locate_bracket]):
+            add_debug("Matched a symbol-type token " + 
+                      token[:locate_bracket] + "[" + 
+                      token[locate_bracket + 1:len(token) - 1] + 
+                      "]", vm)
+        return Symbol (token[:locate_bracket], vm, 
                        int(token[locate_bracket + 1:len(token) - 1]))
     elif re.search(sym_match, token) is not None:
         add_debug("Matched a symbol-type token " + token, vm)
@@ -256,9 +257,47 @@ def convert_string_to_ascii (values):
         values = val_string
     return values
 
-def store_values_array (values, data_type):
+def store_values_dup (values, data_type):
     """
-    Returns the array of data
+    Returns the array of data that uses the term DUP
+    """
+    if values.find("DUP") != -1:
+        try:
+            position = 0
+            count = 0
+            values_list_before = ""
+            if values.find(",") != -1:
+                for pos in range(len(values)):
+                    if (values[pos] == ","):
+                        position = pos
+                values_list_before = values[:position + 1]
+                count = int(values[position + 1:values.find("DUP")])
+            else:
+                count = int(values[:values.find("DUP")])
+            values_list_after = ""
+            for counter in range(count):
+                if values[values.find("(") + 1:
+                          values.find(")")] == DONT_INIT:
+                    values_list_after += str(randrange(0, 
+                                       dtype_info[data_type][MAX_VAL]))
+                else:
+                    try:
+                        values_list_after += values[values.find("(") + 1:
+                                                      values.find(")")]
+                    except Exception:
+                        raise InvalidDataVal(values)
+
+                if counter != count - 1:
+                    values_list_after += ","
+            values = values_list_before + values_list_after
+            return values
+        except Exception:
+            raise InvalidDataVal(values)
+    return values
+
+def store_values_array(values, data_type):
+    """
+    Returns the array made from the string values
     """
     if values.find(",") != -1:
         values_list = values.split(",")
@@ -272,24 +311,6 @@ def store_values_array (values, data_type):
                 except Exception:
                     raise InvalidDataVal(values)
         return values_list
-    else:
-        try:
-            values_list = []
-            count = int(values[:values.find("DUP")])
-            for counter in range(count):
-                if values[values.find("(") + 1:
-                          values.find(")")] == DONT_INIT:
-                    values_list.append(randrange(0, 
-                                       dtype_info[data_type][MAX_VAL]))
-                else:
-                    try:
-                        values_list.append(int(values[values.find("(") + 1:
-                                                      values.find(")")]))
-                    except Exception:
-                        raise InvalidDataVal(values)
-            return values_list
-        except Exception:
-            raise InvalidDataVal(values)
 
 def parse_data_section(lines, vm):
     """
@@ -343,7 +364,8 @@ def parse_data_section(lines, vm):
         # update val's sring word to be
         # the ASCII version of the word
         val = convert_string_to_ascii (val);
-        if val.find (",") != -1 or val.find ("DUP") != -1:
+        val = store_values_dup (val, data_type);
+        if val.find (",") != -1:
             vm.symbols[symbol] = store_values_array (val, data_type)  
             debug_string = "Symbol table now holds "
             for int_values in vm.symbols[symbol]:
