@@ -34,6 +34,7 @@ $(PTML_DIR)/%.ptml: $(TDIR)/%.asm
 	$(MUDIR)/asm2ptml.awk $< >$@
 
 samples: $(ASM_PTMLS)
+		 python3 write_sample_programs.py
 	
 # build the static website describing the project:
 website: $(INCS) $(HTML_FILES) help
