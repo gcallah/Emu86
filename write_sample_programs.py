@@ -12,7 +12,7 @@ link_names = {
 	"log.asm": "Calculate log in base 2",
 	"arithmetic_expression.asm": "Calculate an arithmetic expression",
 	"cel_to_fah.asm": "Convert from Celsius to Fahrenheit",
-	"data.asm": "How to use the .data section"
+	"data.asm": "How to use the .data section",
 	"array_average_test.asm": "Calculate average of an array of numbers"
 }
 
