@@ -188,12 +188,25 @@ def get_op(token, vm):
     elif  token[len(token) - 1] == ']':
         locate_bracket = token.find("[")
         if re.search (sym_match, token[:locate_bracket]):
-            add_debug("Matched a symbol-type token " + 
+            if token[locate_bracket + 1:
+                     len(token) - 1].upper() in vm.registers:
+                displacement = vm.registers[token[locate_bracket + 1:
+                                      len(token) - 1].upper()]
+                displacement = int(displacement)
+                add_debug("Matched a symbol-type token " + 
                       token[:locate_bracket] + "[" + 
-                      token[locate_bracket + 1:len(token) - 1] + 
-                      "]", vm)
-        return Symbol (token[:locate_bracket], vm, 
-                       int(token[locate_bracket + 1:len(token) - 1]))
+                      str(displacement)+ "]", vm)
+                return Symbol (token[:locate_bracket], vm, 
+                       Register(token[locate_bracket + 1:
+                                      len(token) - 1].upper(),vm))
+            else:
+                displacement = int(token[locate_bracket + 1:
+                                    len(token) - 1])
+                add_debug("Matched a symbol-type token " + 
+                      token[:locate_bracket] + "[" + 
+                      str(displacement)+ "]", vm)
+                return Symbol (token[:locate_bracket], vm, 
+                       displacement)
     elif re.search(sym_match, token) is not None:
         add_debug("Matched a symbol-type token " + token, vm)
         if token in vm.labels:

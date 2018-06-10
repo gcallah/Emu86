@@ -191,7 +191,10 @@ class Symbol(Location):
         if index == None:
             self.vm.symbols[self.name] = val
         else:
-            self.vm.symbols[self.name][index] = val
+            if isinstance(self.index, Register):
+                self.vm.symbols[self.name][index.get_val()] = val
+            else:
+                self.vm.symbols[self.name][index] = val
 
     def get_val(self):
         self.check_nm()
@@ -204,8 +207,17 @@ class Symbol(Location):
             add_debug("Symbol " + self.name + " = "
                       + str(self.vm.symbols[self.name][self.index]),
                       self.vm)
+            return self.vm.symbols[self.name][self.index]
         else:
-            add_debug("Symbol " + self.name + "["
+            if isinstance(self.index, Register):
+                add_debug("Symbol " + self.name + "["
+                          + str(self.index) + "] = " + 
+                          str(self.vm.symbols[self.name]
+                         [self.index.get_val()]), self.vm)
+                return self.vm.symbols[self.name][self.index.get_val()]
+            else:
+                add_debug("Symbol " + self.name + "["
                       + str(self.index) + "] = " + 
                       str(self.vm.symbols[self.name][self.index]), self.vm)
-        return self.vm.symbols[self.name][self.index]
+                return self.vm.symbols[self.name][self.index]
+
