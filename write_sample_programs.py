@@ -13,7 +13,8 @@ link_names = {
 	"arithmetic_expression.asm": "Calculate an arithmetic expression",
 	"cel_to_fah.asm": "Convert from Celsius to Fahrenheit",
 	"data.asm": "How to use the .data section",
-	"array_average_test.asm": "Calculate average of an array of numbers"
+	"array_average_test.asm": "Calculate average of an array of numbers",
+	"change_array_elem_test.asm": "Change array elements below min to set minimum"
 }
 
 def create_href():

@@ -27,10 +27,9 @@
              });
          </script>
         <title>
-            test_jump.asm
+            change_array_elem_test.asm
         </title>
     </head>
-
     <body>
         <div class="wrapper">
 <!-- Sidebar Holder -->
@@ -174,32 +173,43 @@
 </nav>
             <div id="content">
             <h1>
-            test_jump.asm
+            change_array_elem_test.asm
             </h1>
+            <p>
+Declare an array and declare size of the array
+            </p>
+            <p>
+Declare the minimum of the array
+            </p>
             <pre>
             <code>
+.data
+    nbrArray DW 25, 47, 15, 50, 32, 95 DUP (10)
+    nbrElts DW 100
+    nbrMin DW 33
+
+            </code>
+            </pre>
+            <p>
+Change any numbers less than min to min:
+            </p>
+            <pre>
+            <code>
+.text
     mov eax, 0
-    jmp label1
-    dec eax
-label1: inc eax
-
     mov ebx, 0
-    cmp ebx, 0
-    je label2
-    dec eax
-label2: inc eax
+    mov edx, 0
+    mov ecx, nbrElts
+forCount1: cmp ebx, ecx
+           je endCount
+body: cmp nbrArray[ebx], nbrMin
+	  jge endIfSmall
+      mov nbrArray[ebx], nbrMin
+endIfSmall: add eax, nbrArray[ebx]
+			inc ebx
+			jmp forCount1
+endCount: mov edx, eax
 
-    mov ebx, 1
-    cmp ebx, 0
-    je label3
-    dec eax
-label3: inc eax
-
-    mov ebx, 1
-    cmp ebx, 0
-    jne label4
-    dec eax
-label4: inc eax
 
             </code>
             </pre>
