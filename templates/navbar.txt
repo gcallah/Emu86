@@ -113,6 +113,11 @@
 					</a>
 				</li>
 				<li>
+					<a href ="int_square_root.html">
+						Calculate square root of a number
+					</a>
+				</li>
+				<li>
 					<a href ="arithmetic_expression.html">
 						Calculate an arithmetic expression
 					</a>
