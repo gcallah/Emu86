@@ -13,7 +13,7 @@ forCount1: cmp ebx, ecx
            je endCount
 body: add eax, nbrArray[ebx]
       inc ebx
-	  jmp forCount1
+      jmp forCount1
 endCount: idiv ecx 
 
 

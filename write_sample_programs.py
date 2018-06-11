@@ -14,7 +14,8 @@ link_names = {
 	"cel_to_fah.asm": "Convert from Celsius to Fahrenheit",
 	"data.asm": "How to use the .data section",
 	"array_average_test.asm": "Calculate average of an array of numbers",
-	"change_array_elem_test.asm": "Change array elements below min to set minimum"
+	"change_array_elem_test.asm": "Change array elements below min to set minimum",
+	"int_square_root.asm": "Calculate square root of a number"
 }
 
 def create_href():

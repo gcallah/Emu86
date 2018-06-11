@@ -14,11 +14,11 @@
 forCount1: cmp ebx, ecx
            je endCount
 body: cmp nbrArray[ebx], nbrMin
-	  jge endIfSmall
+      jge endIfSmall
       mov nbrArray[ebx], nbrMin
 endIfSmall: add eax, nbrArray[ebx]
-			inc ebx
-			jmp forCount1
+            inc ebx
+            jmp forCount1
 endCount: mov edx, eax
 
 
