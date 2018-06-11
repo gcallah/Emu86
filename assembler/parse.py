@@ -462,5 +462,5 @@ def lex(code, vm):
         this_line.append(instr)
         (ops, code_pos) = get_ops(line, code_pos, vm)
         this_line.append(ops)
-        tok_lines.append(this_line)
+        tok_lines.append((this_line, line))
     return (tok_lines)

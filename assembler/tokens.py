@@ -45,12 +45,7 @@ class Instruction(Token):
         return str(self.name)
 
     def f(self, ops, vmachine):
-        self.fhook(ops, vmachine)
-        s = self.name + " "
-        for op in ops:
-            s += str(op)
-            s += " "
-        return s
+        return self.fhook(ops, vmachine)
 
     @abstractmethod
     def fhook(self, ops, vmachine):

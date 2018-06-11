@@ -43,10 +43,10 @@ def exec(tok_lines, vm, last_instr):
         if ip >= len(tok_lines):
             raise InvalidInstruction("Past end of code.")
 
-        curr_instr = tok_lines[ip]
+        (curr_instr, source) = tok_lines[ip]
         vm.inc_ip()
         last_instr = curr_instr[INSTR].f(curr_instr[OPS], vm)
-        return (True, last_instr, "")
+        return (True, source, "")
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
         add_debug("In FlowBreak", vm)
