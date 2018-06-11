@@ -3,7 +3,7 @@
     nbrArray DW 25, 47, 15, 50, 32, 95 DUP (10)
     nbrElts DW 100
 
-; Next is the .text section, where we use them:
+; Calculate the average of the array:
 .text
     mov eax, 0
     mov ebx, 0

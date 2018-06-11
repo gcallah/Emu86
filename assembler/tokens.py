@@ -186,15 +186,15 @@ class Symbol(Location):
         if self.name not in self.vm.symbols:
             raise UnknownName(self.name)
 
-    def set_val(self, val, index = None):
+    def set_val(self, val):
         self.check_nm()
-        if index == None:
+        if self.index == None:
             self.vm.symbols[self.name] = val
         else:
             if isinstance(self.index, Register):
-                self.vm.symbols[self.name][index.get_val()] = val
+                self.vm.symbols[self.name][self.index.get_val()] = val
             else:
-                self.vm.symbols[self.name][index] = val
+                self.vm.symbols[self.name][self.index] = val
 
     def get_val(self):
         self.check_nm()

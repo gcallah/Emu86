@@ -124,6 +124,17 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["ECX"], 100)
         self.assertEqual(vmachine.registers["EBX"], 100)
         self.assertEqual(vmachine.registers["EDX"], 19)
+
+    def test_int_square_root(self):
+        self.run_test_code("tests/int_square_root.asm")
+        self.assertEqual(vmachine.registers["EAX"], 10)
+
+    def test_add_to_array_elem_test(self):
+        self.run_test_code("tests/change_array_elem_test.asm")
+        self.assertEqual(vmachine.registers["EAX"], 3331)
+        self.assertEqual(vmachine.registers["EDX"], 3331)
+        self.assertEqual(vmachine.registers["ECX"], 100)
+        self.assertEqual(vmachine.registers["EBX"], 100)
         
 if __name__ == '__main__':
     main()
