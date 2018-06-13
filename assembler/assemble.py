@@ -7,7 +7,8 @@ import re
 
 from .control_flow import FlowBreak
 from .errors import Error, InvalidInstruction, ExitProg
-from .parse import lex, add_debug
+from .parse import add_debug, parse
+from .lex import lex
 from .tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
@@ -45,7 +46,7 @@ def exec(tok_lines, vm, last_instr):
 
         (curr_instr, source) = tok_lines[ip]
         vm.inc_ip()
-        last_instr = curr_instr[INSTR].f(curr_instr[OPS], vm)
+        last_instr = curr_instr[INSTR].f(curr_instr[1:], vm)
         return (True, source, "")
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
@@ -82,7 +83,9 @@ def assemble(code, vm, step=False):
 
     # break the code into tokens:
     try:
-        tok_lines = lex(code, vm)
+        #tok_lines = lex(code, vm)
+        tok_lines = lex(code,vm)
+        tok_lines = parse(tok_lines, vm)
     except Error as err:
         return (last_instr, err.msg)
 

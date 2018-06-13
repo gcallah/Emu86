@@ -27,7 +27,6 @@ label_match = re.compile(LABEL_RE)
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
-DELIMITERS = set([' ', ',', '\n', '\r', '\t',])
 DELINSIDERS = set([' ', '\n', '\r', '\t',])
 
 DONT_INIT = "?"
@@ -35,7 +34,6 @@ DONT_INIT = "?"
 MAX_BYTE = 255
 MAX_SHORT = 65535
 MAX_LONG = 4294967295
-
 
 je = Je('JE')
 jne = Jne('JNE')
@@ -90,173 +88,21 @@ dtype_info = {
     "DD": (MEM_SIZE / 8, MAX_LONG)
 }
 
+PARAM_TYPE = 1
+PARAM_VAL = 0
+
 def add_debug(s, vm):
     vm.debug += (s + "\n")
-
-
-def get_token(code, code_pos):
-    """
-        Gets the next token.
-        Args:
-            The string of code, set to current pos.
-        Returns:
-            The next token from string.
-    """
-    token = ''
-    if code_pos <= len(code):
-        count = 0
-        for char in code[code_pos:]:  # eat leading delimiters
-            if char in DELIMITERS:
-                count += 1
-            else:
-                break
-        code_pos += count
-
-        if code_pos <= len(code):
-            count = 0
-            for char in code[code_pos:]:
-                count += 1
-                if char not in DELIMITERS:
-                    token = token + char
-                else:
-                    break
-            code_pos += count
-    return (token, code_pos)
-
-def get_string_values(code, code_pos):
-    """
-        Gets the next token.
-        Args:
-            The string of code, set to current pos.
-        Returns:
-            The string values after symbol.
-    """
-    values = ''
-    if code_pos <= len(code):
-        count = 0
-        for char in code[code_pos:]:  # eat leading delimiters
-            if char in DELIMITERS:
-                count += 1
-            else:
-                break
-        code_pos += count
-
-        if code_pos <= len(code):
-            count = 0
-            for char in code[code_pos:]:
-                count += 1
-                if char not in DELINSIDERS:
-                    values = values + char
-            code_pos += count
-    return (values, code_pos)
-
-def get_op(token, vm):
-    """
-    Args:
-        token: string to evaluate
-        vm: our virtual machine
-    Returns:
-        The object representing this operand.
-    """
-
-    global sym_match
-    int_val = 0
-
-    if not token:
-        return None
-    elif token.upper() in vm.registers:  # reg can be e.g. EAX or eax
-        return Register(token.upper(), vm)
-    elif token[0] == '[' and token[len(token) - 1] == ']':
-        address = token[1:len(token) - 1]
-        if address in vm.memory:
-            return Address(address, vm)
-        elif address.upper() in vm.registers:
-            return RegAddress(address.upper(), vm)
-        elif address.find("+") != -1:
-            plus_location = address.find("+")
-            first_param = address[:plus_location]
-            second_param = address[plus_location + 1:]
-            if first_param.upper() in vm.registers: 
-                try:
-                    placement = int(second_param)
-                    return RegAddress (first_param.upper(), vm, 
-                                       int (second_param))
-                except:
-                    raise InvalidMemLoc(address)
-        else:
-            raise InvalidMemLoc(address)
-    elif  token[len(token) - 1] == ']':
-        locate_bracket = token.find("[")
-        if re.search (sym_match, token[:locate_bracket]):
-            if token[locate_bracket + 1:
-                     len(token) - 1].upper() in vm.registers:
-                displacement = vm.registers[token[locate_bracket + 1:
-                                      len(token) - 1].upper()]
-                displacement = int(displacement)
-                add_debug("Matched a symbol-type token " + 
-                      token[:locate_bracket] + "[" + 
-                      str(displacement)+ "]", vm)
-                return Symbol (token[:locate_bracket], vm, 
-                       Register(token[locate_bracket + 1:
-                                      len(token) - 1].upper(),vm))
-            else:
-                displacement = int(token[locate_bracket + 1:
-                                    len(token) - 1])
-                add_debug("Matched a symbol-type token " + 
-                      token[:locate_bracket] + "[" + 
-                      str(displacement)+ "]", vm)
-                return Symbol (token[:locate_bracket], vm, 
-                       displacement)
-    elif re.search(sym_match, token) is not None:
-        add_debug("Matched a symbol-type token " + token, vm)
-        if token in vm.labels:
-            add_debug("Adding label " + token, vm)
-            return Label(token, vm)
-        else:
-            if isinstance (vm.symbols[token], list):     
-                return Symbol(token, vm, 0)
-            else:
-                return Symbol(token, vm)
-    else:
-        try:
-            int_val = int(token)
-        except Exception:
-            raise InvalidOperand(token)
-        return IntOp(int_val)
-
-def get_instr(code, code_pos):
-    """
-    Get an instruction from the code text.
-    Args:
-        code: the code!
-        code_pos: where we are in reading the code.
-    Returns:
-        a tuple of the instruction found and the new code_pos.
-        (Throws an exception if the token is not an instruction.)
-    """
-    (token, code_pos) = get_token(code, code_pos)
-    uptok = token.upper()  # allow instructions in upper or lower
-    if uptok in instructions:
-        instr = instructions[uptok]
-    else:
-        raise InvalidInstruction(token)
-    return (instr, code_pos)
-
-def get_ops(code, code_pos, vm):
-    """
-    Collect our operands.
-    """
-    ops = []
-    while code_pos < len(code):
-        (token, code_pos) = get_token(code, code_pos)
-        op = get_op(token, vm)
-        ops.append(op)
-
-    return (ops, code_pos)
 
 def convert_string_to_ascii (values):
     """
     Converts a string into a string of its ASCII values
+
+    Args:
+        values: String of values of a parameter
+
+    Returns:
+        String of values of ASCII values if a string is present
     """
     if values.find("'") != -1:
         val_string = ""
@@ -272,7 +118,15 @@ def convert_string_to_ascii (values):
 
 def store_values_dup (values, data_type):
     """
-    Returns the array of data that uses the term DUP
+    Converts the string of data that uses the term DUP into 
+    a string of integers without the term DUP 
+
+    Args:
+        values: The values of the variable
+        data_type: The data type of the variable
+
+    Returns: 
+        String of values without term DUP 
     """
     if values.find("DUP") != -1:
         try:
@@ -289,14 +143,14 @@ def store_values_dup (values, data_type):
                 count = int(values[:values.find("DUP")])
             values_list_after = ""
             for counter in range(count):
-                if values[values.find("(") + 1:
-                          values.find(")")] == DONT_INIT:
+                # if values[values.find("(") + 1:
+                #           values.find(")")] == DONT_INIT:
+                if values[values.find("DUP") + 1:] == DONT_INIT: 
                     values_list_after += str(randrange(0, 
                                        dtype_info[data_type][MAX_VAL]))
                 else:
                     try:
-                        values_list_after += values[values.find("(") + 1:
-                                                      values.find(")")]
+                        values_list_after += values[values.find("DUP") + 3:]
                     except Exception:
                         raise InvalidDataVal(values)
 
@@ -311,6 +165,13 @@ def store_values_dup (values, data_type):
 def store_values_array(values, data_type):
     """
     Returns the array made from the string values
+
+    Args:
+        values: Values of the variable 
+        data-type: The data type of the variable
+
+    Returns: 
+        List of integer values 
     """
     if values.find(",") != -1:
         values_list = values.split(",")
@@ -325,142 +186,204 @@ def store_values_array(values, data_type):
                     raise InvalidDataVal(values)
         return values_list
 
-def parse_data_section(lines, vm):
+
+def parse_data_val(token_line, vm):
     """
-    Parses the lines in the data section.
-    The syntax is:
-    var_name data_type value
-    Multi-line declarations are not available yet.
-    Args:
-        lines: The lines containing the declarations.
-        vm: virtual machine
+    Parses the data secton 
 
-    Returns: None
-        <instr>
-             .data
-        </instr>
-        <syntax>
-            var data_type value 
-        </syntax>
-        <descr>
-            After finding .data on a line, the parser will
-            place 'value' in 'var' with data type 'data_type'.
-        </descr>
+    Args: 
+        token_line: A list of tuples of terms for a line of code
+        vm: Virtual machine
     """
-    global sym_match
-    symbol = ""
-    dsize = 0
-    for line in lines:
-        code_pos = 0
+    try:
+        # denote symbol
+        symbol = ""
+        if token_line[0][PARAM_TYPE] == "symbol":
+            symbol = token_line[0][PARAM_VAL]
+        data_type = token_line[1][PARAM_VAL]
 
-# var name:
-        (token, code_pos) = get_token(line, code_pos)
-        # symbols in the data section look like labels 
-        # in the text section, so:
-        symbol_present = re.search(sym_match, token)
-        if symbol_present is not None:
-            symbol = symbol_present.group(1)
-        else:
-            raise InvalidVarDeclaration(token)
-
-# data type (not yet used):
-        (data_type, code_pos) = get_token(line, code_pos)
+        # denote data size
+        dsize = ""
         try:
             dsize = dtype_info[data_type][BYTES]
         except KeyError:
             raise InvalidDataType(date_type)
 
-# value
-        (val, code_pos) = get_string_values(line, code_pos)
-        add_debug("Setting symbol " + symbol + " to val " + val, vm)
-        # if val contains a string word
-        # update val's sring word to be
-        # the ASCII version of the word
-        val = convert_string_to_ascii (val);
-        val = store_values_dup (val, data_type);
+        # sete values
+        val = token_line[2][PARAM_VAL]
+        if len(token_line) > 3:
+            index = 3
+            while (index < len (token_line)):
+                # if contains DUP 
+                if token_line[index][PARAM_TYPE] == "list":
+                    try:
+                        val += (token_line[index][PARAM_VAL] + 
+                               token_line[index + 1][PARAM_VAL] + ",")
+                        index += 2
+                    except Exception:
+                        raise InvalidDataVal(val)
+                # if contains an integer
+                else:
+                    # strip in case next term is DUP 
+                    val = val.strip(",")
+                    val += "," + token_line[index][PARAM_VAL]
+                    index += 1
+
+        # strip off extra comma if there is from DUP
+        val = val.strip(",")
+
+        # convert values if necessary
+        val = convert_string_to_ascii(val);
+        val = store_values_dup(val, data_type);
+
+        # convert string of numbers to a list
         if val.find (",") != -1:
             vm.symbols[symbol] = store_values_array (val, data_type)  
             debug_string = "Symbol table now holds "
             for int_values in vm.symbols[symbol]:
                 debug_string += str(int_values) + ","
             add_debug(debug_string, vm)  
+
+        # if not a list and just a value
         else:
             if val == DONT_INIT:
-                vm.symbols[symbol] = randrange(0, dtype_info[data_type][MAX_VAL])
-                add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
+                vm.symbols[symbol] = randrange(0, 
+                                     dtype_info[data_type][MAX_VAL])
+                add_debug("Symbol table now holds " + 
+                          str(vm.symbols[symbol]), vm)
             else: 
                 try:
                     vm.symbols[symbol] = int(val)
-                    add_debug("Symbol table now holds " + str(vm.symbols[symbol]), vm)
+                    add_debug("Symbol table now holds " + 
+                              str(vm.symbols[symbol]), vm)
                 except Exception:
                     raise InvalidDataVal(val)
+    except Exception:
+        raise InvalidDataVal(token_line)
 
-def lex(code, vm):
+def parse_text_instr(token_line, vm):
     """
-    Lexical phase: tokenizes the code.
+    Parses the text section
+
     Args:
-        code: The code to lexically analyze.
-        vm: virtual machine
+        token_line: Line of code representing the instruction
+        vm: Virtual machine
 
     Returns:
-        tok_lines: the tokenized version
+        The instruction in list form with its parameters 
     """
-    global label_match
-    code_pos = 0
+    token_instruction = []
 
-    data_section = False
-    data_lines = []
+    # add instruction
+    if token_line[0][PARAM_TYPE] == "instruction":
+        token_instruction.append(instructions[token_line[0][PARAM_VAL]])
+    else: 
+        raise InvalidInstruction(token_line[0][PARAM_VAL])
 
-    lines = code.split("\n")
-    pre_processed_lines = []
-    tok_lines = []  # this will hold the tokenized version of the code
-    i = 0
-    for line in lines:
-        # comments:
-        comm_start = line.find(";")
-        if comm_start > 0:  # -1 means not found
-            line = line[0:comm_start]
-        elif comm_start == 0:  # the whole line is a comment
+    # adding the parameters 
+    for index in range(1, len(token_line)):
+        param_val = token_line[index][PARAM_VAL]
+        param_type = token_line[index][PARAM_TYPE]
+        if param_type == "register":
+            token_instruction.append(Register(param_val, vm))
+        elif param_type == "address":
+            address = param_val[1:len(param_val) - 1]
+            if address in vm.memory:
+                token_instruction.append(Address(address, vm))
+            elif address.upper() in vm.registers:
+                token_instruction.append(RegAddress(address.upper(), vm))
+
+            # if is an address type with addition sign
+            elif address.find("+") != -1:
+                plus_location = address.find("+")
+                first_param = address[:plus_location]
+                second_param = address[plus_location + 1:]
+                if first_param.upper() in vm.registers: 
+                    try:
+                        placement = int(second_param)
+                        token_instruction.append(
+                            RegAddress (first_param.upper(), vm, 
+                                           int (second_param)))
+                    except:
+                        raise InvalidMemLoc(address)
+            else:
+                raise InvalidMemLoc(address)
+
+        # index of a list 
+        elif param_type == "index":
+            locate_bracket = param_val.find("[")
+            if re.search (sym_match, 
+                          param_val[:locate_bracket]):
+                if param_val[locate_bracket + 1:
+                             len(param_val) - 1].upper() in vm.registers:
+                    displacement = param_val[locate_bracket + 1:
+                                             len(param_val) - 1].upper()
+                    add_debug("Matched a symbol-type token " + 
+                               param_val[:locate_bracket] + "[" + 
+                               str(displacement)+ "]", vm)
+                    token_instruction.append(
+                    Symbol(param_val[:locate_bracket], vm, 
+                           Register(param_val[locate_bracket + 1:
+                                              len(param_val) - 1].upper(),
+                                    vm)))
+                else:
+                    displacement = int(param_val[locate_bracket + 1:
+                                                 len(param_val) - 1])
+                    add_debug("Matched a symbol-type token " + 
+                               param_val[:locate_bracket] + "[" + 
+                               str(displacement)+ "]", vm)
+                    token_instruction.append(
+                                      Symbol (param_val[:locate_bracket], 
+                                              vm, displacement))
+        elif param_type == "symbol":
+            # check if the symbol is a label
+            if param_val in vm.labels:
+                token_instruction.append(Label(param_val, vm))
+            # if just a symbol
+            else:
+                if isinstance (vm.symbols[param_val], list): 
+                    add_debug("Adding label " + param_val, vm)    
+                    token_instruction.append(
+                                      Symbol(param_val, vm, 0))
+                else:
+                    add_debug("Matched a symbol-type token " + 
+                               param_val, vm)
+                    token_instruction.append(
+                                      Symbol(param_val, vm))
+        elif param_type == "integer":
+            token_instruction.append(IntOp(int(param_val)))
+        else:
+            raise InvalidOperand(param_val)
+    # return parsed instruction
+    return token_instruction
+
+
+def parse(tok_lines, vm):
+    """
+    Parses the analysis obtained from lexical analysis
+
+    Args:
+        tok_lines: Lines containing each line of code
+        vm: Virtual machine
+
+    Returns:
+        A list of parsed instructions
+    """
+    parse_data = False
+    parse_text = True
+    token_instrs = []
+    for tokens in tok_lines:
+        if tokens[0][0][0] == DATA_SECT:
+            parse_data = True
+            parse_text = False
             continue
-
-        # strip AFTER comments to handle blanks between code and ;
-        line = line.strip()
-        if len(line) == 0:  # blank lines ok; just skip 'em
+        elif tokens[0][0][0] == TEXT_SECT:
+            parse_text = True
+            parse_data = False
             continue
-
-        # data section
-        if line == DATA_SECT:
-            data_section = True
-            continue
-        elif line == TEXT_SECT:
-            parse_data_section(data_lines, vm)
-            data_section = False
-            continue
-        elif data_section == True:
-            data_lines.append(line)
-            continue
-
-        # labels:
-        label_present = re.search(label_match, line)
-        if label_present is not None:
-            label = label_present.group(1)
-            add_debug("Setting label " + label + " to val " + str(i), vm)
-            vm.labels[label] = i
-            # now strip off the label:
-            line = line.split (":", 1)[-1]
-            
-        pre_processed_lines.append(line)
-        # we count line numbers to store label jump locations:
-        i += 1
-
-    # we've stripped extra whitespace, comments, and labels: 
-    # now tokenize!
-    for line in pre_processed_lines:
-        code_pos = 0   # reset each line!
-        this_line = []
-        (instr, code_pos) = get_instr(line, code_pos)
-        this_line.append(instr)
-        (ops, code_pos) = get_ops(line, code_pos, vm)
-        this_line.append(ops)
-        tok_lines.append((this_line, line))
-    return (tok_lines)
+        if parse_data:
+            parse_data_val(tokens[0], vm)
+        elif parse_text:
+            token_instrs.append((parse_text_instr(tokens[0], vm), 
+                                 tokens[1]))
+    return token_instrs
