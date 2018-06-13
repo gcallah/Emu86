@@ -7,7 +7,7 @@ import pdb
 from random import randrange
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType
-from .parse import instructions, dtype_info, DONT_INIT
+from .parse import instructions, dtype_info, DONT_INIT, sym_match, label_match
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
 from .tokens import RegAddress, Label
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
@@ -18,10 +18,6 @@ from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
 from .virtual_machine import MEM_SIZE
 
-SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
-sym_match = re.compile(SYM_RE)
-LABEL_RE = SYM_RE + ":"
-label_match = re.compile(LABEL_RE)
 
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
@@ -70,9 +66,7 @@ def sep_line (code, i, vm):
 					analysis.append((word, "index"))
 				elif word == "DUP":
 					analysis.append((word, "list"))
-				elif word.find(":") != -1:
-					if re.search(label_match, 
-						         word) is not None:
+				elif re.search(label_match, word) is not None:
 						vm.labels[word[:word.find(":")]] = i
 				elif re.search(sym_match, word) is not None:
 						analysis.append((word, "symbol"))

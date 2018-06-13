@@ -27,8 +27,6 @@ label_match = re.compile(LABEL_RE)
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
-DELINSIDERS = set([' ', '\n', '\r', '\t',])
-
 DONT_INIT = "?"
 
 MAX_BYTE = 255
