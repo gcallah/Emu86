@@ -23,7 +23,6 @@ class Mov(Instruction):
         check_num_args(self.get_nm(), ops, 2)
         ops[0].set_val(ops[1].get_val())
 
-
 class Pop(Instruction):
     """
         <instr>

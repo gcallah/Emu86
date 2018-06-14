@@ -69,6 +69,9 @@ class IntOp(Operand):
     def __str__(self):
         return str(self.value)
 
+    def get_val(self):
+        return self.value
+
 
 class Location(Operand):
     """
@@ -124,6 +127,9 @@ class RegAddress(Address):
         mem_addr = self.get_mem_addr()
         self.mem[mem_addr] = val
 
+class SymbolAddress(Token):
+    def __init__(self, name, displacement):
+        super().__init__(name, displacement)
 
 class Register(Location):
     def __init__(self, name, vm, val=0):
@@ -133,6 +139,9 @@ class Register(Location):
         self.writable = True
         if self.name in vm.unwritable:
             self.writable = False
+
+    def __str__(self):
+        return str(self.name)
 
     def __str__(self):
         return str(self.name)
@@ -166,6 +175,14 @@ class Label(Location):
     def set_val(self, val):
         raise LabelNotSettable
 
+class NewSymbol(Token):
+    def __init__(self, name, index = None):
+        super().__init__(name)
+
+class InitRegister(Token):
+    def __init__(self, name, index = None):
+        super().__init__(name)
+
 
 class Symbol(Location):
     """
@@ -176,10 +193,16 @@ class Symbol(Location):
         self.vm = vm
         self.check_nm()
         self.index = index
+        #self.check_index()
 
     def check_nm(self):
         if self.name not in self.vm.symbols:
             raise UnknownName(self.name)
+
+    def check_index(self):
+        if (self.index and 
+            self.index not in range(0, len(self.vm.symbols[self.name]))):
+            raise IntOutOfRng(self.index)
 
     def set_val(self, val):
         self.check_nm()
@@ -215,4 +238,7 @@ class Symbol(Location):
                       + str(self.index) + "] = " + 
                       str(self.vm.symbols[self.name][self.index]), self.vm)
                 return self.vm.symbols[self.name][self.index]
+
+    def get_nm(self):
+        return self.name
 
