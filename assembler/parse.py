@@ -9,7 +9,7 @@ from random import randrange
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
-from .tokens import RegAddress, Label, NewSymbol, SymbolAddress
+from .tokens import RegAddress, Label, NewSymbol, SymAddress
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
@@ -284,90 +284,25 @@ def parse_text_instr(token_line, vm):
     for index in range(1, len(token_line)):
         if isinstance(token_line[index], NewSymbol):
             if token_line[index].get_nm() in vm.labels:
-                token_instruction.append(Label(token_line[index].get_nm(), vm))
+                token_instruction.append(Label(token_line[index].get_nm(), 
+                                               vm))
             elif token_line[index].get_nm() not in vm.symbols:
                 raise UnknownName(token_line[index].get_nm())
             elif isinstance (vm.symbols[token_line[index].get_nm()], list): 
                 add_debug("Adding label " + token_line[index].get_nm(), vm)    
                 token_instruction.append(
-                                      Symbol(token_line[index].get_nm(), vm, 0))
+                                      Symbol(token_line[index].get_nm(), 
+                                             vm, 0))
             else:
                 add_debug("Matched a symbol-type token " + 
                            token_line[index].get_nm(), vm)
-                token_instruction.append(Symbol(token_line[index].get_nm(), vm))
-        elif isinstance(token_line[index], SymbolAddress):
-            token_instruction.append(Symbol(token_line[index].get_nm(), vm, token_line[index].get_val()))
+                token_instruction.append(Symbol(token_line[index].get_nm(), 
+                                                vm))
+        elif isinstance(token_line[index], SymAddress):
+            token_instruction.append(Symbol(token_line[index].get_nm(), 
+                                            vm, token_line[index].get_val()))
         else:   
             token_instruction.append(token_line[index])
-        # if isinstance(token_line[index], Register):
-        #     token_instruction.append(token_line[index])
-        # elif isinstance(token_line[index], Address):
-        #     token_instruction.append(Address(address, vm))
-        #     elif address.upper() in vm.registers:
-        #         token_instruction.append(RegAddress(address.upper(), vm))
-
-        #     # if is an address type with addition sign
-        #     elif address.find("+") != -1:
-        #         plus_location = address.find("+")
-        #         first_param = address[:plus_location]
-        #         second_param = address[plus_location + 1:]
-        #         if first_param.upper() in vm.registers: 
-        #             try:
-        #                 placement = int(second_param)
-        #                 token_instruction.append(
-        #                     RegAddress (first_param.upper(), vm, 
-        #                                    int (second_param)))
-        #             except:
-        #                 raise InvalidMemLoc(address)
-        #     else:
-        #         raise InvalidMemLoc(address)
-
-        # # index of a list 
-        # elif param_type == "index":
-        #     locate_bracket = param_val.find("[")
-        #     if re.search (sym_match, 
-        #                   param_val[:locate_bracket]):
-        #         if param_val[locate_bracket + 1:
-        #                      len(param_val) - 1].upper() in vm.registers:
-        #             displacement = param_val[locate_bracket + 1:
-        #                                      len(param_val) - 1].upper()
-        #             add_debug("Matched a symbol-type token " + 
-        #                        param_val[:locate_bracket] + "[" + 
-        #                        str(displacement)+ "]", vm)
-        #             token_instruction.append(
-        #             Symbol(param_val[:locate_bracket], vm, 
-        #                    Register(param_val[locate_bracket + 1:
-        #                                       len(param_val) - 1].upper(),
-        #                             vm)))
-        #         else:
-        #             displacement = int(param_val[locate_bracket + 1:
-        #                                          len(param_val) - 1])
-        #             add_debug("Matched a symbol-type token " + 
-        #                        param_val[:locate_bracket] + "[" + 
-        #                        str(displacement)+ "]", vm)
-        #             token_instruction.append(
-        #                               Symbol (param_val[:locate_bracket], 
-        #                                       vm, displacement))
-        # elif param_type == "symbol":
-        #     # check if the symbol is a label
-        #     if param_val in vm.labels:
-        #         token_instruction.append(Label(param_val, vm))
-        #     # if just a symbol
-        #     else:
-        #         if isinstance (vm.symbols[param_val], list): 
-        #             add_debug("Adding label " + param_val, vm)    
-        #             token_instruction.append(
-        #                               Symbol(param_val, vm, 0))
-        #         else:
-        #             add_debug("Matched a symbol-type token " + 
-        #                        param_val, vm)
-        #             token_instruction.append(
-        #                               Symbol(param_val, vm))
-        # elif param_type == "integer":
-        #     token_instruction.append(IntOp(int(param_val)))
-        # else:
-        #     raise InvalidOperand(param_val)
-    # return parsed instruction
     return token_instruction
 
 

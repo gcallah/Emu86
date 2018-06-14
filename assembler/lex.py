@@ -9,7 +9,7 @@ from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType
 from .parse import instructions, dtype_info, DONT_INIT, sym_match, label_match
 from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
-from .tokens import RegAddress, Label, NewSymbol, SymbolAddress
+from .tokens import RegAddress, Label, NewSymbol, SymAddress
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
@@ -70,11 +70,12 @@ def sep_line (code, i, vm):
                     if first_brack == 0:
                         if address.upper() in vm.registers:
                             if plus_sign == -1:
-                                analysis.append(RegAddress(address.upper(), vm))
+                                analysis.append(RegAddress(address.upper(), 
+                                	                       vm))
                             else:
                                 analysis.append(RegAddress(address.upper(), 
                                                 vm, int(word[plus_sign + 1:
-                                                                 last_brack])))
+                                                             last_brack])))
                         elif address in vm.memory: 
                             analysis.append(Address(address, vm))
                         else:
@@ -82,10 +83,12 @@ def sep_line (code, i, vm):
                     else:
                         if re.search(sym_match, word[:first_brack]):
                             if address.upper() in vm.registers:
-                                analysis.append(SymbolAddress(word[:first_brack],
-                                                Register(address.upper(), vm)))
+                                analysis.append(SymAddress(word[:first_brack],
+                                                Register(address.upper(), 
+                                                         vm)))
                             else:
-                                analysis.append(SymbolAddress(word[:first_brack], int(address)))
+                                analysis.append(SymAddress(word[:first_brack], 
+                                	                         int(address)))
                 elif word == "DUP":
                     analysis.append(word)
                 elif re.search(label_match, word) is not None:

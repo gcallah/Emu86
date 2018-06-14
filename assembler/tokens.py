@@ -127,7 +127,7 @@ class RegAddress(Address):
         mem_addr = self.get_mem_addr()
         self.mem[mem_addr] = val
 
-class SymbolAddress(Token):
+class SymAddress(Token):
     def __init__(self, name, displacement):
         super().__init__(name, displacement)
 
@@ -178,11 +178,6 @@ class Label(Location):
 class NewSymbol(Token):
     def __init__(self, name, index = None):
         super().__init__(name)
-
-class InitRegister(Token):
-    def __init__(self, name, index = None):
-        super().__init__(name)
-
 
 class Symbol(Location):
     """
