@@ -7,9 +7,12 @@ import pdb
 from random import randrange
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
-from .errors import UnknownName, InvalidDataType
-from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
-from .tokens import RegAddress, Label, NewSymbol, SymAddress
+from .errors import UnknownName, InvalidDataType, InvalidSection
+from .errors import InvalidArgument, MissingData, InvalidDataVal
+from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
+from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DataType
+from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
+from .tokens import OpenBracket, CloseBracket, PlusTok
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
@@ -184,126 +187,273 @@ def store_values_array(values, data_type):
                     raise InvalidDataVal(values)
         return values_list
 
-
-def parse_data_val(token_line, vm):
-    """
-    Parses the data secton 
-
-    Args: 
-        token_line: A list of tuples of terms for a line of code
-        vm: Virtual machine
-    """
-    try:
-        # denote symbol
-        symbol = ""
-        if isinstance(token_line[0], NewSymbol):
-            symbol = token_line[0].get_nm()
-        data_type = token_line[1]
-
-        # denote data size
-        dsize = ""
-        try:
-            dsize = dtype_info[data_type][BYTES]
-        except KeyError:
-            raise InvalidDataType(date_type)
-
-        # set values
-        if isinstance(token_line[2], IntOp):
-            val = str(token_line[2].get_val())
+def get_data_type(token_line, pos):
+    if pos >= len(token_line):
+        raise MissingData()
+    elif isinstance(token_line[pos], DataType):
+        if token_line[pos].get_nm() not in dtype_info:
+            raise InvalidDataType(token_line[pos].get_nm())
         else:
-            val = str(token_line[2])
-        if len(token_line) > 3:
-            index = 3
-            while (index < len (token_line)):
-                # if contains DUP 
-                if token_line[index] == "DUP":
-                    try:
-                        val += (token_line[index] + 
-                               str(token_line[index + 1].get_val())+ ",")
-                        index += 2
-                    except Exception:
-                        raise InvalidDataVal(val)
-                # if contains an integer
+            return token_line[pos].get_nm()
+    else:
+        raise InvalidDataType(token_line[pos].get_nm())
+
+def check_data_values(token_line, pos):
+    data_okay = True
+    # first check the very first data element
+    if (not isinstance(token_line[pos], IntegerTok) and 
+        not isinstance(token_line[pos], StringTok) and 
+        not isinstance(token_line[pos], QuestionTok)):
+        data_okay = False
+        raise InvalidArgument(token_line[pos].get_nm())
+    pos += 1
+
+    # check others afer first element
+    while pos < len(token_line):
+
+        # if comma 
+        if isinstance(token_line[pos], Comma):
+            if pos == len(token_line) - 1:
+                data_okay = False
+                raise InvalidArgument(",")
+            else: 
+                if (not isinstance(token_line[pos - 1], IntegerTok) and 
+                    not isinstance(token_line[pos - 1], StringTok) and 
+                    not isinstance(token_line[pos - 1], QuestionTok) and 
+                    not isinstance(token_line[pos - 1], CloseParen)):
+                    data_okay = False
+                    raise InvalidArgument(",")
                 else:
-                    # strip in case next term is DUP 
-                    val = val.strip(",")
-                    val += "," + str(token_line[index].get_val())
-                    index += 1
+                    pos += 1
 
-        # strip off extra comma if there is from DUP
-        val = val.strip(",")
-        # convert values if necessary
-        val = convert_string_to_ascii(val);
-        val = store_values_dup(val, data_type);
+        # if DUP
+        elif isinstance(token_line[pos], DupTok):
+            if not isinstance(token_line[pos - 1], IntegerTok):
+                data_okay = False
+                raise InvalidArgument("DUP")
+            else:
+                pos += 1
 
-        # convert string of numbers to a list
-        if val.find (",") != -1:
-            vm.symbols[symbol] = store_values_array (val, data_type)  
-            debug_string = "Symbol table now holds "
-            for int_values in vm.symbols[symbol]:
-                debug_string += str(int_values) + ","
-            add_debug(debug_string, vm)  
+        # if open parenthesis
+        elif isinstance(token_line[pos], OpenParen):
+            if not isinstance(token_line[pos - 1], DupTok):
+                data_okay = False
+                raise InvalidArgument("(")
+            else:
+                pos += 1
 
-        # if not a list and just a value
+        # if close parenthesis
+        elif isinstance(token_line[pos], CloseParen):
+            if (not isinstance(token_line[pos - 2], OpenParen) and 
+                not isinstance(token_line[pos - 1], IntegerTok) and 
+                not isinstance(token_line[pos - 1], StringTok) and 
+                not isinstance(token_line[pos - 1], QuestionTok)):
+                data_okay = False
+                raise InvalidArgument("(")
+            else:
+                pos += 1
+
+        # if ?
+        elif isinstance(token_line[pos], QuestionTok):
+            if (not isinstance(token_line[pos - 1], Comma) and
+                not isinstance(token_line[pos - 1], OpenParen)):
+                data_okay = False
+                raise InvalidArgument("?")
+            else:
+                pos += 1
+
+        # if integer
+        elif isinstance(token_line[pos], IntegerTok):
+
+            # if not 0 but follows a string
+            if (isinstance(token_line[pos - 2], StringTok) and 
+                isinstance(token_line[pos - 1], Comma) and 
+                token_line[pos].get_val() != 0):
+                data_okay = False
+                raise InvalidDataVal(str(token_line[pos].get_val()))
+
+            elif (not isinstance(token_line[pos - 1], Comma) and
+                not isinstance(token_line[pos - 1], OpenParen)):
+                data_okay = False
+                raise InvalidArgument(str(token_line[pos].get_val()))
+            else:
+                pos += 1
+
+        # if string 
+        elif isinstance(token_line[pos], StringTok):
+            if not isinstance(token_line[pos - 1], Comma):
+                data_okay = False
+                raise InvalidDataVal(token_line[pos].get_val())
+            else:
+                pos += 1
+
         else:
-            if val == DONT_INIT:
-                vm.symbols[symbol] = randrange(0, 
-                                     dtype_info[data_type][MAX_VAL])
+            raise InvalidDataVal(token_line[pos].get_val())
+
+    return data_okay
+
+
+def get_data_values(token_line, pos):
+    if pos >= len(token_line):
+        raise MissingData()
+    else:
+        if check_data_values(token_line, pos):
+            values_list = []
+            while pos < len(token_line):
+                if isinstance(token_line[pos], IntegerTok):
+                    values_list.append(str(token_line[pos].get_val()))
+                elif (not isinstance(token_line[pos], OpenParen) and
+                    not isinstance(token_line[pos], CloseParen)):
+                    values_list.append(token_line[pos].get_nm())
+                pos += 1
+            return "".join(values_list)
+
+def parse_data_token(token_line, vm):
+    pos = 0
+    symbol = ""
+    if not isinstance(token_line[pos], NewSymbol):
+        raise InvalidArgument(token_line[pos].get_nm())
+    else:
+        symbol = token_line[pos].get_nm()
+    pos += 1
+    data_type = get_data_type(token_line, pos)
+    pos += 1
+    val = get_data_values(token_line, pos)
+    val = convert_string_to_ascii(val);
+    val = store_values_dup(val, data_type);
+
+    # convert string of numbers to a list
+    if val.find (",") != -1:
+        vm.symbols[symbol] = store_values_array (val, data_type)  
+        debug_string = "Symbol table now holds "
+        for int_values in vm.symbols[symbol]:
+            debug_string += str(int_values) + ","
+        add_debug(debug_string, vm)  
+
+    # if not a list and just a value
+    else:
+        if val == DONT_INIT:
+            vm.symbols[symbol] = randrange(0, 
+                                 dtype_info[data_type][MAX_VAL])
+            add_debug("Symbol table now holds " + 
+                      str(vm.symbols[symbol]), vm)
+        else: 
+            try:
+                vm.symbols[symbol] = int(val)
                 add_debug("Symbol table now holds " + 
                           str(vm.symbols[symbol]), vm)
-            else: 
-                try:
-                    vm.symbols[symbol] = int(val)
-                    add_debug("Symbol table now holds " + 
-                              str(vm.symbols[symbol]), vm)
-                except Exception:
-                    raise InvalidDataVal(val)
-    except Exception:
-        raise InvalidDataVal(token_line)
+            except:
+                raise InvalidDataVal(val)
 
-def parse_text_instr(token_line, vm):
-    """
-    Parses the text section
-
-    Args:
-        token_line: Line of code representing the instruction
-        vm: Virtual machine
-
-    Returns:
-        The instruction in list form with its parameters 
-    """
-    token_instruction = []
-
-    # add instruction
-    if isinstance(token_line[0], Instruction):
-        token_instruction.append(token_line[0])
-    else: 
-        raise InvalidInstruction(token_line[0].get_nm())
-
-    # adding the parameters 
-    for index in range(1, len(token_line)):
-        if isinstance(token_line[index], NewSymbol):
-            if token_line[index].get_nm() in vm.labels:
-                token_instruction.append(Label(token_line[index].get_nm(), 
-                                               vm))
-            elif token_line[index].get_nm() not in vm.symbols:
-                raise UnknownName(token_line[index].get_nm())
-            elif isinstance (vm.symbols[token_line[index].get_nm()], list): 
-                add_debug("Adding label " + token_line[index].get_nm(), vm)    
-                token_instruction.append(
-                                      Symbol(token_line[index].get_nm(), 
-                                             vm, 0))
+def get_address(token_line, pos, vm):
+    if pos >= len(token_line):
+        raise InvalidMemLoc("")
+    register = None
+    displacement = 0
+    if isinstance(token_line[pos], IntegerTok):
+        displacement = token_line[pos].get_val()
+    elif isinstance(token_line[pos], Register):
+        register = token_line[pos]
+    else:
+        raise InvalidMemLoc(token_line[pos].get_nm())
+    pos += 1
+    closeBracket = False 
+    # check other elements within bracket
+    while pos < len(token_line):
+        if isinstance(token_line[pos], IntegerTok):
+            if isinstance(token_line[pos - 1], PlusTok):
+                displacement += token_line[pos].get_val()
+                pos += 1
             else:
-                add_debug("Matched a symbol-type token " + 
-                           token_line[index].get_nm(), vm)
-                token_instruction.append(Symbol(token_line[index].get_nm(), 
-                                                vm))
-        elif isinstance(token_line[index], SymAddress):
-            token_instruction.append(Symbol(token_line[index].get_nm(), 
-                                            vm, token_line[index].get_val()))
-        else:   
-            token_instruction.append(token_line[index])
+                raise InvalidMemLoc(str(token_line[pos].get_val()))
+        elif isinstance(token_line[pos], PlusTok):
+            if (isinstance(token_line[pos - 1], IntegerTok) or
+                isinstance(token_line[pos - 1], Register)):
+                pos += 1
+                continue
+            else:
+                raise InvalidArgument("+")
+        elif isinstance(token_line[pos], Register):
+            if isinstance(token_line[pos - 1], PlusTok):
+                if register:
+                    displacement += token_line[pos].get_val()
+                else:
+                    register = token_line[pos]
+                pos += 1
+            else:
+                raise InvalidMemLoc(token_line[pos].get_nm())
+        elif isinstance(token_line[pos], CloseBracket):
+            if (isinstance(token_line[pos - 1], IntegerTok) or
+                isinstance(token_line[pos - 1], Register)):
+                closeBracket = True
+                pos += 1
+                break
+        else:
+            raise InvalidMemLoc(token_line[pos].get_nm())
+    if closeBracket:
+        return (register, displacement, pos)
+    else:
+        raise InvalidMemLoc("")
+
+def get_op(token_line, pos, vm):
+    if (isinstance(token_line[pos], Register) or 
+        isinstance(token_line[pos], IntegerTok)):
+        return (token_line[pos], pos + 1)
+    elif isinstance(token_line[pos], OpenBracket):
+        pos += 1
+        register, displacement, pos = get_address(token_line, pos, vm)
+        if register:
+            return (RegAddress(register.get_nm(), vm, displacement), pos)
+        else:
+            return (Address(str(displacement), vm), pos)
+
+    elif isinstance(token_line[pos], NewSymbol):
+        if token_line[pos].get_nm() in vm.labels:
+            return (Label(token_line[pos].get_nm(), vm), pos + 1)
+        elif token_line[pos].get_nm() not in vm.symbols:
+            raise UnknownName(token_line[pos].get_nm())
+        else:
+            symbol = token_line[pos].get_nm()
+            pos += 1 
+            if pos < len(token_line):
+                if isinstance(token_line[pos], OpenBracket):
+                    pos += 1
+                    register, displacement, pos = get_address(token_line, pos, vm)
+                    if register:
+                        return (Symbol(symbol, vm, register), pos)
+                        
+                    return (Symbol(symbol, vm, displacement), pos)
+                else:
+                    if isinstance(vm.symbols[symbol], list):
+                        return (Symbol(symbol, vm, 0), pos)
+                    else:
+                        return (Symbol(symbol,vm), pos)
+            else:
+                if isinstance(vm.symbols[symbol], list):
+                    return (Symbol(symbol, vm, 0), pos)
+                else:
+                    return (Symbol(symbol,vm), pos)
+    else:
+        raise InvalidArgument(token_line[pos].get_nm())
+
+def parse_exec_unit(token_line, vm):
+    pos = 0
+    token_instruction = []
+    if not isinstance(token_line[pos], Instruction):
+        raise InvalidInstruction(token_line[pos].get_nm())
+    token_instruction.append(token_line[pos])
+    pos += 1 
+    while pos < len(token_line):
+        op, pos = get_op(token_line, pos, vm)
+        token_instruction.append(op)
+        if pos + 1 < len(token_line):
+            if isinstance(token_line[pos], Comma): 
+                pos += 1
+            else:
+                raise MissingData()
     return token_instruction
+
+
 
 
 def parse(tok_lines, vm):
@@ -321,17 +471,20 @@ def parse(tok_lines, vm):
     parse_text = True
     token_instrs = []
     for tokens in tok_lines:
-        if tokens[0][0] == DATA_SECT:
-            parse_data = True
-            parse_text = False
-            continue
-        elif tokens[0][0] == TEXT_SECT:
-            parse_text = True
-            parse_data = False
-            continue
+        if isinstance(tokens[0][0], Section):
+            if tokens[0][0].get_nm() == "data":
+                parse_data = True
+                parse_text = False
+                continue
+            elif tokens[0][0].get_nm() == "text":
+                parse_text = True
+                parse_data = False
+                continue
+            else: 
+                raise InvalidSection(tokens[0][0].get_nm())
         if parse_data:
-            parse_data_val(tokens[0], vm)
+            parse_data_token(tokens[0], vm)
         elif parse_text:
-            token_instrs.append((parse_text_instr(tokens[0], vm), 
+            token_instrs.append((parse_exec_unit(tokens[0], vm), 
                                  tokens[1]))
     return token_instrs

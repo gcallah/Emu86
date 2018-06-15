@@ -12,4 +12,4 @@ body: add eax, eax
       inc ecx
       jmp whileLE
 
-endWhileLE:	dec ecx 
+endWhileLE: dec ecx 

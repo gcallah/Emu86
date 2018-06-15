@@ -33,7 +33,34 @@ class Token:
     def get_nm(self):
         return self.name
 
+class Section(Token):
+    def __init__(self, name):
+        super().__init__(name)
 
+class OpenBracket(Token):
+    def __init__(self):
+        super().__init__("[")
+
+class CloseBracket(Token):
+    def __init__(self):
+        super().__init__("]")
+
+class OpenParen(Token):
+    def __init__(self):
+        super().__init__("(")
+
+class CloseParen(Token):
+    def __init__(self):
+        super().__init__(")")
+
+class DataType(Token):
+    def __init__(self, name):
+        super().__init__(name)
+
+class Comma(Token):
+    def __init__(self):
+        super().__init__(",")
+        
 class Instruction(Token):
     """
     Class representing all instructions.
@@ -59,12 +86,12 @@ class Operand(Token):
         super().__init__(name, val)
 
 
-class IntOp(Operand):
+class IntegerTok(Operand):
     def __init__(self, val=0):
         if(val > MAX_INT or val < MIN_INT):
             raise IntOutOfRng(str(val))
 
-        super().__init__("IntOp", val)
+        super().__init__("Integer", val)
 
     def __str__(self):
         return str(self.value)
@@ -72,6 +99,21 @@ class IntOp(Operand):
     def get_val(self):
         return self.value
 
+class StringTok(Token):
+    def __init__(self, name):
+        super().__init__(name)
+
+class DupTok(Token):
+    def __init__(self, name):
+        super().__init__(name)
+
+class QuestionTok(Token):
+    def __init__(self):
+        super().__init__("?")
+
+class PlusTok(Token):
+    def __init__(self):
+        super().__init__("+")
 
 class Location(Operand):
     """

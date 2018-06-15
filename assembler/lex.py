@@ -6,10 +6,13 @@ import re
 import pdb
 from random import randrange
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
-from .errors import UnknownName, InvalidDataType
+from .errors import UnknownName, InvalidDataType, InvalidArgument
 from .parse import instructions, dtype_info, DONT_INIT, sym_match, label_match
-from .tokens import Location, Address, Register, IntOp, Symbol, Instruction
-from .tokens import RegAddress, Label, NewSymbol, SymAddress
+from .tokens import Location, Address, Register, Symbol, Instruction
+from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DupTok
+from .tokens import QuestionTok, PlusTok
+from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
+from .tokens import Comma, OpenParen, CloseParen
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
@@ -22,7 +25,8 @@ from .virtual_machine import MEM_SIZE
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
-DELINSIDERS = set([' ', ',', '(', ')', '\n', '\r', '\t',])
+DELIMITERS = set([' ', '(', ')', '\n', '\r', '\t', ','])
+SEPARATORS = set([',', '(', ')', '[', ']', '+'])
 
 def sep_line (code, i, vm):
     """
@@ -41,74 +45,133 @@ def sep_line (code, i, vm):
     index = 0
     start = 0
     end = 1
-    while end <= len(code):
-        if code[start] in DELINSIDERS:
-            start += 1
-            end += 1
-        else: 
-            if end != len(code) and code[end] not in DELINSIDERS:
-                end += 1
+
+    words = code.split(" ")
+    while index < len(words):
+        words[index].strip(" \t\r\n")
+        splitter = ""
+        for character in words[index]:
+            if character in SEPARATORS and words[index] != character:
+                splitter = character
+                break
+        if splitter != "":
+            split_location = words[index].find(splitter)
+            temp_words = [words[index][:split_location]]
+            temp_words.append(splitter)
+            temp_words.append(words[index][split_location + 1:])
+            words = words[:index] + temp_words + words[index + 1:]
+        else:
+            index += 1
+
+    for word in words:
+        if word != "":
+            if word[0] == ".":
+                analysis.append(Section(word[1:]))
+            elif word in dtype_info:
+                analysis.append(DataType(word))
+            elif word.upper() in instructions:
+                analysis.append(instructions[word.upper()])
+            elif word.upper() in vm.registers:
+                analysis.append(Register(word.upper(), vm))
+            elif word == "[":
+                analysis.append(OpenBracket())
+            elif word == "(":
+                analysis.append(OpenParen())
+            elif word == "]":
+                analysis.append(CloseBracket())
+            elif word == ")":
+                analysis.append(CloseParen())
+            elif word == ",":
+                analysis.append(Comma())
+            elif word == "+":
+                analysis.append(PlusTok())
+            elif word == "DUP":
+                analysis.append(DupTok(word))
+            elif word.find("'") != -1:
+                analysis.append(StringTok(word))
+            elif word == DONT_INIT:
+                analysis.append(QuestionTok())
+            elif re.search(label_match, word) is not None:
+                vm.labels[word[:word.find(":")]] = i
+            elif re.search(sym_match, word) is not None:
+                # if word in vm.labels:
+                #     analysis.append(Label(word, vm))
+                # else:
+                analysis.append(NewSymbol(word, vm))
             else:
-                word = code[start:end].strip(" ,\n\t\r")
-                if word == ".data":
-                    analysis.append(DATA_SECT)
-                elif word == ".text":
-                    analysis.append(TEXT_SECT)
-                elif word in dtype_info:
-                    analysis.append (word)
-                elif word.upper() in instructions:
-                    analysis.append(instructions[word.upper()])
-                elif word.upper() in vm.registers:
-                    analysis.append(Register(word.upper(), vm))
-                elif word.find("[") != -1:
-                    first_brack = word.find("[")
-                    last_brack = word.find("]")
-                    plus_sign = word.find("+")
-                    address = word[first_brack + 1:last_brack]
-                    if plus_sign != -1 and plus_sign < last_brack:
-                        address = word[first_brack + 1:plus_sign]
-                    if first_brack == 0:
-                        if address.upper() in vm.registers:
-                            if plus_sign == -1:
-                                analysis.append(RegAddress(address.upper(), 
-                                	                       vm))
-                            else:
-                                analysis.append(RegAddress(address.upper(), 
-                                                vm, int(word[plus_sign + 1:
-                                                             last_brack])))
-                        elif address in vm.memory: 
-                            analysis.append(Address(address, vm))
-                        else:
-                            raise InvalidMemLoc(address)
-                    else:
-                        if re.search(sym_match, word[:first_brack]):
-                            if address.upper() in vm.registers:
-                                analysis.append(SymAddress(word[:first_brack],
-                                                Register(address.upper(), 
-                                                         vm)))
-                            else:
-                                analysis.append(SymAddress(word[:first_brack], 
-                                	                         int(address)))
-                elif word == "DUP":
-                    analysis.append(word)
-                elif re.search(label_match, word) is not None:
-                    vm.labels[word[:word.find(":")]] = i
-                elif re.search(sym_match, word) is not None:
-                    if word in vm.labels:
-                        analysis.append(Label(word, vm))
-                    else:
-                        analysis.append(NewSymbol(word, vm))
-                elif word.find("'") != -1:
-                    analysis.append(word)
-                elif word == DONT_INIT:
-                    analysis.append (DONT_INIT)
-                else:
-                    try:
-                        analysis.append(IntOp(int(word)))
-                    except Exception:
-                        raise InvalidOperand(word)
-                start = end + 1 
-                end = start + 1
+                try:
+                    analysis.append(IntegerTok(int(word)))
+                except Exception:
+                    raise InvalidArgument(word)
+
+    # analysis = []
+    # while end <= len(code):
+    #     if code[start] in DELIMITERS:
+    #         start += 1
+    #         end += 1
+    #     else: 
+
+    #         if end != len(code) and code[end] not in DELIMITERS:
+    #             end += 1
+    #         else:
+    #             word = code[start:end].strip(" ,\n\t\r")
+    #             if word[0] == ".":
+    #                 analysis.append(Section(word[1:]))
+    #             elif word in dtype_info:
+    #                 analysis.append(DataType(word))
+    #             elif word.upper() in instructions:
+    #                 analysis.append(instructions[word.upper()])
+    #             elif word.upper() in vm.registers:
+    #                 analysis.append(Register(word.upper(), vm))
+    #             elif word.find("[") != -1:
+    #                 first_brack = word.find("[")
+    #                 last_brack = word.find("]")
+    #                 plus_sign = word.find("+")
+    #                 address = word[first_brack + 1:last_brack]
+    #                 if plus_sign != -1 and plus_sign < last_brack:
+    #                     address = word[first_brack + 1:plus_sign]
+    #                 if first_brack == 0:
+    #                     if address.upper() in vm.registers:
+    #                         if plus_sign == -1:
+    #                             analysis.append(RegAddress(address.upper(), 
+    #                                                        vm))
+    #                         else:
+    #                             analysis.append(RegAddress(address.upper(), 
+    #                                             vm, int(word[plus_sign + 1:
+    #                                                          last_brack])))
+    #                     elif address in vm.memory: 
+    #                         analysis.append(Address(address, vm))
+    #                     else:
+    #                         raise InvalidMemLoc(address)
+    #                 else:
+    #                     if re.search(sym_match, word[:first_brack]):
+    #                         if address.upper() in vm.registers:
+    #                             analysis.append(SymAddress(word[:first_brack],
+    #                                             Register(address.upper(), 
+    #                                                      vm)))
+    #                         else:
+    #                             analysis.append(SymAddress(word[:first_brack], 
+    #                                                          int(address)))
+    #             elif word == "DUP":
+    #                 analysis.append(word)
+    #             elif re.search(label_match, word) is not None:
+    #                 vm.labels[word[:word.find(":")]] = i
+    #             elif re.search(sym_match, word) is not None:
+    #                 if word in vm.labels:
+    #                     analysis.append(Label(word, vm))
+    #                 else:
+    #                     analysis.append(NewSymbol(word, vm))
+    #             elif word.find("'") != -1:
+    #                 analysis.append(word)
+    #             elif word == DONT_INIT:
+    #                 analysis.append(StringTok(DONT_INIT))
+    #             else:
+    #                 try:
+    #                     analysis.append(IntegerTok(int(word)))
+    #                 except Exception:
+    #                     raise InvalidArgument(word)
+    #             start = end + 1 
+    #             end = start + 1
     return (analysis, code)
 
 

@@ -3,7 +3,7 @@ interrupts.py: data movement instructions.
 """
 
 from .errors import check_num_args, InvalidOperand, ExitProg, UnknownInt
-from .tokens import Instruction, IntOp
+from .tokens import Instruction, IntegerTok
 
 EAX = 'EAX'
 
@@ -48,7 +48,7 @@ class Interrupt(Instruction):
 
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
-        if type(ops[0]) != IntOp:
+        if type(ops[0]) != IntegerTok:
             raise InvalidOperand(str(ops[0]))
         try:
             interrupt_class = int_vectors[ops[0].get_val()]

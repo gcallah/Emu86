@@ -12,6 +12,8 @@ INVALID_REG = "Invalid register: "
 INVALID_VAR_DECL = "Invalid variable declaration: "
 INVALID_DATA_TYPE = "Invalid data type: "
 INVALID_DATA_VAL = "Invalid data value: "
+INVALID_SECTION = "Invalid section: "
+INVALID_TOKEN = "Invalid argument: "
 LABEL_NOT_SETTABLE = "Label values can't be reset."
 NOT_SETTABLE = "This operand type can't have its value set: "
 PROGRAM_EXIT = "Program exit"
@@ -22,6 +24,7 @@ UNKNOWN_ERR = "Unknown parsing error."
 UNKNOWN_INT = "Unknown interrupt instruction: "
 UNKNOWN_NM = "Unknown symbol: "
 UNKNOWN_LABEL = "Unknown label: "
+MISSING_DATA = "Missing data values"
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -56,6 +59,14 @@ class InvalidDataVal(Error):
 class InvalidInstruction(Error):
     def __init__(self, offender):
         self.msg = INVALID_INSTR + offender
+
+class InvalidSection(Error):
+    def __init__(self, offender):
+        self.msg = INVALID_SECTION + offender
+
+class InvalidArgument(Error):
+    def __init__(self, offender):
+        self.msg = INVALID_TOKEN + offender
 
 class NotSettable(Error):
     def __init__(self, offender):
@@ -115,6 +126,10 @@ class StackUnderflow(Error):
 class ExitProg(Error):
     def __init__(self):
         self.msg = PROGRAM_EXIT
+
+class MissingData(Error):
+    def __init__(self):
+        self.msg = MISSING_DATA
 
 def check_num_args(instr, ops, correct_num):
     """
