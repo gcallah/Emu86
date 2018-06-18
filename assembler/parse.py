@@ -478,6 +478,8 @@ def get_op(token_line, pos, vm):
     Returns: 
         Operand token, position of next item in instruction
     """
+    if pos >= len(token_line):
+        raise Exception   # really we want "no op where expected"
     if (isinstance(token_line[pos], Register) or 
         isinstance(token_line[pos], IntegerTok)):
         return (token_line[pos], pos + 1)
@@ -530,18 +532,27 @@ def parse_exec_unit(token_line, vm):
     Returns: 
         List of tokens: instruction, operand, operand
     """
+    NEED_OP = 0
+    NEED_COMMA_OR_END = 1
     pos = 0
     token_instruction = []
     if not isinstance(token_line[pos], Instruction):
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
     pos += 1 
-    while pos < len(token_line):
-        op, pos = get_op(token_line, pos, vm)
-        token_instruction.append(op)
-        if pos < len(token_line):
-            if isinstance(token_line[pos], Comma): 
+    state = NEED_OP
+    while True:
+        if state == NEED_OP:
+            # get_op will throw excep if no op present
+            op, pos = get_op(token_line, pos, vm)
+            token_instruction.append(op)
+            state = NEED_COMMA_OR_END
+        elif state == NEED_COMMA_OR_END:
+            if pos >= len(token_line):
+                break  # end of tokens
+            elif isinstance(token_line[pos], Comma): 
                 pos += 1
+                state = NEED_OP
             else:
                 raise MissingComma()
     return token_instruction
