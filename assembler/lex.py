@@ -26,7 +26,7 @@ DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
 DELIMITERS = set([' ', '(', ')', '\n', '\r', '\t', ','])
-SEPARATORS = set([',', '(', ')', '[', ']', '+'])
+SEPARATORS = set([',', '(', ')', '\n', '\r', '\t', '[', ']', '+'])
 
 def sep_line (code, i, vm):
     """
@@ -64,7 +64,7 @@ def sep_line (code, i, vm):
             index += 1
 
     for word in words:
-        if word != "":
+        if word != "" and word not in "\n\t\r":
             if word[0] == ".":
                 analysis.append(Section(word[1:]))
             elif word in dtype_info:
