@@ -10,7 +10,7 @@ from .errors import UnknownName, InvalidDataType, InvalidArgument
 from .parse import instructions, dtype_info, DONT_INIT, sym_match, label_match
 from .tokens import Location, Address, Register, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DupTok
-from .tokens import QuestionTok, PlusTok, OperatorTok
+from .tokens import QuestionTok, PlusTok, MinusTok
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
@@ -25,17 +25,28 @@ from .virtual_machine import MEM_SIZE
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
-DELIMITERS = set([' ', '(', ')', '\n', '\r', '\t', ','])
-SEPARATORS = set([',', '(', ')', '\n', '\r', '\t', '[', ']', '+', '-'])
+SEPARATORS = set([',', '(', ')', '[', ']', '+', '-'])
 
 OPEN_BRACKET = OpenBracket()
 CLOSE_BRACKET = CloseBracket()
+OPEN_PAREN = OpenParen()
+CLOSE_PAREN = CloseParen()
+COMMA = Comma()
+PLUS_TOKEN = PlusTok()
+MINUS_TOKEN = MinusTok()
+QUESTION_TOKEN = QuestionTok()
+DUP_TOKEN = DupTok()
 
 keywords_to_tokens = {
     "[": OPEN_BRACKET,
     "]": CLOSE_BRACKET,
-    "(": OpenParen,
-    ")": CloseParen,
+    "(": OPEN_PAREN,
+    ")": CLOSE_PAREN,
+    ",": COMMA,
+    "+": PLUS_TOKEN,
+    "-": MINUS_TOKEN,
+    "?": QUESTION_TOKEN,
+    "DUP": DUP_TOKEN
 }
 
 def sep_line (code, i, vm):
@@ -55,13 +66,11 @@ def sep_line (code, i, vm):
     """
     analysis = []
     index = 0
-    start = 0
-    end = 1
 
 # try re.split here:
-    words = code.split(" ")
+    words = re.split("[ \t\r\n]+", code)
+    
     while index < len(words):
-        words[index].strip(" \t\r\n")
         splitter = ""
         for character in words[index]:
             if character in SEPARATORS and words[index] != character:
@@ -77,7 +86,7 @@ def sep_line (code, i, vm):
             index += 1
 
     for word in words:
-        if word != "" and word not in "\n\t\r":
+        if word != "":
             if word in keywords_to_tokens:
                 analysis.append(keywords_to_tokens[word])
             elif word[0] == ".":
@@ -88,16 +97,8 @@ def sep_line (code, i, vm):
                 analysis.append(instructions[word.upper()])
             elif word.upper() in vm.registers:
                 analysis.append(Register(word.upper(), vm))
-            elif word == ",":
-                analysis.append(Comma())
-            elif word == "+" or word == "-":
-                analysis.append(OperatorTok(word))
-            elif word == "DUP":
-                analysis.append(DupTok(word))
             elif word.find("'") != -1:
                 analysis.append(StringTok(word))
-            elif word == DONT_INIT:
-                analysis.append(QuestionTok())
             elif re.search(label_match, word) is not None:
                 vm.labels[word[:word.find(":")]] = i
             elif re.search(sym_match, word) is not None:
