@@ -28,6 +28,16 @@ TEXT_SECT = ".text"
 DELIMITERS = set([' ', '(', ')', '\n', '\r', '\t', ','])
 SEPARATORS = set([',', '(', ')', '\n', '\r', '\t', '[', ']', '+', '-'])
 
+OPEN_BRACKET = OpenBracket()
+CLOSE_BRACKET = CloseBracket()
+
+keywords_to_tokens = {
+    "[": OPEN_BRACKET,
+    "]": CLOSE_BRACKET,
+    "(": OpenParen,
+    ")": CloseParen,
+}
+
 def sep_line (code, i, vm):
     """
     Returns a list of tokens created 
@@ -40,12 +50,15 @@ def sep_line (code, i, vm):
 
     Returns:
         Tuple of the lexical analysis of the line
+        The first member is the tokens and the second is the
+        text of the code.
     """
     analysis = []
     index = 0
     start = 0
     end = 1
 
+# try re.split here:
     words = code.split(" ")
     while index < len(words):
         words[index].strip(" \t\r\n")
@@ -65,7 +78,9 @@ def sep_line (code, i, vm):
 
     for word in words:
         if word != "" and word not in "\n\t\r":
-            if word[0] == ".":
+            if word in keywords_to_tokens:
+                analysis.append(keywords_to_tokens[word])
+            elif word[0] == ".":
                 analysis.append(Section(word[1:]))
             elif word in dtype_info:
                 analysis.append(DataType(word))
@@ -73,14 +88,6 @@ def sep_line (code, i, vm):
                 analysis.append(instructions[word.upper()])
             elif word.upper() in vm.registers:
                 analysis.append(Register(word.upper(), vm))
-            elif word == "[":
-                analysis.append(OpenBracket())
-            elif word == "(":
-                analysis.append(OpenParen())
-            elif word == "]":
-                analysis.append(CloseBracket())
-            elif word == ")":
-                analysis.append(CloseParen())
             elif word == ",":
                 analysis.append(Comma())
             elif word == "+" or word == "-":
@@ -117,7 +124,7 @@ def lex(code, vm):
     pre_processed_lines = []
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
-    add_to_i = True
+    add_to_ip = True
     for line in lines:
         # comments:
         comm_start = line.find(";")
@@ -138,13 +145,13 @@ def lex(code, vm):
     for line in pre_processed_lines:
         tok_lines.append(sep_line(line, i, vm))
         if line == ".data":
-            add_to_i = False
+            add_to_ip = False
             continue
         if line == ".text":
-            add_to_i = True
+            add_to_ip = True
             continue
         # we count line numbers to store label jump locations:
-        if add_to_i:
+        if add_to_ip:
             i += 1
     return tok_lines
 
