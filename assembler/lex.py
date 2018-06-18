@@ -94,84 +94,12 @@ def sep_line (code, i, vm):
             elif re.search(label_match, word) is not None:
                 vm.labels[word[:word.find(":")]] = i
             elif re.search(sym_match, word) is not None:
-                # if word in vm.labels:
-                #     analysis.append(Label(word, vm))
-                # else:
                 analysis.append(NewSymbol(word, vm))
             else:
                 try:
                     analysis.append(IntegerTok(int(word)))
                 except Exception:
                     raise InvalidArgument(word)
-
-    # analysis = []
-    # while end <= len(code):
-    #     if code[start] in DELIMITERS:
-    #         start += 1
-    #         end += 1
-    #     else: 
-
-    #         if end != len(code) and code[end] not in DELIMITERS:
-    #             end += 1
-    #         else:
-    #             word = code[start:end].strip(" ,\n\t\r")
-    #             if word[0] == ".":
-    #                 analysis.append(Section(word[1:]))
-    #             elif word in dtype_info:
-    #                 analysis.append(DataType(word))
-    #             elif word.upper() in instructions:
-    #                 analysis.append(instructions[word.upper()])
-    #             elif word.upper() in vm.registers:
-    #                 analysis.append(Register(word.upper(), vm))
-    #             elif word.find("[") != -1:
-    #                 first_brack = word.find("[")
-    #                 last_brack = word.find("]")
-    #                 plus_sign = word.find("+")
-    #                 address = word[first_brack + 1:last_brack]
-    #                 if plus_sign != -1 and plus_sign < last_brack:
-    #                     address = word[first_brack + 1:plus_sign]
-    #                 if first_brack == 0:
-    #                     if address.upper() in vm.registers:
-    #                         if plus_sign == -1:
-    #                             analysis.append(RegAddress(address.upper(), 
-    #                                                        vm))
-    #                         else:
-    #                             analysis.append(RegAddress(address.upper(), 
-    #                                             vm, int(word[plus_sign + 1:
-    #                                                          last_brack])))
-    #                     elif address in vm.memory: 
-    #                         analysis.append(Address(address, vm))
-    #                     else:
-    #                         raise InvalidMemLoc(address)
-    #                 else:
-    #                     if re.search(sym_match, word[:first_brack]):
-    #                         if address.upper() in vm.registers:
-    #                             analysis.append(SymAddress(word[:first_brack],
-    #                                             Register(address.upper(), 
-    #                                                      vm)))
-    #                         else:
-    #                             analysis.append(SymAddress(word[:first_brack], 
-    #                                                          int(address)))
-    #             elif word == "DUP":
-    #                 analysis.append(word)
-    #             elif re.search(label_match, word) is not None:
-    #                 vm.labels[word[:word.find(":")]] = i
-    #             elif re.search(sym_match, word) is not None:
-    #                 if word in vm.labels:
-    #                     analysis.append(Label(word, vm))
-    #                 else:
-    #                     analysis.append(NewSymbol(word, vm))
-    #             elif word.find("'") != -1:
-    #                 analysis.append(word)
-    #             elif word == DONT_INIT:
-    #                 analysis.append(StringTok(DONT_INIT))
-    #             else:
-    #                 try:
-    #                     analysis.append(IntegerTok(int(word)))
-    #                 except Exception:
-    #                     raise InvalidArgument(word)
-    #             start = end + 1 
-    #             end = start + 1
     return (analysis, code)
 
 
