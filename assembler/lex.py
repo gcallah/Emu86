@@ -10,7 +10,7 @@ from .errors import UnknownName, InvalidDataType, InvalidArgument
 from .parse import instructions, dtype_info, DONT_INIT, sym_match, label_match
 from .tokens import Location, Address, Register, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DupTok
-from .tokens import QuestionTok, PlusTok
+from .tokens import QuestionTok, PlusTok, OperatorTok
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
@@ -26,7 +26,7 @@ DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
 DELIMITERS = set([' ', '(', ')', '\n', '\r', '\t', ','])
-SEPARATORS = set([',', '(', ')', '\n', '\r', '\t', '[', ']', '+'])
+SEPARATORS = set([',', '(', ')', '\n', '\r', '\t', '[', ']', '+', '-'])
 
 def sep_line (code, i, vm):
     """
@@ -83,8 +83,8 @@ def sep_line (code, i, vm):
                 analysis.append(CloseParen())
             elif word == ",":
                 analysis.append(Comma())
-            elif word == "+":
-                analysis.append(PlusTok())
+            elif word == "+" or word == "-":
+                analysis.append(OperatorTok(word))
             elif word == "DUP":
                 analysis.append(DupTok(word))
             elif word.find("'") != -1:

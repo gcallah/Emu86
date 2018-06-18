@@ -12,7 +12,7 @@ from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
-from .tokens import OpenBracket, CloseBracket, PlusTok
+from .tokens import OpenBracket, CloseBracket, PlusTok, OperatorTok
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
@@ -222,7 +222,10 @@ def check_data_values(token_line, pos):
     """
     data_okay = True
     # first check the very first data element
-    if (not isinstance(token_line[pos], IntegerTok) and 
+    if (not (isinstance(token_line[pos], OperatorTok) and 
+        token_line[pos].get_nm() == "-" and
+        isinstance(token_line[pos + 1], IntegerTok)) and 
+        not isinstance(token_line[pos], IntegerTok) and 
         not isinstance(token_line[pos], StringTok) and 
         not isinstance(token_line[pos], QuestionTok)):
         data_okay = False
@@ -294,7 +297,9 @@ def check_data_values(token_line, pos):
                 raise InvalidDataVal(str(token_line[pos].get_val()))
 
             elif (not isinstance(token_line[pos - 1], Comma) and
-                  not isinstance(token_line[pos - 1], OpenParen)):
+                  not isinstance(token_line[pos - 1], OpenParen) and
+                  not (isinstance(token_line[pos - 1], OperatorTok) 
+                       and token_line[pos - 1].get_nm() == "-")):
                 data_okay = False
                 raise InvalidArgument(str(token_line[pos].get_val()))
             else:
@@ -308,6 +313,13 @@ def check_data_values(token_line, pos):
             else:
                 pos += 1
 
+        elif (isinstance(token_line[pos], OperatorTok) and 
+            token_line[pos].get_nm() == "-"):
+            if not isinstance(token_line[pos + 1], IntegerTok):
+                data_okay = False
+                raise InvalidDataVal(token_line[pos].getval())
+            else:
+                pos += 1
         else:
             raise InvalidDataVal(token_line[pos].get_val())
 
@@ -331,7 +343,9 @@ def get_data_values(token_line, pos):
         if check_data_values(token_line, pos):
             values_list = []
             while pos < len(token_line):
-                if isinstance(token_line[pos], IntegerTok):
+                if isinstance(token_line[pos], OperatorTok):
+                    token_line[pos + 1].negate_val()
+                elif isinstance(token_line[pos], IntegerTok):
                     values_list.append(str(token_line[pos].get_val()))
                 elif (not isinstance(token_line[pos], OpenParen) and
                     not isinstance(token_line[pos], CloseParen)):
@@ -411,12 +425,16 @@ def get_address(token_line, pos, vm):
     # check other elements within bracket
     while pos < len(token_line):
         if isinstance(token_line[pos], IntegerTok):
-            if isinstance(token_line[pos - 1], PlusTok):
-                displacement += token_line[pos].get_val()
+            if isinstance(token_line[pos - 1], OperatorTok):
+                if token_line[pos - 1].get_nm() == '+':
+                    displacement += token_line[pos].get_val()
+                else:
+                    displacement -= token_line[pos].get_val()
+                    print (displacement)
                 pos += 1
             else:
                 raise InvalidMemLoc(str(token_line[pos].get_val()))
-        elif isinstance(token_line[pos], PlusTok):
+        elif isinstance(token_line[pos], OperatorTok):
             if (isinstance(token_line[pos - 1], IntegerTok) or
                 isinstance(token_line[pos - 1], Register)):
                 pos += 1
@@ -424,9 +442,12 @@ def get_address(token_line, pos, vm):
             else:
                 raise InvalidArgument("+")
         elif isinstance(token_line[pos], Register):
-            if isinstance(token_line[pos - 1], PlusTok):
+            if isinstance(token_line[pos - 1], OperatorTok):
                 if register:
-                    displacement += token_line[pos].get_val()
+                    if token_line[pos - 1].get_val() == '+':
+                        displacement += token_line[pos].get_val()
+                    else:
+                        displacement -= token_line[pos].get_val()
                 else:
                     register = token_line[pos]
                 pos += 1

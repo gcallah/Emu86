@@ -99,6 +99,9 @@ class IntegerTok(Operand):
     def get_val(self):
         return self.value
 
+    def negate_val(self):
+        self.value *= -1
+
 class StringTok(Token):
     def __init__(self, name):
         super().__init__(name)
@@ -114,6 +117,10 @@ class QuestionTok(Token):
 class PlusTok(Token):
     def __init__(self):
         super().__init__("+")
+
+class OperatorTok(Token):
+    def __init__(self, name):
+        super().__init__(name)
 
 class Location(Operand):
     """
