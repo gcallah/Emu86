@@ -107,8 +107,8 @@ class StringTok(Token):
         super().__init__(name)
 
 class DupTok(Token):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self):
+        super().__init__("DUP")
 
 class QuestionTok(Token):
     def __init__(self):
@@ -118,9 +118,10 @@ class PlusTok(Token):
     def __init__(self):
         super().__init__("+")
 
-class OperatorTok(Token):
-    def __init__(self, name):
-        super().__init__(name)
+class MinusTok(Token):
+    def __init__(self):
+        super().__init__("-")
+
 
 class Location(Operand):
     """

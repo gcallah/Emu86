@@ -12,7 +12,7 @@ from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
-from .tokens import OpenBracket, CloseBracket, PlusTok, OperatorTok
+from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
@@ -144,8 +144,6 @@ def store_values_dup (values, data_type):
                 count = int(values[:values.find("DUP")])
             values_list_after = ""
             for counter in range(count):
-                # if values[values.find("(") + 1:
-                #           values.find(")")] == DONT_INIT:
                 if values[values.find("DUP") + 1:] == DONT_INIT: 
                     values_list_after += str(randrange(0, 
                                        dtype_info[data_type][MAX_VAL]))
@@ -211,24 +209,19 @@ def get_data_type(token_line, pos):
 def check_data_values(token_line, pos):
     """
     Checks if the tokenized data is a valid set of data values
+    If not valid set, raise exception
 
     Args:
         token_line: List of data tokens
         pos: Beginning position of list
-
-    Returns: 
-        True if tokenized line is valid 
-        False otherwise
     """
-    data_okay = True
+
     # first check the very first data element
-    if (not (isinstance(token_line[pos], OperatorTok) and 
-        token_line[pos].get_nm() == "-" and
+    if (not (isinstance(token_line[pos], MinusTok) and
         isinstance(token_line[pos + 1], IntegerTok)) and 
         not isinstance(token_line[pos], IntegerTok) and 
         not isinstance(token_line[pos], StringTok) and 
         not isinstance(token_line[pos], QuestionTok)):
-        data_okay = False
         raise InvalidArgument(token_line[pos].get_nm())
     pos += 1
 
@@ -238,33 +231,23 @@ def check_data_values(token_line, pos):
         # if comma 
         if isinstance(token_line[pos], Comma):
             if pos == len(token_line) - 1:
-                data_okay = False
                 raise InvalidArgument(",")
             else: 
                 if (not isinstance(token_line[pos - 1], IntegerTok) and 
                     not isinstance(token_line[pos - 1], StringTok) and 
                     not isinstance(token_line[pos - 1], QuestionTok) and 
                     not isinstance(token_line[pos - 1], CloseParen)):
-                    data_okay = False
                     raise InvalidArgument(",")
-                else:
-                    pos += 1
 
         # if DUP
         elif isinstance(token_line[pos], DupTok):
             if not isinstance(token_line[pos - 1], IntegerTok):
-                data_okay = False
                 raise InvalidArgument("DUP")
-            else:
-                pos += 1
 
         # if open parenthesis
         elif isinstance(token_line[pos], OpenParen):
             if not isinstance(token_line[pos - 1], DupTok):
-                data_okay = False
                 raise InvalidArgument("(")
-            else:
-                pos += 1
 
         # if close parenthesis
         elif isinstance(token_line[pos], CloseParen):
@@ -272,19 +255,13 @@ def check_data_values(token_line, pos):
                 not isinstance(token_line[pos - 1], IntegerTok) and 
                 not isinstance(token_line[pos - 1], StringTok) and 
                 not isinstance(token_line[pos - 1], QuestionTok)):
-                data_okay = False
                 raise InvalidArgument("(")
-            else:
-                pos += 1
 
         # if ?
         elif isinstance(token_line[pos], QuestionTok):
             if (not isinstance(token_line[pos - 1], Comma) and
                 not isinstance(token_line[pos - 1], OpenParen)):
-                data_okay = False
                 raise InvalidArgument("?")
-            else:
-                pos += 1
 
         # if integer
         elif isinstance(token_line[pos], IntegerTok):
@@ -293,37 +270,24 @@ def check_data_values(token_line, pos):
             if (isinstance(token_line[pos - 2], StringTok) and 
                 isinstance(token_line[pos - 1], Comma) and 
                 token_line[pos].get_val() != 0):
-                data_okay = False
                 raise InvalidDataVal(str(token_line[pos].get_val()))
 
             elif (not isinstance(token_line[pos - 1], Comma) and
                   not isinstance(token_line[pos - 1], OpenParen) and
-                  not (isinstance(token_line[pos - 1], OperatorTok) 
-                       and token_line[pos - 1].get_nm() == "-")):
-                data_okay = False
+                  not isinstance(token_line[pos - 1], MinusTok)):
                 raise InvalidArgument(str(token_line[pos].get_val()))
-            else:
-                pos += 1
 
         # if string 
         elif isinstance(token_line[pos], StringTok):
             if not isinstance(token_line[pos - 1], Comma):
-                data_okay = False
                 raise InvalidDataVal(token_line[pos].get_val())
-            else:
-                pos += 1
 
-        elif (isinstance(token_line[pos], OperatorTok) and 
-            token_line[pos].get_nm() == "-"):
+        elif isinstance(token_line[pos], MinusTok):
             if not isinstance(token_line[pos + 1], IntegerTok):
-                data_okay = False
                 raise InvalidDataVal(token_line[pos].getval())
-            else:
-                pos += 1
         else:
             raise InvalidDataVal(token_line[pos].get_val())
-
-    return data_okay
+        pos += 1
 
 
 def get_data_values(token_line, pos):
@@ -340,18 +304,18 @@ def get_data_values(token_line, pos):
     if pos >= len(token_line):
         raise MissingData()
     else:
-        if check_data_values(token_line, pos):
-            values_list = []
-            while pos < len(token_line):
-                if isinstance(token_line[pos], OperatorTok):
-                    token_line[pos + 1].negate_val()
-                elif isinstance(token_line[pos], IntegerTok):
-                    values_list.append(str(token_line[pos].get_val()))
-                elif (not isinstance(token_line[pos], OpenParen) and
-                    not isinstance(token_line[pos], CloseParen)):
-                    values_list.append(token_line[pos].get_nm())
-                pos += 1
-            return "".join(values_list)
+        check_data_values(token_line, pos)
+        values_list = []
+        while pos < len(token_line):
+            if isinstance(token_line[pos], MinusTok):
+                token_line[pos + 1].negate_val()
+            elif isinstance(token_line[pos], IntegerTok):
+                values_list.append(str(token_line[pos].get_val()))
+            elif (not isinstance(token_line[pos], OpenParen) and
+                not isinstance(token_line[pos], CloseParen)):
+                values_list.append(token_line[pos].get_nm())
+            pos += 1
+        return "".join(values_list)
 
 def parse_data_token(token_line, vm):
     """
@@ -425,16 +389,16 @@ def get_address(token_line, pos, vm):
     # check other elements within bracket
     while pos < len(token_line):
         if isinstance(token_line[pos], IntegerTok):
-            if isinstance(token_line[pos - 1], OperatorTok):
-                if token_line[pos - 1].get_nm() == '+':
-                    displacement += token_line[pos].get_val()
-                else:
-                    displacement -= token_line[pos].get_val()
-                    print (displacement)
+            if isinstance(token_line[pos - 1], PlusTok):
+                displacement += token_line[pos].get_val()
+                pos += 1
+            elif isinstance(token_line[pos - 1], MinusTok):
+                displacement -= token_line[pos].get_val()
                 pos += 1
             else:
                 raise InvalidMemLoc(str(token_line[pos].get_val()))
-        elif isinstance(token_line[pos], OperatorTok):
+        elif (isinstance(token_line[pos], PlusTok) or 
+              isinstance(token_line[pos], MinusTok)):
             if (isinstance(token_line[pos - 1], IntegerTok) or
                 isinstance(token_line[pos - 1], Register)):
                 pos += 1
@@ -442,12 +406,15 @@ def get_address(token_line, pos, vm):
             else:
                 raise InvalidArgument("+")
         elif isinstance(token_line[pos], Register):
-            if isinstance(token_line[pos - 1], OperatorTok):
+            if isinstance(token_line[pos - 1], PlusTok):
                 if register:
-                    if token_line[pos - 1].get_val() == '+':
-                        displacement += token_line[pos].get_val()
-                    else:
-                        displacement -= token_line[pos].get_val()
+                    displacement += token_line[pos].get_val()
+                else:
+                    register = token_line[pos]
+                pos += 1
+            elif isinstance(token_line[pos - 1], MinusTok):
+                if register:
+                    displacement -= token_line[pos].get_val()
                 else:
                     register = token_line[pos]
                 pos += 1
