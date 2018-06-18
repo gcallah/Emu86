@@ -188,6 +188,16 @@ def store_values_array(values, data_type):
         return values_list
 
 def get_data_type(token_line, pos):
+    """
+    Returns the data type
+
+    Args:
+        token_line: List of data tokens
+        pos: Position of list
+
+    Returns: 
+        Data type of variable
+    """
     if pos >= len(token_line):
         raise MissingData()
     elif isinstance(token_line[pos], DataType):
@@ -199,6 +209,17 @@ def get_data_type(token_line, pos):
         raise InvalidDataType(token_line[pos].get_nm())
 
 def check_data_values(token_line, pos):
+    """
+    Checks if the tokenized data is a valid set of data values
+
+    Args:
+        token_line: List of data tokens
+        pos: Beginning position of list
+
+    Returns: 
+        True if tokenized line is valid 
+        False otherwise
+    """
     data_okay = True
     # first check the very first data element
     if (not isinstance(token_line[pos], IntegerTok) and 
@@ -294,6 +315,16 @@ def check_data_values(token_line, pos):
 
 
 def get_data_values(token_line, pos):
+    """
+    Turns the token of values into one string
+
+    Args:
+        token_line: List of data tokens
+        pos: Beginning position of list
+
+    Returns: 
+        String of values 
+    """
     if pos >= len(token_line):
         raise MissingData()
     else:
@@ -309,6 +340,13 @@ def get_data_values(token_line, pos):
             return "".join(values_list)
 
 def parse_data_token(token_line, vm):
+    """
+    Parses data tokens 
+
+    Args:
+        token_line: List of data tokens
+        vm: Virtual machine
+    """
     pos = 0
     symbol = ""
     if not isinstance(token_line[pos], NewSymbol):
@@ -346,6 +384,18 @@ def parse_data_token(token_line, vm):
                 raise InvalidDataVal(val)
 
 def get_address(token_line, pos, vm):
+    """
+    Converts a sublist of the tokenized instruction into 
+    corresponding address token
+
+    Args:
+        token_line: List of instruction tokens
+        pos: Beginning position in list
+        vm: Virtual machine
+
+    Returns: 
+        Address token 
+    """
     if pos >= len(token_line):
         raise InvalidMemLoc("")
     register = None
@@ -396,6 +446,17 @@ def get_address(token_line, pos, vm):
         raise InvalidMemLoc("")
 
 def get_op(token_line, pos, vm):
+    """
+    Retrieves operand of instruction
+
+    Args:
+        token_line: List of the tokenized instruction
+        pos: Beginning pos of list
+        vm: Virtua machine
+
+    Returns: 
+        Operand token, position of next item in instruction
+    """
     if (isinstance(token_line[pos], Register) or 
         isinstance(token_line[pos], IntegerTok)):
         return (token_line[pos], pos + 1)
@@ -437,6 +498,16 @@ def get_op(token_line, pos, vm):
         raise InvalidArgument(token_line[pos].get_nm())
 
 def parse_exec_unit(token_line, vm):
+    """
+    Parses instruction
+
+    Args:
+        token_line: Tokenized instruction
+        vm: Virtual machine
+
+    Returns: 
+        List of tokens: instruction, operand, operand
+    """
     pos = 0
     token_instruction = []
     if not isinstance(token_line[pos], Instruction):
