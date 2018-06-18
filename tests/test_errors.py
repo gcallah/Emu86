@@ -15,6 +15,7 @@ from assembler.assemble import assemble
 # UNKNOWN_ERR should NOT show up, so we won't write a test case for it.
 from assembler.errors import UNKNOWN_ERR, INVALID_INSTR, INVALID_OPRND
 from assembler.errors import INVALID_NUM_ARGS, INVALID_MEM_LOC, INVALID_REG
+from assembler.errors import MISSING_COMMA, MISSING_DATA, INVALID_TOKEN
 from assembler.errors import REG_UNWRITABLE, STACK_OVERFLOW, STACK_UNDERFLOW
 from assembler.errors import UNKNOWN_NM
 
@@ -51,6 +52,19 @@ class ErrorTestCase(TestCase):
         vmachine.registers["ESP"] = STACK_TOP
         (output, error) = assemble("pop ebx", vmachine)
         self.assertTrue(error.startswith(STACK_UNDERFLOW))
+
+    def test_comma_error(self):
+        (output, error) = assemble("mov eax 1", vmachine)
+        self.assertTrue(error.startswith(MISSING_COMMA))
+
+    def test_comma_error(self):
+        (output, error) = assemble("mov eax,,,, 1", vmachine)
+        self.assertTrue(error.startswith(INVALID_TOKEN))
+
+    def test_data_error(self):
+        (output, error) = assemble(".data \n  x DW", vmachine)
+        self.assertTrue(error.startswith(MISSING_DATA))
+
 
 if __name__ == '__main__':
     main()

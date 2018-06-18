@@ -8,7 +8,7 @@ from random import randrange
 
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidSection
-from .errors import InvalidArgument, MissingData, InvalidDataVal
+from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
@@ -446,11 +446,11 @@ def parse_exec_unit(token_line, vm):
     while pos < len(token_line):
         op, pos = get_op(token_line, pos, vm)
         token_instruction.append(op)
-        if pos + 1 < len(token_line):
+        if pos < len(token_line):
             if isinstance(token_line[pos], Comma): 
                 pos += 1
             else:
-                raise MissingData()
+                raise MissingComma()
     return token_instruction
 
 

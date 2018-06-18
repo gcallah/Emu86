@@ -25,6 +25,7 @@ UNKNOWN_INT = "Unknown interrupt instruction: "
 UNKNOWN_NM = "Unknown symbol: "
 UNKNOWN_LABEL = "Unknown label: "
 MISSING_DATA = "Missing data values"
+MISSING_COMMA = "Missing comma"
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -130,6 +131,10 @@ class ExitProg(Error):
 class MissingData(Error):
     def __init__(self):
         self.msg = MISSING_DATA
+
+class MissingComma(Error):
+    def __init__(self):
+        self.msg = MISSING_COMMA
 
 def check_num_args(instr, ops, correct_num):
     """
