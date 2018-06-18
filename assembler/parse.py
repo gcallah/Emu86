@@ -294,7 +294,7 @@ def check_data_values(token_line, pos):
                 raise InvalidDataVal(str(token_line[pos].get_val()))
 
             elif (not isinstance(token_line[pos - 1], Comma) and
-                not isinstance(token_line[pos - 1], OpenParen)):
+                  not isinstance(token_line[pos - 1], OpenParen)):
                 data_okay = False
                 raise InvalidArgument(str(token_line[pos].get_val()))
             else:
@@ -479,7 +479,8 @@ def get_op(token_line, pos, vm):
             if pos < len(token_line):
                 if isinstance(token_line[pos], OpenBracket):
                     pos += 1
-                    register, displacement, pos = get_address(token_line, pos, vm)
+                    register, displacement, pos = get_address(token_line, 
+                                                              pos, vm)
                     if register:
                         return (Symbol(symbol, vm, register), pos)
                         
