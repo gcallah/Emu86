@@ -1,6 +1,6 @@
 ; Declare an array and declare size of the array
 .data
-    nbrArray DW 25, 47, 15, 50, 32, 95 DUP (10)
+    nbrArray DW 25, 47, -15, -50, 32, 95 DUP (10)
     nbrElts DW 100
 
 ; Calculate the average of the array:

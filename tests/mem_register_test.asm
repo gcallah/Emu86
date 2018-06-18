@@ -10,3 +10,4 @@
 	mov [eax], x[2]
 	mov [eax+2], y[3]
 	mov [ebx], z
+	mov [eax-5], y[2]

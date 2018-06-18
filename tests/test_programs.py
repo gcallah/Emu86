@@ -117,13 +117,14 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.memory["6"], 3)
         self.assertEqual(vmachine.memory["8"], 8)
         self.assertEqual(vmachine.memory["0"], 50)
+        self.assertEqual(vmachine.memory["1"], 32)
 
     def test_array_avg(self):
         self.run_test_code("tests/array_average_test.asm")
-        self.assertEqual(vmachine.registers["EAX"], 11)
+        self.assertEqual(vmachine.registers["EAX"], 9)
         self.assertEqual(vmachine.registers["ECX"], 100)
         self.assertEqual(vmachine.registers["EBX"], 100)
-        self.assertEqual(vmachine.registers["EDX"], 19)
+        self.assertEqual(vmachine.registers["EDX"], 89)
 
     def test_int_square_root(self):
         self.run_test_code("tests/int_square_root.asm")
