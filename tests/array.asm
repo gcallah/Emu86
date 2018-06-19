@@ -3,7 +3,7 @@
 ; z is an array of the ASCII values of 'hello', ends in 0 
 .data
     x DB 3, 8, 5, 2
-    y DW 13 DUP (50)
+    y DW 13 DUP (-50)
     z DD 'hello', 0
 
 ; Store array values

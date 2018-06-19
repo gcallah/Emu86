@@ -82,7 +82,7 @@ class TestPrograms(TestCase):
     def test_array(self):
         self.run_test_code("tests/array.asm")
         self.assertEqual(vmachine.registers["EAX"],  3)
-        self.assertEqual(vmachine.registers["EBX"], 50)
+        self.assertEqual(vmachine.registers["EBX"], -50)
         self.assertEqual(vmachine.registers["ECX"], ord ('l'))
         self.assertEqual(vmachine.registers["EDX"], 5)
 
