@@ -174,6 +174,59 @@ def get_DUP_value(token_line, pos):
 
     return (dup_value, pos)
 
+def parse_string_token(token_line, pos):
+    """
+    Creates a list of the string token's ASCII values
+
+    Args: 
+        token_line: List of data tokens
+        pos: Position of string token
+
+    Returns:
+        List of ASCII values, followed by a 0 
+    """
+    if pos + 2 >= len(token_line):
+        raise MissingData()
+    # check if following is an Integer
+    elif not isinstance(token_line[pos + 1], Comma):
+        raise MissingComma()
+
+    elif not isinstance(token_line[pos + 2], IntegerTok):
+        raise InvalidDataVal(str(token_line[pos + 2].get_val()))
+    # check if following is an Integer with value of 0
+    elif (isinstance(token_line[pos + 2], IntegerTok) and 
+             token_line[pos + 2].get_val() != 0):
+        raise InvalidDataVal(str(token_line[pos + 2].get_val()))
+    else:
+        ascii_list = []
+        for letter in token_line[pos].get_nm():
+            if letter != "'":
+                ascii_list.append(ord(letter))
+        ascii_list.append(0)
+        return (ascii_list, pos + 3)
+
+def parse_dup_token(token_line, data_type, pos):
+    """
+    Parses integer token followed by DUP token
+
+    Args: 
+        token_line: List of data tokens
+        data_type: Data type of variable
+        pos = Position of integer token
+
+    Returns:
+        List of duplicated values
+    """
+    dup_list = []
+    duplicate = token_line[pos].get_val()
+    value, pos = get_DUP_value(token_line, pos + 2)
+    for times in range(duplicate):
+        if value == DONT_INIT:
+            dup_list.append(randrange(0, 
+                     dtype_info[data_type][MAX_VAL]))
+        else:
+            dup_list.append(value)
+    return (dup_list, pos)
 
 def get_Values(token_line, data_type, pos):
     """
@@ -199,54 +252,27 @@ def get_Values(token_line, data_type, pos):
             return (values_list, pos + 2)
         except:
             raise InvalidDataVal(token_line[pos].get_nm())
-
-
     elif isinstance(token_line[pos], IntegerTok):
         if pos + 1 < len(token_line):
             # if DUP token found
             if isinstance(token_line[pos + 1], DupTok):
-                duplicate = token_line[pos].get_val()
-                value, pos = get_DUP_value(token_line, pos + 2)
-                for times in range(duplicate):
-                    if value == DONT_INIT:
-                        values_list.append(randrange(0, 
-                                 dtype_info[data_type][MAX_VAL]))
-                    else:
-                        values_list.append(value)
+                dup_list, pos = parse_dup_token(token_line, data_type, pos)
+                values_list.extend(dup_list)
                 return (values_list, pos)
             # otherwise return int
             else:
                 return ([token_line[pos].get_val()], pos + 1)
-
         else:
             return ([token_line[pos].get_val()], pos + 1)
 
     # if value is a string token
     elif isinstance(token_line[pos], StringTok):
-        if pos + 2 >= len(token_line):
-            raise MissingData()
-        # check if following is an Integer
-        elif not isinstance(token_line[pos + 1], Comma):
-            raise MissingComma()
-
-        elif not isinstance(token_line[pos + 2], IntegerTok):
-            raise InvalidDataVal(str(token_line[pos + 2].get_val()))
-        # check if following is an Integer with value of 0
-        elif (isinstance(token_line[pos + 2], IntegerTok) and 
-                 token_line[pos + 2].get_val() != 0):
-            raise InvalidDataVal(str(token_line[pos + 2].get_val()))
-        else:
-            for letter in token_line[pos].get_nm():
-                if letter != "'":
-                    values_list.append(ord(letter))
-            values_list.append(0)
-            return (values_list, pos + 3)
-
+        ascii_list, pos = parse_string_token(token_line, pos)
+        values_list.extend(ascii_list)
+        return (values_list, pos)
     elif isinstance(token_line[pos], QuestionTok):
-        values_list.append(randrange(0, 
-                                 dtype_info[data_type][MAX_VAL]))
+        values_list.append(randrange(0, dtype_info[data_type][MAX_VAL]))
         return (values_list, pos + 1)
-
     else:
         raise InvalidDataVal(token_line[pos].get_nm())
 
