@@ -228,7 +228,7 @@ def parse_dup_token(token_line, data_type, pos):
             dup_list.append(value)
     return (dup_list, pos)
 
-def get_Values(token_line, data_type, pos):
+def get_values(token_line, data_type, pos):
     """
     Creates a list of values for each variable
 
@@ -299,7 +299,7 @@ def parse_data_token(token_line, vm):
     state = NEED_VAL
     while True: 
         if state == NEED_VAL:
-            val, pos = get_Values(token_line, data_type, pos)
+            val, pos = get_values(token_line, data_type, pos)
             data_vals.extend(val)
             state = NEED_COMMA_OR_END
         elif state == NEED_COMMA_OR_END:
