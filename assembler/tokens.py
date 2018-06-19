@@ -205,6 +205,8 @@ class Register(Location):
         else:
             raise RegUnwritable(self.name)
 
+    def negate_val(self):
+        self.val *= -1
 
 class Label(Location):
     """

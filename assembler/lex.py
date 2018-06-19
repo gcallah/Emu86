@@ -27,26 +27,16 @@ TEXT_SECT = ".text"
 
 SEPARATORS = set([',', '(', ')', '[', ']', '+', '-'])
 
-OPEN_BRACKET = OpenBracket()
-CLOSE_BRACKET = CloseBracket()
-OPEN_PAREN = OpenParen()
-CLOSE_PAREN = CloseParen()
-COMMA = Comma()
-PLUS_TOKEN = PlusTok()
-MINUS_TOKEN = MinusTok()
-QUESTION_TOKEN = QuestionTok()
-DUP_TOKEN = DupTok()
-
 keywords_to_tokens = {
-    "[": OpenBracket(),  # do this for all of them!
-    "]": CLOSE_BRACKET,
-    "(": OPEN_PAREN,
-    ")": CLOSE_PAREN,
-    ",": COMMA,
-    "+": PLUS_TOKEN,
-    "-": MINUS_TOKEN,
-    "?": QUESTION_TOKEN,
-    "DUP": DUP_TOKEN
+    "[": OpenBracket(), 
+    "]": CloseBracket(),
+    "(": OpenParen(),
+    ")": CloseParen(),
+    ",": Comma(),
+    "+": PlusTok(),
+    "-": MinusTok(),
+    "?": QuestionTok(),
+    "DUP": DupTok()
 }
 
 def sep_line (code, i, vm):

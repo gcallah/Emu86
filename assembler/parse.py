@@ -99,6 +99,13 @@ PARAM_VAL = 0
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
+def minus_token(token_line, pos):
+    try:
+        token_line[pos + 1].negate_val()
+        return (token_line[pos + 1], pos + 2)
+    except:
+        InvalidArgument("-")
+
 def get_data_type(token_line, pos):
     """
     Returns the data type
@@ -149,8 +156,7 @@ def get_DUP_value(token_line, pos):
             elif isinstance(token_line[pos], MinusTok):
                 try:
                     token_line[pos + 1].negate_val()
-                    pos += 2
-                    state = NEED_CLOSE_PAREN
+                    pos += 1
                 except: 
                     raise InvalidDataVal("-")
             elif isinstance(token_line[pos], IntegerTok):
@@ -307,64 +313,87 @@ def get_address(token_line, pos, vm):
     Returns: 
         Address token 
     """
+
+    NEED_VAL = 0
+    NEED_OP_OR_CLOSE_BRACK = 1
     if pos >= len(token_line):
         raise InvalidMemLoc("")
+    state = NEED_VAL
     register = None
     displacement = 0
-    if isinstance(token_line[pos], IntegerTok):
-        displacement = token_line[pos].get_val()
-    elif isinstance(token_line[pos], Register):
-        register = token_line[pos]
-    else:
-        raise InvalidMemLoc(token_line[pos].get_nm())
-    pos += 1
     closeBracket = False 
     # check other elements within bracket
-    while pos < len(token_line):
-        if isinstance(token_line[pos], IntegerTok):
-            if isinstance(token_line[pos - 1], PlusTok):
+    while True:
+        if state == NEED_VAL:
+            if pos >= len(token_line):
+                raise MissingOps()
+            elif isinstance(token_line[pos], IntegerTok):
                 displacement += token_line[pos].get_val()
                 pos += 1
-            elif isinstance(token_line[pos - 1], MinusTok):
-                displacement -= token_line[pos].get_val()
-                pos += 1
-            else:
-                raise InvalidMemLoc(str(token_line[pos].get_val()))
-        elif (isinstance(token_line[pos], PlusTok) or 
-              isinstance(token_line[pos], MinusTok)):
-            if (isinstance(token_line[pos - 1], IntegerTok) or
-                isinstance(token_line[pos - 1], Register)):
-                pos += 1
-                continue
-            else:
-                raise InvalidArgument("+")
-        elif isinstance(token_line[pos], Register):
-            if isinstance(token_line[pos - 1], PlusTok):
+                state = NEED_OP_OR_CLOSE_BRACK
+            elif isinstance(token_line[pos], Register):
                 if register:
                     displacement += token_line[pos].get_val()
                 else:
                     register = token_line[pos]
                 pos += 1
-            elif isinstance(token_line[pos - 1], MinusTok):
-                if register:
-                    displacement -= token_line[pos].get_val()
-                else:
-                    register = token_line[pos]
-                pos += 1
+                state = NEED_OP_OR_CLOSE_BRACK
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
-        elif isinstance(token_line[pos], CloseBracket):
-            if (isinstance(token_line[pos - 1], IntegerTok) or
-                isinstance(token_line[pos - 1], Register)):
-                closeBracket = True
+        else: 
+            if pos >= len(token_line):
+                raise MissingCloseBrack()
+            elif isinstance(token_line[pos], MinusTok):
+                token_line[pos + 1].negate_val()
                 pos += 1
-                break
-        else:
-            raise InvalidMemLoc(token_line[pos].get_nm())
-    if closeBracket:
-        return (register, displacement, pos)
+                state = NEED_VAL
+            elif isinstance(token_line[pos], PlusTok):
+                pos += 1
+                state = NEED_VAL
+            elif isinstance(token_line[pos], CloseBracket):
+                pos += 1
+                return (register, displacement, pos)
+            else:
+                raise InvalidMemLoc(token_line[pos].get_nm())
+
+def get_symbol(token_line, pos, vm):
+    """
+    Creates a Symbol token for an instruction
+
+    Args: 
+        token_line: List of tokens
+        pos: Position of NewSymbol token
+        vm: Virtual machine
+
+    Returns:
+        Symbol token, next position to look at
+    """
+    if token_line[pos].get_nm() in vm.labels:
+        return (Label(token_line[pos].get_nm(), vm), pos + 1)
+    elif token_line[pos].get_nm() not in vm.symbols:
+        raise UnknownName(token_line[pos].get_nm())
     else:
-        raise MissingCloseBrack()
+        symbol = token_line[pos].get_nm()
+        pos += 1 
+        if pos < len(token_line):
+            if isinstance(token_line[pos], OpenBracket):
+                pos += 1
+                register, displacement, pos = get_address(token_line, pos, vm)
+                if register:
+                    return (Symbol(symbol, vm, register), pos)
+                    
+                return (Symbol(symbol, vm, displacement), pos)
+            else:
+                if isinstance(vm.symbols[symbol], list):
+                    return (Symbol(symbol, vm, 0), pos)
+                else:
+                    return (Symbol(symbol, vm), pos)
+        else:
+            if isinstance(vm.symbols[symbol], list):
+                return (Symbol(symbol, vm, 0), pos)
+            else:
+                return (Symbol(symbol, vm), pos)
+
 
 def get_op(token_line, pos, vm):
     """
@@ -380,54 +409,20 @@ def get_op(token_line, pos, vm):
     """
     if pos >= len(token_line):
         raise MissingOps()
-    if (isinstance(token_line[pos], Register) or 
+    elif (isinstance(token_line[pos], Register) or 
         isinstance(token_line[pos], IntegerTok)):
         return (token_line[pos], pos + 1)
     elif isinstance(token_line[pos], MinusTok):
-# return minus_tok()
-        try:
-            token_line[pos + 1].negate_val()
-            return (token_line[pos + 1], pos + 2)
-        except:
-            raise InvalidArgument()
+        return minus_token(token_line, pos)
     elif isinstance(token_line[pos], OpenBracket):
-# return open_bracket()
         pos += 1
         register, displacement, pos = get_address(token_line, pos, vm)
         if register:
             return (RegAddress(register.get_nm(), vm, displacement), pos)
         else:
             return (Address(str(displacement), vm), pos)
-
     elif isinstance(token_line[pos], NewSymbol):
-# what about functions for each if / elif in this function?
-# return new_symbol()
-        if token_line[pos].get_nm() in vm.labels:
-            return (Label(token_line[pos].get_nm(), vm), pos + 1)
-        elif token_line[pos].get_nm() not in vm.symbols:
-            raise UnknownName(token_line[pos].get_nm())
-        else:
-            symbol = token_line[pos].get_nm()
-            pos += 1 
-            if pos < len(token_line):
-                if isinstance(token_line[pos], OpenBracket):
-                    pos += 1
-                    register, displacement, pos = get_address(token_line, 
-                                                              pos, vm)
-                    if register:
-                        return (Symbol(symbol, vm, register), pos)
-                        
-                    return (Symbol(symbol, vm, displacement), pos)
-                else:
-                    if isinstance(vm.symbols[symbol], list):
-                        return (Symbol(symbol, vm, 0), pos)
-                    else:
-                        return (Symbol(symbol, vm), pos)
-            else:
-                if isinstance(vm.symbols[symbol], list):
-                    return (Symbol(symbol, vm, 0), pos)
-                else:
-                    return (Symbol(symbol,vm), pos)
+        return get_symbol(token_line, pos, vm)
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
@@ -469,9 +464,6 @@ def parse_exec_unit(token_line, vm):
             else:
                 raise MissingComma()
     return token_instruction
-
-
-
 
 def parse(tok_lines, vm):
     """
