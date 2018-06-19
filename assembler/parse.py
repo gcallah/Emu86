@@ -10,7 +10,7 @@ from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
 from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack, 
-from .errors import MissingCloseBrack
+from .errors import MissingCloseBrack, MissingOps
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
@@ -377,7 +377,7 @@ def get_op(token_line, pos, vm):
         Operand token, position of next item in instruction
     """
     if pos >= len(token_line):
-        raise Exception   # really we want "no op where expected"
+        raise MissingOps()
     if (isinstance(token_line[pos], Register) or 
         isinstance(token_line[pos], IntegerTok)):
         return (token_line[pos], pos + 1)

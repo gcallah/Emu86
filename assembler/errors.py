@@ -24,6 +24,7 @@ UNKNOWN_ERR = "Unknown parsing error."
 UNKNOWN_INT = "Unknown interrupt instruction: "
 UNKNOWN_NM = "Unknown symbol: "
 UNKNOWN_LABEL = "Unknown label: "
+MISSING_OPS = "Missing operands where expected"
 MISSING_DATA = "Missing data values"
 MISSING_COMMA = "Missing comma"
 MISSING_OPENBRACK = "Missing opening bracket"
@@ -131,6 +132,10 @@ class StackUnderflow(Error):
 class ExitProg(Error):
     def __init__(self):
         self.msg = PROGRAM_EXIT
+
+class MissingOps(Error):
+    def __init__(self):
+        self.msg = MISSING_OPS
 
 class MissingData(Error):
     def __init__(self):
