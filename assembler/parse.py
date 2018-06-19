@@ -9,7 +9,7 @@ from random import randrange
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
-from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack, 
+from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack
 from .errors import MissingCloseBrack, MissingOps
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DataType
