@@ -26,6 +26,10 @@ UNKNOWN_NM = "Unknown symbol: "
 UNKNOWN_LABEL = "Unknown label: "
 MISSING_DATA = "Missing data values"
 MISSING_COMMA = "Missing comma"
+MISSING_OPENBRACK = "Missing opening bracket"
+MISSING_OPENPAREN = "Missing opening parenthesis"
+MISSING_CLOSEBRACK = "Missing closing bracket"
+MISSING_CLOSEPAREN = "Missing closing parenthesis"
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -135,6 +139,22 @@ class MissingData(Error):
 class MissingComma(Error):
     def __init__(self):
         self.msg = MISSING_COMMA
+
+class MissingOpenParen(Error):
+    def __init__(self):
+        self.msg = MISSING_OPENPAREN
+
+class MissingOpenBrack(Error):
+    def __init__(self):
+        self.msg = MISSING_OPENBRACK
+
+class MissingCloseParen(Error):
+    def __init__(self):
+        self.msg = MISSING_CLOSEPAREN
+
+class MissingCloseBrack(Error):
+    def __init__(self):
+        self.msg = MISSING_CLOSEBRACK
 
 def check_num_args(instr, ops, correct_num):
     """

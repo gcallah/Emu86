@@ -9,6 +9,8 @@ from random import randrange
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
+from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack, 
+from .errors import MissingCloseBrack
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
@@ -95,96 +97,6 @@ PARAM_VAL = 0
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
-def convert_string_to_ascii (values):
-    """
-    Converts a string into a string of its ASCII values
-
-    Args:
-        values: String of values of a parameter
-
-    Returns:
-        String of values of ASCII values if a string is present
-    """
-    if values.find("'") != -1:
-        val_string = ""
-        begin_index = values.find("'")
-        end_index = values.find("'", begin_index + 1)
-        for index in range(begin_index + 1, end_index):
-            val_string += str(ord(values[index]))
-            if index != end_index - 1:
-                val_string += ","
-        val_string += values[end_index + 1:]
-        values = val_string
-    return values
-
-def store_values_dup (values, data_type):
-    """
-    Converts the string of data that uses the term DUP into 
-    a string of integers without the term DUP 
-
-    Args:
-        values: The values of the variable
-        data_type: The data type of the variable
-
-    Returns: 
-        String of values without term DUP 
-    """
-    if values.find("DUP") != -1:
-        try:
-            position = 0
-            count = 0
-            values_list_before = ""
-            if values.find(",") != -1:
-                for pos in range(len(values)):
-                    if (values[pos] == ","):
-                        position = pos
-                values_list_before = values[:position + 1]
-                count = int(values[position + 1:values.find("DUP")])
-            else:
-                count = int(values[:values.find("DUP")])
-            values_list_after = ""
-            for counter in range(count):
-                if values[values.find("DUP") + 1:] == DONT_INIT: 
-                    values_list_after += str(randrange(0, 
-                                       dtype_info[data_type][MAX_VAL]))
-                else:
-                    try:
-                        values_list_after += values[values.find("DUP") + 3:]
-                    except Exception:
-                        raise InvalidDataVal(values)
-
-                if counter != count - 1:
-                    values_list_after += ","
-            values = values_list_before + values_list_after
-            return values
-        except Exception:
-            raise InvalidDataVal(values)
-    return values
-
-def store_values_array(values, data_type):
-    """
-    Returns the array made from the string values
-
-    Args:
-        values: Values of the variable 
-        data-type: The data type of the variable
-
-    Returns: 
-        List of integer values 
-    """
-    if values.find(",") != -1:
-        values_list = values.split(",")
-        for index in range(len(values_list)):
-            if values_list[index] == DONT_INIT:
-                values_list[index] = randrange(0, dtype_info[data_type]
-                                                            [MAX_VAL])
-            else: 
-                try:
-                    values_list[index] = int(values_list[index])
-                except Exception:
-                    raise InvalidDataVal(values)
-        return values_list
-
 def get_data_type(token_line, pos):
     """
     Returns the data type
@@ -206,116 +118,129 @@ def get_data_type(token_line, pos):
     else:
         raise InvalidDataType(token_line[pos].get_nm())
 
-def check_data_values(token_line, pos):
+def get_DUP_value(token_line, pos):
     """
-    Checks if the tokenized data is a valid set of data values
-    If not valid set, raise exception
+    Finds the value to duplicate if found
 
     Args:
         token_line: List of data tokens
-        pos: Beginning position of list
+        pos: Beginning position to parse for DUP
+
+    Returns:
+        Integer value to duplicate
     """
-
-    # first check the very first data element
-    if (not (isinstance(token_line[pos], MinusTok) and
-        isinstance(token_line[pos + 1], IntegerTok)) and 
-        not isinstance(token_line[pos], IntegerTok) and 
-        not isinstance(token_line[pos], StringTok) and 
-        not isinstance(token_line[pos], QuestionTok)):
-        raise InvalidArgument(token_line[pos].get_nm())
-    pos += 1
-
-    # check others afer first element
+    NEED_OPEN_PAREN = 0
+    NEED_VAL = 1
+    NEED_CLOSE_PAREN = 2
+    state = NEED_OPEN_PAREN
+    dup_value = None
     while pos < len(token_line):
-
-        # if comma 
-        if isinstance(token_line[pos], Comma):
-            if pos == len(token_line) - 1:
-                raise InvalidArgument(",")
+        if state == NEED_OPEN_PAREN: 
+            if isinstance(token_line[pos], OpenParen):
+                state = NEED_VAL
+                pos += 1
+            else:
+                raise MissingOpenParen()
+        elif state == NEED_VAL:
+            if isinstance(token_line[pos], QuestionTok):
+                dup_value = DONT_INIT
+            elif isinstance(token_line[pos], MinusTok):
+                try:
+                    token_line[pos + 1].negate_val()
+                    pos += 2
+                    state = NEED_CLOSE_PAREN
+                except: 
+                    raise InvalidDataVal("-")
+            elif isinstance(token_line[pos], IntegerTok):
+                dup_value = token_line[pos].get_val()
+                state = NEED_CLOSE_PAREN
+                pos += 1
+            else:
+                raise MissingData()
+        elif state == NEED_CLOSE_PAREN:
+            if isinstance(token_line[pos], CloseParen):
+                pos += 1 
+                break
             else: 
-                if (not isinstance(token_line[pos - 1], IntegerTok) and 
-                    not isinstance(token_line[pos - 1], StringTok) and 
-                    not isinstance(token_line[pos - 1], QuestionTok) and 
-                    not isinstance(token_line[pos - 1], CloseParen)):
-                    raise InvalidArgument(",")
+                raise MissingCloseParen()
 
-        # if DUP
-        elif isinstance(token_line[pos], DupTok):
-            if not isinstance(token_line[pos - 1], IntegerTok):
-                raise InvalidArgument("DUP")
-
-        # if open parenthesis
-        elif isinstance(token_line[pos], OpenParen):
-            if not isinstance(token_line[pos - 1], DupTok):
-                raise InvalidArgument("(")
-
-        # if close parenthesis
-        elif isinstance(token_line[pos], CloseParen):
-            if (not isinstance(token_line[pos - 2], OpenParen) and 
-                not isinstance(token_line[pos - 1], IntegerTok) and 
-                not isinstance(token_line[pos - 1], StringTok) and 
-                not isinstance(token_line[pos - 1], QuestionTok)):
-                raise InvalidArgument("(")
-
-        # if ?
-        elif isinstance(token_line[pos], QuestionTok):
-            if (not isinstance(token_line[pos - 1], Comma) and
-                not isinstance(token_line[pos - 1], OpenParen)):
-                raise InvalidArgument("?")
-
-        # if integer
-        elif isinstance(token_line[pos], IntegerTok):
-
-            # if not 0 but follows a string
-            if (isinstance(token_line[pos - 2], StringTok) and 
-                isinstance(token_line[pos - 1], Comma) and 
-                token_line[pos].get_val() != 0):
-                raise InvalidDataVal(str(token_line[pos].get_val()))
-
-            elif (not isinstance(token_line[pos - 1], Comma) and
-                  not isinstance(token_line[pos - 1], OpenParen) and
-                  not isinstance(token_line[pos - 1], MinusTok)):
-                raise InvalidArgument(str(token_line[pos].get_val()))
-
-        # if string 
-        elif isinstance(token_line[pos], StringTok):
-            if not isinstance(token_line[pos - 1], Comma):
-                raise InvalidDataVal(token_line[pos].get_val())
-
-        elif isinstance(token_line[pos], MinusTok):
-            if not isinstance(token_line[pos + 1], IntegerTok):
-                raise InvalidDataVal(token_line[pos].getval())
-        else:
-            raise InvalidDataVal(token_line[pos].get_val())
-        pos += 1
+    return (dup_value, pos)
 
 
-def get_data_values(token_line, pos):
+def get_Values(token_line, data_type, pos):
     """
-    Turns the token of values into one string
+    Creates a list of values for each variable
 
     Args:
         token_line: List of data tokens
-        pos: Beginning position of list
+        data_type: Data type of variable
+        pos: Beginning pos to parse from
 
-    Returns: 
-        String of values 
+    Returns:
+        List of integer values
     """
+    values_list = []
     if pos >= len(token_line):
         raise MissingData()
+
+    # negate integer value if minus sign found
+    elif isinstance(token_line[pos], MinusTok):
+        try:
+            token_line[pos + 1].negate_val()
+            values_list.append(token_line[pos + 1].get_val())
+            return (values_list, pos + 2)
+        except:
+            raise InvalidDataVal(token_line[pos].get_nm())
+
+
+    elif isinstance(token_line[pos], IntegerTok):
+        if pos + 1 < len(token_line):
+            # if DUP token found
+            if isinstance(token_line[pos + 1], DupTok):
+                duplicate = token_line[pos].get_val()
+                value, pos = get_DUP_value(token_line, pos + 2)
+                for times in range(duplicate):
+                    if value == DONT_INIT:
+                        values_list.append(randrange(0, 
+                                 dtype_info[data_type][MAX_VAL]))
+                    else:
+                        values_list.append(value)
+                return (values_list, pos)
+            # otherwise return int
+            else:
+                return ([token_line[pos].get_val()], pos + 1)
+
+        else:
+            return ([token_line[pos].get_val()], pos + 1)
+
+    # if value is a string token
+    elif isinstance(token_line[pos], StringTok):
+        if pos + 2 >= len(token_line):
+            raise MissingData()
+        # check if following is an Integer
+        elif not isinstance(token_line[pos + 1], Comma):
+            raise MissingComma()
+
+        elif not isinstance(token_line[pos + 2], IntegerTok):
+            raise InvalidDataVal(str(token_line[pos + 2].get_val()))
+        # check if following is an Integer with value of 0
+        elif (isinstance(token_line[pos + 2], IntegerTok) and 
+                 token_line[pos + 2].get_val() != 0):
+            raise InvalidDataVal(str(token_line[pos + 2].get_val()))
+        else:
+            for letter in token_line[pos].get_nm():
+                if letter != "'":
+                    values_list.append(ord(letter))
+            values_list.append(0)
+            return (values_list, pos + 3)
+
+    elif isinstance(token_line[pos], QuestionTok):
+        values_list.append(randrange(0, 
+                                 dtype_info[data_type][MAX_VAL]))
+        return (values_list, pos + 1)
+
     else:
-        check_data_values(token_line, pos)
-        values_list = []
-        while pos < len(token_line):
-            if isinstance(token_line[pos], MinusTok):
-                token_line[pos + 1].negate_val()
-            elif isinstance(token_line[pos], IntegerTok):
-                values_list.append(str(token_line[pos].get_val()))
-            elif (not isinstance(token_line[pos], OpenParen) and
-                not isinstance(token_line[pos], CloseParen)):
-                values_list.append(token_line[pos].get_nm())
-            pos += 1
-        return "".join(values_list)
+        raise InvalidDataVal(token_line[pos].get_nm())
 
 def parse_data_token(token_line, vm):
     """
@@ -325,8 +250,11 @@ def parse_data_token(token_line, vm):
         token_line: List of data tokens
         vm: Virtual machine
     """
+    NEED_VAL = 0
+    NEED_COMMA_OR_END = 1
     pos = 0
     symbol = ""
+    data_vals = []
     if not isinstance(token_line[pos], NewSymbol):
         raise InvalidArgument(token_line[pos].get_nm())
     else:
@@ -334,32 +262,35 @@ def parse_data_token(token_line, vm):
     pos += 1
     data_type = get_data_type(token_line, pos)
     pos += 1
-    val = get_data_values(token_line, pos)
-    val = convert_string_to_ascii(val);
-    val = store_values_dup(val, data_type);
+    state = NEED_VAL
+    while True: 
+        if state == NEED_VAL:
+            val, pos = get_Values(token_line, data_type, pos)
+            data_vals.extend(val)
+            state = NEED_COMMA_OR_END
+        elif state == NEED_COMMA_OR_END:
+            if pos >= len(token_line):
+                break
+            elif isinstance(token_line[pos], Comma):
+                state = NEED_VAL
+                pos += 1
+            else:
+                MissingComma()
 
-    # convert string of numbers to a list
-    if val.find (",") != -1:
-        vm.symbols[symbol] = store_values_array (val, data_type)  
+    # if length of list is 1, only store the value
+    if len(data_vals) == 1:
+        vm.symbols[symbol] = data_vals[0]
+        add_debug("Symbol table now holds " + 
+                      str(vm.symbols[symbol]), vm)
+
+    # otherwise, store the list 
+    else:
+        vm.symbols[symbol] = data_vals
         debug_string = "Symbol table now holds "
         for int_values in vm.symbols[symbol]:
             debug_string += str(int_values) + ","
         add_debug(debug_string, vm)  
 
-    # if not a list and just a value
-    else:
-        if val == DONT_INIT:
-            vm.symbols[symbol] = randrange(0, 
-                                 dtype_info[data_type][MAX_VAL])
-            add_debug("Symbol table now holds " + 
-                      str(vm.symbols[symbol]), vm)
-        else: 
-            try:
-                vm.symbols[symbol] = int(val)
-                add_debug("Symbol table now holds " + 
-                          str(vm.symbols[symbol]), vm)
-            except:
-                raise InvalidDataVal(val)
 
 def get_address(token_line, pos, vm):
     """
@@ -431,7 +362,7 @@ def get_address(token_line, pos, vm):
     if closeBracket:
         return (register, displacement, pos)
     else:
-        raise InvalidMemLoc("")
+        raise MissingCloseBrack()
 
 def get_op(token_line, pos, vm):
     """
@@ -450,6 +381,12 @@ def get_op(token_line, pos, vm):
     if (isinstance(token_line[pos], Register) or 
         isinstance(token_line[pos], IntegerTok)):
         return (token_line[pos], pos + 1)
+    if isinstance(token_line[pos], MinusTok):
+        try:
+            token_line[pos + 1].negate_val()
+            return (token_line[pos + 1], pos + 2)
+        except:
+            raise InvalidArgument()
     elif isinstance(token_line[pos], OpenBracket):
         pos += 1
         register, displacement, pos = get_address(token_line, pos, vm)
@@ -479,7 +416,7 @@ def get_op(token_line, pos, vm):
                     if isinstance(vm.symbols[symbol], list):
                         return (Symbol(symbol, vm, 0), pos)
                     else:
-                        return (Symbol(symbol,vm), pos)
+                        return (Symbol(symbol, vm), pos)
             else:
                 if isinstance(vm.symbols[symbol], list):
                     return (Symbol(symbol, vm, 0), pos)
@@ -507,7 +444,10 @@ def parse_exec_unit(token_line, vm):
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
     pos += 1 
-    state = NEED_OP
+    if isinstance(token_instruction[0], Ret):
+        state = NEED_COMMA_OR_END
+    else:
+        state = NEED_OP
     while True:
         if state == NEED_OP:
             # get_op will throw excep if no op present
