@@ -38,7 +38,7 @@ QUESTION_TOKEN = QuestionTok()
 DUP_TOKEN = DupTok()
 
 keywords_to_tokens = {
-    "[": OPEN_BRACKET,
+    "[": OpenBracket(),  # do this for all of them!
     "]": CLOSE_BRACKET,
     "(": OPEN_PAREN,
     ")": CLOSE_PAREN,

@@ -23,6 +23,8 @@ from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
 from .virtual_machine import MEM_SIZE
 
+TOKENS = 0
+CODE = 1
 
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
@@ -381,13 +383,15 @@ def get_op(token_line, pos, vm):
     if (isinstance(token_line[pos], Register) or 
         isinstance(token_line[pos], IntegerTok)):
         return (token_line[pos], pos + 1)
-    if isinstance(token_line[pos], MinusTok):
+    elif isinstance(token_line[pos], MinusTok):
+# return minus_tok()
         try:
             token_line[pos + 1].negate_val()
             return (token_line[pos + 1], pos + 2)
         except:
             raise InvalidArgument()
     elif isinstance(token_line[pos], OpenBracket):
+# return open_bracket()
         pos += 1
         register, displacement, pos = get_address(token_line, pos, vm)
         if register:
@@ -396,6 +400,8 @@ def get_op(token_line, pos, vm):
             return (Address(str(displacement), vm), pos)
 
     elif isinstance(token_line[pos], NewSymbol):
+# what about functions for each if / elif in this function?
+# return new_symbol()
         if token_line[pos].get_nm() in vm.labels:
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
         elif token_line[pos].get_nm() not in vm.symbols:
@@ -482,17 +488,17 @@ def parse(tok_lines, vm):
     parse_text = True
     token_instrs = []
     for tokens in tok_lines:
-        if isinstance(tokens[0][0], Section):
-            if tokens[0][0].get_nm() == "data":
+        if isinstance(tokens[0][TOKENS], Section):
+            if tokens[0][TOKENS].get_nm() == "data":
                 parse_data = True
                 parse_text = False
                 continue
-            elif tokens[0][0].get_nm() == "text":
+            elif tokens[0][TOKENS].get_nm() == "text":
                 parse_text = True
                 parse_data = False
                 continue
             else: 
-                raise InvalidSection(tokens[0][0].get_nm())
+                raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
             parse_data_token(tokens[0], vm)
         elif parse_text:
