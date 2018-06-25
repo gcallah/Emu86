@@ -21,6 +21,7 @@ HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's
 ASM_FILES = $(shell ls $(TDIR)/*.asm)
 ASM_PTMLS = $(shell ls $(TDIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
 
+# this rule builds the menu for the static server:
 navbar:
 	$(UDIR)/html_include.awk <$(TEMPLATE_DIR)/navbar.pre >$(TEMPLATE_DIR)/navbar.txt
 	python3 write_sample_programs.py
