@@ -30,7 +30,6 @@
             area.asm
         </title>
     </head>
-
     <body>
         <div class="wrapper">
 <!-- Sidebar Holder -->
@@ -198,8 +197,8 @@ Calculate area of rectangle
             <pre>
             <code>
 .text
-    mov eax, long
-    imul eax, wide
+    mov eax, [long]
+    imul eax, [wide]
             </code>
             </pre>
             </div>

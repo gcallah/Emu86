@@ -30,7 +30,6 @@
             log.asm
         </title>
     </head>
-
     <body>
         <div class="wrapper">
 <!-- Sidebar Holder -->
@@ -199,13 +198,13 @@ Calculating log (base 2) of a number
 .text
     mov ecx, 0
     mov eax, 1
-whileLE: cmp eax, number
+whileLE: cmp eax, [number]
          jnle endWhileLE
 body: add eax, eax
       inc ecx
       jmp whileLE
 
-endWhileLE:	dec ecx 
+endWhileLE: dec ecx 
             </code>
             </pre>
             </div>

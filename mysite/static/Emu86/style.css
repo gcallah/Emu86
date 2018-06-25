@@ -268,7 +268,7 @@ table {
 td, th {
     border: 1px solid black;
     font-size: 13px;
-    line-height: 16px;
+    line-height: 10px;
     border-bottom: 1px solid #111;
     vertical-align: top;
     padding: 8px;

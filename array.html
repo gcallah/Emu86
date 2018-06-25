@@ -30,7 +30,6 @@
             array.asm
         </title>
     </head>
-
     <body>
         <div class="wrapper">
 <!-- Sidebar Holder -->
@@ -194,7 +193,7 @@ z is an array of the ASCII values of 'hello', ends in 0
             <code>
 .data
     x DB 3, 8, 5, 2
-    y DW 13 DUP (50)
+    y DW 13 DUP (-50)
     z DD 'hello', 0
 
             </code>
@@ -205,10 +204,10 @@ Store array values
             <pre>
             <code>
 .text
-    mov eax, x 
-    mov ebx, y[4]
-    mov ecx, z[3]
-    mov edx, x[2]
+    mov eax, [x] 
+    mov ebx, [y+4]
+    mov ecx, [z+3]
+    mov edx, [x+2]
             </code>
             </pre>
             </div>

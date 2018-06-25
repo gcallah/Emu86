@@ -30,7 +30,6 @@
             mem_register_test.asm
         </title>
     </head>
-
     <body>
         <div class="wrapper">
 <!-- Sidebar Holder -->
@@ -200,9 +199,10 @@ Storing values into memory using register arithmetic
             <code>
 .text
 	mov eax, 6
-	mov [eax], x[2]
-	mov [eax+2], y[3]
-	mov [ebx], z
+	mov [eax], [x+2]
+	mov [eax+2], [y+3]
+	mov [ebx], [z]
+	mov [eax-5], [y+2]
             </code>
             </pre>
             </div>

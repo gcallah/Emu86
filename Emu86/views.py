@@ -17,6 +17,8 @@ NXT_KEY = 'nxt_key'
 STEP = 'step'
 CLEAR = 'clear'
 HEADER = 'header'
+INTEL = 'intel'
+ATT = 'att'
 
 
 def get_hdr():
@@ -59,7 +61,12 @@ def main_page(request):
             get_mem_contents(vmachine.memory, request)
             get_stack_contents(vmachine.stack, request)
             get_flag_contents(vmachine.flags, request)
-            (last_instr, error) = assemble(request.POST[CODE], vmachine, step)
+            if INTEL in request.POST:
+                (last_instr, error) = assemble(request.POST[CODE], 
+                                               vmachine, step)
+            else:
+                (last_instr, error) = assemble(request.POST[CODE], 
+                                               vmachine, step)
 
     return render(request, 'main.html',
                   {'form': form,

@@ -6,6 +6,11 @@
 
     <div class="module">
         <form action="{% url 'Emu86:main_page' %}" method="post">
+            Select the language you are coding in: <br> 
+            <pre>
+            <input type="radio" name="intel" checked="true"> Intel      
+            <input type="radio" name="att"> AT&T 
+            </pre>
             <input type="hidden" name="nxt_key">
             <input type="hidden" name="unwritable">
             <table>
@@ -145,15 +150,15 @@
                             </tr>
                              {% for addr, cont in memory.items %}
                                 <tr>
-                                    <td id="mem-loc">
+                                    <td id="mem-loc" style="height:5px">
                                         {{ addr }}
                                     </td>
-                                    <td id="contents">
+                                    <td id="contents" style="height:5px">
                                         <input
                                             id="mem-cont"
                                             value="{{ cont }}"
                                             name="{{ addr }}"
-                                            size="10"
+                                            size="5"
                                         >
                                     </td>
                                 </tr>
@@ -171,16 +176,16 @@
                                 </th>
                             </tr>
                              {% for addr, cont in stack.items %}
-                                <tr>
-                                    <td id="mem-loc">
+                                <tr style="height:5px"> 
+                                    <td id="mem-loc" style="height:5px">
                                         {{ addr }}
                                     </td>
-                                    <td id="contents">
+                                    <td id="contents" style="height:5px">
                                         <input
                                             id="mem-cont"
                                             value="{{ cont }}"
                                             name="{{ addr }}"
-                                            size="10"
+                                            size="5"
                                         >
                                     </td>
                                 </tr>

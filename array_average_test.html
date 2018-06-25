@@ -186,7 +186,7 @@ Declare an array and declare size of the array
             <pre>
             <code>
 .data
-    nbrArray DW 25, 47, 15, 50, 32, 95 DUP (10)
+    nbrArray DW 25, 47, -15, -50, 32, 95 DUP (10)
     nbrElts DW 100
 
             </code>
@@ -203,7 +203,7 @@ Calculate the average of the array:
     mov ecx, nbrElts
 forCount1: cmp ebx, ecx
            je endCount
-body: add eax, nbrArray[ebx]
+body: add eax, [ebx]
       inc ebx
       jmp forCount1
 endCount: idiv ecx 

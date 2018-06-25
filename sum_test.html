@@ -30,7 +30,6 @@
             sum_test.asm
         </title>
     </head>
-
     <body>
         <div class="wrapper">
 <!-- Sidebar Holder -->
@@ -204,9 +203,9 @@ Store total to sum
             <pre>
             <code>
 .text
-    mov eax, number		
+    mov eax, [number]		
     add eax, 158	
-    mov sum, eax
+    mov [sum], eax
             </code>
             </pre>
             </div>

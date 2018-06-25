@@ -30,7 +30,6 @@
             cel_to_fah.asm
         </title>
     </head>
-
     <body>
         <div class="wrapper">
 <!-- Sidebar Holder -->
@@ -204,13 +203,13 @@ Store result in fTemp
             <pre>
             <code>
 .text
-    mov eax, cTemp
+    mov eax, [cTemp]
     imul eax, 9
     add eax, 2
     mov ebx, 5
     idiv ebx 
     add eax, 32
-    mov fTemp, eax
+    mov [fTemp], eax
             </code>
             </pre>
             </div>
