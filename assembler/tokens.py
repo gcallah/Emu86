@@ -163,9 +163,10 @@ class RegAddress(Address):
 
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
-        address = str(self.regs[self.name])
+        address = hex(self.regs[self.name]).split('x')[-1].upper()
         if self.displacement != 0:
-            address = str(int(self.regs[self.name]) + self.displacement)
+            address = hex(int(self.regs[self.name]) + 
+                          self.displacement).split('x')[-1].upper()
         if address in self.mem:
             return address
         else:

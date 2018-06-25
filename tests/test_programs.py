@@ -90,11 +90,13 @@ class TestPrograms(TestCase):
         for position in range(0, 4):
             self.assertEqual(vmachine.memory[str(position)], list_x[position])
         for position in range(4, 17):
-            self.assertEqual(vmachine.memory[str(position)], -50)
+            self.assertEqual(vmachine.memory[(hex(position).split('x')
+                                             [-1]).upper()], -50)
         for position in range(17, 22):
-            self.assertEqual(vmachine.memory[str(position)], 
+            self.assertEqual(vmachine.memory[(hex(position).split('x')
+                                             [-1]).upper()], 
                              ord(string_z[position - 17]))
-        self.assertEqual(vmachine.memory["22"], 0)
+        self.assertEqual(vmachine.memory[hex(22).split('x')[-1]], 0)
 
     def test_sum_calculation(self):
         self.run_test_code("tests/sum_test.asm")

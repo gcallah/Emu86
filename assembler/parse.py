@@ -316,9 +316,8 @@ def parse_data_token(token_line, vm, mem_loc):
     vm.symbols[symbol] = mem_loc
     add_debug("Symbol table now holds " + str(mem_loc), vm)
     for value in data_vals:
-        vm.memory[str(mem_loc)] = value
+        vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
         mem_loc += 1
-
     return mem_loc
 
 
@@ -419,7 +418,8 @@ def get_op(token_line, pos, vm):
         if register:
             return (RegAddress(register.get_nm(), vm, displacement), pos)
         else:
-            return (Address(str(displacement), vm), pos)
+            return (Address(hex(displacement).split('x')[-1].upper(), vm), 
+                    pos)
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
