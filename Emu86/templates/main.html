@@ -131,7 +131,49 @@
                         Memory:
                         <br>
                     </th>
-                    <th id="MemStack">
+                </tr>
+                <tr>
+                    <td>
+                    <div style="height:235px;overflow:auto;">
+                        <table id="memory-table">
+                            <script>
+                                var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
+                                for (var i = 0; i < 16; i++) {
+                                    text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
+                                    if (i == 15){
+                                        text += "</tr>"
+                                    }
+
+                                }
+                                document.getElementById("memory-table").innerHTML = text;
+                            </script>
+                            {% for addr, cont in memory.items %}
+                                {% if addr == "0" %}
+                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> 0 </td>
+                                {% elif addr|slice:"-1:" == "0" %}
+                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:":-1"}} </td>
+                                {% endif %}
+                                    <td id="contents" style="height:5px">
+                                        <input
+                                            id="mem-cont"
+                                            value="{{ cont }}"
+                                            name="{{ addr }}"
+                                            size="5"
+                                        >
+                                    </td>
+                                {% if addr|slice:"-1:" == "F" %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <table>
+                <tr>
+                <th id="MemStack">
                         <br>
                         Stack:
                         <br>
@@ -139,47 +181,25 @@
                 </tr>
                 <tr>
                     <td>
-                        <table id="memory-table">
-                            <tr>
-                                <th>
-                                    Address
-                                </th>
-                                <th>
-                                    Contents
-                                </th>
-                            </tr>
-                             {% for addr, cont in memory.items %}
-                                <tr>
-                                    <td id="mem-loc" style="height:5px">
-                                        {{ addr }}
-                                    </td>
-                                    <td id="contents" style="height:5px">
-                                        <input
-                                            id="mem-cont"
-                                            value="{{ cont }}"
-                                            name="{{ addr }}"
-                                            size="5"
-                                        >
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </td>
-                    <td>
+                        <div style="height:235px;overflow:auto;">
                         <table id="stack-table">
-                            <tr>
-                                <th>
-                                    Address
-                                </th>
-                                <th>
-                                    Contents
-                                </th>
-                            </tr>
+                            <script>
+                                var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
+                                for (var i = 15; i >= 0; i--) {
+                                    text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
+                                    if (i == 0){
+                                        text += "</tr>"
+                                    }
+
+                                }
+                                document.getElementById("stack-table").innerHTML = text;
+                            </script>
                              {% for addr, cont in stack.items %}
-                                <tr style="height:5px"> 
-                                    <td id="mem-loc" style="height:5px">
-                                        {{ addr }}
-                                    </td>
+                                {% if addr == "F" %}
+                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> 0 </td>
+                                {% elif addr|slice:"-1:" == "F" %}
+                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:":-1"}} </td>
+                                {% endif %}
                                     <td id="contents" style="height:5px">
                                         <input
                                             id="mem-cont"
@@ -188,9 +208,12 @@
                                             size="5"
                                         >
                                     </td>
-                                </tr>
+                                {% if addr|slice:"-1:" == "0" %}
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                         </table>
+                    </div>
                     </td>
                 </tr>
             </table>

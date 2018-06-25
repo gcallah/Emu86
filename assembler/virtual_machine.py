@@ -8,9 +8,11 @@ from .errors import StackOverflow, StackUnderflow
 
 MEM_DIGITS = 2
 
-MEM_SIZE = 32
-STACK_TOP = (MEM_SIZE * 2) - 1
-STACK_BOTTOM = MEM_SIZE
+MEM_SIZE = 256
+# STACK_TOP = (MEM_SIZE * 2) - 1
+# STACK_BOTTOM = MEM_SIZE
+STACK_TOP = MEM_SIZE - 1
+STACK_BOTTOM = 0
 EMPTY_CELL = 0
 INSTR_PTR = "EIP"
 STACK_PTR = "ESP"
@@ -69,11 +71,11 @@ class VirtualMachine:
 
     def mem_init(self):
         for i in range(0, MEM_SIZE):
-            self.memory[str(i)] = 0
+            self.memory[hex(i).split('x')[-1].upper()] = 0
 
     def stack_init(self):
         for i in range(STACK_TOP, STACK_BOTTOM - 1, -1):
-            self.stack[str(i)] = 0
+            self.stack[hex(i).split('x')[-1].upper()] = 0
 
     def re_init(self):
         self.nxt_key = 0

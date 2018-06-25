@@ -145,13 +145,19 @@ class Address(Location):
         super().__init__(name, vm, val)
         self.mem = vm.memory
 
+    def check_mem(self):
+        if int(self.name, 16) >= 256 or int(self.name, 16) < 0:
+            raise InvalidMemLoc(self.name)
+
     def __str__(self):
         return "[" + str(self.name) + "]"
 
     def get_val(self):
+        self.check_mem()
         return int(self.mem[self.name])
 
     def set_val(self, val):
+        self.check_mem()
         self.mem[self.name] = val
 
 
@@ -163,7 +169,7 @@ class RegAddress(Address):
 
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
-        address = hex(self.regs[self.name]).split('x')[-1].upper()
+        address = hex(int(self.regs[self.name])).split('x')[-1].upper()
         if self.displacement != 0:
             address = hex(int(self.regs[self.name]) + 
                           self.displacement).split('x')[-1].upper()
@@ -180,10 +186,6 @@ class RegAddress(Address):
     def set_val(self, val):
         mem_addr = self.get_mem_addr()
         self.mem[mem_addr] = val
-
-class SymAddress(Token):
-    def __init__(self, name, displacement):
-        super().__init__(name, displacement)
 
 class Register(Location):
     def __init__(self, name, vm, val=0):

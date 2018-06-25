@@ -65,6 +65,14 @@ class ErrorTestCase(TestCase):
         (output, error) = assemble(".data \n  x DW", vmachine)
         self.assertTrue(error.startswith(MISSING_DATA))
 
+    def test_mem_error_over(self):
+        (output, error) = assemble("mov [256], 0", vmachine)
+        self.assertTrue(error.startswith(INVALID_MEM_LOC))
+
+    def test_mem_error_less(self):
+        (output, error) = assemble("mov [-30], 0", vmachine)
+        self.assertTrue(error.startswith(INVALID_MEM_LOC))
+
 
 if __name__ == '__main__':
     main()

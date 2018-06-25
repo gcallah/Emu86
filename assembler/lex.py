@@ -9,7 +9,7 @@ from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidArgument
 from .parse import instructions, dtype_info, DONT_INIT, sym_match, label_match
 from .tokens import Location, Address, Register, Symbol, Instruction
-from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DupTok
+from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
 from .tokens import QuestionTok, PlusTok, MinusTok
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen

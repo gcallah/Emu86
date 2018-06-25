@@ -12,7 +12,7 @@ from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
 from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack
 from .errors import MissingCloseBrack, MissingOps
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
-from .tokens import RegAddress, Label, NewSymbol, SymAddress, Section, DataType
+from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
 from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
