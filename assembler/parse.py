@@ -276,13 +276,14 @@ def get_values(token_line, data_type, pos):
     else:
         raise InvalidDataVal(token_line[pos].get_nm())
 
-def parse_data_token(token_line, vm):
+def parse_data_token(token_line, vm, mem_loc):
     """
     Parses data tokens 
 
     Args:
         token_line: List of data tokens
         vm: Virtual machine
+        mem_loc: Starting memory storage location
     """
     NEED_VAL = 0
     NEED_COMMA_OR_END = 1
@@ -311,19 +312,14 @@ def parse_data_token(token_line, vm):
             else:
                 MissingComma()
 
-    # if length of list is 1, only store the value
-    if len(data_vals) == 1:
-        vm.symbols[symbol] = data_vals[0]
-        add_debug("Symbol table now holds " + 
-                      str(vm.symbols[symbol]), vm)
+    # store memory location 
+    vm.symbols[symbol] = mem_loc
+    add_debug("Symbol table now holds " + str(mem_loc), vm)
+    for value in data_vals:
+        vm.memory[str(mem_loc)] = value
+        mem_loc += 1
 
-    # otherwise, store the list 
-    else:
-        vm.symbols[symbol] = data_vals
-        debug_string = "Symbol table now holds "
-        for int_values in vm.symbols[symbol]:
-            debug_string += str(int_values) + ","
-        add_debug(debug_string, vm)  
+    return mem_loc
 
 
 def get_address(token_line, pos, vm):
@@ -353,10 +349,12 @@ def get_address(token_line, pos, vm):
         if state == NEED_VAL:
             if pos >= len(token_line):
                 raise MissingOps()
+            # if Integer
             elif isinstance(token_line[pos], IntegerTok):
                 displacement += token_line[pos].get_val()
                 pos += 1
                 state = NEED_OP_OR_CLOSE_BRACK
+            # if Register
             elif isinstance(token_line[pos], Register):
                 if register:
                     displacement += token_line[pos].get_val()
@@ -364,6 +362,14 @@ def get_address(token_line, pos, vm):
                     register = token_line[pos]
                 pos += 1
                 state = NEED_OP_OR_CLOSE_BRACK
+            # if Symbol, ex: [x]
+            elif isinstance(token_line[pos], NewSymbol):
+                if token_line[pos].get_nm() in vm.symbols:
+                    displacement += vm.symbols[token_line[pos].get_nm()]
+                    pos += 1
+                    state = NEED_OP_OR_CLOSE_BRACK
+                else:
+                    raise InvalidMemLoc(token_line[pos].get_nm())
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
         else: 
@@ -381,44 +387,6 @@ def get_address(token_line, pos, vm):
                 return (register, displacement, pos)
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
-
-def get_symbol(token_line, pos, vm):
-    """
-    Creates a Symbol token for an instruction
-
-    Args: 
-        token_line: List of tokens
-        pos: Position of NewSymbol token
-        vm: Virtual machine
-
-    Returns:
-        Symbol token, next position to look at
-    """
-    if token_line[pos].get_nm() in vm.labels:
-        return (Label(token_line[pos].get_nm(), vm), pos + 1)
-    elif token_line[pos].get_nm() not in vm.symbols:
-        raise UnknownName(token_line[pos].get_nm())
-    else:
-        symbol = token_line[pos].get_nm()
-        pos += 1 
-        if pos < len(token_line):
-            if isinstance(token_line[pos], OpenBracket):
-                pos += 1
-                register, displacement, pos = get_address(token_line, pos, vm)
-                if register:
-                    return (Symbol(symbol, vm, register), pos)
-                    
-                return (Symbol(symbol, vm, displacement), pos)
-            else:
-                if isinstance(vm.symbols[symbol], list):
-                    return (Symbol(symbol, vm, 0), pos)
-                else:
-                    return (Symbol(symbol, vm), pos)
-        else:
-            if isinstance(vm.symbols[symbol], list):
-                return (Symbol(symbol, vm, 0), pos)
-            else:
-                return (Symbol(symbol, vm), pos)
 
 
 def get_op(token_line, pos, vm):
@@ -438,6 +406,11 @@ def get_op(token_line, pos, vm):
     elif (isinstance(token_line[pos], Register) or 
         isinstance(token_line[pos], IntegerTok)):
         return (token_line[pos], pos + 1)
+    elif isinstance(token_line[pos], NewSymbol):
+        if token_line[pos].get_nm() in vm.labels:
+            return (Label(token_line[pos].get_nm(), vm), pos + 1)
+        elif token_line[pos].get_nm() in vm.symbols:
+            return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     elif isinstance(token_line[pos], MinusTok):
         return minus_token(token_line, pos)
     elif isinstance(token_line[pos], OpenBracket):
@@ -447,8 +420,6 @@ def get_op(token_line, pos, vm):
             return (RegAddress(register.get_nm(), vm, displacement), pos)
         else:
             return (Address(str(displacement), vm), pos)
-    elif isinstance(token_line[pos], NewSymbol):
-        return get_symbol(token_line, pos, vm)
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
@@ -505,6 +476,7 @@ def parse(tok_lines, vm):
     parse_data = False
     parse_text = True
     token_instrs = []
+    mem_loc = 0 
     for tokens in tok_lines:
         if isinstance(tokens[0][TOKENS], Section):
             if tokens[0][TOKENS].get_nm() == "data":
@@ -518,7 +490,7 @@ def parse(tok_lines, vm):
             else: 
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
-            parse_data_token(tokens[0], vm)
+            mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
             token_instrs.append((parse_exec_unit(tokens[0], vm), 
                                  tokens[1]))

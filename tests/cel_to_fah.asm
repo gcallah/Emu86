@@ -7,10 +7,10 @@
 ; Convert from Celsius to Fahrenheit
 ; Store result in fTemp
 .text
-    mov eax, cTemp
+    mov eax, [cTemp]
     imul eax, 9
     add eax, 2
     mov ebx, 5
     idiv ebx 
     add eax, 32
-    mov fTemp, eax
+    mov [fTemp], eax

@@ -7,6 +7,6 @@
 ; Add 158 to value in EAX
 ; Store total to sum
 .text
-    mov eax, number		
+    mov eax, [number]		
     add eax, 158	
-    mov sum, eax
+    mov [sum], eax

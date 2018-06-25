@@ -10,13 +10,13 @@
     mov eax, 0
     mov ebx, 0
     mov edx, 0
-    mov ecx, nbrElts
+    mov ecx, [nbrElts]
 forCount1: cmp ebx, ecx
            je endCount
-body: cmp nbrArray[ebx], nbrMin
+body: cmp [ebx], [nbrMin]
       jge endIfSmall
-      mov nbrArray[ebx], nbrMin
-endIfSmall: add eax, nbrArray[ebx]
+      mov [ebx], [nbrMin]
+endIfSmall: add eax, [ebx]
             inc ebx
             jmp forCount1
 endCount: mov edx, eax

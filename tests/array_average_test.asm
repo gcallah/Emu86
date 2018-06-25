@@ -11,7 +11,7 @@
     mov ecx, nbrElts
 forCount1: cmp ebx, ecx
            je endCount
-body: add eax, nbrArray[ebx]
+body: add eax, [ebx]
       inc ebx
       jmp forCount1
 endCount: idiv ecx 

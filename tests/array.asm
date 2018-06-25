@@ -8,7 +8,7 @@
 
 ; Store array values
 .text
-    mov eax, x 
-    mov ebx, y[4]
-    mov ecx, z[3]
-    mov edx, x[2]
+    mov eax, [x] 
+    mov ebx, [y+4]
+    mov ecx, [z+3]
+    mov edx, [x+2]

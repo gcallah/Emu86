@@ -6,6 +6,6 @@
 
 ; Next is the .text section, where we use them:
 .text
-    mov eax, x
-    mov ebx, y
-    mov ecx, z
+    mov eax, [x]
+    mov ebx, [y]
+    mov ecx, [z]

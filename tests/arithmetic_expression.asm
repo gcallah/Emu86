@@ -6,9 +6,9 @@
 
 ; Calculate -(x + y - 2 * z + 1)
 .text
-    mov eax, x		
-    add eax, y	
-    mov ebx, z
+    mov eax, [x]		
+    add eax, [y]	
+    mov ebx, [z]
     add ebx, ebx
     sub eax, ebx
     inc eax 

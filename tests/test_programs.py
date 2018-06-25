@@ -85,11 +85,21 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["EBX"], -50)
         self.assertEqual(vmachine.registers["ECX"], ord ('l'))
         self.assertEqual(vmachine.registers["EDX"], 5)
+        list_x = [3, 8, 5, 2]
+        string_z = "hello"
+        for position in range(0, 4):
+            self.assertEqual(vmachine.memory[str(position)], list_x[position])
+        for position in range(4, 17):
+            self.assertEqual(vmachine.memory[str(position)], -50)
+        for position in range(17, 22):
+            self.assertEqual(vmachine.memory[str(position)], 
+                             ord(string_z[position - 17]))
+        self.assertEqual(vmachine.memory["22"], 0)
 
     def test_sum_calculation(self):
         self.run_test_code("tests/sum_test.asm")
         self.assertEqual(vmachine.registers["EAX"],  53)
-        self.assertEqual(vmachine.symbols["sum"], 53)
+        self.assertEqual(vmachine.memory["1"], 53)
 
     def test_arithmetic_expression(self):
         self.run_test_code("tests/arithmetic_expression.asm")

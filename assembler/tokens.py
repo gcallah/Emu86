@@ -12,6 +12,9 @@ BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1
 MIN_INT = -(2**(BITS-1))
 
+VALS = 0
+MEM_LOC = 1 
+
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
@@ -235,57 +238,23 @@ class Symbol(Location):
     """
     Class to hold symbols such as variable names.
     """
-    def __init__(self, name, vm, index = None):
+    def __init__(self, name, vm):
         super().__init__(name, vm)
         self.vm = vm
         self.check_nm()
-        self.index = index
-        #self.check_index()
 
     def check_nm(self):
         if self.name not in self.vm.symbols:
             raise UnknownName(self.name)
 
-    def check_index(self):
-        if (self.index and 
-            self.index not in range(0, len(self.vm.symbols[self.name]))):
-            raise IntOutOfRng(self.index)
-
     def set_val(self, val):
         self.check_nm()
-        if self.index == None:
-            self.vm.symbols[self.name] = val
-        else:
-            if isinstance(self.index, Register):
-                self.vm.symbols[self.name][self.index.get_val()] = val
-            else:
-                self.vm.symbols[self.name][self.index] = val
+        self.vm.symbols[self.name] = val
 
     def get_val(self):
         self.check_nm()
-        if self.index == None:
-            add_debug("Symbol " + self.name + " = "
-                      + str(self.vm.symbols[self.name]),
-                      self.vm)
-            return self.vm.symbols[self.name]
-        elif self.index == 0:
-            add_debug("Symbol " + self.name + " = "
-                      + str(self.vm.symbols[self.name][self.index]),
-                      self.vm)
-            return self.vm.symbols[self.name][self.index]
-        else:
-            if isinstance(self.index, Register):
-                add_debug("Symbol " + self.name + "["
-                          + str(self.index) + "] = " + 
-                          str(self.vm.symbols[self.name]
-                         [self.index.get_val()]), self.vm)
-                return self.vm.symbols[self.name][self.index.get_val()]
-            else:
-                add_debug("Symbol " + self.name + "["
-                      + str(self.index) + "] = " + 
-                      str(self.vm.symbols[self.name][self.index]), self.vm)
-                return self.vm.symbols[self.name][self.index]
-
-    def get_nm(self):
-        return self.name
+        add_debug("Symbol " + self.name + " = "
+                  + str(self.vm.symbols[self.name]),
+                  self.vm)
+        return self.vm.symbols[self.name]
 

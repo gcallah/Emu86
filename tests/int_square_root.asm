@@ -4,7 +4,7 @@
 
 ; Calculate square root of the number
 .text
-    mov eax, number
+    mov eax, [number]
     push ebx
     push ecx
     mov ebx, 0
