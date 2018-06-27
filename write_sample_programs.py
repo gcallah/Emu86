@@ -20,7 +20,7 @@ link_names = {
 
 def create_href():
 	tab = '\t'
-	directory = os.fsencode("tests")
+	directory = os.fsencode("tests/Intel")
 	file_name = open("templates/sample_programs.txt", "w")
 	file_name.write(tab * 3 + '<ul class="nested">\n')
 	for file in os.listdir(directory):
@@ -38,7 +38,7 @@ def create_href():
 
 def create_sidebar():
 	tab = '\t'
-	directory = os.fsencode("tests")
+	directory = os.fsencode("tests/Intel")
 	file_name = open("templates/samples.txt", "w")
 	file_name.write(tab * 3 + 
 		            '<ul class="collapse list-unstyled nested"' + 
