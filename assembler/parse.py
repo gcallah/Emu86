@@ -90,7 +90,10 @@ MAX_VAL = 1
 dtype_info = {
     "DB": (1, MAX_BYTE),
     "DW": (MEM_SIZE / 16, MAX_SHORT),   # we should revisit this choice
-    "DD": (MEM_SIZE / 8, MAX_LONG)
+    "DD": (MEM_SIZE / 8, MAX_LONG), 
+    ".byte": (1, MAX_BYTE),
+    ".word": (MEM_SIZE / 16, MAX_SHORT),  
+    ".long": (MEM_SIZE / 8, MAX_LONG)
 }
 
 PARAM_TYPE = 1
@@ -387,6 +390,71 @@ def get_address(token_line, pos, vm):
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
 
+def get_address_att(token_line, pos, vm, displacement = 0):
+    """
+    Converts a sublist of the tokenized instruction into 
+    corresponding address token
+
+    Args:
+        token_line: List of instruction tokens
+        pos: Beginning position in list
+        vm: Virtual machine
+
+    Returns: 
+        Address token 
+    """
+
+    NEED_VAL = 0
+    NEED_OP_OR_CLOSE_PAREN = 1
+    if pos >= len(token_line):
+        raise InvalidMemLoc("")
+    state = NEED_VAL
+    register = None
+    closeParen = False 
+    # check other elements within bracket
+    while True:
+        if state == NEED_VAL:
+            if pos >= len(token_line):
+                raise MissingOps()
+            # if Integer
+            elif isinstance(token_line[pos], IntegerTok):
+                displacement += token_line[pos].get_val()
+                pos += 1
+                state = NEED_OP_OR_CLOSE_PAREN
+            # if Register
+            elif isinstance(token_line[pos], Register):
+                if register:
+                    displacement += token_line[pos].get_val()
+                else:
+                    register = token_line[pos]
+                pos += 1
+                state = NEED_OP_OR_CLOSE_PAREN
+            # if Symbol, ex: [x]
+            elif isinstance(token_line[pos], NewSymbol):
+                if token_line[pos].get_nm() in vm.symbols:
+                    displacement += vm.symbols[token_line[pos].get_nm()]
+                    pos += 1
+                    state = NEED_OP_OR_CLOSE_PAREN
+                else:
+                    raise InvalidMemLoc(token_line[pos].get_nm())
+            else:
+                raise InvalidMemLoc(token_line[pos].get_nm())
+        else: 
+            if pos >= len(token_line):
+                raise MissingCloseParen()
+            elif isinstance(token_line[pos], MinusTok):
+                token_line[pos + 1].negate_val()
+                pos += 1
+                state = NEED_VAL
+            elif isinstance(token_line[pos], PlusTok):
+                pos += 1
+                state = NEED_VAL
+            elif isinstance(token_line[pos], CloseParen):
+                pos += 1
+                return (register, displacement, pos)
+            else:
+                raise InvalidMemLoc(token_line[pos].get_nm())
+
 
 def get_op(token_line, pos, vm):
     """
@@ -423,7 +491,63 @@ def get_op(token_line, pos, vm):
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
-def parse_exec_unit(token_line, vm):
+def get_op_att(token_line, pos, vm):
+    """
+    Retrieves operand of instruction
+
+    Args:
+        token_line: List of the tokenized instruction
+        pos: Beginning pos of list
+        vm: Virtua machine
+
+    Returns: 
+        Operand token, position of next item in instruction
+    """
+    if pos >= len(token_line):
+        raise MissingOps()
+    elif isinstance(token_line[pos], Register):
+        return (token_line[pos], pos + 1)
+    elif isinstance(token_line[pos], MinusTok):
+        if pos + 1 < len (token_line):
+            if isinstance(token_line[pos + 1], IntegerTok):
+                token_line[pos + 1].negate_val()
+                # call function again to get integer op 
+                return get_op_att(token_line, pos + 1, vm)
+            else:
+                raise InvalidArgument("-")
+        else:
+            raise InvalidArgument("-")
+    elif isinstance(token_line[pos], IntegerTok):
+        if pos + 1 < len (token_line):
+            if isinstance(token_line[pos + 1], OpenParen):
+                register, displacement, pos = get_address_att(token_line, pos + 2, 
+                                              vm, token_line[pos].get_val())
+                if register:
+                    return (RegAddress(register.get_nm(), vm, displacement), pos)
+                else:
+                    return (Address(hex(displacement).split('x')[-1].upper(), vm), 
+                            pos)
+            else:
+                return (token_line[pos], pos + 1)
+        else:
+            return (token_line[pos], pos + 1)
+    elif isinstance(token_line[pos], NewSymbol):
+        if token_line[pos].get_nm() in vm.labels:
+            return (Label(token_line[pos].get_nm(), vm), pos + 1)
+        elif token_line[pos].get_nm() in vm.symbols:
+            return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
+    elif isinstance(token_line[pos], OpenParen):
+        pos += 1
+        register, displacement, pos = get_address_att(token_line, pos, vm)
+        if register:
+            return (RegAddress(register.get_nm(), vm, displacement), pos)
+        else:
+            return (Address(hex(displacement).split('x')[-1].upper(), vm), 
+                    pos)
+    else:
+        raise InvalidArgument(token_line[pos].get_nm())
+
+def parse_exec_unit(token_line, flavor,vm):
     """
     Parses instruction
 
@@ -448,8 +572,12 @@ def parse_exec_unit(token_line, vm):
         state = NEED_OP
     while True:
         if state == NEED_OP:
+            op = None
             # get_op will throw excep if no op present
-            op, pos = get_op(token_line, pos, vm)
+            if flavor == 'intel':
+                op, pos = get_op(token_line, pos, vm)
+            else:
+                op, pos = get_op_att(token_line, pos, vm)
             token_instruction.append(op)
             state = NEED_COMMA_OR_END
         elif state == NEED_COMMA_OR_END:
@@ -460,9 +588,11 @@ def parse_exec_unit(token_line, vm):
                 state = NEED_OP
             else:
                 raise MissingComma()
+    if flavor == 'att' and len(token_instruction) > 2:
+        token_instruction[1], token_instruction[2] = token_instruction[2], token_instruction[1]
     return token_instruction
 
-def parse(tok_lines, vm):
+def parse(tok_lines, flavor, vm):
     """
     Parses the analysis obtained from lexical analysis
 
@@ -492,6 +622,6 @@ def parse(tok_lines, vm):
         if parse_data:
             mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
-            token_instrs.append((parse_exec_unit(tokens[0], vm), 
+            token_instrs.append((parse_exec_unit(tokens[0], flavor, vm), 
                                  tokens[1]))
     return token_instrs

@@ -8,7 +8,7 @@ import re
 from .control_flow import FlowBreak
 from .errors import Error, InvalidInstruction, ExitProg
 from .parse import add_debug, parse
-from .lex import lex
+from .lex import lex, lex_att
 from .tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
@@ -58,7 +58,7 @@ def exec(tok_lines, vm, last_instr):
     except Error as err:
         return (False, last_instr, err.msg)
 
-def assemble(code, vm, step=False):
+def assemble(code, flavor, vm, step=False):
     """
         Assembles and runs code.
         Args:
@@ -68,6 +68,7 @@ def assemble(code, vm, step=False):
                 registers: current register values.
                 memory: current memory values.
                 flags: current values of flags.
+            flavor: Intel or AT&T? 
             step: are we stepping through code or running continuously?
         Returns:
             next 
@@ -84,8 +85,11 @@ def assemble(code, vm, step=False):
     # break the code into tokens:
     try:
         #tok_lines = lex(code, vm)
+
         tok_lines = lex(code,vm)
-        tok_lines = parse(tok_lines, vm)
+        if flavor == "att":
+            tok_lines = lex_att(code,vm)
+        tok_lines = parse(tok_lines, flavor, vm)
     except Error as err:
         return (last_instr, err.msg)
 

@@ -60,6 +60,7 @@ class VirtualMachine:
 
         self.labels = {}
         self.symbols = {}
+        self.flavor = None
 
 
     def __str__(self):
@@ -88,6 +89,7 @@ class VirtualMachine:
             self.flags[flag] = 0
         self.mem_init()
         self.stack_init()
+        self.flavor = None
         
     def inc_ip(self):
         ip = self.get_ip()
