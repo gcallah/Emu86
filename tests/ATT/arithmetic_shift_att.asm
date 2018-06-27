@@ -1,0 +1,9 @@
+mov 1, (4)
+mov 4, %eax
+mov 2, %ebx
+mov 8, %ecx
+mov 16, %edx
+add %ecx, %ebx
+sub %ecx, %edx
+imul (4), %eax
+shl 2, (4)
