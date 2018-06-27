@@ -28,7 +28,7 @@ class TestPrograms(TestCase):
     def run_test_code (self, filnm):
         vmachine.re_init()
         test_code = self.read_test_code(filnm)
-        assemble(test_code, vmachine)
+        assemble(test_code, 'intel', vmachine)
 
     def test_loop(self):
         self.run_test_code("tests/loop.asm")

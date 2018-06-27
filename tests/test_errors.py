@@ -23,15 +23,15 @@ from assembler.errors import UNKNOWN_NM
 class ErrorTestCase(TestCase):
 
     def test_invalid_instr(self):
-        (output, error) = assemble("shove_up_reg eax, 1", vmachine)
+        (output, error) = assemble("shove_up_reg eax, 1", 'intel', vmachine)
         self.assertTrue(error.startswith(INVALID_INSTR))
 
     def test_invalid_mem_loc(self):
-        (output, error) = assemble("mov [hell], 666", vmachine)
+        (output, error) = assemble("mov [hell], 666", 'intel', vmachine)
         self.assertTrue(error.startswith(INVALID_MEM_LOC))
 
     def test_invalid_num_args(self):
-        (output, error) = assemble("add eax, 10, 22, 34", vmachine)
+        (output, error) = assemble("add eax, 10, 22, 34", 'intel', vmachine)
         self.assertTrue(error.startswith(INVALID_NUM_ARGS))
 
 # we have to clear up symbol handling to make this test work.
@@ -40,37 +40,37 @@ class ErrorTestCase(TestCase):
 #        self.assertTrue(error.startswith(UNKNOWN_NM))
 
     def test_reg_unwritable(self):
-        (output, error) = assemble("mov EIP, 10", vmachine)
+        (output, error) = assemble("mov EIP, 10", 'intel', vmachine)
         self.assertTrue(error.startswith(REG_UNWRITABLE))
 
     def test_stack_overflow(self):
         vmachine.registers["ESP"] = STACK_BOTTOM-1
-        (output, error) = assemble("push 1", vmachine)
+        (output, error) = assemble("push 1", 'intel', vmachine)
         self.assertTrue(error.startswith(STACK_OVERFLOW))
 
     def test_stack_underflow(self):
         vmachine.registers["ESP"] = STACK_TOP
-        (output, error) = assemble("pop ebx", vmachine)
+        (output, error) = assemble("pop ebx", 'intel', vmachine)
         self.assertTrue(error.startswith(STACK_UNDERFLOW))
 
     def test_comma_error(self):
-        (output, error) = assemble("mov eax 1", vmachine)
+        (output, error) = assemble("mov eax 1", 'intel', vmachine)
         self.assertTrue(error.startswith(MISSING_COMMA))
 
     def test_comma_error(self):
-        (output, error) = assemble("mov eax,,,, 1", vmachine)
+        (output, error) = assemble("mov eax,,,, 1", 'intel', vmachine)
         self.assertTrue(error.startswith(INVALID_TOKEN))
 
     def test_data_error(self):
-        (output, error) = assemble(".data \n  x DW", vmachine)
+        (output, error) = assemble(".data \n  x DW", 'intel', vmachine)
         self.assertTrue(error.startswith(MISSING_DATA))
 
     def test_mem_error_over(self):
-        (output, error) = assemble("mov [256], 0", vmachine)
+        (output, error) = assemble("mov [256], 0", 'intel', vmachine)
         self.assertTrue(error.startswith(INVALID_MEM_LOC))
 
     def test_mem_error_less(self):
-        (output, error) = assemble("mov [-30], 0", vmachine)
+        (output, error) = assemble("mov [-30], 0", 'intel', vmachine)
         self.assertTrue(error.startswith(INVALID_MEM_LOC))
 
 

@@ -17,6 +17,7 @@ NXT_KEY = 'nxt_key'
 STEP = 'step'
 CLEAR = 'clear'
 HEADER = 'header'
+FLAVOR = 'flavor'
 INTEL = 'intel'
 ATT = 'att'
 
@@ -57,15 +58,17 @@ def main_page(request):
                 except Exception:
                     vmachine.nxt_key = 0
 
+            vmachine.flavor = request.POST[FLAVOR]
+            print (request.POST[FLAVOR])
             get_reg_contents(vmachine.registers, request)
             get_mem_contents(vmachine.memory, request)
             get_stack_contents(vmachine.stack, request)
             get_flag_contents(vmachine.flags, request)
-            if INTEL in request.POST:
-                (last_instr, error) = assemble(request.POST[CODE], 
+            if INTEL in request.POST[FLAVOR]:
+                (last_instr, error) = assemble(request.POST[CODE], INTEL,
                                                vmachine, step)
             else:
-                (last_instr, error) = assemble(request.POST[CODE], 
+                (last_instr, error) = assemble(request.POST[CODE], ATT, 
                                                vmachine, step)
 
     return render(request, 'main.html',
@@ -80,6 +83,7 @@ def main_page(request):
                    'memory': vmachine.memory, 
                    'stack': vmachine.stack, 
                    'flags': vmachine.flags,
+                   'flavor': vmachine.flavor
                   })
 
 def get_reg_contents(registers, request):

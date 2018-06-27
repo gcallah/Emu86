@@ -39,7 +39,7 @@ class AssembleTestCase(TestCase):
             correct = operator(a, b)
             vmachine.registers["EAX"] = a
             vmachine.registers["EBX"] = b
-            assemble(instr + " eax, ebx", vmachine)
+            assemble(instr + " eax, ebx", 'intel', vmachine)
             self.assertEqual(vmachine.registers["EAX"], correct)
 
     def test_add(self):
@@ -80,7 +80,7 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct = operator(a)
             vmachine.registers["EAX"] = a
-            assemble(instr + " eax", vmachine)
+            assemble(instr + " eax", 'intel', vmachine)
             self.assertEqual(vmachine.registers["EAX"], correct)
 
     def test_not(self):
@@ -107,10 +107,10 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct_stack[i] = a
             vmachine.registers["EAX"] = a
-            assemble("push eax", vmachine)
+            assemble("push eax", 'intel', vmachine)
 
         for i in range(STACK_BOTTOM, STACK_TOP+1):
-            assemble("pop ebx", vmachine)
+            assemble("pop ebx", 'intel', vmachine)
             self.assertEqual(vmachine.registers["EBX"], correct_stack[i])
 
 ##################
@@ -122,7 +122,7 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct = a
             vmachine.registers["EAX"] = a
-            assemble("mov eax, " + str(a), vmachine)
+            assemble("mov eax, " + str(a), 'intel', vmachine)
             self.assertEqual(vmachine.registers["EAX"], correct)
 
     def test_idiv(self):
@@ -137,7 +137,7 @@ class AssembleTestCase(TestCase):
             vmachine.registers["EAX"] = a
             vmachine.registers["EDX"] = d
             vmachine.registers["EBX"] = b
-            assemble("idiv ebx", vmachine)
+            assemble("idiv ebx", 'intel', vmachine)
             self.assertEqual(vmachine.registers["EAX"], correct_quotient)
             self.assertEqual(vmachine.registers["EDX"], correct_remainder)
 
@@ -146,7 +146,7 @@ class AssembleTestCase(TestCase):
         vmachine.registers["EBX"] = 1
         vmachine.flags["ZF"] = 0
         vmachine.flags["SF"] = 0
-        assemble("cmp eax, ebx", vmachine)
+        assemble("cmp eax, ebx", 'intel', vmachine)
         self.assertEqual(vmachine.flags["ZF"], 1)
         self.assertEqual(vmachine.flags["SF"], 0)
 
@@ -155,7 +155,7 @@ class AssembleTestCase(TestCase):
         vmachine.registers["EBX"] = 1
         vmachine.flags["ZF"] = 0
         vmachine.flags["SF"] = 0
-        assemble("cmp eax, ebx", vmachine)
+        assemble("cmp eax, ebx", 'intel', vmachine)
         self.assertEqual(vmachine.flags["ZF"], 0)
         self.assertEqual(vmachine.flags["SF"], 1)
         

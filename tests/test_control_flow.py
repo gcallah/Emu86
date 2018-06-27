@@ -28,7 +28,7 @@ class TestControlFlow(TestCase):
             vmachine.re_init()
             label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             vmachine.labels["test_label"] = label_addr
-            assemble("jmp test_label", vmachine)
+            assemble("jmp test_label", 'intel', vmachine)
             self.assertEqual(vmachine.get_ip(), label_addr)
 
 
@@ -42,7 +42,7 @@ class TestControlFlow(TestCase):
             vmachine.labels["test_label"] = label_addr
             zero_flag = random.getrandbits(1)
             vmachine.flags["ZF"] = zero_flag
-            assemble("je test_label", vmachine)
+            assemble("je test_label", 'intel', vmachine)
             if(zero_flag):
                 self.assertEqual(vmachine.get_ip(), label_addr)
             else:
@@ -58,7 +58,7 @@ class TestControlFlow(TestCase):
             vmachine.labels["test_label"] = label_addr
             zero_flag = random.getrandbits(1)
             vmachine.flags["ZF"] = zero_flag
-            assemble("jne test_label", vmachine)
+            assemble("jne test_label", 'intel', vmachine)
             if(not zero_flag):
                 self.assertEqual(vmachine.get_ip(), label_addr)
             else:
@@ -76,7 +76,7 @@ class TestControlFlow(TestCase):
           zero_flag = random.getrandbits(1)
           vmachine.flags["SF"] = sign_flag
           vmachine.flags["ZF"] = zero_flag
-          assemble("jg test_label", vmachine)
+          assemble("jg test_label", 'intel', vmachine)
           if((not zero_flag) and (not sign_flag)):
             self.assertEqual(vmachine.get_ip(), label_addr)
           else:
@@ -92,7 +92,7 @@ class TestControlFlow(TestCase):
           vmachine.labels["test_label"] = label_addr
           sign_flag = random.getrandbits(1)
           vmachine.flags["SF"] = sign_flag
-          assemble("jge test_label", vmachine)
+          assemble("jge test_label", 'intel', vmachine)
           if(not sign_flag):
             self.assertEqual(vmachine.get_ip(), label_addr)
           else:
@@ -109,7 +109,7 @@ class TestControlFlow(TestCase):
             vmachine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
             vmachine.flags["SF"] = sign_flag
-            assemble("jl test_label", vmachine)
+            assemble("jl test_label", 'intel', vmachine)
             if(sign_flag):
                 self.assertEqual(vmachine.get_ip(), label_addr)
             else:
@@ -127,7 +127,7 @@ class TestControlFlow(TestCase):
             zero_flag = random.getrandbits(1)
             vmachine.flags["SF"] = sign_flag
             vmachine.flags["ZF"] = zero_flag
-            assemble("jle test_label", vmachine)
+            assemble("jle test_label", 'intel', vmachine)
             if(zero_flag or sign_flag):
                 self.assertEqual(vmachine.get_ip(), label_addr)
             else:
@@ -154,7 +154,7 @@ class TestControlFlow(TestCase):
             vmachine.set_ip(call_instr_addr)
 
             # We step once through the code, executing only `call`.
-            assemble("".join(code_to_run), vmachine, step=True)
+            assemble("".join(code_to_run), 'intel', vmachine, step=True)
 
             self.assertEqual(vmachine.get_ip(), label_addr)
 
