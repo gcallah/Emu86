@@ -199,7 +199,7 @@ def sep_line_att(code, i, data_sec, vm):
                 analysis.append(StringTok(word))
             elif re.search(label_match, word) is not None:
                 if data_sec:
-                    analysis.append(NewSymbol(word[:-1]), vm)
+                    analysis.append(NewSymbol(word[:-1], vm))
                 else:
                     vm.labels[word[:word.find(":")]] = i
             elif re.search(sym_match, word) is not None:
@@ -245,18 +245,17 @@ def lex_att(code, vm):
     # we've stripped extra whitespace, comments, and labels: 
     # now perform lexical analysis
     for line in pre_processed_lines:
+        tok_lines.append(sep_line_att(line, i, data_sec, vm))
         if line == ".data":
             add_to_ip = False
             data_sec = True
             continue
-        if line == ".text":
+        elif line == ".text":
             add_to_ip = True
             data_sec = False
             continue
-        tok_lines.append(sep_line_att(line, i, data_sec, vm))
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
-        print (tok_lines)
     return tok_lines
 

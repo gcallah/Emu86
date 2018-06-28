@@ -59,7 +59,6 @@ def main_page(request):
                     vmachine.nxt_key = 0
 
             vmachine.flavor = request.POST[FLAVOR]
-            print (request.POST[FLAVOR])
             get_reg_contents(vmachine.registers, request)
             get_mem_contents(vmachine.memory, request)
             get_stack_contents(vmachine.stack, request)
