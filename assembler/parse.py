@@ -102,12 +102,33 @@ PARAM_VAL = 0
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
-def minus_token(token_line, pos):
-    try:
-        token_line[pos + 1].negate_val()
-        return (token_line[pos + 1], pos + 2)
-    except:
-        InvalidArgument("-")
+def number_token(token_line, pos, flavor, vm):
+    if flavor == "intel":
+        return (token_line[pos], pos + 1)
+    elif flavor == "att":
+        if pos + 1 < len (token_line):
+            if isinstance(token_line[pos + 1], OpenParen):
+                register, displacement, pos = get_address_att(token_line, 
+                                              pos + 2, vm, 
+                                              token_line[pos].get_val())
+                if register: 
+                    return (RegAddress(register.get_nm(), 
+                                       vm, displacement), pos)
+                else:
+                    return (Address(hex(displacement).split('x')[-1].upper(), 
+                                    vm), pos)
+            else:
+                return (token_line[pos], pos + 1)
+        else:
+            return (token_line[pos], pos + 1)
+
+def is_start_address(token_line, pos, flavor):
+    if isinstance(token_line[pos], OpenParen) and flavor == "att":
+        return True
+    elif isinstance(token_line[pos], OpenBracket) and flavor == "intel":
+        return True
+    else:
+        return False
 
 def get_data_type(token_line, pos):
     """
@@ -455,49 +476,14 @@ def get_address_att(token_line, pos, vm, displacement = 0):
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
 
-
-def get_op(token_line, pos, vm):
+def get_op(token_line, pos, flavor, vm):
     """
     Retrieves operand of instruction
 
     Args:
         token_line: List of the tokenized instruction
         pos: Beginning pos of list
-        vm: Virtua machine
-
-    Returns: 
-        Operand token, position of next item in instruction
-    """
-    if pos >= len(token_line):
-        raise MissingOps()
-    elif (isinstance(token_line[pos], Register) or 
-        isinstance(token_line[pos], IntegerTok)):
-        return (token_line[pos], pos + 1)
-    elif isinstance(token_line[pos], NewSymbol):
-        if token_line[pos].get_nm() in vm.labels:
-            return (Label(token_line[pos].get_nm(), vm), pos + 1)
-        elif token_line[pos].get_nm() in vm.symbols:
-            return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
-    elif isinstance(token_line[pos], MinusTok):
-        return minus_token(token_line, pos)
-    elif isinstance(token_line[pos], OpenBracket):
-        pos += 1
-        register, displacement, pos = get_address(token_line, pos, vm)
-        if register:
-            return (RegAddress(register.get_nm(), vm, displacement), pos)
-        else:
-            return (Address(hex(displacement).split('x')[-1].upper(), vm), 
-                    pos)
-    else:
-        raise InvalidArgument(token_line[pos].get_nm())
-
-def get_op_att(token_line, pos, vm):
-    """
-    Retrieves operand of instruction
-
-    Args:
-        token_line: List of the tokenized instruction
-        pos: Beginning pos of list
+        flavor: Coding language
         vm: Virtua machine
 
     Returns: 
@@ -508,37 +494,29 @@ def get_op_att(token_line, pos, vm):
     elif isinstance(token_line[pos], Register):
         return (token_line[pos], pos + 1)
     elif isinstance(token_line[pos], MinusTok):
-        if pos + 1 < len (token_line):
-            if isinstance(token_line[pos + 1], IntegerTok):
-                token_line[pos + 1].negate_val()
-                # call function again to get integer op 
-                return get_op_att(token_line, pos + 1, vm)
-            else:
-                raise InvalidArgument("-")
-        else:
+        try:
+            token_line[pos + 1].negate_val()
+            if flavor == "intel":
+                return minus_token(token_line, pos, flavor)
+            elif flavor == "att":
+                return get_op(token_line, pos + 1, flavor, vm)
+        except:
             raise InvalidArgument("-")
     elif isinstance(token_line[pos], IntegerTok):
-        if pos + 1 < len (token_line):
-            if isinstance(token_line[pos + 1], OpenParen):
-                register, displacement, pos = get_address_att(token_line, pos + 2, 
-                                              vm, token_line[pos].get_val())
-                if register:
-                    return (RegAddress(register.get_nm(), vm, displacement), pos)
-                else:
-                    return (Address(hex(displacement).split('x')[-1].upper(), vm), 
-                            pos)
-            else:
-                return (token_line[pos], pos + 1)
-        else:
-            return (token_line[pos], pos + 1)
+        return number_token(token_line, pos, flavor, vm)
     elif isinstance(token_line[pos], NewSymbol):
         if token_line[pos].get_nm() in vm.labels:
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
         elif token_line[pos].get_nm() in vm.symbols:
             return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
-    elif isinstance(token_line[pos], OpenParen):
+    elif is_start_address(token_line, pos, flavor):
         pos += 1
-        register, displacement, pos = get_address_att(token_line, pos, vm)
+        register = None
+        displacement = 0
+        if flavor == "intel":
+            register, displacement, pos = get_address(token_line, pos, vm)
+        elif flavor == "att":
+            register, displacement, pos = get_address_att(token_line, pos, vm)
         if register:
             return (RegAddress(register.get_nm(), vm, displacement), pos)
         else:
@@ -547,7 +525,7 @@ def get_op_att(token_line, pos, vm):
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
-def parse_exec_unit(token_line, flavor,vm):
+def parse_exec_unit(token_line, flavor, vm):
     """
     Parses instruction
 
@@ -572,12 +550,8 @@ def parse_exec_unit(token_line, flavor,vm):
         state = NEED_OP
     while True:
         if state == NEED_OP:
-            op = None
             # get_op will throw excep if no op present
-            if flavor == 'intel':
-                op, pos = get_op(token_line, pos, vm)
-            else:
-                op, pos = get_op_att(token_line, pos, vm)
+            op, pos = get_op(token_line, pos, flavor, vm)
             token_instruction.append(op)
             state = NEED_COMMA_OR_END
         elif state == NEED_COMMA_OR_END:
@@ -589,7 +563,9 @@ def parse_exec_unit(token_line, flavor,vm):
             else:
                 raise MissingComma()
     if flavor == 'att' and len(token_instruction) > 2:
-        token_instruction[1], token_instruction[2] = token_instruction[2], token_instruction[1]
+        switch_vals = token_instruction[1], token_instruction[2]
+        token_instruction[1] = switch_vals[1]
+        token_instruction[2] = switch_vals[0]
     return token_instruction
 
 def parse(tok_lines, flavor, vm):
