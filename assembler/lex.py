@@ -39,7 +39,39 @@ keywords_to_tokens = {
     "DUP": DupTok()
 }
 
-def sep_line (code, i, vm):
+
+def split_code(code):
+    """
+    Splits code on regular expressions and on separators
+
+    Args: 
+        code: Line of code 
+
+    Returns:
+        A list of words
+    """
+    
+    words = re.split("[ \t\r\n]+", code)
+    index = 0
+
+    while index < len(words):
+        splitter = ""
+        for character in words[index]:
+            if character in SEPARATORS and words[index] != character:
+                splitter = character
+                break
+        if splitter != "":
+            split_location = words[index].find(splitter)
+            temp_words = [words[index][:split_location]]
+            temp_words.append(splitter)
+            temp_words.append(words[index][split_location + 1:])
+            words = words[:index] + temp_words + words[index + 1:]
+        else:
+            index += 1
+
+    return words
+
+def sep_line(code, i, vm):
     """
     Returns a list of tokens created 
 
@@ -55,25 +87,7 @@ def sep_line (code, i, vm):
         text of the code.
     """
     analysis = []
-    index = 0
-
-# try re.split here:
-    words = re.split("[ \t\r\n]+", code)
-    
-    while index < len(words):
-        splitter = ""
-        for character in words[index]:
-            if character in SEPARATORS and words[index] != character:
-                splitter = character
-                break
-        if splitter != "":
-            split_location = words[index].find(splitter)
-            temp_words = [words[index][:split_location]]
-            temp_words.append(splitter)
-            temp_words.append(words[index][split_location + 1:])
-            words = words[:index] + temp_words + words[index + 1:]
-        else:
-            index += 1
+    words = split_code(code)
 
     for word in words:
         if word != "":
@@ -100,53 +114,6 @@ def sep_line (code, i, vm):
                     raise InvalidArgument(word)
     return (analysis, code)
 
-
-def lex(code, vm):
-    """
-    Lexical phase: tokenizes the code.
-    Args:
-        code: The code to lexically analyze.
-        vm: virtual machine
-
-    Returns:
-        tok_lines: the tokenized version
-    """
-    lines = code.split("\n")
-    pre_processed_lines = []
-    tok_lines = []  # this will hold the tokenized version of the code
-    i = 0
-    add_to_ip = True
-    for line in lines:
-        # comments:
-        comm_start = line.find(";")
-        if comm_start > 0:  # -1 means not found
-            line = line[0:comm_start]
-        elif comm_start == 0:  # the whole line is a comment
-            continue
-
-        # strip AFTER comments to handle blanks between code and ;
-        line = line.strip()
-        if len(line) == 0:  # blank lines ok; just skip 'em
-            continue
-            
-        pre_processed_lines.append(line)
-
-    # we've stripped extra whitespace, comments, and labels: 
-    # now perform lexical analysis
-    for line in pre_processed_lines:
-        tok_lines.append(sep_line(line, i, vm))
-        if line == ".data":
-            add_to_ip = False
-            continue
-        if line == ".text":
-            add_to_ip = True
-            continue
-        # we count line numbers to store label jump locations:
-        if add_to_ip:
-            i += 1
-    return tok_lines
-
-
 def sep_line_att(code, i, data_sec, vm):
     """
     Returns a list of tokens created 
@@ -163,25 +130,7 @@ def sep_line_att(code, i, data_sec, vm):
         text of the code.
     """
     analysis = []
-    index = 0
-
-# try re.split here:
-    words = re.split("[ \t\r\n]+", code)
-    
-    while index < len(words):
-        splitter = ""
-        for character in words[index]:
-            if character in SEPARATORS and words[index] != character:
-                splitter = character
-                break
-        if splitter != "":
-            split_location = words[index].find(splitter)
-            temp_words = [words[index][:split_location]]
-            temp_words.append(splitter)
-            temp_words.append(words[index][split_location + 1:])
-            words = words[:index] + temp_words + words[index + 1:]
-        else:
-            index += 1
+    words = split_code(code)
 
     for word in words:
         if word != "":
@@ -211,11 +160,13 @@ def sep_line_att(code, i, data_sec, vm):
                     raise InvalidArgument(word)
     return (analysis, code)
 
-def lex_att(code, vm):
+def lex(code, flavor, vm):
     """
     Lexical phase: tokenizes the code.
+
     Args:
         code: The code to lexically analyze.
+        flavor: Coding language
         vm: virtual machine
 
     Returns:
@@ -225,8 +176,8 @@ def lex_att(code, vm):
     pre_processed_lines = []
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
-    data_sec = False
     add_to_ip = True
+    data_sec = False    #used for AT&T version
     for line in lines:
         # comments:
         comm_start = line.find(";")
@@ -245,12 +196,15 @@ def lex_att(code, vm):
     # we've stripped extra whitespace, comments, and labels: 
     # now perform lexical analysis
     for line in pre_processed_lines:
-        tok_lines.append(sep_line_att(line, i, data_sec, vm))
+        if flavor == "intel":
+            tok_lines.append(sep_line(line, i, vm))
+        elif flavor == "att":
+            tok_lines.append(sep_line_att(line, i, data_sec, vm))
         if line == ".data":
             add_to_ip = False
             data_sec = True
             continue
-        elif line == ".text":
+        if line == ".text":
             add_to_ip = True
             data_sec = False
             continue
@@ -258,4 +212,3 @@ def lex_att(code, vm):
         if add_to_ip:
             i += 1
     return tok_lines
-

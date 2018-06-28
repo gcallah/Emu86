@@ -8,7 +8,7 @@ import re
 from .control_flow import FlowBreak
 from .errors import Error, InvalidInstruction, ExitProg
 from .parse import add_debug, parse
-from .lex import lex, lex_att
+from .lex import lex
 from .tokens import Instruction
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
@@ -86,9 +86,7 @@ def assemble(code, flavor, vm, step=False):
     try:
         #tok_lines = lex(code, vm)
 
-        tok_lines = lex(code,vm)
-        if flavor == "att":
-            tok_lines = lex_att(code,vm)
+        tok_lines = lex(code, flavor, vm)
         tok_lines = parse(tok_lines, flavor, vm)
     except Error as err:
         return (last_instr, err.msg)
