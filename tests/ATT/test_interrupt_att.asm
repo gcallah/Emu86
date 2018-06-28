@@ -7,7 +7,7 @@ loop:    mov %eax, %edx
          mov 0, %eax
          int 22
          mov %eax, (%ebx)
-         cmp [0], %eax
+         cmp %eax, (0)
          je done
          inc %ebx
          jmp loop

@@ -2,7 +2,7 @@
          mov 16, %ebx
 
 ; compare eax and ebx and loop until eax greater than ebx
-loop: cmp %eax, %ebx
+loop: cmp %ebx, %eax
          jg done
          inc %eax
          jmp loop

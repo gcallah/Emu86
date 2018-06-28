@@ -6,7 +6,7 @@
 .text
     mov 0, %ecx
     mov 1, %eax
-whileLE: cmp %eax, (number)
+whileLE: cmp (number), %eax
          jnle endWhileLE
 body: add %eax, %eax
       inc %ecx

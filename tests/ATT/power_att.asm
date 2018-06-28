@@ -2,7 +2,7 @@
       mov 2, %edx
       mov 16, %ebx
       call power
-      mov 0 %eax
+      mov 0, %eax
       int 32
 
 power: mov %edx, %ecx

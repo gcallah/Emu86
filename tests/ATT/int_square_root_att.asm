@@ -10,7 +10,7 @@
     mov 0, %ebx
 WhileLE: mov %ebx, %ecx
          imul %ebx, %ecx
-         cmp %ecx, %eax
+         cmp %eax, %ecx
          jnle EndWhileLE
          inc %ebx
          jmp WhileLE

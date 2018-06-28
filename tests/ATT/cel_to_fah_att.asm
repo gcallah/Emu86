@@ -13,4 +13,4 @@
     mov 5, %ebx
     idiv %ebx 
     add 32, %eax
-    mov eax, (fTemp)
+    mov %eax, (fTemp)
