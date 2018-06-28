@@ -64,6 +64,14 @@ class Comma(Token):
     def __init__(self):
         super().__init__(",")
         
+class ConstantSign(Token):
+    """ 
+    Class used to differentiate between 
+    a constant and an offset
+    """
+    def __init__(self):
+        super().__init__("$")
+
 class Instruction(Token):
     """
     Class representing all instructions.

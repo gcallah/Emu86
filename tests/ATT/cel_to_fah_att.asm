@@ -8,9 +8,9 @@
 ; Store result in fTemp
 .text
     mov (cTemp), %eax
-    imul 9, %eax
-    add 2, %eax
-    mov 5, %ebx
+    imul $9, %eax
+    add $2, %eax
+    mov $5, %ebx
     idiv %ebx 
-    add 32, %eax
+    add $32, %eax
     mov %eax, (fTemp)

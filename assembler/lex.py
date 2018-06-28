@@ -10,7 +10,7 @@ from .errors import UnknownName, InvalidDataType, InvalidArgument
 from .parse import instructions, dtype_info, DONT_INIT, sym_match, label_match
 from .tokens import Location, Address, Register, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
-from .tokens import QuestionTok, PlusTok, MinusTok
+from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
@@ -36,11 +36,12 @@ keywords_to_tokens = {
     "+": PlusTok(),
     "-": MinusTok(),
     "?": QuestionTok(),
-    "DUP": DupTok()
+    "DUP": DupTok(),
+    "$": ConstantSign()
 }
 
 
-def split_code(code):
+def split_code(code, flavor):
     """
     Splits code on regular expressions and on separators
 
@@ -50,7 +51,7 @@ def split_code(code):
     Returns:
         A list of words
     """
-    
+
     words = re.split("[ \t\r\n]+", code)
     index = 0
 
@@ -59,6 +60,11 @@ def split_code(code):
         for character in words[index]:
             if character in SEPARATORS and words[index] != character:
                 splitter = character
+                break
+            elif (flavor == "att" and 
+                     words[index] != "$" and 
+                     character == "$"):
+                splitter = "$"
                 break
         if splitter != "":
             split_location = words[index].find(splitter)
@@ -87,7 +93,7 @@ def sep_line(code, i, vm):
         text of the code.
     """
     analysis = []
-    words = split_code(code)
+    words = split_code(code, "intel")
 
     for word in words:
         if word != "":
@@ -130,7 +136,7 @@ def sep_line_att(code, i, data_sec, vm):
         text of the code.
     """
     analysis = []
-    words = split_code(code)
+    words = split_code(code, "att")
 
     for word in words:
         if word != "":

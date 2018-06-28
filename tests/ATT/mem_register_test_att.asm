@@ -6,7 +6,7 @@
 
 ; Storing values into memory using register arithmetic
 .text
-	mov 6, %eax
+	mov $6, %eax
 	mov 2(x), (%eax)
 	mov 3(y), 2(%eax)
 	mov (z), (%ebx)

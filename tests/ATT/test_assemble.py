@@ -122,7 +122,7 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct = a
             vmachine.registers["EAX"] = a
-            assemble("mov " + str(a) + ", %eax", 'att', vmachine)
+            assemble("mov $" + str(a) + ", %eax", 'att', vmachine)
             self.assertEqual(vmachine.registers["EAX"], correct)
 
     def test_idiv(self):

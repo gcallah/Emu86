@@ -4,8 +4,8 @@
 
 ; Calculating log (base 2) of a number
 .text
-    mov 0, %ecx
-    mov 1, %eax
+    mov $0, %ecx
+    mov $1, %eax
 whileLE: cmp (number), %eax
          jnle endWhileLE
 body: add %eax, %eax

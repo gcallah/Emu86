@@ -8,5 +8,5 @@
 ; Store total to sum
 .text
     mov (number), %eax		
-    add 158, %eax	
+    add $158, %eax	
     mov %eax, (sum)

@@ -1,5 +1,5 @@
-      mov 16, %eax
-      mov 0, %ebx
+      mov $16, %eax
+      mov $0, %ebx
 
 ; Compare eax and ebx and loop until equal
 loop: cmp %eax, %ebx

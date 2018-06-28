@@ -14,7 +14,7 @@ from .errors import MissingCloseBrack, MissingOps
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
-from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok
+from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
@@ -426,12 +426,14 @@ def get_address_att(token_line, pos, vm, displacement = 0):
     """
 
     NEED_VAL = 0
-    NEED_OP_OR_CLOSE_PAREN = 1
+    NEED_COMMA_OR_CLOSE_PAREN = 1
     if pos >= len(token_line):
         raise InvalidMemLoc("")
     state = NEED_VAL
     register = None
     closeParen = False 
+    address_calc = 0
+    count = 0 # can only have at most 2 registers!
     # check other elements within bracket
     while True:
         if state == NEED_VAL:
@@ -439,23 +441,35 @@ def get_address_att(token_line, pos, vm, displacement = 0):
                 raise MissingOps()
             # if Integer
             elif isinstance(token_line[pos], IntegerTok):
-                displacement += token_line[pos].get_val()
+                if isinstance(token_line[pos - 1], Register):
+                    if register == token_line[pos - 1]:
+                        address_calc = (register.get_val() * 
+                                        token_line[pos].get_val())
+                        register = None
+                    else:
+                        adress_calc *= token_line[pos].get_val()
+                else:
+                    address_calc += token_line[pos].get_val()
                 pos += 1
-                state = NEED_OP_OR_CLOSE_PAREN
+                state = NEED_COMMA_OR_CLOSE_PAREN
             # if Register
             elif isinstance(token_line[pos], Register):
-                if register:
-                    displacement += token_line[pos].get_val()
+                count += 1
+                if count > 2:
+                    raise InvalidMemLoc(token_line[pos].get_nm())
                 else:
-                    register = token_line[pos]
-                pos += 1
-                state = NEED_OP_OR_CLOSE_PAREN
+                    if register:
+                        displacement += token_line[pos].get_val()
+                    else:
+                        register = token_line[pos]
+                    pos += 1
+                    state = NEED_COMMA_OR_CLOSE_PAREN
             # if Symbol, ex: [x]
             elif isinstance(token_line[pos], NewSymbol):
                 if token_line[pos].get_nm() in vm.symbols:
                     displacement += vm.symbols[token_line[pos].get_nm()]
                     pos += 1
-                    state = NEED_OP_OR_CLOSE_PAREN
+                    state = NEED_COMMA_OR_CLOSE_PAREN
                 else:
                     raise InvalidMemLoc(token_line[pos].get_nm())
             else:
@@ -463,16 +477,12 @@ def get_address_att(token_line, pos, vm, displacement = 0):
         else: 
             if pos >= len(token_line):
                 raise MissingCloseParen()
-            elif isinstance(token_line[pos], MinusTok):
-                token_line[pos + 1].negate_val()
-                pos += 1
-                state = NEED_VAL
-            elif isinstance(token_line[pos], PlusTok):
+            if isinstance(token_line[pos], Comma):
                 pos += 1
                 state = NEED_VAL
             elif isinstance(token_line[pos], CloseParen):
                 pos += 1
-                return (register, displacement, pos)
+                return (register, displacement + address_calc, pos)
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
 
@@ -484,7 +494,7 @@ def get_op(token_line, pos, flavor, vm):
         token_line: List of the tokenized instruction
         pos: Beginning pos of list
         flavor: Coding language
-        vm: Virtua machine
+        vm: Virtual machine
 
     Returns: 
         Operand token, position of next item in instruction
@@ -493,11 +503,25 @@ def get_op(token_line, pos, flavor, vm):
         raise MissingOps()
     elif isinstance(token_line[pos], Register):
         return (token_line[pos], pos + 1)
+    elif isinstance(token_line[pos], ConstantSign):
+        try:
+            if isinstance(token_line[pos + 1], MinusTok):
+                token_line[pos + 2].negate_val()
+                if flavor == "intel":
+                    return (token_line[pos + 2], pos + 3)
+                elif flavor == "att":
+                    return get_op(token_line, pos + 2, flavor, vm)
+            elif isinstance(token_line[pos + 1], IntegerTok):
+                return (token_line[pos + 1], pos + 2)
+            else:
+                raise InvalidArgument("$")
+        except:
+            raise InvalidArgument("$")
     elif isinstance(token_line[pos], MinusTok):
         try:
             token_line[pos + 1].negate_val()
             if flavor == "intel":
-                return minus_token(token_line, pos, flavor)
+                return (token_line[pos + 1], pos + 2)
             elif flavor == "att":
                 return get_op(token_line, pos + 1, flavor, vm)
         except:
