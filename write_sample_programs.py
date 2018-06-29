@@ -20,17 +20,37 @@ link_names = {
 
 def create_href():
 	tab = '\t'
-	directory = os.fsencode("tests/Intel")
+	directory_intel = os.fsencode("tests/Intel")
 	file_name = open("templates/sample_programs.txt", "w")
 	file_name.write(tab * 3 + '<ul class="nested">\n')
-	for file in os.listdir(directory):
+	for file in os.listdir(directory_intel):
 		file = os.fsdecode(file)
 		if file.endswith(".asm") and file in link_names:
 			file_name.write(tab * 4 + "<li>\n")
 			file_name.write(tab * 5 + 
 				            '<a href ="https://github.com/gcallah/' + 
-							"Emu86/blob/master/tests/" + file + '">\n')
-			file_name.write(tab * 6 + link_names [file] + "\n")
+							"Emu86/blob/master/tests/Intel/" + file + '">\n')
+			file_name.write(tab * 6 + link_names[file] + "\n")
+			file_name.write(tab * 5 + "</a>\n")
+			file_name.write(tab * 4 + "</li>\n")
+	file_name.write(tab * 3 + "</ul>\n")
+	file_name.close()
+
+
+	link_names_att = {}
+	for file in link_names:
+		link_names_att[file[:-4]+"_att.asm"] = link_names[file]
+	directory_att = os.fsencode("tests/ATT")
+	file_name = open("templates/sample_programs_att.txt", "w")
+	file_name.write(tab * 3 + '<ul class="nested">\n')
+	for file in os.listdir(directory_att):
+		file = os.fsdecode(file)
+		if file.endswith(".asm") and file in link_names_att:
+			file_name.write(tab * 4 + "<li>\n")
+			file_name.write(tab * 5 + 
+				            '<a href ="https://github.com/gcallah/' + 
+							"Emu86/blob/master/tests/ATT/" + file + '">\n')
+			file_name.write(tab * 6 + link_names_att[file] + "\n")
 			file_name.write(tab * 5 + "</a>\n")
 			file_name.write(tab * 4 + "</li>\n")
 	file_name.write(tab * 3 + "</ul>\n")

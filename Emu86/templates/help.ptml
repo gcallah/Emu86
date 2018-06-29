@@ -14,8 +14,11 @@
             say, operating systems or compilers, where the focus is not
             assembly language, and actually using an assembler would be a
             distraction from the main theme of the course. It includes a
-            (growing) subset of x86 assembler instructions. (This is, by the
-            way, Intel assembly language, and not AT&amp;T assembly language.)
+            (growing) subset of x86 assembler instructions. It currently 
+            supports 2 x86 flavors: Intel and AT&amp;T assembly language. 
+            <br />
+            As of right now, we do not cover these AT&amp;T addressing modes: 
+            (%ebx, %eax, 2) and var(, 1). If needed, please contact us. 
             </p>
 
             <details>
@@ -24,12 +27,21 @@
                 </summary>
                 <p>
                     Here is a page from the University of Virginia Computer
-                    Science Department that gives a basic guide to x86 assembly
-                    language, which we have followed in creating our emulator:
+                    Science Department that gives a basic guide to Intel x86 
+                    assembly language, which we have followed in creating 
+                    our emulator:
                     <br />
                     <a
                     href="https://www.cs.virginia.edu/~evans/cs216/guides/x86.html">
                     Guide to Intel x86 assembly.
+                    </a>
+                    <br/> <br/>
+                    In addition, here is a page from the Yale FLINT Group that 
+                    gives a basic guide to AT&amp;T x86 assembly language. 
+                    <br />
+                    <a 
+                    href="http://flint.cs.yale.edu/cs421/papers/x86-asm/asm.html">
+                    Guide to AT&amp;T x86 assembly.
                     </a>
                 </p>
             </details>
@@ -47,7 +59,20 @@
                 student exercises would typically be brief, like these
                 samples.)
             </p>
+
+            <details> 
+                <summary class="sum3">
+                    Intel Programs
+                </summary>
 <!--include sample_programs.txt -->
+            </details>
+
+            <details> 
+                <summary class="sum3">
+                    AT&amp;T Programs
+                </summary>
+<!--include sample_programs_att.txt -->
+            </details>
         </details>
 
         <details>

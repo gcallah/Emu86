@@ -21,6 +21,16 @@ function loadcode()
     if(sessionStorage.loadonce)
     {
         AlertError();
+        var instr = document.getElementsByName("last_instr")[0];
+        if (instr) {
+            var input = document.getElementById("id_code");
+            input.focus();
+            if (instr.value != "" && input.value.indexOf(instr.value) != -1) {
+                input.setSelectionRange(input.value.indexOf(instr.value), 
+                       input.value.indexOf(instr.value) + instr.value.length);
+            }
+        }
+        
         return;
     }
     else
