@@ -41,9 +41,9 @@ class Pop(Instruction):
     def fhook(self, ops, vm):
         vm.inc_sp()
         check_num_args("POP", ops, 1)
-        val = int(vm.stack[str(vm.get_sp())])
+        val = int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()])
         ops[0].set_val(val)
-        vm.stack[str(vm.get_sp())] = vm.empty_cell()
+        vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
 
 class Push(Instruction):
     """
@@ -65,7 +65,8 @@ class Push(Instruction):
     def fhook(self, ops, vm):
         vm.dec_sp()
         check_num_args("PUSH", ops, 1)
-        vm.stack[str(vm.get_sp() + 1)] = ops[0].get_val()
+        vm.stack[hex(vm.get_sp() + 
+                     1).split('x')[-1].upper()] = ops[0].get_val()
 
 
 class Lea(Instruction):
