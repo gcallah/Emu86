@@ -203,7 +203,7 @@ class Call(Instruction):
     def fhook(self, ops, vm):
         check_num_args("CALL", ops, 1)
         vm.dec_sp()
-        vm.stack[str(vm.get_sp() + 1)] = vm.get_ip()
+        vm.stack[hex(vm.get_sp() + 1).split('x')[-1].upper()] = vm.get_ip()
         target = get_one_op(self.get_nm(), ops)
         raise Jump(target.name)
 
@@ -223,5 +223,5 @@ class Ret(Instruction):
     def fhook(self, ops, vm):
         check_num_args("RET", ops, 0)
         vm.inc_sp()
-        vm.set_ip(int(vm.stack[str(vm.get_sp())]))
-        vm.stack[str(vm.get_sp())] = vm.empty_cell()
+        vm.set_ip(int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]))
+        vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
