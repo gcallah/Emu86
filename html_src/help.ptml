@@ -183,6 +183,11 @@
             					</a>
             				</li>
             				<li>
+            					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/reg_mem_addition_test_att.asm">
+            						Store values into memory using multiplication syntax
+            					</a>
+            				</li>
+            				<li>
             					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/sum_test_att.asm">
             						Add two numbers
             					</a>
