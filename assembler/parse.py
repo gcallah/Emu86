@@ -113,7 +113,7 @@ def number_token(token_line, pos, flavor, vm):
                                               token_line[pos].get_val())
                 if register: 
                     return (RegAddress(register.get_nm(), 
-                                       vm, displacement), pos)
+                                       vm, displacement, register.get_multiplier()), pos)
                 else:
                     return (Address(hex(displacement).split('x')[-1].upper(), 
                                     vm), pos)
@@ -367,20 +367,30 @@ def get_address(token_line, pos, vm):
     register = None
     displacement = 0
     closeBracket = False 
+    args = 0
     # check other elements within bracket
     while True:
         if state == NEED_VAL:
             if pos >= len(token_line):
                 raise MissingOps()
             # if Integer
+            elif isinstance(token_line[pos], MinusTok):
+                token_line[pos + 1].negate_val()
+                pos += 1
             elif isinstance(token_line[pos], IntegerTok):
+                args += 1
+                if args > 2:
+                    raise MissingCloseBrack()
                 displacement += token_line[pos].get_val()
                 pos += 1
                 state = NEED_OP_OR_CLOSE_BRACK
             # if Register
             elif isinstance(token_line[pos], Register):
+                args += 1
+                if args > 2:
+                    raise MissingCloseBrack()
                 if register:
-                    displacement += token_line[pos].get_val()
+                    displacement = token_line[pos]
                 else:
                     register = token_line[pos]
                 pos += 1
@@ -432,7 +442,7 @@ def get_address_att(token_line, pos, vm, displacement = 0):
     state = NEED_VAL
     register = None
     closeParen = False 
-    address_calc = 0
+    second_register = None
     count = 0 # can only have at most 2 registers!
     # check other elements within bracket
     while True:
@@ -441,15 +451,23 @@ def get_address_att(token_line, pos, vm, displacement = 0):
                 raise MissingOps()
             # if Integer
             elif isinstance(token_line[pos], IntegerTok):
-                if isinstance(token_line[pos - 1], Register):
-                    if register == token_line[pos - 1]:
-                        address_calc = (register.get_val() * 
-                                        token_line[pos].get_val())
-                        register = None
-                    else:
-                        adress_calc *= token_line[pos].get_val()
+                if register:
+                    if register == token_line[pos - 2]:
+                        register.set_multiplier(token_line[pos].get_val())
+                    elif (second_register == token_line[pos - 2] and 
+                          isinstance(second_register, Register)):
+                        second_register.set_multiplier(token_line[pos].get_val())
+                    else: 
+                        raise InvalidArgument(token_line[pos].get_nm())
                 else:
-                    address_calc += token_line[pos].get_val()
+                    try:
+                        if isinstance(token_line[pos + 1], CloseParen):
+                            displacement += token_line[pos].get_val()
+                            return (register, displacement, pos + 2)
+                        else:
+                            raise MissingCloseParen()
+                    except:
+                         raise MissingCloseParen()
                 pos += 1
                 state = NEED_COMMA_OR_CLOSE_PAREN
             # if Register
@@ -459,7 +477,7 @@ def get_address_att(token_line, pos, vm, displacement = 0):
                     raise InvalidMemLoc(token_line[pos].get_nm())
                 else:
                     if register:
-                        displacement += token_line[pos].get_val()
+                        second_register = token_line[pos]
                     else:
                         register = token_line[pos]
                     pos += 1
@@ -481,8 +499,9 @@ def get_address_att(token_line, pos, vm, displacement = 0):
                 pos += 1
                 state = NEED_VAL
             elif isinstance(token_line[pos], CloseParen):
-                pos += 1
-                return (register, displacement + address_calc, pos)
+                if second_register:
+                    return (register, [displacement, second_register], pos + 1)
+                return (register, displacement, pos + 1)
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
 
@@ -542,8 +561,11 @@ def get_op(token_line, pos, flavor, vm):
         elif flavor == "att":
             register, displacement, pos = get_address_att(token_line, pos, vm)
         if register:
-            return (RegAddress(register.get_nm(), vm, displacement), pos)
+            return (RegAddress(register.get_nm(), vm, 
+                               displacement, register.get_multiplier()), pos)
         else:
+            if displacement >= 256 or displacement < 0:
+                raise InvalidMemLoc(str(displacement))
             return (Address(hex(displacement).split('x')[-1].upper(), vm), 
                     pos)
     else:
@@ -619,7 +641,7 @@ def parse(tok_lines, flavor, vm):
                 continue
             else: 
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
-        if parse_data:
+        if parse_data and vm.get_ip() == 0:
             mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
             token_instrs.append((parse_exec_unit(tokens[0], flavor, vm), 

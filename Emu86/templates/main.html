@@ -206,7 +206,7 @@
                                 {% if addr == "F" %}
                                     <tr style='height:5px'><td id='mem-loc' style='height:5px'> 0 </td>
                                 {% elif addr|slice:"-1:" == "F" %}
-                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:":-1"}} </td>
+                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:"1:-1"}} </td>
                                 {% endif %}
                                     <td id="contents" style="height:5px">
                                         <input
