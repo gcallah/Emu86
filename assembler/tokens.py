@@ -4,7 +4,7 @@ tokens.py: contains classes we tokenize into.
 
 from abc import abstractmethod
 
-from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName
+from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName, InvalidArgument
 from .errors import NotSettable
 from .virtual_machine import vmachine
 
@@ -153,33 +153,38 @@ class Address(Location):
         super().__init__(name, vm, val)
         self.mem = vm.memory
 
-    def check_mem(self):
-        if int(self.name, 16) >= 256 or int(self.name, 16) < 0:
-            raise InvalidMemLoc(self.name)
-
     def __str__(self):
         return "[" + str(self.name) + "]"
 
     def get_val(self):
-        self.check_mem()
         return int(self.mem[self.name])
 
     def set_val(self, val):
-        self.check_mem()
         self.mem[self.name] = val
 
 
 class RegAddress(Address):
-    def __init__(self, name, vm, displacement = 0, val=0):
+    def __init__(self, name, vm, displacement = 0, multiplier = 1, val=0):
         super().__init__(name, vm, val)
         self.regs = vm.registers
         self.displacement = displacement
+        self.multiplier = multiplier
 
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
-        address = hex(int(self.regs[self.name])).split('x')[-1].upper()
-        if self.displacement != 0:
-            address = hex(int(self.regs[self.name]) + 
+        address = hex(int(self.regs[self.name]) * 
+                          self.multiplier).split('x')[-1].upper()
+        if isinstance(self.displacement, list):
+            total_disp = 0
+            for disp in self.displacement: 
+                if isinstance(disp, Register):
+                    total_disp += disp.get_val() * disp.get_multiplier()
+                else:
+                    total_disp += disp
+            address = hex(int(self.regs[self.name]) * self.multiplier + 
+                          total_disp).split('x')[-1].upper()
+        elif self.displacement != 0:
+            address = hex(int(self.regs[self.name]) * self.multiplier + 
                           self.displacement).split('x')[-1].upper()
         if address in self.mem:
             return address
@@ -201,6 +206,7 @@ class Register(Location):
         self.registers = vm.registers
         self.val = self.registers[self.name]
         self.writable = True
+        self.multiplier = 1
         if self.name in vm.unwritable:
             self.writable = False
 
@@ -218,6 +224,14 @@ class Register(Location):
             self.registers[self.name] = val
         else:
             raise RegUnwritable(self.name)
+
+    def get_multiplier(self):
+        return self.multiplier
+
+    def set_multiplier(self, val):
+        if val < 0:
+            raise InvalidArgument(str(val))
+        self.multiplier = val
 
     def negate_val(self):
         self.val *= -1

@@ -50,7 +50,7 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["EAX"], 71)
         self.assertEqual(vmachine.registers["EBX"], 6)
         self.assertEqual(vmachine.registers["ECX"], 1)
-        self.assertEqual(vmachine.registers["ESP"], 255)
+        self.assertEqual(vmachine.registers["ESP"], 511)
         self.assertEqual(vmachine.memory["6"], 71)
 
     def test_key_att(self):
@@ -58,7 +58,7 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["EAX"], 71)
         self.assertEqual(vmachine.registers["EBX"], 71)
         self.assertEqual(vmachine.registers["ECX"], 1)
-        self.assertEqual(vmachine.registers["ESP"], 255)
+        self.assertEqual(vmachine.registers["ESP"], 511)
         self.assertEqual(vmachine.memory["9"], 83)
 
     def test_arithmetic_shift_att(self):
@@ -148,6 +148,20 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["EDX"], 3331)
         self.assertEqual(vmachine.registers["ECX"], 100)
         self.assertEqual(vmachine.registers["EBX"], 100)
+
+    def test_reg_mem_addition_att(self):
+        self.run_att_test_code("tests/ATT/reg_mem_addition_test_att.asm")
+        self.assertEqual(vmachine.registers["EAX"], 6)
+        self.assertEqual(vmachine.registers["EBX"], 0)
+        self.assertEqual(vmachine.registers["ECX"], 3)
+        self.assertEqual(vmachine.memory["6"], 3)
+        self.assertEqual(vmachine.memory["8"], 8)
+        self.assertEqual(vmachine.memory["0"], 50)
+        self.assertEqual(vmachine.memory["D"], 32)
+        self.assertEqual(vmachine.memory["F"], 5)
+        self.assertEqual(vmachine.memory["1B"], 5)
+        self.assertEqual(vmachine.memory["24"], 5)
+
 
 if __name__ == '__main__':
     main()

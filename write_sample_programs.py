@@ -15,7 +15,8 @@ link_names = {
 	"data.asm": "How to use the .data section",
 	"array_average_test.asm": "Calculate average of an array of numbers",
 	"change_array_elem_test.asm": "Change array elements below min to set minimum",
-	"int_square_root.asm": "Calculate square root of a number"
+	"int_square_root.asm": "Calculate square root of a number",
+	"reg_mem_addition_test.asm": "Store values into memory using AT;ampT syntax"
 }
 
 def create_href():
@@ -29,7 +30,8 @@ def create_href():
 			file_name.write(tab * 4 + "<li>\n")
 			file_name.write(tab * 5 + 
 				            '<a href ="https://github.com/gcallah/' + 
-							"Emu86/blob/master/tests/Intel/" + file + '">\n')
+							"Emu86/blob/master/tests/Intel/" + 
+							 file + '">\n')
 			file_name.write(tab * 6 + link_names[file] + "\n")
 			file_name.write(tab * 5 + "</a>\n")
 			file_name.write(tab * 4 + "</li>\n")
@@ -49,7 +51,8 @@ def create_href():
 			file_name.write(tab * 4 + "<li>\n")
 			file_name.write(tab * 5 + 
 				            '<a href ="https://github.com/gcallah/' + 
-							"Emu86/blob/master/tests/ATT/" + file + '">\n')
+							"Emu86/blob/master/tests/ATT/" + 
+							 file + '">\n')
 			file_name.write(tab * 6 + link_names_att[file] + "\n")
 			file_name.write(tab * 5 + "</a>\n")
 			file_name.write(tab * 4 + "</li>\n")
