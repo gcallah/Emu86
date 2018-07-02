@@ -16,7 +16,7 @@ link_names = {
 	"array_average_test.asm": "Calculate average of an array of numbers",
 	"change_array_elem_test.asm": "Change array elements below min to set minimum",
 	"int_square_root.asm": "Calculate square root of a number",
-	"reg_mem_addition_test.asm": "Store values into memory using AT;ampT syntax"
+	"reg_mem_addition_test.asm": "Store values into memory using multiplication syntax"
 }
 
 def create_href():
