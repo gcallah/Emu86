@@ -55,7 +55,7 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["EAX"], 71)
         self.assertEqual(vmachine.registers["EBX"], 6)
         self.assertEqual(vmachine.registers["ECX"], 1)
-        self.assertEqual(vmachine.registers["ESP"], 255)
+        self.assertEqual(vmachine.registers["ESP"], 511)
         self.assertEqual(vmachine.memory["6"], 71)
 
     def test_key(self):
@@ -63,7 +63,7 @@ class TestPrograms(TestCase):
         self.assertEqual(vmachine.registers["EAX"], 71)
         self.assertEqual(vmachine.registers["EBX"], 71)
         self.assertEqual(vmachine.registers["ECX"], 1)
-        self.assertEqual(vmachine.registers["ESP"], 255)
+        self.assertEqual(vmachine.registers["ESP"], 511)
         self.assertEqual(vmachine.memory["9"], 83)
 
     def test_arithmetic_shift(self):

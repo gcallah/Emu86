@@ -11,3 +11,4 @@
 	mov [eax+2], [y+3]
 	mov [ebx], [z]
 	mov [eax-5], [y+2]
+	mov [-5+eax], [y+2]
