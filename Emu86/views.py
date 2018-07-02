@@ -57,7 +57,7 @@ def main_page(request):
                     vmachine.nxt_key = int(request.POST.get(NXT_KEY, 0))
                 except Exception:
                     vmachine.nxt_key = 0
-
+                    
             vmachine.flavor = request.POST[FLAVOR]
             get_reg_contents(vmachine.registers, request)
             get_mem_contents(vmachine.memory, request)
