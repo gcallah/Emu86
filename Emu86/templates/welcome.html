@@ -1,0 +1,20 @@
+{% extends "ebase.html" %}
+{% block content %}
+    <div class="module">
+
+        <body>
+            Welcome to Emu, your online assembly machine. 
+            <form action="{% url 'Emu86:main_page' %}" method="post">
+                {% csrf_token %}
+                <br>Select your language
+                <select name="language">
+                    <option value="intel"> Intel </option>
+                    <option value="att"> AT&amp;T </option>
+                    <option value="mips"> MIPS </option>
+                </select>
+                <br><input type = "submit" value= "Submit">
+            </form>
+        </body>
+    </div>
+
+{% endblock content %}

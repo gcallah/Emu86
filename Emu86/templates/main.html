@@ -6,21 +6,11 @@
 
     <div class="module">
         <form action="{% url 'Emu86:main_page' %}" method="post">
-            Select the flavor of assembler you'd like to work in: 
-            {% if flavor == "intel" %}
-                <input type="radio" name="flavor" value="intel" checked="checked"> Intel      
-                <input type="radio" name="flavor" value="att"> AT&T 
-            {% elif flavor == "att" %}
-                <input type="radio" name="flavor" value="intel"> Intel      
-                <input type="radio" name="flavor" value="att" checked="checked"> AT&T
-            {% else %}
-                <input type="radio" name="flavor" value="intel" checked = "checked"> Intel      
-                <input type="radio" name="flavor" value="att"> AT&T
-            {% endif %}
             <br>
             &nbsp;
             <input type="hidden" name="nxt_key">
             <input type="hidden" name="unwritable">
+            <input type="hidden" name="flavor">
             <table>
                 <tr>
                     <td id="form-cell">

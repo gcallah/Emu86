@@ -29,19 +29,6 @@ class VirtualMachine:
         self.debug = ""
     
         self.unwritable = [INSTR_PTR, STACK_PTR]
-
-        self.registers = OrderedDict(
-                    [
-                        ('EAX', 0),
-                        ('EBX', 0),
-                        ('ECX', 0),
-                        ('EDX', 0),
-                        ('ESI', 0),
-                        ('EDI', 0),
-                        (STACK_PTR, STACK_TOP),
-                        ('EBP', 0),
-                        (INSTR_PTR, 0),
-                    ])
         
         # for now we only need four of the flags
         self.flags = OrderedDict(
@@ -126,4 +113,58 @@ class VirtualMachine:
     def empty_cell(self):
         return EMPTY_CELL
 
-vmachine = VirtualMachine()
+class IntelMachine(VirtualMachine):
+    def __init__(self):
+        super().__init__()
+        self.registers = OrderedDict(
+                    [
+                        ('EAX', 0),
+                        ('EBX', 0),
+                        ('ECX', 0),
+                        ('EDX', 0),
+                        ('ESI', 0),
+                        ('EDI', 0),
+                        (STACK_PTR, STACK_TOP),
+                        ('EBP', 0),
+                        (INSTR_PTR, 0),
+                    ])
+
+
+class MIPSMachine(VirtualMachine):
+    def __init__(self):
+        super().__init__()
+        self.registers = OrderedDict(
+                    [
+                        ('V0', 0),
+                        ('V1', 0),
+                        ('A0', 0),
+                        ('A1', 0),
+                        ('A2', 0),
+                        ('A3', 0),
+                        ('T0', 0),
+                        ('T1', 0),
+                        ('T2', 0),
+                        ('T3', 0),
+                        ('T4', 0),
+                        ('T5', 0),
+                        ('T6', 0),
+                        ('T8', 0),
+                        ('T9', 0),
+                        ('T7', 0),
+                        ('S0', 0),
+                        ('S1', 0),
+                        ('S2', 0),
+                        ('S3', 0),
+                        ('S4', 0),
+                        ('S5', 0),
+                        ('S6', 0),
+                        ('S7', 0),
+                        ('K0', 0),
+                        ('K1', 0),
+                        (STACK_PTR, STACK_TOP),
+                        ('EBP', 0),
+                        (INSTR_PTR, 0),
+                    ])
+
+vmachine = IntelMachine()
+mips_machine = MIPSMachine()
