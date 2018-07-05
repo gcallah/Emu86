@@ -4,8 +4,8 @@ arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfunc
 
-from .errors import *
-from .tokens import Instruction, MAX_INT, Register, IntegerTok
+from assembler.errors import *
+from assembler.tokens import Instruction, MAX_INT, Register, IntegerTok
 
 
 def one_op_arith(ops, vm, instr, operator):

@@ -266,5 +266,4 @@ def lex(code, flavor, vm):
         if add_to_ip:
             i += 1
 
-    print (tok_lines)
     return tok_lines

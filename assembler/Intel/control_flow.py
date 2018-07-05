@@ -4,8 +4,8 @@ control_flow.py: control flow instructions,
 
 """
 
-from .errors import check_num_args
-from .tokens import Instruction
+from assembler.errors import check_num_args
+from assembler.tokens import Instruction
 
 
 

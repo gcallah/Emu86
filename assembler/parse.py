@@ -15,13 +15,7 @@ from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
 from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign
-from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
-from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .arithmetic_MIPS import Add_MIPS, Addi, Sub_MIPS, Subi
-from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
-from .control_flow import Jg, Jge, Jl, Jle
-from .data_mov import Mov, Pop, Push, Lea
-from .data_mov_MIPS import Load, Store
+from .Intel.control_flow import Ret
 from .interrupts import Interrupt
 from .virtual_machine import MEM_SIZE
 
@@ -77,7 +71,6 @@ def number_token(token_line, pos, flavor, vm):
             else:
                 return (token_line[pos], pos + 1)
         else:
-            print (token_line[pos].get_val())
             return (token_line[pos], pos + 1)
 
 def is_start_address(token_line, pos, flavor):

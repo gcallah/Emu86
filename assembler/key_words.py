@@ -1,11 +1,11 @@
-from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
-from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .arithmetic_MIPS import Add_MIPS, Sub_MIPS, Addi, Subi, Andf_MIPS
-from .arithmetic_MIPS import Andi, Orf_MIPS, Ori
-from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
-from .control_flow import Jg, Jge, Jl, Jle
-from .data_mov import Mov, Pop, Push, Lea
-from .data_mov_MIPS import Load, Store
+from .Intel.arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
+from .Intel.arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
+from .MIPS.arithmetic import Add_MIPS, Sub_MIPS, Addi, Subi, Andf_MIPS
+from .MIPS.arithmetic import Andi, Orf_MIPS, Ori
+from .Intel.control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
+from .Intel.control_flow import Jg, Jge, Jl, Jle
+from .Intel.data_mov import Mov, Pop, Push, Lea
+from .MIPS.data_mov import Load, Store
 from .interrupts import Interrupt
 
 je = Je('JE')
