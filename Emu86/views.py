@@ -23,7 +23,7 @@ ATT = 'att'
 
 
 def get_hdr():
-    site_hdr = "Emu86: an x86 assembly emulator."
+    site_hdr = "Emu: a multi-language assembly emulator."
     site_list = Site.objects.all()
     for site in site_list:
         site_hdr = site.header
