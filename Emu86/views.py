@@ -37,43 +37,9 @@ def dump_dict(d, vmachine):
 def welcome(request):
     global vmachine
     global mips_machine
+    vmachine.re_init()
+    mips_machine.re_init()
     site_hdr = get_hdr()
-    if request.method == 'POST':
-        lang = request.POST['language']
-        form = MainForm()
-        if lang == "mips":
-            return render(request, 'main.html',
-                        {'form': form,
-                         HEADER: site_hdr,
-                         'last_instr': "",
-                         'error': "",
-                         'unwritable': mips_machine.unwritable,
-                         'debug': mips_machine.debug,
-                         NXT_KEY: mips_machine.nxt_key,
-                         'registers': mips_machine.registers,
-                         'memory': mips_machine.memory, 
-                         'stack': mips_machine.stack, 
-                         'flags': mips_machine.flags,
-                         'flavor': mips_machine.flavor
-                        })
-        elif lang == "att":
-            vmachine.flavor = "att"
-        else:
-            vmachine.flavor = "intel"
-        return render(request, 'main.html',
-                      {'form': form,
-                       HEADER: site_hdr,
-                       'last_instr': "",
-                       'error': "",
-                       'unwritable': vmachine.unwritable,
-                       'debug': vmachine.debug,
-                       NXT_KEY: vmachine.nxt_key,
-                       'registers': vmachine.registers,
-                       'memory': vmachine.memory, 
-                       'stack': vmachine.stack, 
-                       'flags': vmachine.flags,
-                       'flavor': vmachine.flavor
-                      })
     return render(request, 'welcome.html', {HEADER: site_hdr})
 
 def main_page(request):
@@ -83,8 +49,13 @@ def main_page(request):
     site_hdr = get_hdr()
     if request.method == 'GET':
         prev_flav = vmachine.flavor
+        prev_mips = mips_machine.flavor
+        if not prev_flav and not prev_mips:
+            return render(request, 'main_error.html', {HEADER: site_hdr})
         vmachine.re_init()
         vmachine.flavor = prev_flav
+        mips_machine.re_init()
+        mips_machine.flavor = prev_mips
         form = MainForm()
     else:
         if 'language' in request.POST:
@@ -131,12 +102,13 @@ def main_page(request):
                           })
         form = MainForm(request.POST)
         if CLEAR in request.POST:
-          if vmachine.flavor:
-              prev_flav = vmachine.flavor
-              vmachine.re_init()
-              vmachine.flavor = prev_flav
-          else:
-              mips.re_init()
+            if vmachine.flavor:
+                prev_flav = vmachine.flavor
+                vmachine.re_init()
+                vmachine.flavor = prev_flav
+            else:
+                mips_machine.re_init()
+                mips_machine.flavor = "mips"
         else:
             step = (STEP in request.POST)
             vmachine.nxt_key = 0
