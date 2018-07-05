@@ -132,9 +132,11 @@ def main_page(request):
             if vmachine.flavor == "intel":
                 (last_instr, error) = assemble(request.POST[CODE], INTEL,
                                                vmachine, step)
-            else:
+            elif vmachine.flavor == "att":
                 (last_instr, error) = assemble(request.POST[CODE], ATT, 
                                                vmachine, step)
+            else:
+                (last_instr, error) = assemble(request.POST[CODE], "MIPS", mips_machine, step)
 
 
     if mips_machine.flavor == "mips":
