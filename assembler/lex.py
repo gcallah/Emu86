@@ -7,18 +7,13 @@ import pdb
 from random import randrange
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidArgument
-from .parse import instructions, dtype_info, DONT_INIT, sym_match, label_match
+from .parse import dtype_info, DONT_INIT, sym_match, label_match
 from .tokens import Location, Address, Register, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
 from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen
-from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
-from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
-from .control_flow import Jg, Jge, Jl, Jle
-from .data_mov import Mov, Pop, Push, Lea
-from .interrupts import Interrupt
+from .key_words import intel_instructions, mips_instructions
 from .virtual_machine import MEM_SIZE
 
 
@@ -103,8 +98,8 @@ def sep_line(code, i, vm):
                 analysis.append(Section(word[1:]))
             elif word in dtype_info:
                 analysis.append(DataType(word))
-            elif word.upper() in instructions:
-                analysis.append(instructions[word.upper()])
+            elif word.upper() in intel_instructions:
+                analysis.append(intel_instructions[word.upper()])
             elif word.upper() in vm.registers:
                 analysis.append(Register(word.upper(), vm))
             elif word.find("'") != -1:
@@ -128,6 +123,8 @@ def sep_line_att(code, i, data_sec, vm):
         code: Line of code 
         i: Line number of code
            Needed for determining label location
+        data_sec: Boolean, determines if we are in the data section
+                  Needed to differentiate between label and symbol
         vm: Virtual machine
 
     Returns:
@@ -146,9 +143,58 @@ def sep_line_att(code, i, data_sec, vm):
                 analysis.append(DataType(word))
             elif word[0] == ".":
                 analysis.append(Section(word[1:]))
-            elif word.upper() in instructions:
-                analysis.append(instructions[word.upper()])
+            elif word.upper() in intel_instructions:
+                analysis.append(intel_instructions[word.upper()])
             elif word[0] == "%" and word[1:].upper() in vm.registers:
+                analysis.append(Register(word[1:].upper(), vm))
+            elif word.find("'") != -1:
+                analysis.append(StringTok(word))
+            elif re.search(label_match, word) is not None:
+                if data_sec:
+                    analysis.append(NewSymbol(word[:-1], vm))
+                else:
+                    vm.labels[word[:word.find(":")]] = i
+            elif re.search(sym_match, word) is not None:
+                analysis.append(NewSymbol(word, vm))
+            else:
+                try:
+                    analysis.append(IntegerTok(int(word)))
+                except Exception:
+                    raise InvalidArgument(word)
+    return (analysis, code)
+
+
+def sep_line_mips(code, i, data_sec, vm):
+    """
+    Returns a list of tokens created 
+
+    Args:
+        code: Line of code 
+        i: Line number of code
+           Needed for determining label location
+        data_sec: Boolean, determines if we are in the data section
+                  Needed to differentiate between label and symbol
+        vm: Virtual machine
+
+    Returns:
+        Tuple of the lexical analysis of the line
+        The first member is the tokens and the second is the
+        text of the code.
+    """
+    analysis = []
+    words = split_code(code, "mips")
+
+    for word in words:
+        if word != "":
+            if word in keywords_to_tokens:
+                analysis.append(keywords_to_tokens[word])
+            elif word in dtype_info:
+                analysis.append(DataType(word))
+            elif word[0] == ".":
+                analysis.append(Section(word[1:]))
+            elif word.upper() in mips_instructions:
+                analysis.append(mips_instructions[word.upper()])
+            elif word[0] == "$" and word[1:].upper() in vm.registers:
                 analysis.append(Register(word[1:].upper(), vm))
             elif word.find("'") != -1:
                 analysis.append(StringTok(word))
@@ -206,6 +252,8 @@ def lex(code, flavor, vm):
             tok_lines.append(sep_line(line, i, vm))
         elif flavor == "att":
             tok_lines.append(sep_line_att(line, i, data_sec, vm))
+        else: 
+            tok_lines.append(sep_line_mips(line, i, data_sec, vm))
         if line == ".data":
             add_to_ip = False
             data_sec = True
@@ -217,4 +265,6 @@ def lex(code, flavor, vm):
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
+
+    print (tok_lines)
     return tok_lines

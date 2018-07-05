@@ -17,9 +17,11 @@ from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
 from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
+from .arithmetic_MIPS import Add_MIPS, Addi, Sub_MIPS, Subi
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
+from .data_mov_MIPS import Load, Store
 from .interrupts import Interrupt
 from .virtual_machine import MEM_SIZE
 
@@ -39,51 +41,6 @@ DONT_INIT = "?"
 MAX_BYTE = 255
 MAX_SHORT = 65535
 MAX_LONG = 4294967295
-
-je = Je('JE')
-jne = Jne('JNE')
-jg = Jg ('JG')
-jl = Jl ('JL')
-instructions = {
-        # interrupts:
-        'INT': Interrupt('INT'),
-        # control flow:
-        'CMP': Cmpf('CMP'),
-        'JMP': Jmp('JMP'),
-        je.get_nm(): je,
-        jne.get_nm(): jne,
-        # the next two instructions are just synonyms for the previous two.
-        'JZ': je,
-        'JNZ': jne,
-        jg.get_nm(): jg,
-        jl.get_nm(): jl,
-        # JNLE synonymous to JG, JNGE synonymous to JL
-        'JNLE': jg,
-        'JNGE': jl,
-        'JGE': Jge('JGE'),
-        'JLE': Jle('JLE'),
-        'CALL': Call('CALL'),
-        'RET' : Ret('RET'),
-        # data movement:
-        'MOV': Mov('MOV'),
-        'PUSH': Push('PUSH'),
-        'POP': Pop('POP'),
-        'LEA': Lea('LEA'),
-        # arithmetic and logic:
-        'ADD': Add('ADD'),
-        'SUB': Sub('SUB'),
-        'IMUL': Imul('IMUL'),
-        'IDIV': Idiv('IDIV'),
-        'AND': Andf('AND'),
-        'OR': Orf('OR'),
-        'XOR': Xor('XOR'),
-        'SHL': Shl('SHL'),
-        'SHR': Shr('SHR'),
-        'NOT': Notf('NOT'),
-        'INC': Inc('INC'),
-        'DEC': Dec('DEC'),
-        'NEG': Neg('NEG'),
-        }
 
 BYTES = 0
 MAX_VAL = 1
@@ -105,7 +62,7 @@ def add_debug(s, vm):
 def number_token(token_line, pos, flavor, vm):
     if flavor == "intel":
         return (token_line[pos], pos + 1)
-    elif flavor == "att":
+    else:
         if pos + 1 < len (token_line):
             if isinstance(token_line[pos + 1], OpenParen):
                 register, displacement, pos = get_address_att(token_line, 
@@ -120,6 +77,7 @@ def number_token(token_line, pos, flavor, vm):
             else:
                 return (token_line[pos], pos + 1)
         else:
+            print (token_line[pos].get_val())
             return (token_line[pos], pos + 1)
 
 def is_start_address(token_line, pos, flavor):
