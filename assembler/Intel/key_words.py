@@ -3,7 +3,7 @@ from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
-from assembler.interrupts import Interrupt
+from .interrupts import Interrupt
 from assembler.tokens import DataType, Register
 
 je = Je('JE')

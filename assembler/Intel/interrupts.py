@@ -2,8 +2,8 @@
 interrupts.py: data movement instructions.
 """
 
-from .errors import check_num_args, InvalidOperand, ExitProg, UnknownInt
-from .tokens import Instruction, IntegerTok
+from assembler.errors import check_num_args, InvalidOperand, ExitProg, UnknownInt
+from assembler.tokens import Instruction, IntegerTok
 
 EAX = 'EAX'
 

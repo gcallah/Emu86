@@ -16,7 +16,6 @@ from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
 from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign
 from .Intel.control_flow import Ret
-from .interrupts import Interrupt
 from .virtual_machine import MEM_SIZE
 
 TOKENS = 0
