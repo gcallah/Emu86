@@ -5,11 +5,12 @@ export QUIZ_DIR = templates
 PTML_DIR = html_src
 ADIR = ansible
 SDIR = assembler
+INTEL_DIR = $(SDIR)/Intel
 ODIR = Emu86/templates
 MUDIR = myutils
 UDIR = utils
 TDIR = tests
-SRCS = $(SDIR)/arithmetic.py $(SDIR)/control_flow.py $(SDIR)/data_mov.py $(SDIR)/interrupts.py 
+SRCS = $(INTEL_DIR)/arithmetic.py $(INTEL_DIR)/control_flow.py $(INTEL_DIR)/data_mov.py $(INTEL_DIR)/interrupts.py 
 INTER2 = $(ODIR)/help.ptml
 OBJS = $(ODIR)/help.html
 EXTR = $(UDIR)/extract_doc.awk
@@ -50,10 +51,10 @@ website: $(INCS) $(HTML_FILES) help
 help: $(SRCS) samples
 	python3 write_sample_programs.py
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
-	$(EXTR) <$(SDIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
-	$(EXTR) <$(SDIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
-	$(EXTR) <$(SDIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/data_mov.txt
-	$(EXTR) <$(SDIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/interrupts.txt
+	$(EXTR) <$(INTEL_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
+	$(EXTR) <$(INTEL_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
+	$(EXTR) <$(INTEL_DIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/data_mov.txt
+	$(EXTR) <$(INTEL_DIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/interrupts.txt
 	$(UDIR)/html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
 	$(UDIR)/django2ptml.awk <$(ODIR)/help.html title="Language Description" >$(PTML_DIR)/help.ptml
 	-git commit $(ODIR)/help.html
