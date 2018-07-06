@@ -6,7 +6,6 @@ from abc import abstractmethod
 
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName, InvalidArgument
 from .errors import NotSettable
-from .virtual_machine import vmachine
 
 BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1

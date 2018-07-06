@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404, render
 from .models import AdminEmail
 from .models import Site
 from .forms import MainForm
-from assembler.virtual_machine import vmachine, mips_machine
+from assembler.virtual_machine import intel_machine, mips_machine
 from assembler.assemble import assemble, add_debug
 
 CODE = 'code'
@@ -30,14 +30,14 @@ def get_hdr():
         break   # since we only expect a single site record!
     return site_hdr
 
-def dump_dict(d, vmachine):
+def dump_dict(d, intel_machine):
     for key, val in d.items():
-        add_debug(str(key) + ": " + str(val), vmachine)
+        add_debug(str(key) + ": " + str(val), intel_machine)
 
 def welcome(request):
-    global vmachine
+    global intel_machine
     global mips_machine
-    vmachine.re_init()
+    intel_machine.re_init()
     mips_machine.re_init()
     site_hdr = get_hdr()
     return render(request, 'welcome.html', {HEADER: site_hdr})
@@ -48,23 +48,23 @@ def main_page(request):
 
     site_hdr = get_hdr()
     if request.method == 'GET':
-        prev_flav = vmachine.flavor
+        prev_flav = intel_machine.flavor
         prev_mips = mips_machine.flavor
         if not prev_flav and not prev_mips:
             return render(request, 'main_error.html', {HEADER: site_hdr})
-        vmachine.re_init()
-        vmachine.flavor = prev_flav
+        intel_machine.re_init()
+        intel_machine.flavor = prev_flav
         mips_machine.re_init()
         mips_machine.flavor = prev_mips
         form = MainForm()
     else:
         if 'language' in request.POST:
-            vmachine.re_init()
+            intel_machine.re_init()
             mips_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
             if lang == "mips":
-                vmachine.flavor = None
+                intel_machine.flavor = None
                 mips_machine.flavor = "mips"
                 return render(request, 'main.html',
                             {'form': form,
@@ -81,60 +81,60 @@ def main_page(request):
                              'flavor': mips_machine.flavor
                             })
             elif lang == "att":
-                vmachine.flavor = "att"
+                intel_machine.flavor = "att"
                 mips_machine.flavor = None
             else:
-                vmachine.flavor = "intel"
+                intel_machine.flavor = "intel"
                 mips_machine.flavor = None
             return render(request, 'main.html',
                           {'form': form,
                            HEADER: site_hdr,
                            'last_instr': "",
                            'error': "",
-                           'unwritable': vmachine.unwritable,
-                           'debug': vmachine.debug,
-                           NXT_KEY: vmachine.nxt_key,
-                           'registers': vmachine.registers,
-                           'memory': vmachine.memory, 
-                           'stack': vmachine.stack, 
-                           'flags': vmachine.flags,
-                           'flavor': vmachine.flavor
+                           'unwritable': intel_machine.unwritable,
+                           'debug': intel_machine.debug,
+                           NXT_KEY: intel_machine.nxt_key,
+                           'registers': intel_machine.registers,
+                           'memory': intel_machine.memory, 
+                           'stack': intel_machine.stack, 
+                           'flags': intel_machine.flags,
+                           'flavor': intel_machine.flavor
                           })
         form = MainForm(request.POST)
         if CLEAR in request.POST:
-            if vmachine.flavor:
-                prev_flav = vmachine.flavor
-                vmachine.re_init()
-                vmachine.flavor = prev_flav
+            if intel_machine.flavor:
+                prev_flav = intel_machine.flavor
+                intel_machine.re_init()
+                intel_machine.flavor = prev_flav
             else:
                 mips_machine.re_init()
                 mips_machine.flavor = "mips"
         else:
             step = (STEP in request.POST)
-            vmachine.nxt_key = 0
+            intel_machine.nxt_key = 0
             if step:
-                add_debug("Getting next key", vmachine)
+                add_debug("Getting next key", intel_machine)
                 try:
-                    vmachine.nxt_key = int(request.POST.get(NXT_KEY, 0))
+                    intel_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
                 except Exception:
-                    vmachine.nxt_key = 0
+                    intel_machine.nxt_key = 0
                     
-            if vmachine.flavor:
-                get_reg_contents(vmachine.registers, request)
-                get_mem_contents(vmachine.memory, request)
-                get_stack_contents(vmachine.stack, request)
-                get_flag_contents(vmachine.flags, request)
+            if intel_machine.flavor:
+                get_reg_contents(intel_machine.registers, request)
+                get_mem_contents(intel_machine.memory, request)
+                get_stack_contents(intel_machine.stack, request)
+                get_flag_contents(intel_machine.flags, request)
             else:
                 get_reg_contents(mips_machine.registers, request)
                 get_mem_contents(mips_machine.memory, request)
                 get_stack_contents(mips_machine.stack, request)
                 get_flag_contents(mips_machine.flags, request)
-            if vmachine.flavor == "intel":
+            if intel_machine.flavor == "intel":
                 (last_instr, error) = assemble(request.POST[CODE], INTEL,
-                                               vmachine, step)
-            elif vmachine.flavor == "att":
+                                               intel_machine, step)
+            elif intel_machine.flavor == "att":
                 (last_instr, error) = assemble(request.POST[CODE], ATT, 
-                                               vmachine, step)
+                                               intel_machine, step)
             else:
                 (last_instr, error) = assemble(request.POST[CODE], "mips", mips_machine, step)
 
@@ -159,13 +159,13 @@ def main_page(request):
                    HEADER: site_hdr,
                    'last_instr': last_instr,
                    'error': error,
-                   'unwritable': vmachine.unwritable,
-                   'debug': vmachine.debug,
-                   NXT_KEY: vmachine.nxt_key,
-                   'registers': vmachine.registers,
-                   'memory': vmachine.memory, 
-                   'stack': vmachine.stack, 
-                   'flags': vmachine.flags
+                   'unwritable': intel_machine.unwritable,
+                   'debug': intel_machine.debug,
+                   NXT_KEY: intel_machine.nxt_key,
+                   'registers': intel_machine.registers,
+                   'memory': intel_machine.memory, 
+                   'stack': intel_machine.stack, 
+                   'flags': intel_machine.flags
                   })
 
 def get_reg_contents(registers, request):

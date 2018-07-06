@@ -167,5 +167,5 @@ class MIPSMachine(VirtualMachine):
                         (STACK_PTR, STACK_TOP),
                     ])
 
-vmachine = IntelMachine()
+intel_machine = IntelMachine()
 mips_machine = MIPSMachine()

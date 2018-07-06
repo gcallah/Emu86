@@ -6,7 +6,7 @@ import string
 
 import operator as opfunc
 import functools
-from assembler.virtual_machine import vmachine
+from assembler.virtual_machine import intel_machine
 
 from unittest import TestCase, main
 
@@ -26,141 +26,141 @@ class TestPrograms(TestCase):
             return prog.read()
 
     def run_att_test_code (self, filnm):
-        vmachine.re_init()
+        intel_machine.re_init()
         test_code = self.read_test_code(filnm)
-        assemble(test_code, 'att', vmachine)
+        assemble(test_code, 'att', intel_machine)
 
     def test_loop_att(self):
         self.run_att_test_code("tests/ATT/loop_att.asm")
-        self.assertEqual(vmachine.registers["ECX"], 16)
+        self.assertEqual(intel_machine.registers["ECX"], 16)
 
     def test_power_att(self):
         self.run_att_test_code("tests/ATT/power_att.asm")
-        self.assertEqual(vmachine.registers["EDX"], 65536)
+        self.assertEqual(intel_machine.registers["EDX"], 65536)
 
     def test_gt_att(self):
         self.run_att_test_code("tests/ATT/gt_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 17)
-        self.assertEqual(vmachine.registers["EBX"], 16)
-        self.assertEqual(vmachine.registers["ECX"], 16)
-        self.assertEqual(vmachine.registers["EDX"], 19)
+        self.assertEqual(intel_machine.registers["EAX"], 17)
+        self.assertEqual(intel_machine.registers["EBX"], 16)
+        self.assertEqual(intel_machine.registers["ECX"], 16)
+        self.assertEqual(intel_machine.registers["EDX"], 19)
 
     def test_interrupt_att(self):
         self.run_att_test_code("tests/ATT/test_interrupt_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 71)
-        self.assertEqual(vmachine.registers["EBX"], 6)
-        self.assertEqual(vmachine.registers["ECX"], 1)
-        self.assertEqual(vmachine.registers["ESP"], 511)
-        self.assertEqual(vmachine.memory["6"], 71)
+        self.assertEqual(intel_machine.registers["EAX"], 71)
+        self.assertEqual(intel_machine.registers["EBX"], 6)
+        self.assertEqual(intel_machine.registers["ECX"], 1)
+        self.assertEqual(intel_machine.registers["ESP"], 511)
+        self.assertEqual(intel_machine.memory["6"], 71)
 
     def test_key_att(self):
         self.run_att_test_code("tests/ATT/key_test_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 71)
-        self.assertEqual(vmachine.registers["EBX"], 71)
-        self.assertEqual(vmachine.registers["ECX"], 1)
-        self.assertEqual(vmachine.registers["ESP"], 511)
-        self.assertEqual(vmachine.memory["9"], 83)
+        self.assertEqual(intel_machine.registers["EAX"], 71)
+        self.assertEqual(intel_machine.registers["EBX"], 71)
+        self.assertEqual(intel_machine.registers["ECX"], 1)
+        self.assertEqual(intel_machine.registers["ESP"], 511)
+        self.assertEqual(intel_machine.memory["9"], 83)
 
     def test_arithmetic_shift_att(self):
         self.run_att_test_code("tests/ATT/arithmetic_shift_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 4)
-        self.assertEqual(vmachine.registers["EBX"], 10)
-        self.assertEqual(vmachine.registers["ECX"], 8)
-        self.assertEqual(vmachine.registers["EDX"], 8)
-        self.assertEqual(vmachine.memory["4"], 4)
+        self.assertEqual(intel_machine.registers["EAX"], 4)
+        self.assertEqual(intel_machine.registers["EBX"], 10)
+        self.assertEqual(intel_machine.registers["ECX"], 8)
+        self.assertEqual(intel_machine.registers["EDX"], 8)
+        self.assertEqual(intel_machine.memory["4"], 4)
 
     def test_jump_att(self):
         self.run_att_test_code("tests/ATT/test_jump_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 3)
+        self.assertEqual(intel_machine.registers["EAX"], 3)
 
     def test_data_att(self):
         self.run_att_test_code("tests/ATT/data_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 8)
-        self.assertEqual(vmachine.registers["EBX"], 16)
-        self.assertEqual(vmachine.registers["ECX"], 32)
+        self.assertEqual(intel_machine.registers["EAX"], 8)
+        self.assertEqual(intel_machine.registers["EBX"], 16)
+        self.assertEqual(intel_machine.registers["ECX"], 32)
 
     def test_array_att(self):
         self.run_att_test_code("tests/ATT/array_att.asm")
-        self.assertEqual(vmachine.registers["EAX"],  3)
-        self.assertEqual(vmachine.registers["EBX"], -50)
-        self.assertEqual(vmachine.registers["ECX"], ord ('l'))
-        self.assertEqual(vmachine.registers["EDX"], 5)
+        self.assertEqual(intel_machine.registers["EAX"],  3)
+        self.assertEqual(intel_machine.registers["EBX"], -50)
+        self.assertEqual(intel_machine.registers["ECX"], ord ('l'))
+        self.assertEqual(intel_machine.registers["EDX"], 5)
         list_x = [3, 8, 5, 2]
         string_z = "hello"
         for position in range(0, 4):
-            self.assertEqual(vmachine.memory[str(position)], list_x[position])
+            self.assertEqual(intel_machine.memory[str(position)], list_x[position])
         for position in range(4, 17):
-            self.assertEqual(vmachine.memory[(hex(position).split('x')
+            self.assertEqual(intel_machine.memory[(hex(position).split('x')
                                              [-1]).upper()], -50)
         for position in range(17, 22):
-            self.assertEqual(vmachine.memory[(hex(position).split('x')
+            self.assertEqual(intel_machine.memory[(hex(position).split('x')
                                              [-1]).upper()], 
                              ord(string_z[position - 17]))
-        self.assertEqual(vmachine.memory[hex(22).split('x')[-1]], 0)
+        self.assertEqual(intel_machine.memory[hex(22).split('x')[-1]], 0)
 
     def test_sum_calculation_att(self):
         self.run_att_test_code("tests/ATT/sum_test_att.asm")
-        self.assertEqual(vmachine.registers["EAX"],  53)
-        self.assertEqual(vmachine.memory["1"], 53)
+        self.assertEqual(intel_machine.registers["EAX"],  53)
+        self.assertEqual(intel_machine.memory["1"], 53)
 
     def test_arithmetic_expression_att(self):
         self.run_att_test_code("tests/ATT/arithmetic_expression_att.asm")
-        self.assertEqual(vmachine.registers["EAX"],  -31)
-        self.assertEqual(vmachine.registers["EBX"],  52)
+        self.assertEqual(intel_machine.registers["EAX"],  -31)
+        self.assertEqual(intel_machine.registers["EBX"],  52)
 
     def test_area_att(self):
         self.run_att_test_code("tests/ATT/area_att.asm")
-        self.assertEqual(vmachine.registers["EAX"],  35 * 27)
+        self.assertEqual(intel_machine.registers["EAX"],  35 * 27)
 
     def test_celsius_conversion_att(self):
         self.run_att_test_code("tests/ATT/cel_to_fah_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 95)
-        self.assertEqual(vmachine.registers["EDX"], 2)
-        self.assertEqual(vmachine.registers["EBX"], 5)
+        self.assertEqual(intel_machine.registers["EAX"], 95)
+        self.assertEqual(intel_machine.registers["EDX"], 2)
+        self.assertEqual(intel_machine.registers["EBX"], 5)
 
     def test_log_att(self):
         self.run_att_test_code("tests/ATT/log_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 1024)
-        self.assertEqual(vmachine.registers["ECX"], 9)
+        self.assertEqual(intel_machine.registers["EAX"], 1024)
+        self.assertEqual(intel_machine.registers["ECX"], 9)
 
     def test_mem_register_att(self):
         self.run_att_test_code("tests/ATT/mem_register_test_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 6)
-        self.assertEqual(vmachine.memory["6"], 3)
-        self.assertEqual(vmachine.memory["8"], 8)
-        self.assertEqual(vmachine.memory["0"], 50)
-        self.assertEqual(vmachine.memory["1"], 32)
+        self.assertEqual(intel_machine.registers["EAX"], 6)
+        self.assertEqual(intel_machine.memory["6"], 3)
+        self.assertEqual(intel_machine.memory["8"], 8)
+        self.assertEqual(intel_machine.memory["0"], 50)
+        self.assertEqual(intel_machine.memory["1"], 32)
 
     def test_array_avg_att(self):
         self.run_att_test_code("tests/ATT/array_average_test_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 9)
-        self.assertEqual(vmachine.registers["ECX"], 100)
-        self.assertEqual(vmachine.registers["EBX"], 100)
-        self.assertEqual(vmachine.registers["EDX"], 89)
+        self.assertEqual(intel_machine.registers["EAX"], 9)
+        self.assertEqual(intel_machine.registers["ECX"], 100)
+        self.assertEqual(intel_machine.registers["EBX"], 100)
+        self.assertEqual(intel_machine.registers["EDX"], 89)
 
     def test_int_square_root_att(self):
         self.run_att_test_code("tests/ATT/int_square_root_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 10)
+        self.assertEqual(intel_machine.registers["EAX"], 10)
 
     def test_add_to_array_elem_test_att(self):
         self.run_att_test_code("tests/ATT/change_array_elem_test_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 3331)
-        self.assertEqual(vmachine.registers["EDX"], 3331)
-        self.assertEqual(vmachine.registers["ECX"], 100)
-        self.assertEqual(vmachine.registers["EBX"], 100)
+        self.assertEqual(intel_machine.registers["EAX"], 3331)
+        self.assertEqual(intel_machine.registers["EDX"], 3331)
+        self.assertEqual(intel_machine.registers["ECX"], 100)
+        self.assertEqual(intel_machine.registers["EBX"], 100)
 
     def test_reg_mem_addition_att(self):
         self.run_att_test_code("tests/ATT/reg_mem_addition_test_att.asm")
-        self.assertEqual(vmachine.registers["EAX"], 6)
-        self.assertEqual(vmachine.registers["EBX"], 0)
-        self.assertEqual(vmachine.registers["ECX"], 3)
-        self.assertEqual(vmachine.memory["6"], 3)
-        self.assertEqual(vmachine.memory["8"], 8)
-        self.assertEqual(vmachine.memory["0"], 50)
-        self.assertEqual(vmachine.memory["D"], 32)
-        self.assertEqual(vmachine.memory["F"], 5)
-        self.assertEqual(vmachine.memory["1B"], 5)
-        self.assertEqual(vmachine.memory["24"], 5)
+        self.assertEqual(intel_machine.registers["EAX"], 6)
+        self.assertEqual(intel_machine.registers["EBX"], 0)
+        self.assertEqual(intel_machine.registers["ECX"], 3)
+        self.assertEqual(intel_machine.memory["6"], 3)
+        self.assertEqual(intel_machine.memory["8"], 8)
+        self.assertEqual(intel_machine.memory["0"], 50)
+        self.assertEqual(intel_machine.memory["D"], 32)
+        self.assertEqual(intel_machine.memory["F"], 5)
+        self.assertEqual(intel_machine.memory["1B"], 5)
+        self.assertEqual(intel_machine.memory["24"], 5)
 
 
 if __name__ == '__main__':
