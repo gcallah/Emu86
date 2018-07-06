@@ -40,7 +40,7 @@ class ErrorTestCase(TestCase):
 #        self.assertTrue(error.startswith(UNKNOWN_NM))
 
     def test_reg_unwritable(self):
-        (output, error) = assemble("addi $EIP, 10", 'mips', mips_machine)
+        (output, error) = assemble("addi $zero, 10", 'mips', mips_machine)
         self.assertTrue(error.startswith(REG_UNWRITABLE))
 
     def test_comma_error(self):
