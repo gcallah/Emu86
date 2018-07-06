@@ -95,17 +95,17 @@ class AssembleTestCase(TestCase):
         mips_machine.registers["T2"] = 1
         mips_machine.flags["ZF"] = 0
         mips_machine.flags["SF"] = 0
-        assemble("SLT $t3, $t1, $t2", 'mips', mips_machine)
+        assemble("slt $t3, $t1, $t2", 'mips', mips_machine)
         self.assertEqual(mips_machine.flags["ZF"], 1)
         self.assertEqual(mips_machine.flags["SF"], 0)
-        self.assertEqual(mips_machine.registers["t3"], 0)
+        self.assertEqual(mips_machine.registers["T3"], 0)
 
     def test_slt_l(self):
-        mips_machine.registers["t1"] = 0
-        mips_machine.registers["t2"] = 1
+        mips_machine.registers["T1"] = 0
+        mips_machine.registers["T2"] = 1
         mips_machine.flags["ZF"] = 0
         mips_machine.flags["SF"] = 0
-        assemble("SLT $t3, $t1, $t2", 'mips', mips_machine)
+        assemble("slt $t3, $t1, $t2", 'mips', mips_machine)
         self.assertEqual(mips_machine.flags["ZF"], 0)
         self.assertEqual(mips_machine.flags["SF"], 1)
         self.assertEqual(mips_machine.registers["T3"], 1)
