@@ -52,7 +52,7 @@ class ErrorTestCase(TestCase):
         self.assertTrue(error.startswith(INVALID_TOKEN))
 
     def test_data_error(self):
-        (output, error) = assemble(".data \n  x DW", 'mips', mips_machine)
+        (output, error) = assemble(".data \n  x .short", 'mips', mips_machine)
         self.assertTrue(error.startswith(MISSING_DATA))
 
 
