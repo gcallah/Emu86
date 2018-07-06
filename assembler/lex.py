@@ -271,7 +271,9 @@ def lex(code, flavor, vm):
                                            instructions))
         else:
             from .Intel.key_words import instructions
-            key_words = {**instructions, **generate_reg_dict(vm, flavor)}
+            key_words = {}
+            key_words.update(instructions)
+            key_words.update(generate_reg_dict(vm, flavor))
             if flavor == "intel":
                 from .Intel.key_words import intel_key_words
                 key_words.update(intel_key_words)
