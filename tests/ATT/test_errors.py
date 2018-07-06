@@ -62,7 +62,7 @@ class ErrorTestCase(TestCase):
         self.assertTrue(error.startswith(INVALID_TOKEN))
 
     def test_data_error(self):
-        (output, error) = assemble(".data \n  x DW", 'att', vmachine)
+        (output, error) = assemble(".data \n  x: .short", 'att', vmachine)
         self.assertTrue(error.startswith(MISSING_DATA))
 
     def test_mem_error_over(self):

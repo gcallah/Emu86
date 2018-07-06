@@ -1,18 +1,16 @@
-from .Intel.arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
-from .Intel.arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .MIPS.arithmetic import Add_MIPS, Sub_MIPS, Addi, Subi, Andf_MIPS
-from .MIPS.arithmetic import Andi, Orf_MIPS, Ori
-from .Intel.control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
-from .Intel.control_flow import Jg, Jge, Jl, Jle
-from .Intel.data_mov import Mov, Pop, Push, Lea
-from .MIPS.data_mov import Load, Store
-from .interrupts import Interrupt
+from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
+from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
+from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
+from .control_flow import Jg, Jge, Jl, Jle
+from .data_mov import Mov, Pop, Push, Lea
+from assembler.interrupts import Interrupt
+from assembler.tokens import DataType, Register
 
 je = Je('JE')
 jne = Jne('JNE')
 jg = Jg ('JG')
 jl = Jl ('JL')
-intel_instructions = {
+instructions = {
         # interrupts:
         'INT': Interrupt('INT'),
         # control flow:
@@ -53,24 +51,16 @@ intel_instructions = {
         'NEG': Neg('NEG'),
         }
 
-INTEL_SEPARATORS = set([',', '(', ')', '[', ']', '+', '-'])
-
-ATT_SEPARATORS = set([',', '(', ')', '[', ']', '+', '-', '$'])
-
-mips_instructions = {
-    # data movement:
-	'LOAD': Load('LOAD'),
-	'STORE': Store('STORE'),
-
-	# arithmetic and logic
-	'ADD': Add_MIPS('ADD'),
-	'ADDI': Addi('ADDI'),
-	'SUB': Sub_MIPS('SUB'),
-	'SUBI': Subi('SUBI'),
-	'AND': Andf_MIPS('AND'),
-	'ANDI': Andi('ANDI'),
-	'OR': Orf_MIPS('OR'),
-	'ORI': Ori('ORI'),
+intel_key_words = {
+        #data-types
+        'DB': DataType('DB'),
+        'DW': DataType('DW'),
+        'DD': DataType('DD'),
 }
 
-MIPS_SEPARATORS = set([',', '(', ')', '[', ']', '+', '-'])
+att_key_words = {
+        #data-types
+        '.BYTE': DataType('DB'),
+        '.SHORT': DataType('DW'),
+        '.LONG': DataType('DD'),
+}

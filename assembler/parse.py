@@ -42,9 +42,6 @@ dtype_info = {
     "DB": (1, MAX_BYTE),
     "DW": (MEM_SIZE / 16, MAX_SHORT),   # we should revisit this choice
     "DD": (MEM_SIZE / 8, MAX_LONG), 
-    ".byte": (1, MAX_BYTE),
-    ".short": (MEM_SIZE / 16, MAX_SHORT),  
-    ".long": (MEM_SIZE / 8, MAX_LONG)
 }
 
 PARAM_TYPE = 1

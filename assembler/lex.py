@@ -13,7 +13,6 @@ from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
 from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen
-from .key_words import intel_instructions, mips_instructions
 from .virtual_machine import MEM_SIZE
 
 
@@ -34,6 +33,29 @@ keywords_to_tokens = {
     "DUP": DupTok(),
     "$": ConstantSign()
 }
+
+def generate_reg_dict(vm, flavor):
+    """
+    Generates a dictionary
+    Keys: register name 
+    Values: Register token
+
+    Args:
+        vm: Virtual machine
+        flavor: Flavor
+
+    Returns: 
+        A dictionary of (registers, register tokens)
+    """
+    registers = {}
+    for reg in vm.registers:
+        if flavor == "att":
+            registers["%" + reg] = Register(reg, vm)
+        elif flavor == "mips":
+            registers["$" + reg] = Register(reg, vm)
+        else:
+            registers[reg] = Register(reg, vm)
+    return registers
 
 
 def split_code(code, flavor):
@@ -72,7 +94,7 @@ def split_code(code, flavor):
 
     return words
 
-def sep_line(code, i, vm):
+def sep_line(code, i, vm, key_words):
     """
     Returns a list of tokens created 
 
@@ -81,6 +103,9 @@ def sep_line(code, i, vm):
         i: Line number of code
            Needed for determining label location
         vm: Virtual machine
+        key_words: A dictionary of key_words
+                   If word found, return the token associated 
+                   to that word key
 
     Returns:
         Tuple of the lexical analysis of the line
@@ -94,14 +119,10 @@ def sep_line(code, i, vm):
         if word != "":
             if word in keywords_to_tokens:
                 analysis.append(keywords_to_tokens[word])
+            elif word.upper() in key_words:
+                analysis.append(key_words[word.upper()])
             elif word[0] == ".":
                 analysis.append(Section(word[1:]))
-            elif word in dtype_info:
-                analysis.append(DataType(word))
-            elif word.upper() in intel_instructions:
-                analysis.append(intel_instructions[word.upper()])
-            elif word.upper() in vm.registers:
-                analysis.append(Register(word.upper(), vm))
             elif word.find("'") != -1:
                 analysis.append(StringTok(word))
             elif re.search(label_match, word) is not None:
@@ -115,7 +136,7 @@ def sep_line(code, i, vm):
                     raise InvalidArgument(word)
     return (analysis, code)
 
-def sep_line_att(code, i, data_sec, vm):
+def sep_line_att(code, i, data_sec, vm, key_words):
     """
     Returns a list of tokens created 
 
@@ -139,14 +160,10 @@ def sep_line_att(code, i, data_sec, vm):
         if word != "":
             if word in keywords_to_tokens:
                 analysis.append(keywords_to_tokens[word])
-            elif word in dtype_info:
-                analysis.append(DataType(word))
+            elif word.upper() in key_words:
+                analysis.append(key_words[word.upper()])
             elif word[0] == ".":
                 analysis.append(Section(word[1:]))
-            elif word.upper() in intel_instructions:
-                analysis.append(intel_instructions[word.upper()])
-            elif word[0] == "%" and word[1:].upper() in vm.registers:
-                analysis.append(Register(word[1:].upper(), vm))
             elif word.find("'") != -1:
                 analysis.append(StringTok(word))
             elif re.search(label_match, word) is not None:
@@ -164,7 +181,7 @@ def sep_line_att(code, i, data_sec, vm):
     return (analysis, code)
 
 
-def sep_line_mips(code, i, data_sec, vm):
+def sep_line_mips(code, i, data_sec, vm, instructions):
     """
     Returns a list of tokens created 
 
@@ -192,8 +209,8 @@ def sep_line_mips(code, i, data_sec, vm):
                 analysis.append(DataType(word))
             elif word[0] == ".":
                 analysis.append(Section(word[1:]))
-            elif word.upper() in mips_instructions:
-                analysis.append(mips_instructions[word.upper()])
+            elif word.upper() in instructions:
+                analysis.append(instructions[word.upper()])
             elif word[0] == "$" and word[1:].upper() in vm.registers:
                 analysis.append(Register(word[1:].upper(), vm))
             elif word.find("'") != -1:
@@ -248,12 +265,23 @@ def lex(code, flavor, vm):
     # we've stripped extra whitespace, comments, and labels: 
     # now perform lexical analysis
     for line in pre_processed_lines:
-        if flavor == "intel":
-            tok_lines.append(sep_line(line, i, vm))
-        elif flavor == "att":
-            tok_lines.append(sep_line_att(line, i, data_sec, vm))
-        else: 
-            tok_lines.append(sep_line_mips(line, i, data_sec, vm))
+        if flavor == "mips":
+            from .MIPS.key_words import instructions
+            tok_lines.append(sep_line_mips(line, i, data_sec, vm, 
+                                           instructions))
+        else:
+            from .Intel.key_words import instructions
+            key_words = {**instructions, **generate_reg_dict(vm, flavor)}
+            if flavor == "intel":
+                from .Intel.key_words import intel_key_words
+                key_words.update(intel_key_words)
+                tok_lines.append(sep_line(line, i, vm, 
+                                          key_words))
+            else:
+                from .Intel.key_words import att_key_words
+                key_words.update(att_key_words)
+                tok_lines.append(sep_line_att(line, i, data_sec, vm, 
+                                              key_words))
         if line == ".data":
             add_to_ip = False
             data_sec = True
