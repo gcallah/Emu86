@@ -60,7 +60,8 @@ def number_token(token_line, pos, flavor, vm):
                                               token_line[pos].get_val())
                 if register: 
                     return (RegAddress(register.get_nm(), 
-                                       vm, displacement, register.get_multiplier()), pos)
+                                       vm, displacement, 
+                                       register.get_multiplier()), pos)
                 else:
                     return (Address(hex(displacement).split('x')[-1].upper(), 
                                     vm), pos)
@@ -71,6 +72,8 @@ def number_token(token_line, pos, flavor, vm):
 
 def is_start_address(token_line, pos, flavor):
     if isinstance(token_line[pos], OpenParen) and flavor == "att":
+        return True
+    elif isinstance(token_line[pos], OpenParen) and flavor == "mips":
         return True
     elif isinstance(token_line[pos], OpenBracket) and flavor == "intel":
         return True
@@ -505,7 +508,7 @@ def get_op(token_line, pos, flavor, vm):
         displacement = 0
         if flavor == "intel":
             register, displacement, pos = get_address(token_line, pos, vm)
-        elif flavor == "att":
+        elif flavor == "att" or flavor == "mips":
             register, displacement, pos = get_address_att(token_line, pos, vm)
         if register:
             return (RegAddress(register.get_nm(), vm, 

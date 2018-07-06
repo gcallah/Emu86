@@ -87,7 +87,7 @@ class AssembleTestCase(TestCase):
             correct = opfunc.inv(opfunc.or_(a, b))
             mips_machine.registers["T1"] = a
             mips_machine.registers["T2"] = b
-            assemble("nor $T3, $T1, $T2", 'mips', mips_machine)
+            assemble("nor $t3, $t1, $t2", 'mips', mips_machine)
             self.assertEqual(mips_machine.registers["T3"], correct)
 
     def test_slt_eq(self):
@@ -95,17 +95,17 @@ class AssembleTestCase(TestCase):
         mips_machine.registers["T2"] = 1
         mips_machine.flags["ZF"] = 0
         mips_machine.flags["SF"] = 0
-        assemble("SLT $T3, $T1, $T2", 'mips', mips_machine)
+        assemble("SLT $t3, $t1, $t2", 'mips', mips_machine)
         self.assertEqual(mips_machine.flags["ZF"], 1)
         self.assertEqual(mips_machine.flags["SF"], 0)
-        self.assertEqual(mips_machine.registers["T3"], 0)
+        self.assertEqual(mips_machine.registers["t3"], 0)
 
     def test_slt_l(self):
-        mips_machine.registers["T1"] = 0
-        mips_machine.registers["T2"] = 1
+        mips_machine.registers["t1"] = 0
+        mips_machine.registers["t2"] = 1
         mips_machine.flags["ZF"] = 0
         mips_machine.flags["SF"] = 0
-        assemble("SLT $T3, $T1, $T2", 'mips', mips_machine)
+        assemble("SLT $t3, $t1, $t2", 'mips', mips_machine)
         self.assertEqual(mips_machine.flags["ZF"], 0)
         self.assertEqual(mips_machine.flags["SF"], 1)
         self.assertEqual(mips_machine.registers["T3"], 1)

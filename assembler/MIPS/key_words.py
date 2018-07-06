@@ -11,8 +11,8 @@ key_words = {
     '.LONG': DataType('DD'),
 
     # data movement:
-	'LOAD': Load('LOAD'),
-	'STORE': Store('STORE'),
+	'LW': Load('LW'),
+	'SW': Store('SW'),
 
 	# arithmetic and logic
 	'ADD': Add('ADD'),

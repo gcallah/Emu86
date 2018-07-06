@@ -2,7 +2,7 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args
-from assembler.tokens import Instruction
+from assembler.tokens import Instruction, Register, RegAddress
 
 class Load(Instruction):
     """
@@ -39,7 +39,7 @@ class Store(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 2)
-        if isinstance(ops[0], RegAddress) and isinstance(ops[1], Register):
-            ops[0].set_val(ops[1].get_val())
+        if isinstance(ops[1], RegAddress) and isinstance(ops[0], Register):
+            ops[1].set_val(ops[0].get_val())
         else: 
             raise Exception()
