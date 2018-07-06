@@ -160,7 +160,9 @@ class MIPSMachine(VirtualMachine):
                         ('S6', 0),
                         ('S7', 0),
                         ('K0', 0),
-                        ('K1', 0)
+                        ('K1', 0),
+                        (INSTR_PTR, 0),
+                        (STACK_PTR, STACK_TOP),
                     ])
 
 vmachine = IntelMachine()

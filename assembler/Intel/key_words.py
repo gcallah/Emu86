@@ -4,7 +4,7 @@ from .control_flow import Cmpf, Je, Jne, Jmp, FlowBreak, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
-from assembler.tokens import DataType, Register
+from assembler.tokens import DataType
 
 je = Je('JE')
 jne = Jne('JNE')

@@ -3,6 +3,7 @@ data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args
 from assembler.tokens import Instruction
+
 class Load(Instruction):
     """
         <instr>

@@ -6,6 +6,7 @@ import operator as opfunc
 
 from assembler.errors import *
 from assembler.tokens import Instruction, MAX_INT, Register, IntegerTok
+from .argument_check import check_reg_only, check_immediate
 
 
 def one_op_arith(ops, vm, instr, operator):
@@ -23,13 +24,11 @@ def two_op_arith_reg(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 3)
-    if (isinstance(ops[0], Register) and 
-        isinstance(ops[1], Register) and 
-        isinstance(ops[2], Register)):
-            ops[0].set_val(
-            checkflag(operator(ops[1].get_val(),
-                               ops[2].get_val()), 
-                               vm))
+    check_reg_only(instr, ops)
+    ops[0].set_val(
+    checkflag(operator(ops[1].get_val(),
+                       ops[2].get_val()), 
+                       vm))
 
 def two_op_arith_immediate(ops, vm, instr, operator):
     """
@@ -37,17 +36,11 @@ def two_op_arith_immediate(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 3)
-    if isinstance(ops[0], Register):
-        print ("YO")
-        if ((isinstance(ops[1], IntegerTok) and isinstance(ops[2], Register)) or
-            (isinstance(ops[1], Register) and isinstance(ops[2], IntegerTok))):
-            print (ops[1].get_val(), ops[2].get_val())
-            ops[0].set_val(
-            checkflag(operator(ops[1].get_val(),
-                               ops[2].get_val()), 
-                               vm))
-            print (ops[0].get_val())
-
+    check_immediate(instr, ops)
+    ops[0].set_val(
+    checkflag(operator(ops[1].get_val(),
+                       ops[2].get_val()), 
+                       vm))
 
 def checkflag(val, vm):
     if(val > MAX_INT):
@@ -58,7 +51,7 @@ def checkflag(val, vm):
     return val
 
 
-class Add_MIPS(Instruction):
+class Add(Instruction):
     """
         <instr>
              ADD
@@ -73,19 +66,17 @@ class Add_MIPS(Instruction):
 class Addi(Instruction):
     """
         <instr>
-             ADD
+             ADDI
         </instr>
         <syntax>
-            ADD reg, reg, con
-            ADD reg, con, reg
+            ADDI reg, reg, con
+            ADDI reg, con, reg
         </syntax>
     """
     def fhook(self, ops, vm):
-        print (self.name)
-        print (ops)
         two_op_arith_immediate(ops, vm, self.name, opfunc.add)
 
-class Sub_MIPS(Instruction):
+class Sub(Instruction):
     """
         <instr>
              SUB
@@ -100,17 +91,17 @@ class Sub_MIPS(Instruction):
 class Subi(Instruction):
     """
         <instr>
-             SUB
+             SUBI
         </instr>
         <syntax>
-            SUB reg, reg, con
-            SUB reg, con, reg
+            SUBI reg, reg, con
+            SUBI reg, con, reg
         </syntax>
     """
-    def fhook_immediate(self, ops, vm):
+    def fhook(self, ops, vm):
         two_op_arith_immediate(ops, vm, self.name, opfunc.sub)
 
-class Imul_MIPS(Instruction):
+class Imul(Instruction):
     """
         <instr>
              IMUL
@@ -123,7 +114,7 @@ class Imul_MIPS(Instruction):
         two_op_arith_reg(ops, vm, self.name, opfunc.mul)
         return ''
 
-class Andf_MIPS(Instruction):
+class Andf(Instruction):
     """
         <instr>
              AND
@@ -150,7 +141,7 @@ class Andi(Instruction):
         two_op_arith_immediate(ops, vm, self.name, opfunc.and_)
         return ''
 
-class Orf_MIPS(Instruction):
+class Orf(Instruction):
     """
         <instr>
              OR
@@ -177,6 +168,20 @@ class Ori(Instruction):
         two_op_arith_immediate(ops, vm, self.name, opfunc.or_)
         return ''
 
+class Nor(Instruction):
+    """
+        <instr>
+             NOR
+        </instr>
+        <syntax>
+            NOR reg, reg, reg
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith_reg(ops, vm, self.name, opfunc.or_)
+        ops[0].set_val(opfunc.inv(ops[0].get_val()))
+        return ''
+
 class Xor(Instruction):
     """
         <instr>
@@ -192,34 +197,30 @@ class Xor(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.xor)
         return ''
 
-class Shl(Instruction):
+class Sll(Instruction):
     """
         <instr>
-             shl
+             sll
         </instr>
         <syntax>
-            SHL reg, reg
-            SHL reg, mem
-            SHL reg, con
+            SLL reg, reg, reg
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.lshift)
+        two_op_arith_reg(ops, vm, self.name, opfunc.lshift)
         return ''
 
-class Shr(Instruction):
+class Srl(Instruction):
     """
         <instr>
-             shr
+             srl
         </instr>
         <syntax>
-            SHR reg, reg
-            SHR reg, mem
-            SHR reg, con
+            SRL reg, reg, reg
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.rshift)
+        two_op_arith_reg(ops, vm, self.name, opfunc.rshift)
 
 class Notf(Instruction):
     """

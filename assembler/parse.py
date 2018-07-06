@@ -488,7 +488,7 @@ def get_op(token_line, pos, flavor, vm):
             token_line[pos + 1].negate_val()
             if flavor == "intel":
                 return (token_line[pos + 1], pos + 2)
-            elif flavor == "att":
+            else:
                 return get_op(token_line, pos + 1, flavor, vm)
         except:
             raise InvalidArgument("-")

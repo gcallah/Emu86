@@ -31,7 +31,6 @@ keywords_to_tokens = {
     "-": MinusTok(),
     "?": QuestionTok(),
     "DUP": DupTok(),
-    "$": ConstantSign()
 }
 
 def generate_reg_dict(vm, flavor):
@@ -162,6 +161,8 @@ def sep_line_att(code, i, data_sec, vm, key_words):
                 analysis.append(keywords_to_tokens[word])
             elif word.upper() in key_words:
                 analysis.append(key_words[word.upper()])
+            elif word[0] == "$":
+                analysis.append(ConstantSign())
             elif word[0] == ".":
                 analysis.append(Section(word[1:]))
             elif word.find("'") != -1:
@@ -181,7 +182,7 @@ def sep_line_att(code, i, data_sec, vm, key_words):
     return (analysis, code)
 
 
-def sep_line_mips(code, i, data_sec, vm, instructions):
+def sep_line_mips(code, i, data_sec, vm, key_words):
     """
     Returns a list of tokens created 
 
@@ -205,14 +206,10 @@ def sep_line_mips(code, i, data_sec, vm, instructions):
         if word != "":
             if word in keywords_to_tokens:
                 analysis.append(keywords_to_tokens[word])
-            elif word in dtype_info:
-                analysis.append(DataType(word))
+            elif word.upper() in key_words:
+                analysis.append(key_words[word.upper()])
             elif word[0] == ".":
                 analysis.append(Section(word[1:]))
-            elif word.upper() in instructions:
-                analysis.append(instructions[word.upper()])
-            elif word[0] == "$" and word[1:].upper() in vm.registers:
-                analysis.append(Register(word[1:].upper(), vm))
             elif word.find("'") != -1:
                 analysis.append(StringTok(word))
             elif re.search(label_match, word) is not None:
@@ -266,9 +263,12 @@ def lex(code, flavor, vm):
     # now perform lexical analysis
     for line in pre_processed_lines:
         if flavor == "mips":
-            from .MIPS.key_words import instructions
+            from .MIPS.key_words import key_words
+            keys = {}
+            keys.update(key_words)
+            keys.update(generate_reg_dict(vm, flavor))
             tok_lines.append(sep_line_mips(line, i, data_sec, vm, 
-                                           instructions))
+                                           keys))
         else:
             from .Intel.key_words import instructions
             key_words = {}

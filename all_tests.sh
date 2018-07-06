@@ -7,6 +7,7 @@ set -e
 export TDIR="tests"
 export ATT_DIR="$TDIR/ATT"
 export INTEL_DIR="$TDIR/Intel"
+export MIPS_DIR="$TDIR/MIPS"
 
 $INTEL_DIR/test_assemble.py
 $INTEL_DIR/test_errors.py
@@ -17,3 +18,5 @@ $ATT_DIR/test_assemble.py
 $ATT_DIR/test_errors.py
 $ATT_DIR/test_control_flow.py
 $ATT_DIR/test_programs.py
+
+$MIPS_DIR/test_assemble.py

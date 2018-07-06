@@ -1,19 +1,33 @@
-from .arithmetic import Add_MIPS, Sub_MIPS, Addi, Subi, Andf_MIPS
-from .arithmetic import Andi, Orf_MIPS, Ori
+from .arithmetic import Add, Sub, Addi, Subi, Andf
+from .arithmetic import Andi, Orf, Ori, Nor, Sll, Srl
 from .data_mov import Load, Store
+from .control_flow import Slt, Slti
+from assembler.tokens import DataType
 
-instructions = {
+key_words = {
+	# data types
+	'.BYTE': DataType('DB'),
+    '.SHORT': DataType('DW'),
+    '.LONG': DataType('DD'),
+
     # data movement:
 	'LOAD': Load('LOAD'),
 	'STORE': Store('STORE'),
 
 	# arithmetic and logic
-	'ADD': Add_MIPS('ADD'),
+	'ADD': Add('ADD'),
 	'ADDI': Addi('ADDI'),
-	'SUB': Sub_MIPS('SUB'),
+	'SUB': Sub('SUB'),
 	'SUBI': Subi('SUBI'),
-	'AND': Andf_MIPS('AND'),
+	'AND': Andf('AND'),
 	'ANDI': Andi('ANDI'),
-	'OR': Orf_MIPS('OR'),
+	'OR': Orf('OR'),
 	'ORI': Ori('ORI'),
+	'NOR': Nor('NOR'),
+	'SLL': Sll('SLL'),
+	'SRL': Srl('SRL'),
+
+	#control 
+	'SLT': Slt('SLT'),
+	'SLTI': Slti('SLTI')
 }

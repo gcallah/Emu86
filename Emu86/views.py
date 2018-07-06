@@ -136,7 +136,7 @@ def main_page(request):
                 (last_instr, error) = assemble(request.POST[CODE], ATT, 
                                                vmachine, step)
             else:
-                (last_instr, error) = assemble(request.POST[CODE], "MIPS", mips_machine, step)
+                (last_instr, error) = assemble(request.POST[CODE], "mips", mips_machine, step)
 
 
     if mips_machine.flavor == "mips":
