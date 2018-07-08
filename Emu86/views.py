@@ -105,9 +105,11 @@ def main_page(request):
             if intel_machine.flavor != None:
                 prev_flav = intel_machine.flavor
                 intel_machine.re_init()
+                mips_machine.re_init()
                 intel_machine.flavor = prev_flav
             else:
                 mips_machine.re_init()
+                intel_machine.re_init()
                 mips_machine.flavor = "mips"
         else:
             step = (STEP in request.POST)
