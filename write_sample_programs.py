@@ -24,7 +24,14 @@ def create_href():
 	directories = ["tests/Intel", "tests/ATT", "tests/MIPS"]
 	for dire in directories: 
 		directory_intel = os.fsencode(dire)
-		file_name = open("templates/sample_programs.txt", "w")
+		name = "templates/sample_programs" 
+		if dire == "tests/Intel":
+			name += "_intel"
+		elif dire == "tests/ATT":
+			name += "_att"
+		else:
+			name += "_mips"
+		file_name = open(name + ".txt", "w")
 		file_name.write(tab * 3 + '<ul class="nested">\n')
 		for file in os.listdir(directory_intel):
 			file = os.fsdecode(file)
