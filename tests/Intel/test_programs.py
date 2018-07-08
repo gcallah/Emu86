@@ -30,11 +30,6 @@ class TestPrograms(TestCase):
         test_code = self.read_test_code(filnm)
         assemble(test_code, 'intel', intel_machine)
 
-    def run_att_test_code (self, filnm):
-        intel_machine.re_init()
-        test_code = self.read_test_code(filnm)
-        assemble(test_code, 'att', intel_machine)
-
     def test_loop(self):
         self.run_intel_test_code("tests/Intel/loop.asm")
         self.assertEqual(intel_machine.registers["ECX"], 16)

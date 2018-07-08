@@ -49,12 +49,9 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             correct = operator(a, b)
-            correct_other = operator(b, a)
             mips_machine.registers["T1"] = a
             assemble(instr + " $t3, $t1, " + str(b), 'mips', mips_machine)
-            assemble(instr + " $t4, " + str(b) + ", $t1", 'mips', mips_machine)
             self.assertEqual(mips_machine.registers["T3"], correct)
-            self.assertEqual(mips_machine.registers["T4"], correct_other)
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
