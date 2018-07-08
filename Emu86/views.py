@@ -113,13 +113,20 @@ def main_page(request):
             step = (STEP in request.POST)
             intel_machine.nxt_key = 0
             if step:
-                add_debug("Getting next key", intel_machine)
-                try:
-                    intel_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
-                except Exception:
-                    intel_machine.nxt_key = 0
+                if intel_machine.flavor != None:
+                    add_debug("Getting next key", intel_machine)
+                    try:
+                        intel_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
+                    except Exception:
+                        intel_machine.nxt_key = 0
+                else:
+                    add_debug("Getting next key", mips_machine)
+                    try:
+                        mips_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
+                    except Exception:
+                        mips_machine.nxt_key = 0
                     
-            if intel_machine.flavor:
+            if intel_machine.flavor != None:
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
                 get_stack_contents(intel_machine.stack, request)
