@@ -102,7 +102,7 @@ def main_page(request):
                           })
         form = MainForm(request.POST)
         if CLEAR in request.POST:
-            if intel_machine.flavor:
+            if intel_machine.flavor != None:
                 prev_flav = intel_machine.flavor
                 intel_machine.re_init()
                 intel_machine.flavor = prev_flav
