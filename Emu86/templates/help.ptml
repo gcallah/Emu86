@@ -64,7 +64,7 @@
                 <summary class="sum3">
                     Intel Programs
                 </summary>
-<!--include sample_programs.txt -->
+<!--include sample_programs_intel.txt -->
             </details>
 
             <details> 
@@ -72,6 +72,13 @@
                     AT&amp;T Programs
                 </summary>
 <!--include sample_programs_att.txt -->
+            </details>
+
+            <details> 
+                <summary class="sum3">
+                    MIPS Programs
+                </summary>
+<!--include sample_programs_mips.txt -->
             </details>
         </details>
 
