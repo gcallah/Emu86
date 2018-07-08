@@ -112,6 +112,7 @@ def main_page(request):
         else:
             step = (STEP in request.POST)
             intel_machine.nxt_key = 0
+            mips_machine.nxt_key = 0
             if step:
                 if intel_machine.flavor != None:
                     add_debug("Getting next key", intel_machine)
