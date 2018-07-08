@@ -8,8 +8,7 @@ from assembler.tokens import DataType
 key_words = {
 	# data types
 	'.BYTE': DataType('DB'),
-    '.SHORT': DataType('DW'),
-    '.LONG': DataType('DD'),
+    '.WORD': DataType('DW'),
 
     # data movement:
 	'LW': Load('LW'),

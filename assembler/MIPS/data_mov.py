@@ -1,8 +1,8 @@
 """
 data_mov.py: data movement instructions.
 """
-from assembler.errors import check_num_args
-from assembler.tokens import Instruction, Register, RegAddress
+from assembler.errors import check_num_args, InvalidArgument
+from assembler.tokens import Instruction, Register, RegAddress, Symbol
 
 class Load(Instruction):
     """
@@ -19,10 +19,15 @@ class Load(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 2)
-        if isinstance(ops[0], Register) and isinstance(ops[1], RegAddress):
-            ops[0].set_val(ops[1].get_val())
+        if isinstance(ops[0], Register):
+            if isinstance(ops[1], RegAddress):
+                ops[0].set_val(ops[1].get_val())
+            elif isinstance(ops[1], Symbol):
+                ops[0].set_val(ops[1].get_val())
+            else:
+                raise InvalidArgument(ops[1].get_nm())
         else: 
-            raise Exception()
+            raise InvalidArgument(ops[0].get_nm())
 
 class Store(Instruction):
     """
@@ -39,7 +44,12 @@ class Store(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 2)
-        if isinstance(ops[1], RegAddress) and isinstance(ops[0], Register):
-            ops[1].set_val(ops[0].get_val())
+        if isinstance(ops[0], Register):
+            if isinstance(ops[1], RegAddress):
+                ops[1].set_val(ops[0].get_val())
+            elif isinstance(ops[1], Symbol):
+                ops[1]. set_val(ops[0].get_val())
+            else:
+                InvalidArgument(ops[1].get_nm())
         else: 
-            raise Exception()
+            raise InvalidArgument(ops[0].get_nm())
