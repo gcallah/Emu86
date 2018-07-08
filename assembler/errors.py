@@ -31,6 +31,7 @@ MISSING_OPENBRACK = "Missing opening bracket"
 MISSING_OPENPAREN = "Missing opening parenthesis"
 MISSING_CLOSEBRACK = "Missing closing bracket"
 MISSING_CLOSEPAREN = "Missing closing parenthesis"
+ZERO_DIVISION = "Division by zero"
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -160,6 +161,10 @@ class MissingCloseParen(Error):
 class MissingCloseBrack(Error):
     def __init__(self):
         self.msg = MISSING_CLOSEBRACK
+
+class DivisionZero(Error):
+    def __init__(self):
+        self.msg = ZERO_DIVISION
 
 def check_num_args(instr, ops, correct_num):
     """

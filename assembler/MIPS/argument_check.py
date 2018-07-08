@@ -6,15 +6,19 @@ def check_reg_only(instr, ops):
         if not isinstance(ops[i], Register):
             raise InvalidArgument(ops[i].get_nm())
 
-def check_immediate(instr, ops):
+def check_immediate_three(instr, ops):
     if not isinstance(ops[0], Register):
         raise InvalidArgument(ops[i].get_nm())
     else:
-        if isinstance(ops[1], IntegerTok):
-            if not isinstance(ops[2], Register):
-                raise InvalidArgument(ops[2].get_nm())
-        elif isinstance(ops[1], Register):
+        if isinstance(ops[1], Register):
             if not isinstance(ops[2], IntegerTok):
                 raise InvalidArgument(ops[2].get_nm())
         else:
             raise InvalidArgument(ops[1].get_nm())
+
+def check_immediate_two(instr, ops):
+    if isinstance(ops[0], Register):
+        if not isinstance(ops[1], IntegerTok):
+            raise InvalidArgument(ops[1].get_nm())
+    else:
+        raise InvalidArgument(ops[0].get_nm())

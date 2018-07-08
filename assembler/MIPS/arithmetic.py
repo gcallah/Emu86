@@ -6,7 +6,7 @@ import operator as opfunc
 
 from assembler.errors import *
 from assembler.tokens import Instruction, MAX_INT, Register, IntegerTok
-from .argument_check import check_reg_only, check_immediate
+from .argument_check import * 
 
 
 def one_op_arith(ops, vm, instr, operator):
@@ -17,8 +17,7 @@ def one_op_arith(ops, vm, instr, operator):
     check_num_args(instr, ops, 1)
     ops[0].set_val(operator(ops[0].get_val()))
 
-
-def two_op_arith_reg(ops, vm, instr, operator):
+def three_op_arith_reg(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
@@ -30,13 +29,13 @@ def two_op_arith_reg(ops, vm, instr, operator):
                        ops[2].get_val()), 
                        vm))
 
-def two_op_arith_immediate(ops, vm, instr, operator):
+def three_op_arith_immediate(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
     check_num_args(instr, ops, 3)
-    check_immediate(instr, ops)
+    check_immediate_three(instr, ops)
     ops[0].set_val(
     checkflag(operator(ops[1].get_val(),
                        ops[2].get_val()), 
@@ -61,7 +60,7 @@ class Add(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_reg(ops, vm, self.name, opfunc.add)
+        three_op_arith_reg(ops, vm, self.name, opfunc.add)
 
 class Addi(Instruction):
     """
@@ -70,11 +69,10 @@ class Addi(Instruction):
         </instr>
         <syntax>
             ADDI reg, reg, con
-            ADDI reg, con, reg
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_immediate(ops, vm, self.name, opfunc.add)
+        three_op_arith_immediate(ops, vm, self.name, opfunc.add)
 
 class Sub(Instruction):
     """
@@ -86,7 +84,7 @@ class Sub(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_reg(ops, vm, self.name, opfunc.sub)
+        three_op_arith_reg(ops, vm, self.name, opfunc.sub)
 
 class Subi(Instruction):
     """
@@ -95,23 +93,30 @@ class Subi(Instruction):
         </instr>
         <syntax>
             SUBI reg, reg, con
-            SUBI reg, con, reg
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_immediate(ops, vm, self.name, opfunc.sub)
+        three_op_arith_immediate(ops, vm, self.name, opfunc.sub)
 
-class Imul(Instruction):
+class Mult(Instruction):
     """
         <instr>
-             IMUL
+             MULT
         </instr>
         <syntax>
-            IMUL reg, reg, reg
+            MULT reg, reg
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_reg(ops, vm, self.name, opfunc.mul)
+        check_num_args(self.name, ops, 2)
+        check_reg_only(self.name, ops)
+        result = ops[0].get_val() * ops[1].get_val()
+        if result > 2 ** 32 - 1:
+            vm.registers['LO'] = opfunc.lshift(result, 32)
+            vm.registers['HI'] = opfunc.rshift(result, 32)
+        else:
+            vm.registers['LO'] = result
+            vm.registers['HI'] = 0
         return ''
 
 class Andf(Instruction):
@@ -124,7 +129,7 @@ class Andf(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_reg(ops, vm, self.name, opfunc.and_)
+        three_op_arith_reg(ops, vm, self.name, opfunc.and_)
         return ''
 
 class Andi(Instruction):
@@ -133,12 +138,11 @@ class Andi(Instruction):
              AND
         </instr>
         <syntax>
-            AND reg, con, reg
-            AND reg, reg, con
+            ANDI reg, reg, con
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_immediate(ops, vm, self.name, opfunc.and_)
+        three_op_arith_immediate(ops, vm, self.name, opfunc.and_)
         return ''
 
 class Orf(Instruction):
@@ -151,7 +155,7 @@ class Orf(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_reg(ops, vm, self.name, opfunc.or_)
+        three_op_arith_reg(ops, vm, self.name, opfunc.or_)
         return ''
 
 class Ori(Instruction):
@@ -160,12 +164,11 @@ class Ori(Instruction):
              OR
         </instr>
         <syntax>
-            OR reg, con, reg
-            OR reg, reg, con
+            ORI reg, reg, con
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_immediate(ops, vm, self.name, opfunc.or_)
+        three_op_arith_immediate(ops, vm, self.name, opfunc.or_)
         return ''
 
 class Nor(Instruction):
@@ -178,7 +181,7 @@ class Nor(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_reg(ops, vm, self.name, opfunc.or_)
+        three_op_arith_reg(ops, vm, self.name, opfunc.or_)
         ops[0].set_val(opfunc.inv(ops[0].get_val()))
         return ''
 
@@ -207,7 +210,7 @@ class Sll(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_reg(ops, vm, self.name, opfunc.lshift)
+        three_op_arith_reg(ops, vm, self.name, opfunc.lshift)
         return ''
 
 class Srl(Instruction):
@@ -220,7 +223,7 @@ class Srl(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith_reg(ops, vm, self.name, opfunc.rshift)
+        three_op_arith_reg(ops, vm, self.name, opfunc.rshift)
 
 class Notf(Instruction):
     """
@@ -273,30 +276,70 @@ class Neg(Instruction):
         one_op_arith(ops, vm, self.name, opfunc.neg)
         return ''
 
-class Idiv(Instruction):
+class Div(Instruction):
     """
         <instr>
-             idiv
+             DIV
         </instr>
         <syntax>
-            IDIV reg
+            DIV reg, reg
         </syntax>
         <descr>
-            The idiv instruction divides the contents of
-            the 64 bit integer EDX:EAX (constructed by viewing
-            EDX as the most significant four bytes and EAX
-            as the least significant four bytes) by the
-            specified operand value. The quotient result
-            of the division is stored into EAX, while the
-            remainder is placed in EDX.
+            The div instruction divides the contents of
+            the two registers. The quotient result
+            of the division is stored into LO, while the
+            remainder is placed in HI.
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
-    
-        hireg = int(vm.registers['EDX']) << 32
-        lowreg = int(vm.registers['EAX'])
-        dividend = hireg + lowreg
-        vm.registers['EAX'] = dividend // ops[0].get_val()
-        vm.registers['EDX'] = dividend % ops[0].get_val()
+        check_num_args(self.name, ops, 2)
+        check_reg_only(self.name, ops)
+        if ops[1].get_val() == 0:
+            raise DivisionZero()
+
+        quotient = ops[0].get_val() // ops[1].get_val()
+        remainder = ops[0].get_val() % ops[1].get_val()
+        vm.registers['LO'] = quotient
+        vm.registers['HI'] = remainder
         return ''
+
+class Mfhi(Instruction):
+    """
+        <instr>
+             mfhi
+        </instr>
+        <syntax>
+            MFHI reg
+        </syntax>
+        <descr>
+            Moves the value from the HI register into the 
+            destination register given.
+    """
+
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 1)
+        if not isinstance(ops[0], Register):
+            raise InvalidArgument(ops[0].get_nm())
+        ops[0].set_val(vm.registers['HI'])
+        return ''
+
+class Mflo(Instruction):
+    """
+        <instr>
+             mflo
+        </instr>
+        <syntax>
+            MFLO reg
+        </syntax>
+        <descr>
+            Moves the value from the LO register into the 
+            destination register given.
+    """
+
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 1)
+        if not isinstance(ops[0], Register):
+            raise InvalidArgument(ops[0].get_nm())
+        ops[0].set_val(vm.registers['LO'])
+        return ''
+        

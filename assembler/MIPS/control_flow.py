@@ -6,7 +6,7 @@ control_flow.py: control flow instructions,
 
 from assembler.errors import check_num_args
 from assembler.tokens import Instruction, Register, IntegerTok
-from .argument_check import check_reg_only, check_immediate
+from .argument_check import *
 
 
 
@@ -34,7 +34,7 @@ def get_three_ops(instr, ops):
 
 def get_three_ops_imm(instr, ops):
     check_num_args(instr, ops, 3)
-    check_immediate(instr, ops)
+    check_immediate_three(instr, ops)
     return (ops[0], ops[1], ops[2])
 
 class Jump(FlowBreak):

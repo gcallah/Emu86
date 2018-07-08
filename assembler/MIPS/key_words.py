@@ -1,5 +1,6 @@
-from .arithmetic import Add, Sub, Addi, Subi, Andf
-from .arithmetic import Andi, Orf, Ori, Nor, Sll, Srl
+from .arithmetic import Add, Sub, Addi, Subi, Mult, Div
+from .arithmetic import Andf, Andi, Orf, Ori, Nor, Sll, Srl
+from .arithmetic import Mflo, Mfhi
 from .data_mov import Load, Store
 from .control_flow import Slt, Slti
 from assembler.tokens import DataType
@@ -19,6 +20,10 @@ key_words = {
 	'ADDI': Addi('ADDI'),
 	'SUB': Sub('SUB'),
 	'SUBI': Subi('SUBI'),
+	'MULT': Mult('MULT'),
+	'DIV': Div('DIV'),
+	'MFLO': Mflo('MFLO'),
+	'MFHI': Mfhi('MFHI'),
 	'AND': Andf('AND'),
 	'ANDI': Andi('ANDI'),
 	'OR': Orf('OR'),

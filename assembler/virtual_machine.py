@@ -133,7 +133,7 @@ class IntelMachine(VirtualMachine):
 class MIPSMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
-        self.unwritable.append('ZERO')
+        self.unwritable.extend(['ZERO', 'HI', 'LO'])
         self.registers = OrderedDict(
                     [
                         ('ZERO', 0),
@@ -163,6 +163,8 @@ class MIPSMachine(VirtualMachine):
                         ('S7', 0),
                         ('K0', 0),
                         ('K1', 0),
+                        ('HI', 0),
+                        ('LO', 0),
                         (INSTR_PTR, 0),
                         (STACK_PTR, STACK_TOP),
                     ])
