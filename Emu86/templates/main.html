@@ -10,6 +10,15 @@
             &nbsp;
             <input type="hidden" name="nxt_key">
             <input type="hidden" name="unwritable">
+            {% if flavor == "intel" %}
+                <input type="hidden" name="flavor" value = "intel">
+            {% elif flavor == "att" %}
+                <input type="hidden" name="flavor" value = "att">
+            {% elif flavor == "mips" %}
+                <input type="hidden" name="flavor" value = "mips">
+            {% else %}
+                <input type="hidden" name="flavor">
+            {% endif %}
             <table>
                 <tr>
                     <td id="form-cell">

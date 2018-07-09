@@ -60,6 +60,7 @@ def main_page(request):
             mips_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
+            print (lang)
             if lang == "mips":
                 intel_machine.flavor = None
                 mips_machine.flavor = "mips"
@@ -74,7 +75,8 @@ def main_page(request):
                              'registers': mips_machine.registers,
                              'memory': mips_machine.memory, 
                              'stack': mips_machine.stack, 
-                             'flags': mips_machine.flags
+                             'flags': mips_machine.flags,
+                             'flavor': mips_machine.flavor
                             })
             else:
                 mips_machine.flavor = None
@@ -93,9 +95,18 @@ def main_page(request):
                                'registers': intel_machine.registers,
                                'memory': intel_machine.memory, 
                                'stack': intel_machine.stack, 
-                               'flags': intel_machine.flags
+                               'flags': intel_machine.flags,
+                               'flavor': intel_machine.flavor
                               })
         form = MainForm(request.POST)
+        if 'flavor' in request.POST:
+            language = request.POST['flavor']
+            if language == "intel" or language == "att":
+                intel_machine.flavor = language
+                mips_machine.flavor = None
+            elif language == "mips":
+                intel_machine.flavor = None
+                mips_machine.flavor = language
         if CLEAR in request.POST:
             intel_machine.re_init()
             mips_machine.re_init()
@@ -117,7 +128,7 @@ def main_page(request):
                     except Exception:
                         mips_machine.nxt_key = 0
                     
-            if intel_machine.flavor == "intel" or intel_machine.flavor == "att":
+            if intel_machine.flavor != None:
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
                 get_stack_contents(intel_machine.stack, request)
@@ -134,7 +145,8 @@ def main_page(request):
                 (last_instr, error) = assemble(request.POST[CODE], ATT, 
                                                intel_machine, step)
             else:
-                (last_instr, error) = assemble(request.POST[CODE], "mips", mips_machine, step)
+                (last_instr, error) = assemble(request.POST[CODE], "mips", 
+                                               mips_machine, step)
 
 
     if mips_machine.flavor == "mips":
@@ -149,7 +161,8 @@ def main_page(request):
                      'registers': mips_machine.registers,
                      'memory': mips_machine.memory, 
                      'stack': mips_machine.stack, 
-                     'flags': mips_machine.flags
+                     'flags': mips_machine.flags,
+                     'flavor': mips_machine.flavor
                     })
 
     return render(request, 'main.html',
@@ -163,7 +176,8 @@ def main_page(request):
                    'registers': intel_machine.registers,
                    'memory': intel_machine.memory, 
                    'stack': intel_machine.stack, 
-                   'flags': intel_machine.flags
+                   'flags': intel_machine.flags,
+                   'flavor': intel_machine.flavor
                   })
 
 def get_reg_contents(registers, request):
