@@ -120,7 +120,7 @@ def main_page(request):
                     except Exception:
                         mips_machine.nxt_key = 0
                     
-            if intel_machine.flavor != None:
+            if intel_machine.flavor == "intel" or intel_machine.flavor == "att":
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
                 get_stack_contents(intel_machine.stack, request)
