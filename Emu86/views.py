@@ -110,7 +110,7 @@ def main_page(request):
             if flavor == "mips":
                 intel_machine.flavor = None
                 mips_machine.flavor == 'mips'
-            elif flavor = "intel":
+            elif flavor == "intel":
                 mips_machine.flavor = None
                 intel_machine.flavor = 'intel'
             else:
