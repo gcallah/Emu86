@@ -17,7 +17,6 @@ NXT_KEY = 'nxt_key'
 STEP = 'step'
 CLEAR = 'clear'
 HEADER = 'header'
-FLAVOR = 'flavor'
 INTEL = 'intel'
 ATT = 'att'
 
@@ -75,8 +74,7 @@ def main_page(request):
                              'registers': mips_machine.registers,
                              'memory': mips_machine.memory, 
                              'stack': mips_machine.stack, 
-                             'flags': mips_machine.flags,
-                             'flavor': mips_machine.flavor
+                             'flags': mips_machine.flags
                             })
             else:
                 mips_machine.flavor = None
@@ -95,8 +93,7 @@ def main_page(request):
                                'registers': intel_machine.registers,
                                'memory': intel_machine.memory, 
                                'stack': intel_machine.stack, 
-                               'flags': intel_machine.flags,
-                               'flavor': intel_machine.flavor
+                               'flags': intel_machine.flags
                               })
         form = MainForm(request.POST)
         if CLEAR in request.POST:
@@ -106,16 +103,6 @@ def main_page(request):
             step = (STEP in request.POST)
             intel_machine.nxt_key = 0
             mips_machine.nxt_key = 0
-            flavor = request.POST['flavor']
-            if flavor == "mips":
-                intel_machine.flavor = None
-                mips_machine.flavor == 'mips'
-            elif flavor == "intel":
-                mips_machine.flavor = None
-                intel_machine.flavor = 'intel'
-            else:
-                mips_machine.flavor = None
-                intel_machine.flavor = 'att'
             if step:
                 if intel_machine.flavor != None:
                     add_debug("Getting next key", intel_machine)
@@ -162,8 +149,7 @@ def main_page(request):
                      'registers': mips_machine.registers,
                      'memory': mips_machine.memory, 
                      'stack': mips_machine.stack, 
-                     'flags': mips_machine.flags,
-                     'flavor': mips_machine.flavor
+                     'flags': mips_machine.flags
                     })
 
     return render(request, 'main.html',
@@ -177,8 +163,7 @@ def main_page(request):
                    'registers': intel_machine.registers,
                    'memory': intel_machine.memory, 
                    'stack': intel_machine.stack, 
-                   'flags': intel_machine.flags,
-                   'flavor': intel_machine.flavor
+                   'flags': intel_machine.flags
                   })
 
 def get_reg_contents(registers, request):
