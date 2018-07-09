@@ -250,7 +250,7 @@ def get_values(token_line, data_type, pos):
     else:
         raise InvalidDataVal(token_line[pos].get_nm())
 
-def parse_data_token(token_line, vm, mem_loc):
+def parse_data_token(token_line, vm, mem_loc, ip):
     """
     Parses data tokens 
 
@@ -290,7 +290,8 @@ def parse_data_token(token_line, vm, mem_loc):
     vm.symbols[symbol] = mem_loc
     add_debug("Symbol table now holds " + str(mem_loc), vm)
     for value in data_vals:
-        vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
+        if ip == 0:
+            vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
         mem_loc += 1
     return mem_loc
 
@@ -455,6 +456,36 @@ def get_address_att(token_line, pos, vm, displacement = 0):
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
 
+def get_address_location(token_line, pos, flavor, vm):
+    """
+    Retrieves address at current position in code 
+    Retrieves address by coding language
+
+    Args:
+        token_line: List of the tokenized instruction
+        pos: Beginning pos of list
+        flavor: Coding language
+        vm: Virtual machine
+
+    Returns: 
+        RegAddress or Address token, 
+        position of next item in instruction
+    """
+    register = None
+    displacement = 0
+    if flavor == "intel":
+        register, displacement, pos = get_address(token_line, pos, vm)
+    else:
+        register, displacement, pos = get_address_att(token_line, pos, vm)
+    if register:
+        return (RegAddress(register.get_nm(), vm, 
+                           displacement, register.get_multiplier()), pos)
+    else:
+        if displacement >= 256 or displacement < 0:
+            raise InvalidMemLoc(str(displacement))
+        return (Address(hex(displacement).split('x')[-1].upper(), vm), 
+                pos)
+
 def get_op(token_line, pos, flavor, vm):
     """
     Retrieves operand of instruction
@@ -473,19 +504,19 @@ def get_op(token_line, pos, flavor, vm):
     elif isinstance(token_line[pos], Register):
         return (token_line[pos], pos + 1)
     elif isinstance(token_line[pos], ConstantSign):
-        try:
-            if isinstance(token_line[pos + 1], MinusTok):
-                token_line[pos + 2].negate_val()
-                if flavor == "intel":
-                    return (token_line[pos + 2], pos + 3)
-                elif flavor == "att":
-                    return get_op(token_line, pos + 2, flavor, vm)
-            elif isinstance(token_line[pos + 1], IntegerTok):
-                return (token_line[pos + 1], pos + 2)
-            else:
-                raise InvalidArgument("$")
-        except:
+        if flavor != "att":
             raise InvalidArgument("$")
+        else:
+            try: 
+                if isinstance(token_line[pos + 1], MinusTok):
+                    token_line[pos + 2].negate_val()
+                    return get_op(token_line, pos + 2, flavor, vm)
+                elif isinstance(token_line[pos + 1], IntegerTok):
+                    return (token_line[pos + 1], pos + 2)
+                else:
+                    raise InvalidArgument("$")
+            except:
+                raise InvalidArgument("$")
     elif isinstance(token_line[pos], MinusTok):
         try:
             token_line[pos + 1].negate_val()
@@ -503,21 +534,7 @@ def get_op(token_line, pos, flavor, vm):
         elif token_line[pos].get_nm() in vm.symbols:
             return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     elif is_start_address(token_line, pos, flavor):
-        pos += 1
-        register = None
-        displacement = 0
-        if flavor == "intel":
-            register, displacement, pos = get_address(token_line, pos, vm)
-        elif flavor == "att" or flavor == "mips":
-            register, displacement, pos = get_address_att(token_line, pos, vm)
-        if register:
-            return (RegAddress(register.get_nm(), vm, 
-                               displacement, register.get_multiplier()), pos)
-        else:
-            if displacement >= 256 or displacement < 0:
-                raise InvalidMemLoc(str(displacement))
-            return (Address(hex(displacement).split('x')[-1].upper(), vm), 
-                    pos)
+        return get_address_location (token_line, pos + 1, flavor, vm)
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
@@ -591,8 +608,8 @@ def parse(tok_lines, flavor, vm):
                 continue
             else: 
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
-        if parse_data and vm.get_ip() == 0:
-            mem_loc = parse_data_token(tokens[0], vm, mem_loc)
+        if parse_data:
+            mem_loc = parse_data_token(tokens[0], vm, mem_loc, vm.get_ip())
         elif parse_text:
             token_instrs.append((parse_exec_unit(tokens[0], flavor, vm), 
                                  tokens[1]))
