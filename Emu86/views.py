@@ -39,6 +39,8 @@ def welcome(request):
     global mips_machine
     intel_machine.re_init()
     mips_machine.re_init()
+    intel_machine.flavor = None
+    mips_machine.flavor = None
     site_hdr = get_hdr()
     return render(request, 'welcome.html', {HEADER: site_hdr})
 
@@ -48,14 +50,10 @@ def main_page(request):
 
     site_hdr = get_hdr()
     if request.method == 'GET':
-        prev_flav = intel_machine.flavor
-        prev_mips = mips_machine.flavor
-        if not prev_flav and not prev_mips:
+        if intel_machine.flavor == None and mips_machine.flavor == None:
             return render(request, 'main_error.html', {HEADER: site_hdr})
         intel_machine.re_init()
-        intel_machine.flavor = prev_flav
         mips_machine.re_init()
-        mips_machine.flavor = prev_mips
         form = MainForm()
     else:
         if 'language' in request.POST:
@@ -102,15 +100,8 @@ def main_page(request):
                           })
         form = MainForm(request.POST)
         if CLEAR in request.POST:
-            if intel_machine.flavor != None:
-                prev_flav = intel_machine.flavor
-                intel_machine.re_init()
-                mips_machine.re_init()
-                intel_machine.flavor = prev_flav
-            else:
-                mips_machine.re_init()
-                intel_machine.re_init()
-                mips_machine.flavor = "mips"
+            intel_machine.re_init()
+            mips_machine.re_init()
         else:
             step = (STEP in request.POST)
             intel_machine.nxt_key = 0
