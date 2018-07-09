@@ -32,6 +32,7 @@ MISSING_OPENPAREN = "Missing opening parenthesis"
 MISSING_CLOSEBRACK = "Missing closing bracket"
 MISSING_CLOSEPAREN = "Missing closing parenthesis"
 ZERO_DIVISION = "Division by zero"
+OUT_OF_BOUNDS = "Displacement out of bounds"
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -165,6 +166,10 @@ class MissingCloseBrack(Error):
 class DivisionZero(Error):
     def __init__(self):
         self.msg = ZERO_DIVISION
+
+class OutofBounds(Error):
+    def __init__(self):
+        self.msg = OUT_OF_BOUNDS
 
 def check_num_args(instr, ops, correct_num):
     """

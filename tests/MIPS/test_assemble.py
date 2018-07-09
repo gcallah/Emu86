@@ -77,6 +77,9 @@ class AssembleTestCase(TestCase):
     def test_or_imm(self):
         self.two_op_test_imm(opfunc.or_, "ori")
 
+    def test_xor(self):
+        self.two_op_test(opfunc.xor, "xor")
+
     def test_nor(self):
         for i in range(0, NUM_TESTS):
             a = random.randint(MIN_TEST, MAX_TEST)

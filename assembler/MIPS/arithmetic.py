@@ -188,16 +188,14 @@ class Nor(Instruction):
 class Xor(Instruction):
     """
         <instr>
-             xor
+             XOR
         </instr>
         <syntax>
-            XOR reg, reg
-            XOR reg, mem
-            XOR reg, con
+            XOR reg, reg, reg
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.xor)
+        three_op_arith_reg(ops, vm, self.name, opfunc.xor)
         return ''
 
 class Sll(Instruction):

@@ -122,23 +122,40 @@ class Jmp(Instruction):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(target.name)
 
-class Je(Instruction):
+class Beq(Instruction):
     """
         <instr>
-             je
+             BEQ
         </instr>
         <syntax>
-            JE lbl
+            BEQ con, reg, reg
         </syntax>
         <descr>
-            Jumps if ZF is one. <br>
-            Equivalent name: JZ
+            Jumps if registers are equal.
         </descr>
     """
     def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
-        if int(vm.flags['ZF']) == 1:
-            raise Jump(target.name)
+        check_num_args("BEQ", ops, 3)
+        disp = 0
+        if isinstance(ops[0], IntegerTok):
+            disp = ops[0].get_nm()
+        else:
+            raise InvalidArgument(ops[0].get_nm())
+        val_one, val_two = (0, 0)
+        if isinstance(ops[1], Register):
+            val_one = ops[1].get_val()
+            if isinstance(ops[2], Register):
+                val_two = ops[2].get_val()
+            else:
+                InvalidArgument(ops[2].get_nm())
+        else:
+            InvalidArgument(ops[1].get_nm())
+        if val_one == val_two:
+            current_ip = vm.get_ip() + 1 
+            if current_ip + disp >= 0:
+                vm.set_ip(current_ip + disp)
+            else:
+                raise OutofBounds()
 
 class Jne(Instruction):
     """
