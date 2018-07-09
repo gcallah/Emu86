@@ -78,26 +78,26 @@ def main_page(request):
                              'flags': mips_machine.flags,
                              'flavor': mips_machine.flavor
                             })
-            elif lang == "att":
-                intel_machine.flavor = "att"
-                mips_machine.flavor = None
             else:
-                intel_machine.flavor = "intel"
                 mips_machine.flavor = None
-            return render(request, 'main.html',
-                          {'form': form,
-                           HEADER: site_hdr,
-                           'last_instr': "",
-                           'error': "",
-                           'unwritable': intel_machine.unwritable,
-                           'debug': intel_machine.debug,
-                           NXT_KEY: intel_machine.nxt_key,
-                           'registers': intel_machine.registers,
-                           'memory': intel_machine.memory, 
-                           'stack': intel_machine.stack, 
-                           'flags': intel_machine.flags,
-                           'flavor': intel_machine.flavor
-                          })
+                if lang == "att":
+                    intel_machine.flavor = "att"
+                else:
+                    intel_machine.flavor = "intel"
+                return render(request, 'main.html',
+                              {'form': form,
+                               HEADER: site_hdr,
+                               'last_instr': "",
+                               'error': "",
+                               'unwritable': intel_machine.unwritable,
+                               'debug': intel_machine.debug,
+                               NXT_KEY: intel_machine.nxt_key,
+                               'registers': intel_machine.registers,
+                               'memory': intel_machine.memory, 
+                               'stack': intel_machine.stack, 
+                               'flags': intel_machine.flags,
+                               'flavor': intel_machine.flavor
+                              })
         form = MainForm(request.POST)
         if CLEAR in request.POST:
             intel_machine.re_init()
@@ -106,6 +106,16 @@ def main_page(request):
             step = (STEP in request.POST)
             intel_machine.nxt_key = 0
             mips_machine.nxt_key = 0
+            flavor = request.POST['flavor']
+            if flavor == "mips":
+                intel_machine.flavor = None
+                mips_machine.flavor == 'mips'
+            elif flavor = "intel":
+                mips_machine.flavor = None
+                intel_machine.flavor = 'intel'
+            else:
+                mips_machine.flavor = None
+                intel_machine.flavor = 'att'
             if step:
                 if intel_machine.flavor != None:
                     add_debug("Getting next key", intel_machine)
@@ -152,7 +162,8 @@ def main_page(request):
                      'registers': mips_machine.registers,
                      'memory': mips_machine.memory, 
                      'stack': mips_machine.stack, 
-                     'flags': mips_machine.flags
+                     'flags': mips_machine.flags,
+                     'flavor': mips_machine.flavor
                     })
 
     return render(request, 'main.html',
@@ -166,7 +177,8 @@ def main_page(request):
                    'registers': intel_machine.registers,
                    'memory': intel_machine.memory, 
                    'stack': intel_machine.stack, 
-                   'flags': intel_machine.flags
+                   'flags': intel_machine.flags,
+                   'flavor': intel_machine.flavor
                   })
 
 def get_reg_contents(registers, request):
