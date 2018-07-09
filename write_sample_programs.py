@@ -39,7 +39,7 @@ def create_href():
 				file_name.write(tab * 4 + "<li>\n")
 				file_name.write(tab * 5 + 
 					            '<a href ="https://github.com/gcallah/' + 
-								"Emu86/blob/master/" + dire +
+								"Emu86/blob/master/" + dire + "/" +
 								 file + '">\n')
 				file_name.write(tab * 6 + link_names[file] + "\n")
 				file_name.write(tab * 5 + "</a>\n")
