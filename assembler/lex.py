@@ -295,5 +295,5 @@ def lex(code, flavor, vm):
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
-
+            
     return tok_lines

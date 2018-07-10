@@ -19,6 +19,12 @@
             {% else %}
                 <input type="hidden" name="flavor">
             {% endif %}
+            {% if data_init == "on" %}
+                <input type="hidden" name="data_init" value = "on">
+            {% else %}
+                <input type="hidden" name="data_init" value = "off">
+            }
+            {% endif %}
             <table>
                 <tr>
                     <td id="form-cell">

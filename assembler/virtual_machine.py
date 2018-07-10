@@ -48,6 +48,7 @@ class VirtualMachine:
         self.labels = {}
         self.symbols = {}
         self.flavor = None
+        self.data_init = "on"
 
 
     def __str__(self):
@@ -76,6 +77,7 @@ class VirtualMachine:
             self.flags[flag] = 0
         self.mem_init()
         self.stack_init()
+        self.data_init = "on"
         
     def inc_ip(self):
         ip = self.get_ip()
@@ -111,6 +113,12 @@ class VirtualMachine:
 
     def empty_cell(self):
         return EMPTY_CELL
+
+    def get_data_init(self):
+        return self.data_init
+
+    def set_data_init(self, on_or_off):
+        self.data_init = on_or_off
 
 class IntelMachine(VirtualMachine):
     def __init__(self):

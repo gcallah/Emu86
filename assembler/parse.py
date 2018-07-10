@@ -250,7 +250,7 @@ def get_values(token_line, data_type, pos):
     else:
         raise InvalidDataVal(token_line[pos].get_nm())
 
-def parse_data_token(token_line, vm, mem_loc, ip):
+def parse_data_token(token_line, vm, mem_loc):
     """
     Parses data tokens 
 
@@ -290,7 +290,7 @@ def parse_data_token(token_line, vm, mem_loc, ip):
     vm.symbols[symbol] = mem_loc
     add_debug("Symbol table now holds " + str(mem_loc), vm)
     for value in data_vals:
-        if ip == 0:
+        if vm.get_data_init() == "on":
             vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
         mem_loc += 1
     return mem_loc
@@ -609,8 +609,9 @@ def parse(tok_lines, flavor, vm):
             else: 
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
-            mem_loc = parse_data_token(tokens[0], vm, mem_loc, vm.get_ip())
+            mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
+            vm.set_data_init("off")
             token_instrs.append((parse_exec_unit(tokens[0], flavor, vm), 
                                  tokens[1]))
     return token_instrs

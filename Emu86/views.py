@@ -19,6 +19,7 @@ CLEAR = 'clear'
 HEADER = 'header'
 INTEL = 'intel'
 ATT = 'att'
+DATA_INIT = 'data_init'
 
 
 def get_hdr():
@@ -60,7 +61,6 @@ def main_page(request):
             mips_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
-            print (lang)
             if lang == "mips":
                 intel_machine.flavor = None
                 mips_machine.flavor = "mips"
@@ -76,7 +76,8 @@ def main_page(request):
                              'memory': mips_machine.memory, 
                              'stack': mips_machine.stack, 
                              'flags': mips_machine.flags,
-                             'flavor': mips_machine.flavor
+                             'flavor': mips_machine.flavor,
+                             'data_init': mips_machine.data_init
                             })
             else:
                 mips_machine.flavor = None
@@ -96,7 +97,8 @@ def main_page(request):
                                'memory': intel_machine.memory, 
                                'stack': intel_machine.stack, 
                                'flags': intel_machine.flags,
-                               'flavor': intel_machine.flavor
+                               'flavor': intel_machine.flavor,
+                               DATA_INIT: intel_machine.data_init
                               })
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
@@ -133,11 +135,13 @@ def main_page(request):
                 get_mem_contents(intel_machine.memory, request)
                 get_stack_contents(intel_machine.stack, request)
                 get_flag_contents(intel_machine.flags, request)
+                intel_machine.data_init = request.POST[DATA_INIT]
             else:
                 get_reg_contents(mips_machine.registers, request)
                 get_mem_contents(mips_machine.memory, request)
                 get_stack_contents(mips_machine.stack, request)
                 get_flag_contents(mips_machine.flags, request)
+                mips_machine.data_init = request.POST[DATA_INIT]
             if intel_machine.flavor == "intel":
                 (last_instr, error) = assemble(request.POST[CODE], INTEL,
                                                intel_machine, step)
@@ -162,7 +166,8 @@ def main_page(request):
                      'memory': mips_machine.memory, 
                      'stack': mips_machine.stack, 
                      'flags': mips_machine.flags,
-                     'flavor': mips_machine.flavor
+                     'flavor': mips_machine.flavor,
+                     DATA_INIT: mips_machine.data_init
                     })
 
     return render(request, 'main.html',
@@ -177,7 +182,8 @@ def main_page(request):
                    'memory': intel_machine.memory, 
                    'stack': intel_machine.stack, 
                    'flags': intel_machine.flags,
-                   'flavor': intel_machine.flavor
+                   'flavor': intel_machine.flavor,
+                   DATA_INIT: intel_machine.data_init
                   })
 
 def get_reg_contents(registers, request):

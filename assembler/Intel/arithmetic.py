@@ -230,6 +230,8 @@ class Idiv(Instruction):
         hireg = int(vm.registers['EDX']) << 32
         lowreg = int(vm.registers['EAX'])
         dividend = hireg + lowreg
+        if ops[0].get_val() == 0:
+            raise DivisionZero()
         vm.registers['EAX'] = dividend // ops[0].get_val()
         vm.registers['EDX'] = dividend % ops[0].get_val()
         return ''
