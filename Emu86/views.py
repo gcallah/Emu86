@@ -23,7 +23,7 @@ DATA_INIT = 'data_init'
 
 
 def get_hdr():
-    site_hdr = "Emu: a multi-language assembly emulator."
+    site_hdr = "Emu: a multi-language assembly emulator"
     site_list = Site.objects.all()
     for site in site_list:
         site_hdr = site.header
@@ -66,7 +66,7 @@ def main_page(request):
                 mips_machine.flavor = "mips"
                 return render(request, 'main.html',
                             {'form': form,
-                             HEADER: site_hdr,
+                             HEADER: site_hdr + ": MIPS",
                              'last_instr': "",
                              'error': "",
                              'unwritable': mips_machine.unwritable,
@@ -81,13 +81,16 @@ def main_page(request):
                             })
             else:
                 mips_machine.flavor = None
+                header_line = site_hdr
                 if lang == "att":
                     intel_machine.flavor = "att"
+                    header_line += ": AT&T"
                 else:
                     intel_machine.flavor = "intel"
+                    header_line += ": Intel"
                 return render(request, 'main.html',
                               {'form': form,
-                               HEADER: site_hdr,
+                               HEADER: header_line,
                                'last_instr': "",
                                'error': "",
                                'unwritable': intel_machine.unwritable,
@@ -156,7 +159,7 @@ def main_page(request):
     if mips_machine.flavor == "mips":
         return render(request, 'main.html',
                     {'form': form,
-                     HEADER: site_hdr,
+                     HEADER: site_hdr + ": MIPS",
                      'last_instr': last_instr,
                      'error': error,
                      'unwritable': mips_machine.unwritable,
@@ -170,9 +173,14 @@ def main_page(request):
                      DATA_INIT: mips_machine.data_init
                     })
 
+    header_intel = site_hdr
+    if intel_machine.flavor == "intel":
+        header_intel += ": Intel"
+    else:
+        header_intel += ": AT&T"
     return render(request, 'main.html',
                   {'form': form,
-                   HEADER: site_hdr,
+                   HEADER: header_intel,
                    'last_instr': last_instr,
                    'error': error,
                    'unwritable': intel_machine.unwritable,
