@@ -127,7 +127,7 @@ class Beq(Instruction):
              BEQ
         </instr>
         <syntax>
-            BEQ con, reg, reg
+            BEQ reg, reg, con
         </syntax>
         <descr>
             Jumps if registers are equal.
@@ -136,19 +136,19 @@ class Beq(Instruction):
     def fhook(self, ops, vm):
         check_num_args("BEQ", ops, 3)
         disp = 0
-        if isinstance(ops[0], IntegerTok):
-            disp = ops[0].get_nm()
+        if isinstance(ops[2], IntegerTok):
+            disp = ops[2].get_nm()
         else:
             raise InvalidArgument(ops[0].get_nm())
         val_one, val_two = (0, 0)
-        if isinstance(ops[1], Register):
-            val_one = ops[1].get_val()
-            if isinstance(ops[2], Register):
-                val_two = ops[2].get_val()
+        if isinstance(ops[0], Register):
+            val_one = ops[0].get_val()
+            if isinstance(ops[1], Register):
+                val_two = ops[1].get_val()
             else:
-                InvalidArgument(ops[2].get_nm())
+                InvalidArgument(ops[1].get_nm())
         else:
-            InvalidArgument(ops[1].get_nm())
+            InvalidArgument(ops[0].get_nm())
         if val_one == val_two:
             current_ip = vm.get_ip() 
             if current_ip + disp * 4 >= 0:
@@ -162,7 +162,7 @@ class Bne(Instruction):
              BNE
         </instr>
         <syntax>
-            BNE con, reg, reg
+            BNE reg, reg, con
         </syntax>
         <descr>
             Jumps if registers are equal.
@@ -171,19 +171,19 @@ class Bne(Instruction):
     def fhook(self, ops, vm):
         check_num_args("BNE", ops, 3)
         disp = 0
-        if isinstance(ops[0], IntegerTok):
-            disp = ops[0].get_val()
+        if isinstance(ops[2], IntegerTok):
+            disp = ops[2].get_val()
         else:
             raise InvalidArgument(ops[0].get_nm())
         val_one, val_two = (0, 0)
-        if isinstance(ops[1], Register):
-            val_one = ops[1].get_val()
-            if isinstance(ops[2], Register):
-                val_two = ops[2].get_val()
+        if isinstance(ops[0], Register):
+            val_one = ops[0].get_val()
+            if isinstance(ops[1], Register):
+                val_two = ops[1].get_val()
             else:
-                InvalidArgument(ops[2].get_nm())
+                InvalidArgument(ops[1].get_nm())
         else:
-            InvalidArgument(ops[1].get_nm())
+            InvalidArgument(ops[0].get_nm())
         if val_one != val_two:
             current_ip = vm.get_ip()
             if current_ip + disp * 4 >= 0:
