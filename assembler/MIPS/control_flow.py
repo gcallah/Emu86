@@ -6,18 +6,9 @@ control_flow.py: control flow instructions,
 
 from assembler.errors import check_num_args, OutofBounds
 from assembler.tokens import Instruction, Register, IntegerTok
+from assembler.flowbreak import Jump
 from .argument_check import *
 
-
-
-class FlowBreak(Exception):
-    """
-    Base class for all of our flow break exceptions.
-    """
-    def __init__(self, label):
-        super().__init__("Flow break")
-        self.label = label
-        self.msg = "Unknown control flow exception."
 
 def get_one_op(instr, ops):
     check_num_args(instr, ops, 1)
@@ -36,12 +27,6 @@ def get_three_ops_imm(instr, ops):
     check_num_args(instr, ops, 3)
     check_immediate_three(instr, ops)
     return (ops[0], ops[1], ops[2])
-
-class Jump(FlowBreak):
-    def __init__(self, label):
-        super().__init__(label)
-        self.msg = "Jump to " + label
-
 
 class Slt(Instruction):
     """

@@ -139,12 +139,13 @@ class TestPrograms(TestCase):
     #     self.assertEqual(intel_machine.memory["0"], 50)
     #     self.assertEqual(intel_machine.memory["1"], 32)
 
-    # def test_array_avg(self):
-    #     self.run_intel_test_code("tests/Intel/array_average_test.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"], 9)
-    #     self.assertEqual(intel_machine.registers["ECX"], 100)
-    #     self.assertEqual(intel_machine.registers["EBX"], 100)
-    #     self.assertEqual(intel_machine.registers["EDX"], 89)
+    def test_array_avg(self):
+        self.run_mips_test_code("tests/MIPS/array_average_test.asm")
+        self.assertEqual(intel_machine.registers["T0"], 10)
+        self.assertEqual(intel_machine.registers["S0"], 89)
+        self.assertEqual(intel_machine.registers["S1"], 10)
+        self.assertEqual(intel_machine.registers["S2"], 9)
+        self.assertEqual(intel_machine.registers["S3"], 8)
 
     # def test_int_square_root(self):
     #     self.run_intel_test_code("tests/Intel/int_square_root.asm")

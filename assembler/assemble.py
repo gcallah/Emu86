@@ -5,7 +5,7 @@ Executes assembly code typed in.
 
 import re
 
-from .Intel.control_flow import FlowBreak
+from .flowbreak import FlowBreak
 from .errors import Error, InvalidInstruction, ExitProg
 from .parse import add_debug, parse
 from .lex import lex

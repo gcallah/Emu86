@@ -216,7 +216,7 @@ def sep_line_mips(code, i, data_sec, vm, key_words):
                 if data_sec:
                     analysis.append(NewSymbol(word[:-1], vm))
                 else:
-                    vm.labels[word[:word.find(":")]] = i
+                    vm.labels[word[:word.find(":")]] = i * 4
             elif re.search(sym_match, word) is not None:
                 analysis.append(NewSymbol(word, vm))
             else:
@@ -295,5 +295,5 @@ def lex(code, flavor, vm):
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
-            
+
     return tok_lines

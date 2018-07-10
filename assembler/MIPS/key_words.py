@@ -2,7 +2,7 @@ from .arithmetic import Add, Sub, Addi, Subi, Mult, Div
 from .arithmetic import Andf, Andi, Orf, Ori, Xor, Nor, Sll, Srl
 from .arithmetic import Mflo, Mfhi
 from .data_mov import Load, Store
-from .control_flow import Slt, Slti, Beq, Bne
+from .control_flow import Slt, Slti, Beq, Bne, Jmp
 from assembler.tokens import DataType
 
 key_words = {
@@ -36,5 +36,6 @@ key_words = {
 	'SLT': Slt('SLT'),
 	'SLTI': Slti('SLTI'),
 	'BEQ': Beq('BEQ'),
-	'BNE': Bne('BNE')
+	'BNE': Bne('BNE'),
+	'J': Jmp('J')
 }
