@@ -41,11 +41,20 @@ def exec(tok_lines, vm, last_instr):
     """
     try:
         ip = vm.get_ip()
-        if ip >= len(tok_lines):
-            raise InvalidInstruction("Past end of code.")
+        curr_instr = None
+        source = None
+        if vm.flavor == "mips":
+            if ip // 4 >= len(tok_lines):
+                raise InvalidInstruction("Past end of code.")
 
-        (curr_instr, source) = tok_lines[ip]
-        vm.inc_ip()
+            (curr_instr, source) = tok_lines[ip // 4]
+            vm.inc_ip()
+        else:
+            if ip >= len(tok_lines):
+                raise InvalidInstruction("Past end of code.")
+
+            (curr_instr, source) = tok_lines[ip]
+            vm.inc_ip()
         last_instr = curr_instr[INSTR].f(curr_instr[1:], vm)
         return (True, source, "")
     except FlowBreak as brk:
@@ -96,15 +105,26 @@ def assemble(code, flavor, vm, step=False):
             add_debug("Setting ip to 0", vm)
             vm.set_ip(0)   # instruction pointer reset for 'run'
             count = 0
-            while vm.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
-                (success, last_instr, error) = exec(tok_lines, vm, 
-                                                    last_instr)
-                if not success:
-                    return (last_instr, error)
-                count += 1
+            ip = vm.get_ip()
+            if vm.flavor == "mips":
+                while vm.get_ip() // 4 < len(tok_lines) and count < MAX_INSTRUCTIONS:
+                    (success, last_instr, error) = exec(tok_lines, vm, 
+                                                        last_instr)
+                    if not success:
+                        return (last_instr, error)
+                    count += 1
+            else:
+                while vm.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
+                    (success, last_instr, error) = exec(tok_lines, vm, 
+                                                        last_instr)
+                    if not success:
+                        return (last_instr, error)
+                    count += 1
         else:  # step through code
             count = 0
             ip = vm.get_ip()
+            if vm.flavor == "mips":
+                ip = ip // 4
             if ip < len(tok_lines):
                 (success, last_instr, error) = exec(tok_lines, vm,
                                                     last_instr)

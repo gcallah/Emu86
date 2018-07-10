@@ -196,7 +196,7 @@ class MIPSMachine(VirtualMachine):
 
     def inc_ip(self):
         ip = self.get_ip()
-        ip += 1
+        ip += 4
         self.set_ip(ip)
     
     def set_ip(self, val):

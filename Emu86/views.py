@@ -181,7 +181,7 @@ def main_page(request):
         site_hdr += ": AT&T"
     return render(request, 'main.html',
                   {'form': form,
-                   HEADER: header_intel,
+                   HEADER: site_hdr,
                    'last_instr': last_instr,
                    'error': error,
                    'unwritable': intel_machine.unwritable,

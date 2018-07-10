@@ -4,7 +4,7 @@ control_flow.py: control flow instructions,
 
 """
 
-from assembler.errors import check_num_args
+from assembler.errors import check_num_args, OutofBounds
 from assembler.tokens import Instruction, Register, IntegerTok
 from .argument_check import *
 
@@ -151,8 +151,8 @@ class Beq(Instruction):
             InvalidArgument(ops[1].get_nm())
         if val_one == val_two:
             current_ip = vm.get_ip() 
-            if current_ip + disp >= 0:
-                vm.set_ip(current_ip + disp)
+            if current_ip + disp * 4 >= 0:
+                vm.set_ip(current_ip + disp * 4)
             else:
                 raise OutofBounds()
 
@@ -186,8 +186,8 @@ class Bne(Instruction):
             InvalidArgument(ops[1].get_nm())
         if val_one != val_two:
             current_ip = vm.get_ip()
-            if current_ip + disp >= 0:
-                vm.set_ip(current_ip + disp)
+            if current_ip + disp * 4 >= 0:
+                vm.set_ip(current_ip + disp * 4)
             else:
                 raise OutofBounds()
 
