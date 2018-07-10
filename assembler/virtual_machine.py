@@ -182,7 +182,8 @@ class MIPSMachine(VirtualMachine):
                         ('FP', 0),
                         ('RA', 0),
                         ('HI', 0),
-                        ('LO', 0)
+                        ('LO', 0),
+                        (INSTR_PTR_MIPS, 0),
                     ])
 
         self.flags = OrderedDict(
