@@ -26,13 +26,13 @@ class TestPrograms(TestCase):
             return prog.read()
 
     def run_mips_test_code (self, filnm):
-        intel_machine.re_init()
+        mips_machine.re_init()
         test_code = self.read_test_code(filnm)
         assemble(test_code, 'mips', mips_machine)
 
-    # def test_loop(self):
-    #     self.run_intel_test_code("tests/Intel/loop.asm")
-    #     self.assertEqual(intel_machine.registers["ECX"], 16)
+    def test_loop(self):
+        self.run_MIPS_test_code("tests/MIPS/loop.asm")
+        self.assertEqual(intel_machine.registers["S3"], 16)
 
     # def test_power(self):
     #     self.run_intel_test_code("tests/Intel/power.asm")
