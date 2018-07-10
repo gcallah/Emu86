@@ -25,7 +25,7 @@ def three_op_arith_reg(ops, vm, instr, operator):
     check_num_args(instr, ops, 3)
     check_reg_only(instr, ops)
     ops[0].set_val(
-    checkflag(operator(ops[1].get_val(),
+    check_overflow(operator(ops[1].get_val(),
                        ops[2].get_val()), 
                        vm))
 
@@ -37,16 +37,13 @@ def three_op_arith_immediate(ops, vm, instr, operator):
     check_num_args(instr, ops, 3)
     check_immediate_three(instr, ops)
     ops[0].set_val(
-    checkflag(operator(ops[1].get_val(),
+    check_overflow(operator(ops[1].get_val(),
                        ops[2].get_val()), 
                        vm))
 
-def checkflag(val, vm):
+def check_overflow(val, vm):
     if(val > MAX_INT):
-        vm.flags['CF'] = 1
         val = val - MAX_INT+1
-    else:
-        vm.flags['CF'] = 0
     return val
 
 
