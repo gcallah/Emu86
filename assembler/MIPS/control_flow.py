@@ -103,10 +103,9 @@ class Slti(Instruction):
             vm.flags['ZF'] = 0
         # sign flag:
         if res < 0:
-            vm.flags['SF'] = 1
+            op1.set_val(1)
         else:
-            vm.flags['SF'] = 0
-        op1.set_val(vm.flags['SF'])
+            op1.set_val(0)
     
 
 class Jmp(Instruction):

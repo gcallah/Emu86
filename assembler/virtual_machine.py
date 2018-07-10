@@ -14,8 +14,10 @@ STACK_BOTTOM = MEM_SIZE
 # STACK_TOP = MEM_SIZE - 1
 # STACK_BOTTOM = 0
 EMPTY_CELL = 0
-INSTR_PTR = "EIP"
-STACK_PTR = "ESP"
+INSTR_PTR_INTEL = "EIP"
+INSTR_PTR_MIPS = "PC"
+STACK_PTR_INTEL = "ESP"
+STACK_PTR_MIPS = "SP"
 
 class VirtualMachine:
     """
@@ -27,17 +29,6 @@ class VirtualMachine:
         self.nxt_key = 0
         self.ret_str = "GIRONAGIRONAGETSGETS"
         self.debug = ""
-    
-        self.unwritable = [INSTR_PTR, STACK_PTR]
-        
-        # for now we only need four of the flags
-        self.flags = OrderedDict(
-                    [
-                        ('CF', 0),
-                        ('OF', 0),
-                        ('SF', 0),
-                        ('ZF', 0),
-                    ])
         
         self.memory = OrderedDict()
         self.mem_init()
@@ -72,44 +63,11 @@ class VirtualMachine:
         for reg in self.registers:
             self.registers[reg] = 0
         # one gets a unique value:
-        self.registers[STACK_PTR] = STACK_TOP
         for flag in self.flags:
             self.flags[flag] = 0
         self.mem_init()
         self.stack_init()
         self.data_init = "on"
-        
-    def inc_ip(self):
-        ip = self.get_ip()
-        ip += 1
-        self.set_ip(ip)
-    
-    def set_ip(self, val):
-        self.registers[INSTR_PTR] = val
-    
-    def get_ip(self):
-        return int(self.registers[INSTR_PTR])
-        
-    def inc_sp(self):
-        sp = self.get_sp()
-        sp += 1
-        self.set_sp(sp)
-        
-    def dec_sp(self):
-        sp = self.get_sp()
-        sp -= 1
-        self.set_sp(sp)
-    
-    def set_sp(self, val):
-        if val < STACK_BOTTOM - 1:
-            raise StackOverflow()
-        if val > STACK_TOP:
-            raise StackUnderflow()
-
-        self.registers[STACK_PTR] = val
-    
-    def get_sp(self):
-        return int(self.registers[STACK_PTR])
 
     def empty_cell(self):
         return EMPTY_CELL
@@ -131,19 +89,68 @@ class IntelMachine(VirtualMachine):
                         ('EDX', 0),
                         ('ESI', 0),
                         ('EDI', 0),
-                        (STACK_PTR, STACK_TOP),
+                        (STACK_PTR_INTEL, STACK_TOP),
                         ('EBP', 0),
-                        (INSTR_PTR, 0),
+                        (INSTR_PTR_INTEL, 0),
                     ])
+
+        self.unwritable = [INSTR_PTR_INTEL, STACK_PTR_INTEL]
+
+        # for now we only need four of the flags
+        self.flags = OrderedDict(
+                    [
+                        ('CF', 0),
+                        ('OF', 0),
+                        ('SF', 0),
+                        ('ZF', 0),
+                    ])
+
+    def re_init(self):
+        super().re_init()
+        self.registers[STACK_PTR_INTEL] = STACK_TOP
+
+    def inc_ip(self):
+        ip = self.get_ip()
+        ip += 1
+        self.set_ip(ip)
+    
+    def set_ip(self, val):
+        self.registers[INSTR_PTR_INTEL] = val
+    
+    def get_ip(self):
+        return int(self.registers[INSTR_PTR_INTEL])
+
+    def inc_sp(self):
+        sp = self.get_sp()
+        sp += 1
+        self.set_sp(sp)
+        
+    def dec_sp(self):
+        sp = self.get_sp()
+        sp -= 1
+        self.set_sp(sp)
+    
+    def set_sp(self, val):
+        if val < STACK_BOTTOM - 1:
+            raise StackOverflow()
+        if val > STACK_TOP:
+            raise StackUnderflow()
+
+        self.registers[STACK_PTR_INTEL] = val
+    
+    def get_sp(self):
+        return int(self.registers[STACK_PTR_INTEL])
 
 
 class MIPSMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
-        self.unwritable.extend(['ZERO', 'HI', 'LO'])
+        self.unwritable = [INSTR_PTR_MIPS, 'ZERO', 
+                           STACK_PTR_MIPS, 'HI', 'LO']
         self.registers = OrderedDict(
                     [
                         ('ZERO', 0),
+                        ('AT', 0),
                         ('V0', 0),
                         ('V1', 0),
                         ('A0', 0),
@@ -158,8 +165,6 @@ class MIPSMachine(VirtualMachine):
                         ('T5', 0),
                         ('T6', 0),
                         ('T7', 0),
-                        ('T8', 0),
-                        ('T9', 0),
                         ('S0', 0),
                         ('S1', 0),
                         ('S2', 0),
@@ -168,13 +173,57 @@ class MIPSMachine(VirtualMachine):
                         ('S5', 0),
                         ('S6', 0),
                         ('S7', 0),
+                        ('T8', 0),
+                        ('T9', 0),
                         ('K0', 0),
                         ('K1', 0),
+                        ('GP', 0),
+                        ('SP', STACK_TOP),
+                        ('FP', 0),
+                        ('RA', 0),
                         ('HI', 0),
-                        ('LO', 0),
-                        (INSTR_PTR, 0),
-                        (STACK_PTR, STACK_TOP),
+                        ('LO', 0)
                     ])
+
+        self.flags = OrderedDict(
+                    [
+                        ('ZF', 0),
+                    ])
+    def re_init(self):
+        super().re_init()
+        self.registers[STACK_PTR_MIPS] = STACK_TOP
+
+    def inc_ip(self):
+        ip = self.get_ip()
+        ip += 1
+        self.set_ip(ip)
+    
+    def set_ip(self, val):
+        self.registers[INSTR_PTR_MIPS] = val
+    
+    def get_ip(self):
+        return int(self.registers[INSTR_PTR_MIPS])
+
+    def inc_sp(self):
+        sp = self.get_sp()
+        sp += 1
+        self.set_sp(sp)
+        
+    def dec_sp(self):
+        sp = self.get_sp()
+        sp -= 1
+        self.set_sp(sp)
+    
+    def set_sp(self, val):
+        if val < STACK_BOTTOM - 1:
+            raise StackOverflow()
+        if val > STACK_TOP:
+            raise StackUnderflow()
+
+        self.registers[STACK_PTR_MIPS] = val
+    
+    def get_sp(self):
+        return int(self.registers[STACK_PTR_MIPS])
 
 intel_machine = IntelMachine()
 mips_machine = MIPSMachine()
