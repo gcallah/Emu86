@@ -64,9 +64,10 @@ def main_page(request):
             if lang == "mips":
                 intel_machine.flavor = None
                 mips_machine.flavor = "mips"
+                site_hdr += ": MIPS"
                 return render(request, 'main.html',
                             {'form': form,
-                             HEADER: site_hdr + ": MIPS",
+                             HEADER: site_hdr,
                              'last_instr': "",
                              'error': "",
                              'unwritable': mips_machine.unwritable,
@@ -84,13 +85,13 @@ def main_page(request):
                 header_line = site_hdr
                 if lang == "att":
                     intel_machine.flavor = "att"
-                    header_line += ": AT&T"
+                    site_hdr += ": AT&T"
                 else:
                     intel_machine.flavor = "intel"
-                    header_line += ": Intel"
+                    site_hdr += ": Intel"
                 return render(request, 'main.html',
                               {'form': form,
-                               HEADER: header_line,
+                               HEADER: site_hdr,
                                'last_instr': "",
                                'error': "",
                                'unwritable': intel_machine.unwritable,
@@ -157,9 +158,10 @@ def main_page(request):
 
 
     if mips_machine.flavor == "mips":
+        site_hdr += ": MIPS"
         return render(request, 'main.html',
                     {'form': form,
-                     HEADER: site_hdr + ": MIPS",
+                     HEADER: site_hdr,
                      'last_instr': last_instr,
                      'error': error,
                      'unwritable': mips_machine.unwritable,
@@ -173,11 +175,10 @@ def main_page(request):
                      DATA_INIT: mips_machine.data_init
                     })
 
-    header_intel = site_hdr
     if intel_machine.flavor == "intel":
-        header_intel += ": Intel"
+        site_hdr += ": Intel"
     else:
-        header_intel += ": AT&T"
+        site_hdr += ": AT&T"
     return render(request, 'main.html',
                   {'form': form,
                    HEADER: header_intel,
@@ -211,10 +212,18 @@ def get_stack_contents(stack, request):
         stack[loc] = request.POST[str(loc)]
 
 def help(request):
+    intel_machine.re_init()
+    mips_machine.re_init()
+    intel_machine.flavor = None
+    mips_machine.flavor = None
     site_hdr = get_hdr()
     return render(request, 'help.html', {HEADER: site_hdr})
 
 def feedback(request):
+    intel_machine.re_init()
+    mips_machine.re_init()
+    intel_machine.flavor = None
+    mips_machine.flavor = None
     site_hdr = get_hdr()
     email_list = AdminEmail.objects.all()
     comma_del_emails = ""
