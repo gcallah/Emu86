@@ -23,11 +23,11 @@ from assembler.errors import UNKNOWN_NM
 class ErrorTestCase(TestCase):
 
     def test_invalid_instr(self):
-        (output, error) = assemble("shove_up_reg $t4eax, 1", 'mips', mips_machine)
+        (output, error) = assemble("shove_up_reg $t4, 1", 'mips', mips_machine)
         self.assertTrue(error.startswith(INVALID_INSTR))
 
     def test_invalid_mem_loc(self):
-        (output, error) = assemble("mov [hell], 666", 'mips', mips_machine)
+        (output, error) = assemble("sw $t3, 3(hell)", 'mips', mips_machine)
         self.assertTrue(error.startswith(INVALID_MEM_LOC))
 
     def test_invalid_num_args(self):
@@ -40,11 +40,11 @@ class ErrorTestCase(TestCase):
 #        self.assertTrue(error.startswith(UNKNOWN_NM))
 
     def test_reg_unwritable(self):
-        (output, error) = assemble("addi $zero, 10", 'mips', mips_machine)
+        (output, error) = assemble("addi $zero, $s2, 10", 'mips', mips_machine)
         self.assertTrue(error.startswith(REG_UNWRITABLE))
 
     def test_comma_error(self):
-        (output, error) = assemble("subi $t5 1", 'mips', mips_machine)
+        (output, error) = assemble("subi $t5 $t5 1", 'mips', mips_machine)
         self.assertTrue(error.startswith(MISSING_COMMA))
 
     def test_comma_error(self):
@@ -52,7 +52,7 @@ class ErrorTestCase(TestCase):
         self.assertTrue(error.startswith(INVALID_TOKEN))
 
     def test_data_error(self):
-        (output, error) = assemble(".data \n  x .short", 'mips', mips_machine)
+        (output, error) = assemble(".data \n  x: .word", 'mips', mips_machine)
         self.assertTrue(error.startswith(MISSING_DATA))
 
 

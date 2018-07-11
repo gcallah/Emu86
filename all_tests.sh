@@ -20,3 +20,5 @@ $ATT_DIR/test_control_flow.py
 $ATT_DIR/test_programs.py
 
 $MIPS_DIR/test_assemble.py
+$MIPS_DIR/test_errors.py
+$MIPS_DIR/test_programs.py

@@ -31,7 +31,7 @@ class TestPrograms(TestCase):
         assemble(test_code, 'mips', mips_machine)
 
     def test_loop(self):
-        self.run_MIPS_test_code("tests/MIPS/loop.asm")
+        self.run_mip_test_code("tests/MIPS/loop.asm")
         self.assertEqual(intel_machine.registers["S3"], 16)
 
     # def test_power(self):
