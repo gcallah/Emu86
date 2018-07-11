@@ -116,11 +116,12 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["LO"], 35 * 27)
         self.assertEqual(mips_machine.registers["HI"], 0)
 
-    # def test_celsius_conversion(self):
-    #     self.run_intel_test_code("tests/Intel/cel_to_fah.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"], 95)
-    #     self.assertEqual(intel_machine.registers["EDX"], 2)
-    #     self.assertEqual(intel_machine.registers["EBX"], 5)
+    def test_celsius_conversion(self):
+        self.run_mips_test_code("tests/MIPS/cel_to_fah.asm")
+        self.assertEqual(mips_machine.registers["T0"], 95)
+        self.assertEqual(mips_machine.memory["1"], 95)
+        self.assertEqual(mips_machine.registers["HI"], 2)
+        self.assertEqual(mips_machine.registers["S0"], 5)
 
     def test_log(self):
         self.run_mips_test_code("tests/MIPS/log.asm")
