@@ -72,7 +72,7 @@ def number_token(token_line, pos, flavor, vm):
 
 def symbol_token(token_line, pos, flavor, vm):
     if flavor != "mips":
-        return (token_line[pos], pos + 1)
+        return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     else:
         if pos + 1 < len (token_line):
             if isinstance(token_line[pos + 1], OpenParen):
@@ -87,9 +87,9 @@ def symbol_token(token_line, pos, flavor, vm):
                     return (Address(hex(displacement).split('x')[-1].upper(), 
                                     vm), pos)
             else:
-                return (token_line[pos], pos + 1)
+                return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
         else:
-            return (token_line[pos], pos + 1)
+            return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
 
 def is_start_address(token_line, pos, flavor):
     if isinstance(token_line[pos], OpenParen) and flavor == "att":

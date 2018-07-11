@@ -39,12 +39,12 @@ class TestPrograms(TestCase):
     #     self.run_intel_test_code("tests/Intel/power.asm")
     #     self.assertEqual(intel_machine.registers["EDX"], 65536)
 
-    # def test_gt(self):
-    #     self.run_intel_test_code("tests/Intel/gt.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"], 17)
-    #     self.assertEqual(intel_machine.registers["EBX"], 16)
-    #     self.assertEqual(intel_machine.registers["ECX"], 16)
-    #     self.assertEqual(intel_machine.registers["EDX"], 19)
+    def test_gt(self):
+        self.run_mips_test_code("tests/MIPS/gt.asm")
+        self.assertEqual(mips_machine.registers["S0"], 17)
+        self.assertEqual(mips_machine.registers["S1"], 16)
+        self.assertEqual(mips_machine.registers["S5"], 16)
+        self.assertEqual(mips_machine.registers["S6"], 19)
 
     # def test_interrupt(self):
     #     self.run_intel_test_code("tests/Intel/test_interrupt.asm")
@@ -123,10 +123,10 @@ class TestPrograms(TestCase):
     #     self.assertEqual(intel_machine.registers["EDX"], 2)
     #     self.assertEqual(intel_machine.registers["EBX"], 5)
 
-    # def test_log(self):
-    #     self.run_intel_test_code("tests/Intel/log.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"], 1024)
-    #     self.assertEqual(intel_machine.registers["ECX"], 9)
+    def test_log(self):
+        self.run_mips_test_code("tests/MIPS/log.asm")
+        self.assertEqual(mips_machine.registers["S1"], 1024)
+        self.assertEqual(mips_machine.registers["S0"], 9)
 
     # def test_mem_register(self):
     #     self.run_intel_test_code("tests/Intel/mem_register_test.asm")

@@ -8,7 +8,7 @@
     add $s0, $s0, $zero
     add $s1, $s1, $zero
     lw $t0, nbrElts($gp)
-    add $s2, $gp, nbrArray 
+    addi $s2, $gp, nbrArray 
 forCount1: beq $s1, $t0, 5
 body: lw $s4, ($s2)
       add $s0, $s0, $s4

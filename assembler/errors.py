@@ -182,6 +182,6 @@ def check_num_args(instr, ops, correct_num):
             extra_arg = ops[l - 1]
         raise InvalidNumArgs(instr, correct_num, len(ops),
                              extra_arg)
-    for i in range(0,l-1):
+    for i in range(0,l):
         if(ops[i].get_val() > INT_MAX or ops[i].get_val() < INT_MIN ):
             raise IntOutOfRng(instr)

@@ -2,7 +2,7 @@ from assembler.tokens import Register, IntegerTok, Symbol
 from assembler.errors import InvalidArgument
 
 def check_reg_only(instr, ops):
-    for i in range(0, len(ops) - 1):
+    for i in range(0, len(ops)):
         if not isinstance(ops[i], Register):
             raise InvalidArgument(ops[i].get_nm())
 
