@@ -31,7 +31,7 @@ def jump_to_label(label, source, vm):
     else:
         return (False, source, "Invalid label: " + label)
 
-def exec(tok_lines, vm, last_instr):
+def exec(tok_lines, flavor, vm, last_instr):
     """
         Executes a single instruction at location reg[EIP] in tok_lines.
         Returns:
@@ -43,7 +43,7 @@ def exec(tok_lines, vm, last_instr):
         ip = vm.get_ip()
         curr_instr = None
         source = None
-        if vm.flavor == "mips":
+        if flavor == "mips":
             if ip // 4 >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
 
@@ -106,16 +106,16 @@ def assemble(code, flavor, vm, step=False):
             vm.set_ip(0)   # instruction pointer reset for 'run'
             count = 0
             ip = vm.get_ip()
-            if vm.flavor == "mips":
+            if flavor == "mips":
                 while vm.get_ip() // 4 < len(tok_lines) and count < MAX_INSTRUCTIONS:
-                    (success, last_instr, error) = exec(tok_lines, vm, 
+                    (success, last_instr, error) = exec(tok_lines, flavor, vm, 
                                                         last_instr)
                     if not success:
                         return (last_instr, error)
                     count += 1
             else:
                 while vm.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
-                    (success, last_instr, error) = exec(tok_lines, vm, 
+                    (success, last_instr, error) = exec(tok_lines, flavor, vm, 
                                                         last_instr)
                     if not success:
                         return (last_instr, error)
@@ -123,10 +123,10 @@ def assemble(code, flavor, vm, step=False):
         else:  # step through code
             count = 0
             ip = vm.get_ip()
-            if vm.flavor == "mips":
+            if flavor == "mips":
                 ip = ip // 4
             if ip < len(tok_lines):
-                (success, last_instr, error) = exec(tok_lines, vm,
+                (success, last_instr, error) = exec(tok_lines, flavor, vm,
                                                     last_instr)
                 count += 1
             else:

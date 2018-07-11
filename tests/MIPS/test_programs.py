@@ -27,7 +27,6 @@ class TestPrograms(TestCase):
 
     def run_mips_test_code (self, filnm):
         mips_machine.re_init()
-        mips_machine.flavor = 'mips'
         test_code = self.read_test_code(filnm)
         assemble(test_code, 'mips', mips_machine)
 
@@ -145,9 +144,9 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["S3"], 8)
         self.assertEqual(mips_machine.registers["S4"], 9)
 
-    # def test_int_square_root(self):
-    #     self.run_intel_test_code("tests/Intel/int_square_root.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"], 10)
+    def test_int_square_root(self):
+        self.run_mips_test_code("tests/MIPS/int_square_root.asm")
+        self.assertEqual(mips_machine.registers["S0"], 10)
 
     # def test_add_to_array_elem_test(self):
     #     self.run_intel_test_code("tests/Intel/change_array_elem_test.asm")
