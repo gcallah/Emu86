@@ -1,4 +1,4 @@
-from assembler.tokens import Register, IntegerTok
+from assembler.tokens import Register, IntegerTok, Symbol
 from assembler.errors import InvalidArgument
 
 def check_reg_only(instr, ops):
@@ -11,7 +11,8 @@ def check_immediate_three(instr, ops):
         raise InvalidArgument(ops[i].get_nm())
     else:
         if isinstance(ops[1], Register):
-            if not isinstance(ops[2], IntegerTok):
+            if (not isinstance(ops[2], IntegerTok) and 
+                not isinstance(ops[2], Symbol)):
                 raise InvalidArgument(ops[2].get_nm())
         else:
             raise InvalidArgument(ops[1].get_nm())

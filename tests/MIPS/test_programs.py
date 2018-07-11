@@ -27,12 +27,13 @@ class TestPrograms(TestCase):
 
     def run_mips_test_code (self, filnm):
         mips_machine.re_init()
+        mips_machine.flavor = 'mips'
         test_code = self.read_test_code(filnm)
         assemble(test_code, 'mips', mips_machine)
 
     def test_loop(self):
-        self.run_mip_test_code("tests/MIPS/loop.asm")
-        self.assertEqual(intel_machine.registers["S3"], 16)
+        self.run_mips_test_code("tests/MIPS/loop.asm")
+        self.assertEqual(mips_machine.registers["S3"], 16)
 
     # def test_power(self):
     #     self.run_intel_test_code("tests/Intel/power.asm")
@@ -105,18 +106,14 @@ class TestPrograms(TestCase):
 
     def test_arithmetic_expression(self):
         self.run_mips_test_code("tests/MIPS/arithmetic_expression.asm")
-        self.assertEqual(mips_machine.registers["T0"], 0)
-        self.assertEqual(mips_machine.registers["T1"], 2)
-        self.assertEqual(mips_machine.registers["T2"], -31)
-        self.assertEqual(mips_machine.registers["T3"], 52)
+        self.assertEqual(mips_machine.registers["T0"], -31)
+        self.assertEqual(mips_machine.registers["T1"], 52)
 
     def test_area(self):
         self.run_mips_test_code("tests/MIPS/area.asm")
-        self.assertEqual(mips_machine.registers["T0"], 0)
-        self.assertEqual(mips_machine.registers["T1"], 1)
-        self.assertEqual(mips_machine.registers["T2"], 35)
-        self.assertEqual(mips_machine.registers["T3"], 27)
-        self.assertEqual(mips_machine.registers["T4"], 35 * 27)
+        self.assertEqual(mips_machine.registers["T0"], 35)
+        self.assertEqual(mips_machine.registers["T1"], 27)
+        self.assertEqual(mips_machine.registers["T2"], 35 * 27)
         self.assertEqual(mips_machine.registers["LO"], 35 * 27)
         self.assertEqual(mips_machine.registers["HI"], 0)
 
@@ -141,11 +138,12 @@ class TestPrograms(TestCase):
 
     def test_array_avg(self):
         self.run_mips_test_code("tests/MIPS/array_average_test.asm")
-        self.assertEqual(intel_machine.registers["T0"], 10)
-        self.assertEqual(intel_machine.registers["S0"], 89)
-        self.assertEqual(intel_machine.registers["S1"], 10)
-        self.assertEqual(intel_machine.registers["S2"], 9)
-        self.assertEqual(intel_machine.registers["S3"], 8)
+        self.assertEqual(mips_machine.registers["T0"], 10)
+        self.assertEqual(mips_machine.registers["S0"], 89)
+        self.assertEqual(mips_machine.registers["S1"], 10)
+        self.assertEqual(mips_machine.registers["S2"], 10)
+        self.assertEqual(mips_machine.registers["S3"], 8)
+        self.assertEqual(mips_machine.registers["S4"], 9)
 
     # def test_int_square_root(self):
     #     self.run_intel_test_code("tests/Intel/int_square_root.asm")

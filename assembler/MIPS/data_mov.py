@@ -22,8 +22,6 @@ class Load(Instruction):
         if isinstance(ops[0], Register):
             if isinstance(ops[1], RegAddress):
                 ops[0].set_val(ops[1].get_val())
-            elif isinstance(ops[1], Symbol):
-                ops[0].set_val(ops[1].get_val())
             else:
                 raise InvalidArgument(ops[1].get_nm())
         else: 

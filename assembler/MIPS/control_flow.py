@@ -122,7 +122,7 @@ class Beq(Instruction):
         check_num_args("BEQ", ops, 3)
         disp = 0
         if isinstance(ops[2], IntegerTok):
-            disp = ops[2].get_nm()
+            disp = ops[2].get_val()
         else:
             raise InvalidArgument(ops[0].get_nm())
         val_one, val_two = (0, 0)

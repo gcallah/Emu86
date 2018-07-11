@@ -5,9 +5,7 @@
 
 ; Calculate area of rectangle
 .text
-    lw $t0, long
-    lw $t1, wide
-    lw $t2, 0($t0)
-    lw $t3, 0($t1)
-    mult $t3, $t2
-    mflo $t4
+    lw $t0, long($gp)
+    lw $t1, wide($gp)
+    mult $t0, $t1
+    mflo $t2

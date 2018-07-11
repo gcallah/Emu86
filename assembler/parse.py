@@ -70,6 +70,27 @@ def number_token(token_line, pos, flavor, vm):
         else:
             return (token_line[pos], pos + 1)
 
+def symbol_token(token_line, pos, flavor, vm):
+    if flavor != "mips":
+        return (token_line[pos], pos + 1)
+    else:
+        if pos + 1 < len (token_line):
+            if isinstance(token_line[pos + 1], OpenParen):
+                register, displacement, pos = get_address_att(token_line, 
+                                              pos + 2, vm, 
+                                              vm.symbols[token_line[pos].get_nm()])
+                if register: 
+                    return (RegAddress(register.get_nm(), 
+                                       vm, displacement, 
+                                       register.get_multiplier()), pos)
+                else:
+                    return (Address(hex(displacement).split('x')[-1].upper(), 
+                                    vm), pos)
+            else:
+                return (token_line[pos], pos + 1)
+        else:
+            return (token_line[pos], pos + 1)
+
 def is_start_address(token_line, pos, flavor):
     if isinstance(token_line[pos], OpenParen) and flavor == "att":
         return True
@@ -532,7 +553,7 @@ def get_op(token_line, pos, flavor, vm):
         if token_line[pos].get_nm() in vm.labels:
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
         elif token_line[pos].get_nm() in vm.symbols:
-            return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
+            return symbol_token(token_line, pos, flavor, vm)
     elif is_start_address(token_line, pos, flavor):
         return get_address_location (token_line, pos + 1, flavor, vm)
     else:

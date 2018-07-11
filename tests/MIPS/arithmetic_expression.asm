@@ -6,14 +6,11 @@
 
 ; Calculate -(x + y - 2 * z + 1)
 .text
-    lw $t0, x
-    lw $t1, y
-    lw $t2, 0($t0)
-    lw $t3, 0($t1)
-    add $t2, $t2, $t3
-    lw $t1, z
-    lw $t3, 0($t1)
-    add $t3, $t3, $t3
-    sub $t2, $t2, $t3
-    addi $t2, $t2, 1
-    sub $t2, $zero, $t2
+    lw $t0, x($gp)
+    lw $t1, y($gp)
+    add $t0, $t0, $t1
+    lw $t1, z($gp)
+    add $t1, $t1, $t1
+    sub $t0, $t0, $t1
+    addi $t0, $t0, 1
+    sub $t0, $zero, $t0
