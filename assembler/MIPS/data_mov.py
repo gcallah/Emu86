@@ -45,8 +45,6 @@ class Store(Instruction):
         if isinstance(ops[0], Register):
             if isinstance(ops[1], RegAddress):
                 ops[1].set_val(ops[0].get_val())
-            elif isinstance(ops[1], Symbol):
-                ops[1]. set_val(ops[0].get_val())
             else:
                 InvalidArgument(ops[1].get_nm())
         else: 

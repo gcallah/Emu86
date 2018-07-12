@@ -98,10 +98,10 @@ class TestPrograms(TestCase):
     #                          ord(string_z[position - 17]))
     #     self.assertEqual(intel_machine.memory[hex(22).split('x')[-1]], 0)
 
-    # def test_sum_calculation(self):
-    #     self.run_intel_test_code("tests/Intel/sum_test.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"],  53)
-    #     self.assertEqual(intel_machine.memory["1"], 53)
+    def test_sum_calculation(self):
+        self.run_mips_test_code("tests/MIPS/sum_test.asm")
+        self.assertEqual(mips_machine.registers["S0"],  53)
+        self.assertEqual(mips_machine.memory["1"], 53)
 
     def test_arithmetic_expression(self):
         self.run_mips_test_code("tests/MIPS/arithmetic_expression.asm")
@@ -149,12 +149,12 @@ class TestPrograms(TestCase):
         self.run_mips_test_code("tests/MIPS/int_square_root.asm")
         self.assertEqual(mips_machine.registers["S0"], 10)
 
-    # def test_add_to_array_elem_test(self):
-    #     self.run_intel_test_code("tests/Intel/change_array_elem_test.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"], 3331)
-    #     self.assertEqual(intel_machine.registers["EDX"], 3331)
-    #     self.assertEqual(intel_machine.registers["ECX"], 100)
-    #     self.assertEqual(intel_machine.registers["EBX"], 100)
+    def test_add_to_array_elem_test(self):
+        self.run_mips_test_code("tests/MIPS/change_array_elem_test.asm")
+        self.assertEqual(mips_machine.registers["S0"], 361)
+        self.assertEqual(mips_machine.registers["S5"], 361)
+        self.assertEqual(mips_machine.registers["T1"], 10)
+        self.assertEqual(mips_machine.registers["S1"], 10)
 
 if __name__ == '__main__':
     main()
