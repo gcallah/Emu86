@@ -3,10 +3,10 @@
     number: .word -105
     sum: .word 0
 
-; Store first number to EAX
-; Add 158 to value in EAX
+; Store first number to R8
+; Add 158 to value in R8
 ; Store total to sum
 .text
-    lw $s0, number($gp)		
-    addi $s0, $s0, 158	
-    sw $s0, sum($gp)
+    LW R8, number(R28)		
+    ADDI R8, R8, 158	
+    SW R8, sum(R28)

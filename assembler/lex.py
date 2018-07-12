@@ -50,8 +50,6 @@ def generate_reg_dict(vm, flavor):
     for reg in vm.registers:
         if flavor == "att":
             registers["%" + reg] = Register(reg, vm)
-        elif flavor == "mips":
-            registers["$" + reg] = Register(reg, vm)
         else:
             registers[reg] = Register(reg, vm)
     return registers

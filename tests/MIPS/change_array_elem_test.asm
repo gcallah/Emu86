@@ -7,18 +7,18 @@
 
 ; Change any numbers less than min to min:
 .text
-    add $s0, $zero, $zero
-    add $s1, $zero, $zero
-    addi $s2, $zero, nbrArray
-    lw $t0, nbrMin($gp)
-    lw $t1, nbrElts($gp)
-forCount1: beq $s1, $t1, 8
-body: lw $s3, ($s1)
-      slt $s4, $t0, $s3
-      bne $s4, $zero, 1
-      sw $t0, ($s1)
-endIfSmall: lw $s3, ($s1)
-            add $s0, $s0, $s3
-            addi $s1, $s1, 1
-            j forCount1
-endCount: add $s5, $zero, $s0
+    ADD R8, R0, R0
+    ADD R9, R0, R0
+    ADDI R10, R0, nbrArray
+    LW R16, nbrMin(R28)
+    LW R17, nbrElts(R28)
+FORCOUNT: BEQ R9, R17, 8
+BODY: LW R11, (R9)
+      SLT R12, R16, R11
+      BNE R12, R0, 1
+      SW R16, (R9)
+ENDIFSMALL: LW R11, (R9)
+            ADD R8, R8, R11
+            ADDI R9, R9, 1
+            J FORCOUNT
+ENDCOUNT: ADD R13, R0, R8

@@ -6,11 +6,11 @@
 
 ; Calculate -(x + y - 2 * z + 1)
 .text
-    lw $t0, x($gp)
-    lw $t1, y($gp)
-    add $t0, $t0, $t1
-    lw $t1, z($gp)
-    add $t1, $t1, $t1
-    sub $t0, $t0, $t1
-    addi $t0, $t0, 1
-    sub $t0, $zero, $t0
+    LW R8, x(R28)
+    LW R9, y(R28)
+    ADD R8, R8, R9
+    LW R10, z(R28)
+    ADD R10, R10, R10
+    SUB R8, R8, R10
+    ADDI R8, R8, 1
+    SUB R8, R0, R8

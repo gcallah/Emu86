@@ -37,10 +37,10 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             correct = operator(a, b)
-            mips_machine.registers["T1"] = a
-            mips_machine.registers["T2"] = b
-            assemble(instr + " $t3, $t1, $t2", 'mips', mips_machine)
-            self.assertEqual(mips_machine.registers["T3"], correct)
+            mips_machine.registers["R8"] = a
+            mips_machine.registers["R9"] = b
+            assemble(instr + " R10, R8, R9", 'mips', mips_machine)
+            self.assertEqual(mips_machine.registers["R10"], correct)
 
     def two_op_test_imm(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
@@ -49,84 +49,84 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             correct = operator(a, b)
-            mips_machine.registers["T1"] = a
-            assemble(instr + " $t3, $t1, " + str(b), 'mips', mips_machine)
-            self.assertEqual(mips_machine.registers["T3"], correct)
+            mips_machine.registers["R9"] = a
+            assemble(instr + " R10, R9, " + str(b), 'mips', mips_machine)
+            self.assertEqual(mips_machine.registers["R10"], correct)
 
     def test_add(self):
-        self.two_op_test(opfunc.add, "add")
+        self.two_op_test(opfunc.add, "ADD")
 
     def test_sub(self):
-        self.two_op_test(opfunc.sub, "sub")
+        self.two_op_test(opfunc.sub, "SUB")
 
     def test_and(self):
-        self.two_op_test(opfunc.and_, "and")
+        self.two_op_test(opfunc.and_, "AND")
 
     def test_or(self):
-        self.two_op_test(opfunc.or_, "or")
+        self.two_op_test(opfunc.or_, "OR")
 
     def test_add_imm(self):
-        self.two_op_test_imm(opfunc.add, "addi")
+        self.two_op_test_imm(opfunc.add, "ADDI")
 
     def test_sub_imm(self):
-        self.two_op_test_imm(opfunc.sub, "subi")
+        self.two_op_test_imm(opfunc.sub, "SUBI")
 
     def test_and_imm(self):
-        self.two_op_test_imm(opfunc.and_, "andi")
+        self.two_op_test_imm(opfunc.and_, "ANDI")
 
     def test_or_imm(self):
-        self.two_op_test_imm(opfunc.or_, "ori")
+        self.two_op_test_imm(opfunc.or_, "ORI")
 
     def test_xor(self):
-        self.two_op_test(opfunc.xor, "xor")
+        self.two_op_test(opfunc.xor, "XOR")
 
     def test_nor(self):
         for i in range(0, NUM_TESTS):
             a = random.randint(MIN_TEST, MAX_TEST)
             b = random.randint(MIN_TEST, MAX_TEST)
             correct = opfunc.inv(opfunc.or_(a, b))
-            mips_machine.registers["T1"] = a
-            mips_machine.registers["T2"] = b
-            assemble("nor $t3, $t1, $t2", 'mips', mips_machine)
-            self.assertEqual(mips_machine.registers["T3"], correct)
+            mips_machine.registers["R8"] = a
+            mips_machine.registers["R9"] = b
+            assemble("NOR R10, R8, R9", 'mips', mips_machine)
+            self.assertEqual(mips_machine.registers["R10"], correct)
 
     def test_slt_eq(self):
-        mips_machine.registers["T1"] = 1
-        mips_machine.registers["T2"] = 1
+        mips_machine.registers["R8"] = 1
+        mips_machine.registers["R9"] = 1
         mips_machine.flags["ZF"] = 0
-        assemble("slt $t3, $t1, $t2", 'mips', mips_machine)
+        assemble("SLT R10, R8, R9", 'mips', mips_machine)
         self.assertEqual(mips_machine.flags["ZF"], 1)
-        self.assertEqual(mips_machine.registers["T3"], 0)
+        self.assertEqual(mips_machine.registers["R10"], 0)
 
     def test_slt_l(self):
-        mips_machine.registers["T1"] = 0
-        mips_machine.registers["T2"] = 1
+        mips_machine.registers["R8"] = 0
+        mips_machine.registers["R9"] = 1
         mips_machine.flags["ZF"] = 0
-        assemble("slt $t3, $t1, $t2", 'mips', mips_machine)
+        assemble("SLT R10, R8, R9", 'mips', mips_machine)
         self.assertEqual(mips_machine.flags["ZF"], 0)
-        self.assertEqual(mips_machine.registers["T3"], 1)
+        self.assertEqual(mips_machine.registers["R10"], 1)
 
     def test_slti_eq(self):
-        mips_machine.registers["T1"] = 1
+        mips_machine.registers["R9"] = 1
         mips_machine.flags["ZF"] = 0
-        assemble("slti $t3, $t1, 1", 'mips', mips_machine)
+        assemble("SLTI R10, R9, 1", 'mips', mips_machine)
         self.assertEqual(mips_machine.flags["ZF"], 1)
-        self.assertEqual(mips_machine.registers["T3"], 0)
+        self.assertEqual(mips_machine.registers["R10"], 0)
 
     def test_slti_l(self):
-        mips_machine.registers["T1"] = 0
+        mips_machine.registers["R9"] = 0
         mips_machine.flags["ZF"] = 0
-        assemble("slti $t3, $t1, 1", 'mips', mips_machine)
+        assemble("SLTI R10, R9, 1", 'mips', mips_machine)
         self.assertEqual(mips_machine.flags["ZF"], 0)
-        self.assertEqual(mips_machine.registers["T3"], 1)
+        self.assertEqual(mips_machine.registers["R10"], 1)
 
     def test_sll(self):
-        self.two_op_test(opfunc.lshift, "sll",
+        self.two_op_test(opfunc.lshift, "SLL",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
 
     def test_srl(self):
-        self.two_op_test(opfunc.rshift, "srl",
+        self.two_op_test(opfunc.rshift, "SRL",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
         

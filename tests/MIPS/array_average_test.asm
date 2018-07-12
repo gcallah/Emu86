@@ -5,16 +5,16 @@
 
 ; Calculate the average of the array:
 .text
-    add $s0, $s0, $zero
-    add $s1, $s1, $zero
-    lw $t0, nbrElts($gp)
-    addi $s2, $gp, nbrArray 
-forCount1: beq $s1, $t0, 5
-body: lw $s4, ($s2)
-      add $s0, $s0, $s4
-      addi $s1, $s1, 1
-      addi $s2, $s2, 1
-      j forCount1
-endCount: div $s0, $t0
-mflo $s3
-mfhi $s4
+    ADD R8, R0, R0
+    ADD R9, R0, R0
+    LW R16, nbrElts(R28)
+    ADDI R10, R28, nbrArray 
+FORCOUNT: BEQ R9, R16, 5
+BODY: LW R11, (R10)
+      ADD R8, R8, R11
+      ADDI R9, R9, 1
+      ADDI R10, R10, 1
+      J FORCOUNT
+ENDCOUNT: DIV R8, R16
+MFLO R12
+MFHI R13

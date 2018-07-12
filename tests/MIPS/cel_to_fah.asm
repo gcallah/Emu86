@@ -7,13 +7,13 @@
 ; Convert from Celsius to Fahrenheit
 ; Store result in fTemp
 .text
-    lw $t0, cTemp($gp)
-    addi $s0, $zero, 9
-    mult $t0, $s0
-    mflo $t0
-    addi $t0, $t0, 2
-    addi $s0, $zero, 5
-    div $t0, $s0
-    mflo $t0
-    addi $t0, $t0, 32
-    sw $t0, fTemp($gp)
+    LW R8, cTemp(R28)
+    ADDI R9, R0, 9
+    MULT R8, R9
+    MFLO R8
+    ADDI R8, R8, 2
+    ADDI R9, R0, 5
+    DIV R8, R9
+    MFLO R8
+    ADDI R8, R8, 32
+    SW R8, fTemp(R28)

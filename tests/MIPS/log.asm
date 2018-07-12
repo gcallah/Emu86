@@ -4,15 +4,15 @@
 
 ; Calculating log (base 2) of a number
 .text
-    add $s0, $s0, $zero
-    addi $s1, $s1, 1
-    lw $s2, number($gp)
+    ADD R8, R8, R0
+    ADDI R9, R9, 1
+    LW R10, number(R28)
 
-whileLE: sub $s3, $s1, $s2
-         slt $s4, $zero, $s3  
-         bne $s4, $zero, 3
-body: add $s1, $s1, $s1
-      addi $s0, $s0, 1
-      j whileLE
+WHILELE: SUB R11, R9, R10
+         SLT R12, R0, R11
+         BNE R12, R0, 3
+BODY: ADD R9, R9, R9
+      ADDI R8, R8, 1
+      J WHILELE
 
-endWhileLE: addi $s0, $s0, -1
+ENDWHILELE: ADDI R8, R8, -1

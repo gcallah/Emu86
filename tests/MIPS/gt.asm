@@ -1,18 +1,18 @@
-         add $s0, $s0, $zero
-         addi $s1, $s1, 16
+         ADD R8, R8, R0
+         ADDI R9, R9, 16
 
-; compare S0 and S1 and loop until eax greater than ebx
-loop: sub $s2, $s0, $s1
-      slt $s3, $zero, $s2
-      addi $s4, $zero, 1
-      beq $s3, $s4, 2
-      addi $s0, $s0, 1
-      j loop
+; compare R8 and R9 and loop until R8 greater than R9
+LOOP: SUB R10, R8, R9
+      SLT R11, R0, R10
+      ADDI R12, R0, 1
+      BEQ R11, R12, 2
+      ADDI R8, R8, 1
+      J LOOP
 
-; when done, store ebx in ecx
-done: add $s5, $s1, $zero
-      addi $s6, $zero, 27
-      andi $s6, $s6, 23
+; when done, store R9 in R13
+DONE: ADD R13, R9, R0
+      ADDI R14, R0, 27
+      ANDI R14, R14, 23
 
 
 

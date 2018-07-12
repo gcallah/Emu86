@@ -1,11 +1,9 @@
-addi $t0, $zero, 4
-addi $t1, $zero, 1
-sw $t1, 0($t0)
-addi $t2, $zero, 4
-addi $t3, $zero, 2
-addi $t4, $zero, 8
-addi $t5, $zero, 16
-add ebx, ebx, ecx
-sub edx, edx, ecx
-sll $t1, $t1, 2
-sw $t1, 0($t0)
+ADDI R16, R0, 4
+ADDI R17, R0, 1
+SW R17, 0(R16)
+ADDI R18, R0, 4
+ADDI R19, R0, 2
+ADDI R20, R0, 8
+ADDI R21, R0, 16
+SLL R17, R17, 2
+SW R17, 0(R16)
