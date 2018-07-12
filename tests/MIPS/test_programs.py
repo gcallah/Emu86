@@ -69,9 +69,9 @@ class TestPrograms(TestCase):
     #     self.assertEqual(intel_machine.registers["EDX"], 8)
     #     self.assertEqual(intel_machine.memory["4"], 4)
 
-    # def test_jump(self):
-    #     self.run_intel_test_code("tests/Intel/test_jump.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"], 3)
+    def test_jump(self):
+        self.run_mips_test_code("tests/MIPS/test_jump.asm")
+        self.assertEqual(mips_machine.registers["S0"], 3)
 
     # def test_data(self):
     #     self.run_intel_test_code("tests/Intel/data.asm")
