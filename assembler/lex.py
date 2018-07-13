@@ -29,8 +29,7 @@ keywords_to_tokens = {
     ",": Comma(),
     "+": PlusTok(),
     "-": MinusTok(),
-    "?": QuestionTok(),
-    "DUP": DupTok(),
+    "?": QuestionTok()
 }
 
 def generate_reg_dict(vm, flavor):
@@ -68,7 +67,6 @@ def split_code(code, flavor):
 
     words = re.split("[ \t\r\n]+", code)
     index = 0
-
     while index < len(words):
         splitter = ""
         for character in words[index]:
@@ -91,49 +89,7 @@ def split_code(code, flavor):
 
     return words
 
-def sep_line(code, i, vm, key_words):
-    """
-    Returns a list of tokens created 
-
-    Args:
-        code: Line of code 
-        i: Line number of code
-           Needed for determining label location
-        vm: Virtual machine
-        key_words: A dictionary of key_words
-                   If word found, return the token associated 
-                   to that word key
-
-    Returns:
-        Tuple of the lexical analysis of the line
-        The first member is the tokens and the second is the
-        text of the code.
-    """
-    analysis = []
-    words = split_code(code, "intel")
-
-    for word in words:
-        if word != "":
-            if word in keywords_to_tokens:
-                analysis.append(keywords_to_tokens[word])
-            elif word.upper() in key_words:
-                analysis.append(key_words[word.upper()])
-            elif word[0] == ".":
-                analysis.append(Section(word[1:]))
-            elif word.find("'") != -1:
-                analysis.append(StringTok(word))
-            elif re.search(label_match, word) is not None:
-                vm.labels[word[:word.find(":")]] = i
-            elif re.search(sym_match, word) is not None:
-                analysis.append(NewSymbol(word, vm))
-            else:
-                try:
-                    analysis.append(IntegerTok(int(word)))
-                except Exception:
-                    raise InvalidArgument(word)
-    return (analysis, code)
-
-def sep_line_not_intel(code, i, flavor, data_sec, vm, key_words):
+def sep_line(code, i, flavor, data_sec, vm, key_words):
     """
     Returns a list of tokens created 
 
@@ -166,13 +122,16 @@ def sep_line_not_intel(code, i, flavor, data_sec, vm, key_words):
             elif word.find("'") != -1:
                 analysis.append(StringTok(word))
             elif re.search(label_match, word) is not None:
-                if data_sec:
-                    analysis.append(NewSymbol(word[:-1], vm))
+                if flavor == "intel":
+                    vm.labels[word[:word.find(":")]] = i
                 else:
-                    if flavor == "mips":
-                        vm.labels[word[:word.find(":")]] = i * 4
+                    if data_sec:
+                        analysis.append(NewSymbol(word[:-1], vm))
                     else:
-                        vm.labels[word[:word.find(":")]] = i
+                        if flavor == "mips":
+                            vm.labels[word[:word.find(":")]] = i * 4
+                        else:
+                            vm.labels[word[:word.find(":")]] = i
             elif re.search(sym_match, word) is not None:
                 analysis.append(NewSymbol(word, vm))
             else:
@@ -218,28 +177,22 @@ def lex(code, flavor, vm):
     # we've stripped extra whitespace, comments, and labels: 
     # now perform lexical analysis
     for line in pre_processed_lines:
+        language_keys = {}
+        language_keys.update(generate_reg_dict(vm, flavor))
         if flavor == "mips":
             from .MIPS.key_words import key_words
-            keys = {}
-            keys.update(key_words)
-            keys.update(generate_reg_dict(vm, flavor))
-            tok_lines.append(sep_line_not_intel(line, i, flavor, data_sec, vm, 
-                                           keys))
+            language_keys.update(key_words)
         else:
             from .Intel.key_words import instructions
-            key_words = {}
-            key_words.update(instructions)
-            key_words.update(generate_reg_dict(vm, flavor))
+            language_keys.update(instructions)
             if flavor == "intel":
                 from .Intel.key_words import intel_key_words
-                key_words.update(intel_key_words)
-                tok_lines.append(sep_line(line, i, vm, 
-                                          key_words))
+                language_keys.update(intel_key_words)
             else:
                 from .Intel.key_words import att_key_words
-                key_words.update(att_key_words)
-                tok_lines.append(sep_line_not_intel(line, i, flavor, data_sec, vm, 
-                                              key_words))
+                language_keys.update(att_key_words)
+        tok_lines.append(sep_line(line, i, flavor, data_sec, 
+                                  vm, language_keys))
         if line == ".data":
             add_to_ip = False
             data_sec = True
@@ -248,8 +201,8 @@ def lex(code, flavor, vm):
             add_to_ip = True
             data_sec = False
             continue
+
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
-
     return tok_lines

@@ -4,7 +4,7 @@ from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
 from .interrupts import Interrupt
-from assembler.tokens import DataType, ConstantSign
+from assembler.tokens import DataType, ConstantSign, DupTok
 
 je = Je('JE')
 jne = Jne('JNE')
@@ -56,6 +56,7 @@ intel_key_words = {
         'DB': DataType('DB'),
         'DW': DataType('DW'),
         'DD': DataType('DD'),
+        "DUP": DupTok()
 }
 
 att_key_words = {
@@ -64,6 +65,7 @@ att_key_words = {
         '.SHORT': DataType('DW'),
         '.LONG': DataType('DD'),
 
-        # constant token
-        '$': ConstantSign()
+        # other tokens
+        '$': ConstantSign(),
+        "DUP": DupTok()
 }
