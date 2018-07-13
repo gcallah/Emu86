@@ -84,7 +84,7 @@ def number_token(token_line, pos, flavor, vm):
             return (token_line[pos], pos + 1)
 
 def symbol_token(token_line, pos, flavor, vm):
-     """
+    """
     If token seen is a symbol, determine by flavor whether 
     to return the symbol token or return an address token
 

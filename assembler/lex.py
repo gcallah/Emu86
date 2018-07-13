@@ -133,7 +133,7 @@ def sep_line(code, i, vm, key_words):
                     raise InvalidArgument(word)
     return (analysis, code)
 
-def sep_line_att(code, i, data_sec, vm, key_words):
+def sep_line_not_intel(code, i, flavor, data_sec, vm, key_words):
     """
     Returns a list of tokens created 
 
@@ -141,9 +141,11 @@ def sep_line_att(code, i, data_sec, vm, key_words):
         code: Line of code 
         i: Line number of code
            Needed for determining label location
+        flavor: AT&T or MIPS
         data_sec: Boolean, determines if we are in the data section
                   Needed to differentiate between label and symbol
         vm: Virtual machine
+        key_words: Dictionary of key words for the flavor
 
     Returns:
         Tuple of the lexical analysis of the line
@@ -151,54 +153,7 @@ def sep_line_att(code, i, data_sec, vm, key_words):
         text of the code.
     """
     analysis = []
-    words = split_code(code, "att")
-
-    for word in words:
-        if word != "":
-            if word in keywords_to_tokens:
-                analysis.append(keywords_to_tokens[word])
-            elif word.upper() in key_words:
-                analysis.append(key_words[word.upper()])
-            elif word[0] == "$":
-                analysis.append(ConstantSign())
-            elif word[0] == ".":
-                analysis.append(Section(word[1:]))
-            elif word.find("'") != -1:
-                analysis.append(StringTok(word))
-            elif re.search(label_match, word) is not None:
-                if data_sec:
-                    analysis.append(NewSymbol(word[:-1], vm))
-                else:
-                    vm.labels[word[:word.find(":")]] = i
-            elif re.search(sym_match, word) is not None:
-                analysis.append(NewSymbol(word, vm))
-            else:
-                try:
-                    analysis.append(IntegerTok(int(word)))
-                except Exception:
-                    raise InvalidArgument(word)
-    return (analysis, code)
-
-
-def sep_line_mips(code, i, data_sec, vm, key_words):
-    """
-    Returns a list of tokens created 
-
-    Args:
-        code: Line of code 
-        i: Line number of code
-           Needed for determining label location
-        data_sec: Boolean, determines if we are in the data section
-                  Needed to differentiate between label and symbol
-        vm: Virtual machine
-
-    Returns:
-        Tuple of the lexical analysis of the line
-        The first member is the tokens and the second is the
-        text of the code.
-    """
-    analysis = []
-    words = split_code(code, "mips")
+    words = split_code(code,flavor)
 
     for word in words:
         if word != "":
@@ -214,7 +169,10 @@ def sep_line_mips(code, i, data_sec, vm, key_words):
                 if data_sec:
                     analysis.append(NewSymbol(word[:-1], vm))
                 else:
-                    vm.labels[word[:word.find(":")]] = i * 4
+                    if flavor == "mips":
+                        vm.labels[word[:word.find(":")]] = i * 4
+                    else:
+                        vm.labels[word[:word.find(":")]] = i
             elif re.search(sym_match, word) is not None:
                 analysis.append(NewSymbol(word, vm))
             else:
@@ -265,7 +223,7 @@ def lex(code, flavor, vm):
             keys = {}
             keys.update(key_words)
             keys.update(generate_reg_dict(vm, flavor))
-            tok_lines.append(sep_line_mips(line, i, data_sec, vm, 
+            tok_lines.append(sep_line_not_intel(line, i, flavor, data_sec, vm, 
                                            keys))
         else:
             from .Intel.key_words import instructions
@@ -280,7 +238,7 @@ def lex(code, flavor, vm):
             else:
                 from .Intel.key_words import att_key_words
                 key_words.update(att_key_words)
-                tok_lines.append(sep_line_att(line, i, data_sec, vm, 
+                tok_lines.append(sep_line_not_intel(line, i, flavor, data_sec, vm, 
                                               key_words))
         if line == ".data":
             add_to_ip = False
