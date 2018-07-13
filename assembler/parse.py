@@ -50,6 +50,19 @@ def add_debug(s, vm):
     vm.debug += (s + "\n")
 
 def number_token(token_line, pos, flavor, vm):
+    """
+    If token seen is an integer, determine by flavor whether 
+    to return the integer token or return an address token
+
+    Args:
+        token_line: Line of code
+        pos: Position where integer token is seen
+        flavor: Assembly language
+        vm: Virtual machine
+
+    Returns:
+        Integer or address token, next positon to look at
+    """
     if flavor == "intel":
         return (token_line[pos], pos + 1)
     else:
@@ -71,6 +84,19 @@ def number_token(token_line, pos, flavor, vm):
             return (token_line[pos], pos + 1)
 
 def symbol_token(token_line, pos, flavor, vm):
+     """
+    If token seen is a symbol, determine by flavor whether 
+    to return the symbol token or return an address token
+
+    Args:
+        token_line: Line of code
+        pos: Position where integer token is seen
+        flavor: Assembly language
+        vm: Virtual machine
+
+    Returns:
+        Symbol or address token, next positon to look at
+    """
     if flavor != "mips":
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     else:
@@ -92,6 +118,17 @@ def symbol_token(token_line, pos, flavor, vm):
             return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
 
 def is_start_address(token_line, pos, flavor):
+    """ 
+    Determines at current location if there is an address
+
+    Args:
+        token_line: Line of code
+        pos: Position of possible address
+        flavor: Assembly langauge
+
+    Returns:
+        True if address seen, False otherwise
+    """
     if isinstance(token_line[pos], OpenParen) and flavor == "att":
         return True
     elif isinstance(token_line[pos], OpenParen) and flavor == "mips":
