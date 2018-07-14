@@ -82,6 +82,19 @@ def make_language_keys(vm, flavor):
             language_keys.update(att_key_words)
     return language_keys
 
+def clean_list(lst):
+    """
+    Removes empty strings from a list of words
+
+    Args:
+        lst: List of words
+
+    Returns:
+        Cleaned list of words
+    """
+    while "" in lst:
+        lst.remove("")
+
 def split_code(code, flavor):
     """
     Splits code on regular expressions and on separators
@@ -115,6 +128,9 @@ def split_code(code, flavor):
         else:
             index += 1
 
+    # remove all empty strings from list 
+    # that were made from splitting
+    clean_list(words)
     return words
 
 def sep_line(code, i, flavor, data_sec, vm, language_keys):
@@ -140,31 +156,30 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
     words = split_code(code,flavor)
 
     for word in words:
-        if word != "":
-            if word.upper() in language_keys:
-                analysis.append(language_keys[word.upper()])
-            elif word[0] == ".":
-                analysis.append(Section(word[1:]))
-            elif word.find("'") != -1:
-                analysis.append(StringTok(word))
-            elif re.search(label_match, word) is not None:
-                if flavor == "intel":
-                    vm.labels[word[:word.find(":")]] = i
-                else:
-                    if data_sec:
-                        analysis.append(NewSymbol(word[:-1], vm))
-                    else:
-                        if flavor == "mips":
-                            vm.labels[word[:word.find(":")]] = i * 4
-                        else:
-                            vm.labels[word[:word.find(":")]] = i
-            elif re.search(sym_match, word) is not None:
-                analysis.append(NewSymbol(word, vm))
+        if word.upper() in language_keys:
+            analysis.append(language_keys[word.upper()])
+        elif word[0] == ".":
+            analysis.append(Section(word[1:]))
+        elif word.find("'") != -1:
+            analysis.append(StringTok(word))
+        elif re.search(label_match, word) is not None:
+            if flavor == "intel":
+                vm.labels[word[:word.find(":")]] = i
             else:
-                try:
-                    analysis.append(IntegerTok(int(word)))
-                except Exception:
-                    raise InvalidArgument(word)
+                if data_sec:
+                    analysis.append(NewSymbol(word[:-1], vm))
+                else:
+                    if flavor == "mips":
+                        vm.labels[word[:word.find(":")]] = i * 4
+                    else:
+                        vm.labels[word[:word.find(":")]] = i
+        elif re.search(sym_match, word) is not None:
+            analysis.append(NewSymbol(word, vm))
+        else:
+            try:
+                analysis.append(IntegerTok(int(word)))
+            except Exception:
+                raise InvalidArgument(word)
     return (analysis, code)
 
 def lex(code, flavor, vm):
