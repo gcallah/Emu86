@@ -53,6 +53,34 @@ def generate_reg_dict(vm, flavor):
             registers[reg] = Register(reg, vm)
     return registers
 
+def make_language_keys(vm, flavor):
+    """
+    Creates a dictionary of key terms
+
+    Args: 
+        vm: Virtual machine
+        flavor: Assembly language
+
+    Returns:
+        A dictionary of key terms with associated tokens
+    """
+    language_keys = {}
+    language_keys.update(keywords_to_tokens)
+    language_keys.update(generate_reg_dict(vm, flavor))
+    if flavor == "mips":
+        from .MIPS.key_words import key_words
+        language_keys.update(key_words)
+        return language_keys
+    else:
+        from .Intel.key_words import instructions
+        language_keys.update(instructions)
+        if flavor == "intel":
+            from .Intel.key_words import intel_key_words
+            language_keys.update(intel_key_words)
+        else:
+            from .Intel.key_words import att_key_words
+            language_keys.update(att_key_words)
+    return language_keys
 
 def split_code(code, flavor):
     """
@@ -89,7 +117,7 @@ def split_code(code, flavor):
 
     return words
 
-def sep_line(code, i, flavor, data_sec, vm, key_words):
+def sep_line(code, i, flavor, data_sec, vm, language_keys):
     """
     Returns a list of tokens created 
 
@@ -113,10 +141,8 @@ def sep_line(code, i, flavor, data_sec, vm, key_words):
 
     for word in words:
         if word != "":
-            if word in keywords_to_tokens:
-                analysis.append(keywords_to_tokens[word])
-            elif word.upper() in key_words:
-                analysis.append(key_words[word.upper()])
+            if word.upper() in language_keys:
+                analysis.append(language_keys[word.upper()])
             elif word[0] == ".":
                 analysis.append(Section(word[1:]))
             elif word.find("'") != -1:
@@ -173,24 +199,11 @@ def lex(code, flavor, vm):
             continue
             
         pre_processed_lines.append(line)
-
+    
     # we've stripped extra whitespace, comments, and labels: 
     # now perform lexical analysis
     for line in pre_processed_lines:
-        language_keys = {}
-        language_keys.update(generate_reg_dict(vm, flavor))
-        if flavor == "mips":
-            from .MIPS.key_words import key_words
-            language_keys.update(key_words)
-        else:
-            from .Intel.key_words import instructions
-            language_keys.update(instructions)
-            if flavor == "intel":
-                from .Intel.key_words import intel_key_words
-                language_keys.update(intel_key_words)
-            else:
-                from .Intel.key_words import att_key_words
-                language_keys.update(att_key_words)
+        language_keys = make_language_keys(vm, flavor)
         tok_lines.append(sep_line(line, i, flavor, data_sec, 
                                   vm, language_keys))
         if line == ".data":
@@ -205,4 +218,5 @@ def lex(code, flavor, vm):
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
+
     return tok_lines
