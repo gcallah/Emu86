@@ -65,6 +65,8 @@ def main_page(request):
                 intel_machine.flavor = None
                 mips_machine.flavor = "mips"
                 site_hdr += ": MIPS"
+                convert_reg_contents(mips_machine.registers)
+                convert_mem_contents(mips_machine.memory)
                 return render(request, 'main.html',
                             {'form': form,
                              HEADER: site_hdr,
