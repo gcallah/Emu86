@@ -48,6 +48,7 @@ def welcome(request):
 def main_page(request):
     last_instr = ""
     error = ""
+    base = ""
 
     site_hdr = get_hdr()
     if request.method == 'GET':
@@ -56,6 +57,10 @@ def main_page(request):
         intel_machine.re_init()
         mips_machine.re_init()
         form = MainForm()
+        if intel_machine.flavor != None:
+            base = "dec"
+        else:
+            base = "hex"
     else:
         if 'language' in request.POST:
             intel_machine.re_init()
@@ -82,7 +87,7 @@ def main_page(request):
                              'flags': mips_machine.flags,
                              'flavor': mips_machine.flavor,
                              'data_init': mips_machine.data_init,
-                             'base_num': 'hex'
+                             'base': 'hex'
                             })
             else:
                 mips_machine.flavor = None
@@ -107,7 +112,7 @@ def main_page(request):
                                'flags': intel_machine.flags,
                                'flavor': intel_machine.flavor,
                                DATA_INIT: intel_machine.data_init,
-                               'base_num': 'dec'
+                               'base': 'dec'
                               })
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
@@ -138,7 +143,7 @@ def main_page(request):
                         mips_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
                     except Exception:
                         mips_machine.nxt_key = 0
-                    
+            base = request.POST['base']     
             if intel_machine.flavor != None:
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
@@ -146,8 +151,8 @@ def main_page(request):
                 get_flag_contents(intel_machine.flags, request)
                 intel_machine.data_init = request.POST[DATA_INIT]
             else:
-                get_reg_contents(mips_machine.registers, request, True)
-                get_mem_contents(mips_machine.memory, request, True)
+                get_reg_contents(mips_machine.registers, request)
+                get_mem_contents(mips_machine.memory, request)
                 get_stack_contents(mips_machine.stack, request)
                 get_flag_contents(mips_machine.flags, request)
                 mips_machine.data_init = request.POST[DATA_INIT]
@@ -164,8 +169,9 @@ def main_page(request):
 
     if mips_machine.flavor == MIPS:
         site_hdr += ": MIPS"
-        convert_reg_contents(mips_machine.registers)
-        convert_mem_contents(mips_machine.memory)
+        if base == "hex":
+            convert_reg_contents(mips_machine.registers)
+            convert_mem_contents(mips_machine.memory)
         return render(request, 'main.html',
                     {'form': form,
                      HEADER: site_hdr,
@@ -179,13 +185,17 @@ def main_page(request):
                      'stack': mips_machine.stack, 
                      'flags': mips_machine.flags,
                      'flavor': mips_machine.flavor,
-                     DATA_INIT: mips_machine.data_init
+                     DATA_INIT: mips_machine.data_init,
+                     'base': base
                     })
-
+        
     if intel_machine.flavor == INTEL:
         site_hdr += ": Intel"
     else:
         site_hdr += ": AT&T"
+    if base == "hex":
+        convert_reg_contents(intel_machine.registers)
+        convert_mem_contents(intel_machine.memory)
     return render(request, 'main.html',
                   {'form': form,
                    HEADER: site_hdr,
@@ -199,12 +209,13 @@ def main_page(request):
                    'stack': intel_machine.stack, 
                    'flags': intel_machine.flags,
                    'flavor': intel_machine.flavor,
-                   DATA_INIT: intel_machine.data_init
+                   DATA_INIT: intel_machine.data_init,
+                   'base': base
                   })
 
-def get_reg_contents(registers, request, convert=False):
+def get_reg_contents(registers, request):
     for reg in registers:
-        if convert:
+        if "x" in request.POST[reg]:
             registers[reg] = int(request.POST[reg], 16)
         else:
             registers[reg] = request.POST[reg]
@@ -213,9 +224,9 @@ def get_flag_contents(flags, request):
     for flag in flags:
         flags[flag] = request.POST[flag]
 
-def get_mem_contents(memory, request, convert=False):
+def get_mem_contents(memory, request):
     for loc in memory:
-        if convert:
+        if "x" in request.POST[loc]:
             memory[loc] = int(request.POST[str(loc)], 16)
         else:
             memory[loc] = request.POST[str(loc)]
