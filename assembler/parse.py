@@ -65,23 +65,27 @@ def number_token(token_line, pos, flavor, vm):
     """
     if flavor == "intel":
         return (token_line[pos], pos + 1)
-    else:
-        if pos + 1 < len (token_line):
-            if isinstance(token_line[pos + 1], OpenParen):
-                register, displacement, pos = get_address_att(token_line, 
+    elif (pos + 1 < len(token_line) and 
+          isinstance(token_line[pos + 1], OpenParen)):
+        reg = None
+        disp = None
+        if flavor == "att":
+            reg, disp, pos = get_address_att(token_line, 
+                                             pos + 2, vm, 
+                                             token_line[pos].get_val())
+        else:
+            reg, disp, pos = get_address_mips(token_line, 
                                               pos + 2, vm, 
                                               token_line[pos].get_val())
-                if register: 
-                    return (RegAddress(register.get_nm(), 
-                                       vm, displacement, 
-                                       register.get_multiplier()), pos)
-                else:
-                    return (Address(hex(displacement).split('x')[-1].upper(), 
-                                    vm), pos)
-            else:
-                return (token_line[pos], pos + 1)
+        if reg: 
+            return (RegAddress(reg.get_nm(), 
+                               vm, disp, 
+                               reg.get_multiplier()), pos)
         else:
-            return (token_line[pos], pos + 1)
+            return (Address(hex(disp).split('x')[-1].upper(), 
+                            vm), pos)
+    else:
+        return (token_line[pos], pos + 1)
 
 def symbol_token(token_line, pos, flavor, vm):
     """
@@ -99,23 +103,20 @@ def symbol_token(token_line, pos, flavor, vm):
     """
     if flavor != "mips":
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
-    else:
-        if pos + 1 < len (token_line):
-            if isinstance(token_line[pos + 1], OpenParen):
-                register, displacement, pos = get_address_att(token_line, 
-                                              pos + 2, vm, 
-                                              vm.symbols[token_line[pos].get_nm()])
-                if register: 
-                    return (RegAddress(register.get_nm(), 
-                                       vm, displacement, 
-                                       register.get_multiplier()), pos)
-                else:
-                    return (Address(hex(displacement).split('x')[-1].upper(), 
-                                    vm), pos)
-            else:
-                return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
+    elif (pos + 1 < len (token_line) and 
+          isinstance(token_line[pos + 1], OpenParen)):
+        register, displacement, pos = get_address_att(token_line, 
+                                      pos + 2, vm, 
+                                      vm.symbols[token_line[pos].get_nm()])
+        if register: 
+            return (RegAddress(register.get_nm(), 
+                               vm, displacement, 
+                               register.get_multiplier()), pos)
         else:
-            return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
+            return (Address(hex(displacement).split('x')[-1].upper(), 
+                            vm), pos)
+    else:
+        return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
 
 def is_start_address(token_line, pos, flavor):
     """ 
@@ -491,7 +492,7 @@ def get_address_att(token_line, pos, vm, displacement = 0):
                         register = token_line[pos]
                     pos += 1
                     state = NEED_COMMA_OR_CLOSE_PAREN
-            # if Symbol, ex: [x]
+            # if Symbol, ex: (x)
             elif isinstance(token_line[pos], NewSymbol):
                 if token_line[pos].get_nm() in vm.symbols:
                     displacement += vm.symbols[token_line[pos].get_nm()]
@@ -510,6 +511,51 @@ def get_address_att(token_line, pos, vm, displacement = 0):
             elif isinstance(token_line[pos], CloseParen):
                 if second_register:
                     return (register, [displacement, second_register], pos + 1)
+                return (register, displacement, pos + 1)
+            else:
+                raise InvalidMemLoc(token_line[pos].get_nm())
+
+def get_address_mips(token_line, pos, vm, displacement = 0):
+    """
+    Converts a sublist of the tokenized instruction into 
+    corresponding address token for MIPS
+
+    Args:
+        token_line: List of instruction tokens
+        pos: Beginning position in list
+        vm: Virtual machine
+
+    Returns: 
+        Address token 
+    """
+
+    NEED_VAL = 0
+    NEED_CLOSE_PAREN = 1
+    if pos >= len(token_line):
+        raise InvalidMemLoc("")
+    state = NEED_VAL
+    register = None
+    int_disp = 0
+    while True:
+        if state == NEED_VAL:
+            if pos >= len(token_line):
+                raise MissingOps()
+            # if Integer
+            elif isinstance(token_line[pos], IntegerTok):
+                int_disp += token_line[pos].get_val()
+                pos += 1
+                state = NEED_CLOSE_PAREN
+            # if Register
+            elif isinstance(token_line[pos], Register):
+                register = token_line[pos]
+                pos += 1
+                state = NEED_CLOSE_PAREN
+            else:
+                raise InvalidMemLoc(token_line[pos].get_nm())
+        else: 
+            if pos >= len(token_line):
+                raise MissingCloseParen()
+            elif isinstance(token_line[pos], CloseParen):
                 return (register, displacement, pos + 1)
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
@@ -533,8 +579,10 @@ def get_address_location(token_line, pos, flavor, vm):
     displacement = 0
     if flavor == "intel":
         register, displacement, pos = get_address(token_line, pos, vm)
-    else:
+    elif flavor == "att":
         register, displacement, pos = get_address_att(token_line, pos, vm)
+    else: 
+        register, displacement, pos = get_address_mips(token_line, pos, vm)
     if register:
         return (RegAddress(register.get_nm(), vm, 
                            displacement, register.get_multiplier()), pos)
@@ -591,6 +639,8 @@ def get_op(token_line, pos, flavor, vm):
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
         elif token_line[pos].get_nm() in vm.symbols:
             return symbol_token(token_line, pos, flavor, vm)
+        else:
+            raise UnknownName(token_line[pos].get_nm())
     elif is_start_address(token_line, pos, flavor):
         return get_address_location (token_line, pos + 1, flavor, vm)
     else:
