@@ -19,10 +19,23 @@
             {% else %}
                 <input type="hidden" name="flavor">
             {% endif %}
+
             {% if data_init == "on" %}
                 <input type="hidden" name="data_init" value = "on">
             {% else %}
                 <input type="hidden" name="data_init" value = "off">
+            {% endif %}
+
+            <br>
+            {% if base_num == "dec" %}
+                <input type="radio" name="base" value="dec" checked="checked"> Decimal<br>
+                <input type="radio" name="base" value="hex"> Hexidecimal<br>
+            {% elif base_num == "hex" %}
+                <input type="radio" name="base" value="dec"> Decimal<br>
+                <input type="radio" name="base" value="hex" checked="checked"> Hexidecimal<br>
+            {% else %}
+                <input type="radio" name="base" value="dec"> Decimal<br>
+                <input type="radio" name="base" value="hex" checked="checked"> Hexidecimal <br>
             {% endif %}
             <table>
                 <tr>

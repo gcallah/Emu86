@@ -19,6 +19,7 @@ CLEAR = 'clear'
 HEADER = 'header'
 INTEL = 'intel'
 ATT = 'att'
+MIPS = 'mips'
 DATA_INIT = 'data_init'
 
 
@@ -61,9 +62,9 @@ def main_page(request):
             mips_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
-            if lang == "mips":
+            if lang == MIPS:
                 intel_machine.flavor = None
-                mips_machine.flavor = "mips"
+                mips_machine.flavor = MIPS
                 site_hdr += ": MIPS"
                 convert_reg_contents(mips_machine.registers)
                 convert_mem_contents(mips_machine.memory)
@@ -80,16 +81,17 @@ def main_page(request):
                              'stack': mips_machine.stack, 
                              'flags': mips_machine.flags,
                              'flavor': mips_machine.flavor,
-                             'data_init': mips_machine.data_init
+                             'data_init': mips_machine.data_init,
+                             'base_num': 'hex'
                             })
             else:
                 mips_machine.flavor = None
                 header_line = site_hdr
-                if lang == "att":
-                    intel_machine.flavor = "att"
+                if lang == ATT:
+                    intel_machine.flavor = ATT
                     site_hdr += ": AT&T"
                 else:
-                    intel_machine.flavor = "intel"
+                    intel_machine.flavor = INTEL
                     site_hdr += ": Intel"
                 return render(request, 'main.html',
                               {'form': form,
@@ -104,15 +106,16 @@ def main_page(request):
                                'stack': intel_machine.stack, 
                                'flags': intel_machine.flags,
                                'flavor': intel_machine.flavor,
-                               DATA_INIT: intel_machine.data_init
+                               DATA_INIT: intel_machine.data_init,
+                               'base_num': 'dec'
                               })
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
             language = request.POST['flavor']
-            if language == "intel" or language == "att":
+            if language == INTEL or language == ATT:
                 intel_machine.flavor = language
                 mips_machine.flavor = None
-            elif language == "mips":
+            elif language == MIPS:
                 intel_machine.flavor = None
                 mips_machine.flavor = language
         if CLEAR in request.POST:
@@ -148,18 +151,18 @@ def main_page(request):
                 get_stack_contents(mips_machine.stack, request)
                 get_flag_contents(mips_machine.flags, request)
                 mips_machine.data_init = request.POST[DATA_INIT]
-            if intel_machine.flavor == "intel":
+            if intel_machine.flavor == INTEL:
                 (last_instr, error) = assemble(request.POST[CODE], INTEL,
                                                intel_machine, step)
-            elif intel_machine.flavor == "att":
+            elif intel_machine.flavor == ATT:
                 (last_instr, error) = assemble(request.POST[CODE], ATT, 
                                                intel_machine, step)
             else:
-                (last_instr, error) = assemble(request.POST[CODE], "mips", 
+                (last_instr, error) = assemble(request.POST[CODE], MIPS, 
                                                mips_machine, step)
 
 
-    if mips_machine.flavor == "mips":
+    if mips_machine.flavor == MIPS:
         site_hdr += ": MIPS"
         convert_reg_contents(mips_machine.registers)
         convert_mem_contents(mips_machine.memory)
@@ -179,7 +182,7 @@ def main_page(request):
                      DATA_INIT: mips_machine.data_init
                     })
 
-    if intel_machine.flavor == "intel":
+    if intel_machine.flavor == INTEL:
         site_hdr += ": Intel"
     else:
         site_hdr += ": AT&T"
