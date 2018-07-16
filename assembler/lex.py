@@ -7,7 +7,6 @@ import pdb
 from random import randrange
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidArgument
-from .parse import dtype_info, DONT_INIT, sym_match, label_match
 from .tokens import Location, Address, Register, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
 from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
@@ -23,6 +22,8 @@ label_match = re.compile(LABEL_RE)
 
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
+
+DONT_INIT = "?"
 
 SEPARATORS = set([',', '(', ')', '[', ']', '+', '-'])
 

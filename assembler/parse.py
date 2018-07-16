@@ -6,6 +6,7 @@ import re
 import pdb
 from random import randrange
 
+from .lex import DONT_INIT
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
@@ -20,8 +21,6 @@ from .virtual_machine import MEM_SIZE
 
 TOKENS = 0
 CODE = 1
-
-DONT_INIT = "?"
 
 MAX_BYTE = 255
 MAX_SHORT = 65535
@@ -200,11 +199,10 @@ def get_DUP_value(token_line, pos):
     return (dup_value, pos)
 
 def is_str_termin(token_line, pos):
-    if not isinstance(token_line[pos + 2], IntegerTok):
+    if not isinstance(token_line[pos], IntegerTok):
         return False
     # check if following is an Integer with value of 0
-    elif (isinstance(token_line[pos + 2], IntegerTok) and 
-             token_line[pos + 2].get_val() != 0):
+    elif (token_line[pos].get_val() != 0):
         return False
     return True
 
@@ -227,8 +225,8 @@ def parse_string_token(token_line, pos):
         raise MissingData()
     elif not isinstance(token_line[pos + COMMA_POS], Comma):
         raise MissingComma()
-# is string terminated poperly?
-    elif not is_str_termin(token_line, pos + TERM_POS)
+# is string terminated properly?
+    elif not is_str_termin(token_line, pos + TERM_POS):
         raise InvalidDataVal(str(token_line[pos + TERM_POS].get_val()))
 
     else:
