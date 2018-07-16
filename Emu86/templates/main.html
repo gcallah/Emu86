@@ -27,14 +27,15 @@
             {% endif %}
 
             <br>
+            Please select your number system: 
             {% if base == "dec" %}
-                <input type="radio" name="base" value="dec" checked="checked"> Decimal<br>
+                <input type="radio" name="base" value="dec" checked="checked"> Decimal 
                 <input type="radio" name="base" value="hex"> Hexidecimal<br>
             {% elif base == "hex" %}
-                <input type="radio" name="base" value="dec"> Decimal<br>
+                <input type="radio" name="base" value="dec"> Decimal
                 <input type="radio" name="base" value="hex" checked="checked"> Hexidecimal<br>
             {% else %}
-                <input type="radio" name="base" value="dec"> Decimal<br>
+                <input type="radio" name="base" value="dec"> Decimal
                 <input type="radio" name="base" value="hex"> Hexidecimal <br>
             {% endif %}
             <table>
