@@ -105,15 +105,15 @@ def symbol_token(token_line, pos, flavor, vm):
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     elif (pos + 1 < len (token_line) and 
           isinstance(token_line[pos + 1], OpenParen)):
-        register, displacement, pos = get_address_att(token_line, 
+        reg, disp, pos = get_address_att(token_line, 
                                       pos + 2, vm, 
                                       vm.symbols[token_line[pos].get_nm()])
-        if register: 
-            return (RegAddress(register.get_nm(), 
-                               vm, displacement, 
-                               register.get_multiplier()), pos)
+        if reg: 
+            return (RegAddress(reg.get_nm(), 
+                               vm, disp, 
+                               reg.get_multiplier()), pos)
         else:
-            return (Address(hex(displacement).split('x')[-1].upper(), 
+            return (Address(hex(disp).split('x')[-1].upper(), 
                             vm), pos)
     else:
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
@@ -374,8 +374,8 @@ def get_address(token_line, pos, vm):
     if pos >= len(token_line):
         raise InvalidMemLoc("")
     state = NEED_VAL
-    register = None
-    displacement = 0
+    reg = None
+    disp = 0
     closeBracket = False 
     args = 0
     # check other elements within bracket
@@ -391,24 +391,24 @@ def get_address(token_line, pos, vm):
                 args += 1
                 if args > 2:
                     raise MissingCloseBrack()
-                displacement += token_line[pos].get_val()
+                disp += token_line[pos].get_val()
                 pos += 1
                 state = NEED_OP_OR_CLOSE_BRACK
-            # if Register
+            # if reg
             elif isinstance(token_line[pos], Register):
                 args += 1
                 if args > 2:
                     raise MissingCloseBrack()
-                if register:
-                    displacement = token_line[pos]
+                if reg:
+                    disp = token_line[pos]
                 else:
-                    register = token_line[pos]
+                    reg = token_line[pos]
                 pos += 1
                 state = NEED_OP_OR_CLOSE_BRACK
             # if Symbol, ex: [x]
             elif isinstance(token_line[pos], NewSymbol):
                 if token_line[pos].get_nm() in vm.symbols:
-                    displacement += vm.symbols[token_line[pos].get_nm()]
+                    disp += vm.symbols[token_line[pos].get_nm()]
                     pos += 1
                     state = NEED_OP_OR_CLOSE_BRACK
                 else:
@@ -427,11 +427,11 @@ def get_address(token_line, pos, vm):
                 state = NEED_VAL
             elif isinstance(token_line[pos], CloseBracket):
                 pos += 1
-                return (register, displacement, pos)
+                return (reg, disp, pos)
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
 
-def get_address_att(token_line, pos, vm, displacement = 0):
+def get_address_att(token_line, pos, vm, disp = 0):
     """
     Converts a sublist of the tokenized instruction into 
     corresponding address token
@@ -450,10 +450,10 @@ def get_address_att(token_line, pos, vm, displacement = 0):
     if pos >= len(token_line):
         raise InvalidMemLoc("")
     state = NEED_VAL
-    register = None
+    reg = None
     closeParen = False 
-    second_register = None
-    count = 0 # can only have at most 2 registers!
+    sec_reg = None
+    count = 0 # can only have at most 2 regs!
     # check other elements within bracket
     while True:
         if state == NEED_VAL:
@@ -461,41 +461,41 @@ def get_address_att(token_line, pos, vm, displacement = 0):
                 raise MissingOps()
             # if Integer
             elif isinstance(token_line[pos], IntegerTok):
-                if register:
-                    if register == token_line[pos - 2]:
-                        register.set_multiplier(token_line[pos].get_val())
-                    elif (second_register == token_line[pos - 2] and 
-                          isinstance(second_register, Register)):
-                        second_register.set_multiplier(token_line[pos].get_val())
+                if reg:
+                    if reg == token_line[pos - 2]:
+                        reg.set_multiplier(token_line[pos].get_val())
+                    elif (sec_reg == token_line[pos - 2] and 
+                          isinstance(sec_reg, Register)):
+                        sec_reg.set_multiplier(token_line[pos].get_val())
                     else: 
                         raise InvalidArgument(token_line[pos].get_nm())
                 else:
                     try:
                         if isinstance(token_line[pos + 1], CloseParen):
-                            displacement += token_line[pos].get_val()
-                            return (register, displacement, pos + 2)
+                            disp += token_line[pos].get_val()
+                            return (reg, disp, pos + 2)
                         else:
                             raise MissingCloseParen()
                     except:
                          raise MissingCloseParen()
                 pos += 1
                 state = NEED_COMMA_OR_CLOSE_PAREN
-            # if Register
+            # if reg
             elif isinstance(token_line[pos], Register):
                 count += 1
                 if count > 2:
                     raise InvalidMemLoc(token_line[pos].get_nm())
                 else:
-                    if register:
-                        second_register = token_line[pos]
+                    if reg:
+                        sec_reg = token_line[pos]
                     else:
-                        register = token_line[pos]
+                        reg = token_line[pos]
                     pos += 1
                     state = NEED_COMMA_OR_CLOSE_PAREN
             # if Symbol, ex: (x)
             elif isinstance(token_line[pos], NewSymbol):
                 if token_line[pos].get_nm() in vm.symbols:
-                    displacement += vm.symbols[token_line[pos].get_nm()]
+                    disp += vm.symbols[token_line[pos].get_nm()]
                     pos += 1
                     state = NEED_COMMA_OR_CLOSE_PAREN
                 else:
@@ -509,13 +509,13 @@ def get_address_att(token_line, pos, vm, displacement = 0):
                 pos += 1
                 state = NEED_VAL
             elif isinstance(token_line[pos], CloseParen):
-                if second_register:
-                    return (register, [displacement, second_register], pos + 1)
-                return (register, displacement, pos + 1)
+                if sec_reg:
+                    return (reg, [disp, sec_reg], pos + 1)
+                return (reg, disp, pos + 1)
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
 
-def get_address_mips(token_line, pos, vm, displacement = 0):
+def get_address_mips(token_line, pos, vm, disp = 0):
     """
     Converts a sublist of the tokenized instruction into 
     corresponding address token for MIPS
@@ -534,7 +534,7 @@ def get_address_mips(token_line, pos, vm, displacement = 0):
     if pos >= len(token_line):
         raise InvalidMemLoc("")
     state = NEED_VAL
-    register = None
+    reg = None
     int_disp = 0
     while True:
         if state == NEED_VAL:
@@ -545,9 +545,9 @@ def get_address_mips(token_line, pos, vm, displacement = 0):
                 int_disp += token_line[pos].get_val()
                 pos += 1
                 state = NEED_CLOSE_PAREN
-            # if Register
+            # if reg
             elif isinstance(token_line[pos], Register):
-                register = token_line[pos]
+                reg = token_line[pos]
                 pos += 1
                 state = NEED_CLOSE_PAREN
             else:
@@ -556,7 +556,7 @@ def get_address_mips(token_line, pos, vm, displacement = 0):
             if pos >= len(token_line):
                 raise MissingCloseParen()
             elif isinstance(token_line[pos], CloseParen):
-                return (register, displacement, pos + 1)
+                return (reg, disp, pos + 1)
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
 
@@ -575,21 +575,21 @@ def get_address_location(token_line, pos, flavor, vm):
         RegAddress or Address token, 
         position of next item in instruction
     """
-    register = None
-    displacement = 0
+    reg = None
+    disp = 0
     if flavor == "intel":
-        register, displacement, pos = get_address(token_line, pos, vm)
+        reg, disp, pos = get_address(token_line, pos, vm)
     elif flavor == "att":
-        register, displacement, pos = get_address_att(token_line, pos, vm)
+        reg, disp, pos = get_address_att(token_line, pos, vm)
     else: 
-        register, displacement, pos = get_address_mips(token_line, pos, vm)
-    if register:
-        return (RegAddress(register.get_nm(), vm, 
-                           displacement, register.get_multiplier()), pos)
+        reg, disp, pos = get_address_mips(token_line, pos, vm)
+    if reg:
+        return (RegAddress(reg.get_nm(), vm, 
+                           disp, reg.get_multiplier()), pos)
     else:
-        if displacement >= 256 or displacement < 0:
-            raise InvalidMemLoc(str(displacement))
-        return (Address(hex(displacement).split('x')[-1].upper(), vm), 
+        if disp >= 256 or disp < 0:
+            raise InvalidMemLoc(str(disp))
+        return (Address(hex(disp).split('x')[-1].upper(), vm), 
                 pos)
 
 def get_op(token_line, pos, flavor, vm):
