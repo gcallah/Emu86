@@ -16,6 +16,11 @@ from .tokens import Comma, OpenParen, CloseParen
 from .virtual_machine import MEM_SIZE
 
 
+SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
+sym_match = re.compile(SYM_RE)
+LABEL_RE = SYM_RE + ":"
+label_match = re.compile(LABEL_RE)
+
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
@@ -156,12 +161,16 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
     words = split_code(code,flavor)
 
     for word in words:
+# keyword:
         if word.upper() in language_keys:
             analysis.append(language_keys[word.upper()])
+# section declaration:
         elif word[0] == ".":
             analysis.append(Section(word[1:]))
+# string:
         elif word.find("'") != -1:
             analysis.append(StringTok(word))
+# label / symbol:
         elif re.search(label_match, word) is not None:
             if flavor == "intel":
                 vm.labels[word[:word.find(":")]] = i
@@ -173,6 +182,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                         vm.labels[word[:word.find(":")]] = i * 4
                     else:
                         vm.labels[word[:word.find(":")]] = i
+# hex number:
         elif word[:2] == "0x" and flavor == "mips":
             try:
                 analysis.append(IntegerTok(int(word, 16)))
@@ -223,6 +233,7 @@ def lex(code, flavor, vm):
     # we've stripped extra whitespace, comments, and labels: 
     # now perform lexical analysis
     for line in pre_processed_lines:
+# create language-specific dictionary:
         language_keys = make_language_keys(vm, flavor)
         tok_lines.append(sep_line(line, i, flavor, data_sec, 
                                   vm, language_keys))

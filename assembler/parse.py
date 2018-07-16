@@ -21,14 +21,6 @@ from .virtual_machine import MEM_SIZE
 TOKENS = 0
 CODE = 1
 
-SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
-sym_match = re.compile(SYM_RE)
-LABEL_RE = SYM_RE + ":"
-label_match = re.compile(LABEL_RE)
-
-DATA_SECT = ".data"
-TEXT_SECT = ".text"
-
 DONT_INIT = "?"
 
 MAX_BYTE = 255
@@ -207,6 +199,19 @@ def get_DUP_value(token_line, pos):
 
     return (dup_value, pos)
 
+def is_str_termin(token_line, pos):
+    if not isinstance(token_line[pos + 2], IntegerTok):
+        return False
+    # check if following is an Integer with value of 0
+    elif (isinstance(token_line[pos + 2], IntegerTok) and 
+             token_line[pos + 2].get_val() != 0):
+        return False
+    return True
+
+NUM_STR_TOKS = 3
+COMMA_POS = 1
+TERM_POS = 2
+
 def parse_string_token(token_line, pos):
     """
     Creates a list of the string token's ASCII values
@@ -218,18 +223,14 @@ def parse_string_token(token_line, pos):
     Returns:
         List of ASCII values, followed by a 0 
     """
-    if pos + 2 >= len(token_line):
+    if len(token_line) < pos + NUM_STR_TOKS:
         raise MissingData()
-    # check if following is an Integer
-    elif not isinstance(token_line[pos + 1], Comma):
+    elif not isinstance(token_line[pos + COMMA_POS], Comma):
         raise MissingComma()
+# is string terminated poperly?
+    elif not is_str_termin(token_line, pos + TERM_POS)
+        raise InvalidDataVal(str(token_line[pos + TERM_POS].get_val()))
 
-    elif not isinstance(token_line[pos + 2], IntegerTok):
-        raise InvalidDataVal(str(token_line[pos + 2].get_val()))
-    # check if following is an Integer with value of 0
-    elif (isinstance(token_line[pos + 2], IntegerTok) and 
-             token_line[pos + 2].get_val() != 0):
-        raise InvalidDataVal(str(token_line[pos + 2].get_val()))
     else:
         ascii_list = []
         for letter in token_line[pos].get_nm():
@@ -263,7 +264,7 @@ def parse_dup_token(token_line, data_type, pos):
 
 def get_values(token_line, data_type, pos):
     """
-    Creates a list of values for each variable
+    Creates a list of values for each variable when it is declared.
 
     Args:
         token_line: List of data tokens
@@ -415,7 +416,7 @@ def get_address(token_line, pos, vm):
                     raise InvalidMemLoc(token_line[pos].get_nm())
             else:
                 raise InvalidMemLoc(token_line[pos].get_nm())
-        else: 
+        elif state == NEED_OP_OR_CLOSE_BRACK: 
             if pos >= len(token_line):
                 raise MissingCloseBrack()
             elif isinstance(token_line[pos], MinusTok):
