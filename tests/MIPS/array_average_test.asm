@@ -1,7 +1,7 @@
 ; Declare an array and declare size of the array
 .data
-    nbrArray: .word 25, 47, -15, -50, 32, 10, 10, 10, 10, 10
-    nbrElts: .word 10
+    nbrArray: .word 0x19, 0x2F, -0xF, -0x32, 0x20, 0xA, 0xA, 0xA, 0xA, 0xA
+    nbrElts: .word 0xA
 
 ; Calculate the average of the array:
 .text

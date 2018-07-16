@@ -141,8 +141,8 @@ def main_page(request):
                 get_flag_contents(intel_machine.flags, request)
                 intel_machine.data_init = request.POST[DATA_INIT]
             else:
-                get_reg_contents(mips_machine.registers, request)
-                get_mem_contents(mips_machine.memory, request)
+                get_reg_contents(mips_machine.registers, request, True)
+                get_mem_contents(mips_machine.memory, request, True)
                 get_stack_contents(mips_machine.stack, request)
                 get_flag_contents(mips_machine.flags, request)
                 mips_machine.data_init = request.POST[DATA_INIT]
@@ -159,6 +159,8 @@ def main_page(request):
 
     if mips_machine.flavor == "mips":
         site_hdr += ": MIPS"
+        convert_reg_contents(mips_machine.registers)
+        convert_mem_contents(mips_machine.memory)
         return render(request, 'main.html',
                     {'form': form,
                      HEADER: site_hdr,
@@ -195,17 +197,37 @@ def main_page(request):
                    DATA_INIT: intel_machine.data_init
                   })
 
-def get_reg_contents(registers, request):
+def get_reg_contents(registers, request, convert=False):
     for reg in registers:
-        registers[reg] = request.POST[reg]
+        if convert:
+            registers[reg] = int(request.POST[reg], 16)
+        else:
+            registers[reg] = request.POST[reg]
 
 def get_flag_contents(flags, request):
     for flag in flags:
         flags[flag] = request.POST[flag]
 
-def get_mem_contents(memory, request):
+def get_mem_contents(memory, request, convert=False):
     for loc in memory:
-        memory[loc] = request.POST[str(loc)]
+        if convert:
+            memory[loc] = int(request.POST[str(loc)], 16)
+        else:
+            memory[loc] = request.POST[str(loc)]
+
+def convert_reg_contents(registers):
+    for reg in registers:
+        hex_list = hex(int(registers[reg])).split('x')
+        hex_list[1] = hex_list[1].upper()
+        hex_value = "x".join(hex_list)
+        registers[reg] = hex_value
+
+def convert_mem_contents(memory):
+    for loc in memory:
+        hex_list = hex(int(memory[loc])).split('x')
+        hex_list[1] = hex_list[1].upper()
+        hex_value = "x".join(hex_list)
+        memory[loc] = hex_value
 
 def get_stack_contents(stack, request):
     for loc in stack:

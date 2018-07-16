@@ -18,8 +18,8 @@ from assembler.assemble import assemble
 
 NUM_TESTS = 100
 MAX_SHIFT = BITS // 2
-MIN_TEST = MIN_INT // 10   # right now we don't want to overflow!
-MAX_TEST = MAX_INT // 10   # right now we don't want to overflow!
+MIN_TEST = MIN_INT // 100   # right now we don't want to overflow!
+MAX_TEST = MAX_INT // 100  # right now we don't want to overflow!
 MAX_MUL = 10000  # right now we don't want to overflow!
 MIN_MUL = -10000  # right now we don't want to overflow!
 REGISTER_SIZE = BITS
@@ -48,9 +48,14 @@ class AssembleTestCase(TestCase):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
-            correct = operator(a, b)
+            hex_string = "0x"
+            if b < 0:
+                hex_string = "-" + hex_string + str(-b)
+            else:
+                hex_string += str(b)
+            correct = operator(a, int(str(b), 16))
             mips_machine.registers["R9"] = a
-            assemble(instr + " R10, R9, " + str(b), 'mips', mips_machine)
+            assemble(instr + " R10, R9, " + hex_string, 'mips', mips_machine)
             self.assertEqual(mips_machine.registers["R10"], correct)
 
     def test_add(self):

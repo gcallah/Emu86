@@ -173,6 +173,11 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                         vm.labels[word[:word.find(":")]] = i * 4
                     else:
                         vm.labels[word[:word.find(":")]] = i
+        elif word[:2] == "0x" and flavor == "mips":
+            try:
+                analysis.append(IntegerTok(int(word, 16)))
+            except: 
+                raise InvalidArgument(word)
         elif re.search(sym_match, word) is not None:
             analysis.append(NewSymbol(word, vm))
         else:

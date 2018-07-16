@@ -1,8 +1,8 @@
 ; Declare a Celsius temperature
 
 .data
-    cTemp: .word 35
-    fTemp: .word 0
+    cTemp: .word 0x23
+    fTemp: .word 0x0
 
 ; Convert from Celsius to Fahrenheit
 ; Store result in fTemp
