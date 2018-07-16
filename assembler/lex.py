@@ -174,15 +174,15 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
 # label / symbol:
         elif re.search(label_match, word) is not None:
             if flavor == "intel":
-                vm.labels[word[:word.find(":")]] = i
+                vm.labels[word[:-1]] = i
             else:
                 if data_sec:
                     analysis.append(NewSymbol(word[:-1], vm))
                 else:
                     if flavor == "mips":
-                        vm.labels[word[:word.find(":")]] = i * 4
+                        vm.labels[word[:-1]] = i * 4
                     else:
-                        vm.labels[word[:word.find(":")]] = i
+                        vm.labels[word[:-1]] = i
 # hex number:
         elif word[:2] == "0x" and flavor == "mips":
             try:
