@@ -123,6 +123,7 @@ def main_page(request):
             elif language == MIPS:
                 intel_machine.flavor = None
                 mips_machine.flavor = language
+        base = request.POST['base']
         if CLEAR in request.POST:
             intel_machine.re_init()
             mips_machine.re_init()
@@ -142,8 +143,7 @@ def main_page(request):
                     try:
                         mips_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
                     except Exception:
-                        mips_machine.nxt_key = 0
-            base = request.POST['base']     
+                        mips_machine.nxt_key = 0     
             if intel_machine.flavor != None:
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
