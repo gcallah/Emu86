@@ -112,19 +112,25 @@ def split_code(code, flavor):
         A list of words
     """
 
+    # split on regular expressions
     words = re.split("[ \t\r\n]+", code)
     index = 0
+
+    # split on separator characters, such as commas
     while index < len(words):
         splitter = ""
         for character in words[index]:
+            # determine the splitter
             if character in SEPARATORS and words[index] != character:
                 splitter = character
                 break
+            # splitter specifically for AT&T
             elif (flavor == "att" and 
                      words[index] != "$" and 
                      character == "$"):
                 splitter = "$"
                 break
+        # split if splitter is found
         if splitter != "":
             split_location = words[index].find(splitter)
             temp_words = [words[index][:split_location]]
@@ -134,8 +140,8 @@ def split_code(code, flavor):
         else:
             index += 1
 
-    # remove all empty strings from list 
-    # that were made from splitting
+    # remove all empty strings from list that were made from splitting 
+    # if splitter was first or last character
     clean_list(words)
     return words
 
