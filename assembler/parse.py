@@ -353,6 +353,67 @@ def parse_data_token(token_line, vm, mem_loc):
         mem_loc += 1
     return mem_loc
 
+def get_term(token_line, pos, vm):
+    """
+    Returns the next term of the expression
+
+    Args:
+        token_line: Line of code
+        pos: Position of next term to be found
+        vm: Virtual machine
+
+    Returns:
+        Next term token, position of token
+    """
+    # call function again to get the negated term
+    if isinstance(token_line[pos], MinusTok):
+        token_line[pos + 1].negate_val()
+        return get_term(token_line, pos + 1, vm)
+    # integer or register term
+    elif (isinstance(token_line[pos], IntegerTok) or 
+          isinstance(token_line[pos], Register)):
+        return (token_line[pos], pos)
+    # symbol term
+    elif isinstance(token_line[pos], NewSymbol):
+        if token_line[pos].get_nm() in vm.symbols:
+            return (Symbol(token_line[pos].get_nm(), vm), pos)
+        else:
+            raise InvalidMemLoc(token_line[pos].get_nm())
+    else:
+        raise InvalidMemLoc(token_line[pos].get_nm())
+
+REG = 0
+DISP_VAL = 1
+POSITION = 2
+
+def get_expression(token_line, pos, vm, reg):
+    """
+    Returns the register and the evaluated expression 
+
+    Args:
+        token_line: Line of code
+        pos: Position of address expression
+        vm: Virtual machine
+
+    Returns:
+        Found register, integer value of expression, next position
+    """
+    if len(token_line) < pos + 2:
+        return MissingOps
+    left, pos = get_term(token_line, pos, vm)
+    if isinstance(left, Register):
+        reg = left
+    next_term = token_line[pos + 1]
+    if isinstance(next_term, PlusTok):
+        next_val_pos = get_expression(token_line, pos + 2, vm, reg)
+        return (next_val_pos[REG], left.get_val() + next_val_pos[DISP_VAL],
+                next_val_pos[POSITION])
+    elif isinstance(next_term, MinusTok):
+        next_val_pos = get_expression(token_line, pos + 2, vm, reg)
+        return (next_val_pos[REG], left.get_val() - next_val_pos[DISP_VAL],
+                next_val_pos[POSITION])
+    else:
+        return (reg, left.get_val(), pos + 1)
 
 def get_address(token_line, pos, vm):
     """
@@ -369,61 +430,21 @@ def get_address(token_line, pos, vm):
     """
 
     NEED_VAL = 0
-    NEED_OP_OR_CLOSE_BRACK = 1
+    NEED_CLOSE_BRACK = 1
     if pos >= len(token_line):
         raise InvalidMemLoc("")
     state = NEED_VAL
     reg = None
     disp = 0
-    closeBracket = False 
-    args = 0
     # check other elements within bracket
     while True:
         if state == NEED_VAL:
-            if pos >= len(token_line):
-                raise MissingOps()
-            # if Integer
-            elif isinstance(token_line[pos], MinusTok):
-                token_line[pos + 1].negate_val()
-                pos += 1
-            elif isinstance(token_line[pos], IntegerTok):
-                args += 1
-                if args > 2:
-                    raise MissingCloseBrack()
-                disp += token_line[pos].get_val()
-                pos += 1
-                state = NEED_OP_OR_CLOSE_BRACK
-            # if reg
-            elif isinstance(token_line[pos], Register):
-                args += 1
-                if args > 2:
-                    raise MissingCloseBrack()
-                if reg:
-                    disp = token_line[pos]
-                else:
-                    reg = token_line[pos]
-                pos += 1
-                state = NEED_OP_OR_CLOSE_BRACK
-            # if Symbol, ex: [x]
-            elif isinstance(token_line[pos], NewSymbol):
-                if token_line[pos].get_nm() in vm.symbols:
-                    disp += vm.symbols[token_line[pos].get_nm()]
-                    pos += 1
-                    state = NEED_OP_OR_CLOSE_BRACK
-                else:
-                    raise InvalidMemLoc(token_line[pos].get_nm())
-            else:
-                raise InvalidMemLoc(token_line[pos].get_nm())
-        elif state == NEED_OP_OR_CLOSE_BRACK: 
+            # get address expression value
+            reg, disp, pos = get_expression(token_line, pos, vm, reg)
+            state = NEED_CLOSE_BRACK
+        elif state == NEED_CLOSE_BRACK: 
             if pos >= len(token_line):
                 raise MissingCloseBrack()
-            elif isinstance(token_line[pos], MinusTok):
-                token_line[pos + 1].negate_val()
-                pos += 1
-                state = NEED_VAL
-            elif isinstance(token_line[pos], PlusTok):
-                pos += 1
-                state = NEED_VAL
             elif isinstance(token_line[pos], CloseBracket):
                 pos += 1
                 return (reg, disp, pos)
