@@ -191,16 +191,18 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                         vm.labels[word[:-1]] = i
         elif re.match(sym_match, word) is not None:
             analysis.append(NewSymbol(word, vm))
+        # hex number:
+        elif word[:2] == "0x":
+            try:
+                analysis.append(IntegerTok(int(word, 16)))
+            except:
+                raise InvalidArgument(word)
+        # dec number:
         else:
             try:
-                # dec number:
                 analysis.append(IntegerTok(int(word)))
             except:
-                try:
-                    # hex number:
-                    analysis.append(IntegerTok(int(word, 16)))
-                except:
-                    raise InvalidArgument(word)
+                raise InvalidArgument(word)
     return (analysis, code)
 
 def lex(code, flavor, vm):
