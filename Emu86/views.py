@@ -73,6 +73,7 @@ def main_page(request):
                 site_hdr += ": MIPS"
                 convert_reg_contents(mips_machine.registers)
                 convert_mem_contents(mips_machine.memory)
+                convert_stack_contents(mips_machine.stack)
                 return render(request, 'main.html',
                             {'form': form,
                              HEADER: site_hdr,
@@ -172,6 +173,7 @@ def main_page(request):
         if base == "hex":
             convert_reg_contents(mips_machine.registers)
             convert_mem_contents(mips_machine.memory)
+            convert_stack_contents(mips_machine.stack)
         return render(request, 'main.html',
                     {'form': form,
                      HEADER: site_hdr,
@@ -196,6 +198,7 @@ def main_page(request):
     if base == "hex":
         convert_reg_contents(intel_machine.registers)
         convert_mem_contents(intel_machine.memory)
+        convert_stack_contents(intel_machine.stack)
     return render(request, 'main.html',
                   {'form': form,
                    HEADER: site_hdr,
@@ -213,9 +216,21 @@ def main_page(request):
                    'base': base
                   })
 
+def is_hex_form(request):
+    hex_term = False
+    if "R29" in request.POST:
+        if request.POST["R29"] == "1FF":
+            hex_term = True
+    elif "ESP" in request.POST:
+        if request.POST["ESP"] == "1FF":
+            hex_term = True
+    return hex_term
+
 def get_reg_contents(registers, request):
+    hex_term = is_hex_form(request)
+
     for reg in registers:
-        if "x" in request.POST[reg]:
+        if hex_term:
             registers[reg] = int(request.POST[reg], 16)
         else:
             registers[reg] = request.POST[reg]
@@ -225,29 +240,47 @@ def get_flag_contents(flags, request):
         flags[flag] = request.POST[flag]
 
 def get_mem_contents(memory, request):
+    hex_term = is_hex_form(request)
     for loc in memory:
-        if "x" in request.POST[loc]:
+        if hex_term:
             memory[loc] = int(request.POST[str(loc)], 16)
         else:
             memory[loc] = request.POST[str(loc)]
+
+def get_stack_contents(stack, request):
+    hex_term = is_hex_form(request)
+    for loc in stack:
+        if hex_term:
+            stack[loc] = int(request.POST[str(loc)], 16)
+        else:
+            stack[loc] = request.POST[str(loc)]
 
 def convert_reg_contents(registers):
     for reg in registers:
         hex_list = hex(int(registers[reg])).split('x')
         hex_list[1] = hex_list[1].upper()
-        hex_value = "x".join(hex_list)
-        registers[reg] = hex_value
+        if "-" in hex_list[0]:
+            registers[reg] = "-" + hex_list[1]
+        else:
+            registers[reg] = hex_list[1]
 
 def convert_mem_contents(memory):
     for loc in memory:
         hex_list = hex(int(memory[loc])).split('x')
         hex_list[1] = hex_list[1].upper()
-        hex_value = "x".join(hex_list)
-        memory[loc] = hex_value
+        if "-" in hex_list[0]:
+            memory[loc] = "-" + hex_list[1]
+        else:
+            memory[loc] = hex_list[1]
 
-def get_stack_contents(stack, request):
+def convert_stack_contents(stack):
     for loc in stack:
-        stack[loc] = request.POST[str(loc)]
+        hex_list = hex(int(stack[loc])).split('x')
+        hex_list[1] = hex_list[1].upper()
+        if "-" in hex_list[0]:
+            stack[loc] = "-" + hex_list[1]
+        else:
+            stack[loc] = hex_list[1]
 
 def help(request):
     intel_machine.re_init()

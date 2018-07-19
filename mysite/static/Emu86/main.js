@@ -25,11 +25,29 @@ function loadcode()
         var mips_ip = document.getElementsByName("PC");
         var intel_ip = document.getElementsByName("EIP");
         var ip_val = null;
+        var hex_or_dec = null
+        var radios = document.getElementsByName("base");
+        for (var index = 0; index < radios.length; index++) {
+            if (radios[index].checked) {
+                hex_or_dec = radios[index].value;
+                break;
+            }
+        }
         if (mips_ip.length != 0){
-            ip_val = parseInt(mips_ip[0].value)/4;
+            if (hex_or_dec == "hex") {
+                ip_val = parseInt(mips_ip[0].value, 16)/4;
+            }
+            else {
+                ip_val = parseInt(mips_ip[0].value)/4;
+            }
         }
         else if (intel_ip.length != 0) {
-            ip_val = parseInt(intel_ip[0].value);
+            if (hex_or_dec == "hex") {
+                ip_val = parseInt(intel_ip[0].value, 16);
+            }
+            else {
+                ip_val = parseInt(intel_ip[0].value);
+            }
         }
         if (instr && ip_val) {
             var input = document.getElementById("id_code");

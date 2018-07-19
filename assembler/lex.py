@@ -190,6 +190,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                     else:
                         vm.labels[word[:-1]] = i
         elif re.match(sym_match, word) is not None:
+
             analysis.append(NewSymbol(word, vm))
         # hex number:
         else:
