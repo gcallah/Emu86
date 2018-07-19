@@ -7,7 +7,6 @@
     <div class="module">
         <form action="{% url 'Emu86:main_page' %}" method="post">
             <br>
-            &nbsp;
             <input type="hidden" name="nxt_key">
             <input type="hidden" name="unwritable">
             {% if flavor == "intel" %}
@@ -26,7 +25,6 @@
                 <input type="hidden" name="data_init" value = "off">
             {% endif %}
 
-            <br>
             Please select your number system: 
             {% if base == "dec" %}
                 <input type="radio" name="base" value="dec" checked="checked"> Decimal 
@@ -38,6 +36,77 @@
                 <input type="radio" name="base" value="dec"> Decimal
                 <input type="radio" name="base" value="hex"> Hexidecimal <br>
             {% endif %}
+            Sample Programs: 
+            <select name="sample" onchange="selectSample()">
+                {% if sample == "none" %}
+                    <option value="none" selected></option>
+                {% else %}
+                    <option value="none"></option>
+                {% endif %}
+                {% if sample == "addTwo" %}
+                    <option value="addTwo" selected>Add two numbers</option>
+                {% else %}
+                    <option value="addTwo">Add two numbers</option>
+                {% endif %}
+                {% if sample == "arithExpr" %}
+                    <option value="arithExpr" selected>Arithmetic expression</option>
+                {% else %}
+                    <option value="arithExpr">Arithmetic expression</option>
+                {% endif %}
+                {% if sample == "area" %}
+                    <option value="area" selected>Area of a rectangle</option>
+                {% else %}
+                    <option value="area">Area of a rectangle</option>
+                {% endif %}
+                {% if sample == "loop" %}
+                    <option value="loop" selected></option>
+                {% else %}
+                    <option value="loop">A simple loop</option>
+                {% endif %}
+                {% if sample == "log" %}
+                    <option value="log" selected>Calculate log (base 2) of a number</option>
+                {% else %}
+                    <option value="log">Calculate log (base 2) of a number</option>
+                {% endif %}
+                {% if sample == "avg" %}
+                    <option value="avg" selected>Calculate average of an array</option>
+                {% else %}
+                    <option value="avg">Calculate average of an array</option>
+                {% endif %}
+                {% if sample == "celFah" %}
+                    <option value="celFah" selected>Convert from Celsius to Fahrenheit</option>
+                {% else %}
+                    <option value="celFah">Convert from Celsius to Fahrenheit</option>
+                {% endif %}
+                {% if sample == "modify" %}
+                    <option value="modify" selected>Modify an array</option>
+                {% else %}
+                    <option value="modify">Modify an array</option>
+                {% endif %}
+                {% if sample == "sqrt" %}
+                    <option value="sqrt" selected>Square root of a number</option>
+                {% else %}
+                    <option value="sqrt">Square root of a number</option>
+                {% endif %}
+                {% if flavor != "mips" %}
+                    {% if sample == "arithShift" %}
+                        <option value="arithShift" selected>Arithmetic shift</option>
+                    {% else %}
+                        <option value="arithShift">Arithmetic shift</option>
+                    {% endif %}
+                    {% if sample == "power" %}
+                        <option value="power" selected>Raise a number to a power</option>
+                    {% else %}
+                        <option value="power">Raise a number to a power</option>
+                    {% endif %}
+                    {% if sample == "data" %}
+                        <option value="data" selected>Use the data section</option>
+                    {% else %}
+                        <option value="data">Use the data section</option>
+                    {% endif %}
+                {% endif %}
+                </select>
+                <br>
             <table>
                 <tr>
                     <td id="form-cell">
@@ -45,7 +114,7 @@
                             {{ form.as_p }}
 
                             <input type="submit" name="clear"
-                                value="Clear Mem"
+                                value="Reinitialize"
                                 title="Clear the contents of memory and the stack."
                                 id="clear-button">
                             <input type="submit" name="run"
