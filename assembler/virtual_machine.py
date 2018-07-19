@@ -189,7 +189,7 @@ class MIPSMachine(VirtualMachine):
 
         self.flags = OrderedDict(
                     [
-                        ('ZF', 0),
+                        ('COND', 0),
                     ])
     def re_init(self):
         super().re_init()
