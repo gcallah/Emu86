@@ -1,7 +1,7 @@
 ; Declare length and width
 .data
-    long: .word 0x23
-    wide: .word 0x1B
+    long: .word 23
+    wide: .word 1B
 
 ; Calculate area of rectangle
 .text

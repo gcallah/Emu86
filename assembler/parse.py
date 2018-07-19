@@ -415,6 +415,27 @@ def get_expression(token_line, pos, vm, reg):
     else:
         return (reg, left.get_val(), pos + 1)
 
+def get_expr_mips(token_line, pos, vm):
+    """
+    Returns address expression for MIPS
+
+    Args:
+        token_line: Line of code
+        pos: Position of address
+        vm: Virtual machine
+
+    Returns:
+        Expression, next position
+    """
+
+    if pos >= len(token_line):
+        raise MissingOps()
+    left, pos = get_term(token_line, pos, vm)
+    if isinstance(left, Register) or isinstance(left, IntegerTok):
+        return (left, pos + 1)
+    else:
+        raise InvalidMemLoc(left.get_nm())
+
 def get_address(token_line, pos, vm):
     """
     Converts a sublist of the tokenized instruction into 
@@ -436,20 +457,14 @@ def get_address(token_line, pos, vm):
     state = NEED_VAL
     reg = None
     disp = 0
-    # check other elements within bracket
-    while True:
-        if state == NEED_VAL:
-            # get address expression value
-            reg, disp, pos = get_expression(token_line, pos, vm, reg)
-            state = NEED_CLOSE_BRACK
-        elif state == NEED_CLOSE_BRACK: 
-            if pos >= len(token_line):
-                raise MissingCloseBrack()
-            elif isinstance(token_line[pos], CloseBracket):
-                pos += 1
-                return (reg, disp, pos)
-            else:
-                raise InvalidMemLoc(token_line[pos].get_nm())
+    reg, disp, pos = get_expression(token_line, pos, vm, reg)
+    if pos >= len(token_line):
+        raise MissingCloseBrack()
+    elif isinstance(token_line[pos], CloseBracket):
+        pos += 1
+        return (reg, disp, pos)
+    else:
+        raise InvalidMemLoc(token_line[pos].get_nm())
 
 def get_address_att(token_line, pos, vm, disp = 0):
     """
@@ -556,29 +571,17 @@ def get_address_mips(token_line, pos, vm, disp = 0):
     state = NEED_VAL
     reg = None
     int_disp = 0
-    while True:
-        if state == NEED_VAL:
-            if pos >= len(token_line):
-                raise MissingOps()
-            # if Integer
-            elif isinstance(token_line[pos], IntegerTok):
-                int_disp += token_line[pos].get_val()
-                pos += 1
-                state = NEED_CLOSE_PAREN
-            # if reg
-            elif isinstance(token_line[pos], Register):
-                reg = token_line[pos]
-                pos += 1
-                state = NEED_CLOSE_PAREN
-            else:
-                raise InvalidMemLoc(token_line[pos].get_nm())
-        else: 
-            if pos >= len(token_line):
-                raise MissingCloseParen()
-            elif isinstance(token_line[pos], CloseParen):
-                return (reg, disp, pos + 1)
-            else:
-                raise InvalidMemLoc(token_line[pos].get_nm())
+    value, pos = get_expr_mips(token_line, pos, vm)
+    if isinstance(value, IntegerTok):
+        int_disp += value.get_val()
+    else:
+        reg = value
+    if pos >= len(token_line):
+        raise MissingCloseParen()
+    elif isinstance(token_line[pos], CloseParen):
+        return (reg, disp, pos + 1)
+    else:
+        raise InvalidMemLoc(token_line[pos].get_nm())
 
 def get_address_location(token_line, pos, flavor, vm):
     """

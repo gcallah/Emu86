@@ -1,6 +1,6 @@
 ; Declare a number
 .data
-    number: .word 759
+    number: .word 2F7
 
 ; Calculating log (base 2) of a number
 .text

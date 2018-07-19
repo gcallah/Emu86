@@ -1,6 +1,6 @@
 ; Compare R8 and R9 and loop until equal
 ; When done, store R9 to R11
-    ADDI R8, R0, 16
+    ADDI R8, R0, 10
     ADD R9, R0, R0
     ADDI R9, R9, 1
     ADDI R10, R10, -1

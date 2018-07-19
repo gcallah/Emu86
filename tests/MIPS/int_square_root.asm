@@ -1,6 +1,6 @@
 ; Declare a number
 .data
-    number: .word 0x64
+    number: .word 64
 
 ; Calculate square root of the number
 .text
