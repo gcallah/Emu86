@@ -16,6 +16,20 @@ function AlertError()
     }
 }
 
+function checkForScript()
+{
+    data = document.getElementById("id_code").value;
+    if (data.indexOf("<script>") != -1){
+        var temp_val = data.split("<script>");
+        data = temp_val.join("");
+    }
+    if (data.indexOf("</script>") != -1){
+        var temp_val = data.split("</script>");
+        data = temp_val.join("");
+    }
+    document.getElementById("id_code").value = data;
+}
+
 function loadcode()
 {
     if(sessionStorage.loadonce)
