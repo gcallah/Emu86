@@ -1,8 +1,8 @@
 ; Declare an array and declare size of the array
 ; Declare the minimum of the array
 .data
-    nbrArray: .word 19, 2F, 0xF, 32, 20, 0xA, 0xA, 0xA, 0xA, 0xA
-    nbrElts: .word 0xA
+    nbrArray: .word 19, 2F, 0F, 32, 20, 0A, 0A, 0A, 0A, 0A
+    nbrElts: .word 0A
     nbrMin: .word 21
 
 ; Change any numbers less than min to min:
