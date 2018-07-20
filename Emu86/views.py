@@ -49,6 +49,7 @@ def main_page(request):
     last_instr = ""
     error = ""
     base = ""
+    sample = ""
 
     site_hdr = get_hdr()
     if request.method == 'GET':
@@ -88,7 +89,8 @@ def main_page(request):
                              'flags': mips_machine.flags,
                              'flavor': mips_machine.flavor,
                              'data_init': mips_machine.data_init,
-                             'base': 'hex'
+                             'base': 'hex',
+                             'sample': 'none'
                             })
             else:
                 mips_machine.flavor = None
@@ -113,7 +115,8 @@ def main_page(request):
                                'flags': intel_machine.flags,
                                'flavor': intel_machine.flavor,
                                DATA_INIT: intel_machine.data_init,
-                               'base': 'dec'
+                               'base': 'dec',
+                               'sample': 'none'
                               })
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
@@ -125,6 +128,7 @@ def main_page(request):
                 intel_machine.flavor = None
                 mips_machine.flavor = language
         base = request.POST['base']
+        sample = request.POST['sample']
         if CLEAR in request.POST:
             intel_machine.re_init()
             mips_machine.re_init()
@@ -188,7 +192,8 @@ def main_page(request):
                      'flags': mips_machine.flags,
                      'flavor': mips_machine.flavor,
                      DATA_INIT: mips_machine.data_init,
-                     'base': base
+                     'base': base,
+                     'sample': sample
                     })
         
     if intel_machine.flavor == INTEL:
@@ -213,7 +218,8 @@ def main_page(request):
                    'flags': intel_machine.flags,
                    'flavor': intel_machine.flavor,
                    DATA_INIT: intel_machine.data_init,
-                   'base': base
+                   'base': base, 
+                   'sample': sample
                   })
 
 def is_hex_form(request):
