@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            test_interrupt.asm
+        </title>
+    </head>
+
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            test_interrupt.asm
+            </h1>
+            <pre>
+            <code>
+         mov eax, 0
+         int 22
+         mov [0], eax
+         mov ebx, 1
+
+loop:    mov edx, eax
+         mov eax, 0
+         int 22
+         mov [ebx], eax
+         cmp [0], eax
+         je done
+         inc ebx
+         jmp loop
+done: mov ecx, 1
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

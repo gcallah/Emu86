@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            sum_test.asm
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            sum_test.asm
+            </h1>
+            <p>
+Declare number and sum.
+            </p>
+            <pre>
+            <code>
+.data
+    number DW -105
+    sum DW ?
+
+            </code>
+            </pre>
+            <p>
+Store first number to EAX
+            </p>
+            <p>
+Add 158 to value in EAX
+            </p>
+            <p>
+Store total to sum
+            </p>
+            <pre>
+            <code>
+.text
+    mov eax, [number]		
+    add eax, 158	
+    mov [sum], eax
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

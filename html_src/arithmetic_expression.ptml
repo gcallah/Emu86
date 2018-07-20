@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            arithmetic_expression.asm
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            arithmetic_expression.asm
+            </h1>
+            <p>
+Declare x, y, and z variables 
+            </p>
+            <pre>
+            <code>
+.data
+    x DW 35
+    y DW 47
+    z DW 26
+
+            </code>
+            </pre>
+            <p>
+Calculate -(x + y - 2 * z + 1)
+            </p>
+            <pre>
+            <code>
+.text
+    mov eax, [x]		
+    add eax, [y]	
+    mov ebx, [z]
+    add ebx, ebx
+    sub eax, ebx
+    inc eax 
+    neg eax
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

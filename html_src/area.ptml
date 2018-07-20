@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            area.asm
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            area.asm
+            </h1>
+            <p>
+Declare length and width
+            </p>
+            <pre>
+            <code>
+.data
+    long DW 35
+    wide DW 27
+
+            </code>
+            </pre>
+            <p>
+Calculate area of rectangle
+            </p>
+            <pre>
+            <code>
+.text
+    mov eax, [long]
+    imul eax, [wide]
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

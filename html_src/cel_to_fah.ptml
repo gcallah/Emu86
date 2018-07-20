@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            cel_to_fah.asm
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            cel_to_fah.asm
+            </h1>
+            <p>
+Declare a Celsius temperature
+            </p>
+            <p>
+Uninitialized fTemp 
+            </p>
+            <pre>
+            <code>
+.data
+    cTemp DW 35
+    fTemp DW ?
+
+            </code>
+            </pre>
+            <p>
+Convert from Celsius to Fahrenheit
+            </p>
+            <p>
+Store result in fTemp
+            </p>
+            <pre>
+            <code>
+.text
+    mov eax, [cTemp]
+    imul eax, 9
+    add eax, 2
+    mov ebx, 5
+    idiv ebx 
+    add eax, 32
+    mov [fTemp], eax
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

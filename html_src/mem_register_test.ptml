@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            mem_register_test.asm
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            mem_register_test.asm
+            </h1>
+            <p>
+Declare arrays
+            </p>
+            <pre>
+            <code>
+.data
+    x DB 1, 2, 3, 4, 5
+    y DW 2, 54, 32, 8
+    z DD 10 DUP (50)
+
+            </code>
+            </pre>
+            <p>
+Storing values into memory using register arithmetic
+            </p>
+            <pre>
+            <code>
+.text
+	mov eax, 6
+	mov [eax], [x+2]
+	mov [eax+2], [y+3]
+	mov [ebx], [z]
+	mov [eax-5], [y+2]
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

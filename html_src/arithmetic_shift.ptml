@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            arithmetic_shift.asm
+        </title>
+    </head>
+
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            arithmetic_shift.asm
+            </h1>
+            <pre>
+            <code>
+mov [4], 1
+mov eax, 4
+mov ebx, 2
+mov ecx, 8
+mov edx, 16
+add ebx, ecx
+sub edx, ecx
+imul eax, [4]
+shl [4], 2
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

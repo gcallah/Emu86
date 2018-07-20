@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            log.asm
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            log.asm
+            </h1>
+            <p>
+Declare a number
+            </p>
+            <pre>
+            <code>
+.data
+    number DW 759
+
+            </code>
+            </pre>
+            <p>
+Calculating log (base 2) of a number
+            </p>
+            <pre>
+            <code>
+.text
+    mov ecx, 0
+    mov eax, 1
+whileLE: cmp eax, [number]
+         jnle endWhileLE
+body: add eax, eax
+      inc ecx
+      jmp whileLE
+
+endWhileLE: dec ecx 
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>
