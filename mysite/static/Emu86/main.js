@@ -20,7 +20,6 @@ function selectSample()
 {
     selectBar = document.getElementsByName("sample")[0];
     var selected = selectBar.options[selectBar.selectedIndex].value
-    console.log(selected);
     var flav = document.getElementsByName("flavor")[0];
     if (flav){
         if (selected == "none"){
@@ -168,22 +167,37 @@ function loadcode()
     }
 }
 
-
 function Savecode()
 {
-    if(confirm("Do you want to save this code?")) {
+    var file_name = prompt("Please enter file name to save as, ending in .asm or .bin: ");
+    if (file_name == ""){
+        alert("Invalid file name");
+    }
+    else if (file_name.length < 5){
+        alert("Invalid file name: " + file_name);
+    }
+    else if (file_name.slice(file_name.length - 4) != ".asm" && file_name.slice(file_name.length - 4) != ".bin") {
+        alert("Invalid file name: " + file_name);
+    }
+    else {
         data = document.getElementById("id_code").value;
-        try {
-            localStorage.Code=data;
-            alert("Your code was saved successfully.");
+        var file_blob = new Blob([data], {type: 'text/plain'});
+        if (window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(file_blob, file);
         }
-        catch(exception)
-        {
-            alert("An unknown error occured, please try again.");
-
+        else {
+            var anchor = document.createElement('a'),
+            url = URL.createObjectURL(file_blob);
+            anchor.href = url;
+            anchor.download = file_name;
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            window.URL.revokeObjectURL(url);  
         }
     }
 }
+
 
 function convert(name,value)
 {
