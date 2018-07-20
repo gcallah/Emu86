@@ -12,21 +12,26 @@ function_names = {
 	"int_square_root.asm": "sqrt"
 }
 
+intel_function_names = {
+	"arithmetic_shift.asm": "arithShift",
+	"power.asm": "power",
+	"data.asm": "data",
+	"key_test.asm": "keyInterrupt",
+	"array.asm": "array"
+}
+
 INTEL = 0
 ATT = 1
 MIPS = 2
 
-def create_js_file():
-	tab = '\t'
-	directories = ["tests/Intel/", "tests/ATT/", "tests/MIPS/"]
-	js_file = open("mysite/static/Emu86/helper_functions.js", "w")
+def function_directory(func_dict, directory_lst):
 	file_code = ""
-	for file_name in function_names:
+	for file_name in func_dict:
 		function_code = ""
 		count = 0
-		function_code += "function " + function_names[file_name] + "(flavor) {"
+		function_code += "function " + func_dict[file_name] + "(flavor) {"
 		function_code += "\n\tcode_string = '';" 
-		for dire in directories:
+		for dire in directory_lst:
 			sample_test = open(dire + file_name, "r")
 			if count == 0: 
 				function_code += "\n\tif (flavor == 'intel'){\n"
@@ -39,9 +44,17 @@ def create_js_file():
 			sample_test.close()
 			function_code += ";\n\t}"
 			count += 1
-		function_code += "\n\tdocument.getElementById('id_code').value = code_string;\n}"
+		function_code += "\n\tdocument.getElementById('id_code')" 
+		function_code += ".value = code_string;\n}"
 		file_code += function_code + "\n"
+	return file_code
 
+def create_js_file():
+	tab = '\t'
+	intel_directory = ["tests/Intel/", "tests/ATT/"]
+	js_file = open("mysite/static/Emu86/helper_functions.js", "w")
+	file_code = function_directory(function_names, intel_directory + ["tests/MIPS/"])
+	file_code += function_directory(intel_function_names, intel_directory)
 	js_file.write(file_code)
 	js_file.close()
 

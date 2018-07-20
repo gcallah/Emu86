@@ -88,11 +88,16 @@
                 {% else %}
                     <option value="sqrt">Square root of a number</option>
                 {% endif %}
-                <!-- {% if flavor != "mips" %}
+                {% if flavor != "mips" %}
                     {% if sample == "arithShift" %}
                         <option value="arithShift" selected>Arithmetic shift</option>
                     {% else %}
                         <option value="arithShift">Arithmetic shift</option>
+                    {% endif %}
+                    {% if sample == "array" %}
+                        <option value="array" selected>Declare an array</option>
+                    {% else %}
+                        <option value="array">Declare an array</option>
                     {% endif %}
                     {% if sample == "power" %}
                         <option value="power" selected>Raise a number to a power</option>
@@ -104,7 +109,12 @@
                     {% else %}
                         <option value="data">Use the data section</option>
                     {% endif %}
-                {% endif %} -->
+                    {% if sample == "keyInterrupt" %}
+                        <option value="keyInterrupt" selected>Keyboard interrupt</option>
+                    {% else %}
+                        <option value="keyInterrupt">Keyboard interrupt</option>
+                    {% endif %}
+                {% endif %}
                 </select>
                 <br>
             <table>

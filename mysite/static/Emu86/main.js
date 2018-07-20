@@ -16,6 +16,61 @@ function AlertError()
     }
 }
 
+function selectSample()
+{
+    selectBar = document.getElementsByName("sample")[0];
+    var selected = selectBar.options[selectBar.selectedIndex].value
+    console.log(selected);
+    var flav = document.getElementsByName("flavor")[0];
+    if (flav){
+        if (selected == "none"){
+            document.getElementById("id_code").value = "";
+        }
+        else if (selected == "addTwo") {
+            addTwo(flav.value);
+        }
+        else if (selected == "arithExpr") {
+            arithExpr(flav.value);
+        }
+        else if (selected == "log") {
+            log(flav.value);
+        }
+        else if (selected == "modify") {
+            modify(flav.value);
+        }
+        else if (selected == "loop") {
+            loop(flav.value);
+        }
+        else if (selected == "avg") {
+            avg(flav.value);
+        }
+        else if (selected == "celFah") {
+            celFah(flav.value);
+        }
+        else if (selected == "sqrt") {
+            sqrt(flav.value);
+        }
+        else if (selected == "area") {
+            area(flav.value);
+        }
+        else if (selected == "power") {
+            power(flav.value);
+        }
+        else if (selected == "arithShift") {
+            arithShift(flav.value);
+        }
+        else if (selected == "data") {
+            data(flav.value);
+        }
+        else if (selected == "keyInterrupt") {
+            keyInterrupt(flav.value);
+        }
+        else if (selected == "array") {
+            array(flav.value);
+        }
+    }
+}
+
 function checkForScript()
 {
     data = document.getElementById("id_code").value;

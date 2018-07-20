@@ -115,3 +115,53 @@ function addTwo(flavor) {
 	}
 	document.getElementById('id_code').value = code_string;
 }
+function power(flavor) {
+	code_string = '';
+	if (flavor == 'intel'){
+		code_string += '; In edx, we put the number to raise to the power we put in ebx.\n      mov edx, 2\n      mov ebx, 16\n      call power\n      mov eax, 0\n      int 32\n\npower: mov ecx, edx\nloop: imul edx, ecx\n      dec ebx\n      cmp ebx, 1\n      jne loop\n      ret\n';
+	}
+	else if (flavor == 'att'){
+		code_string += '; In edx, we put the number to raise to the power we put in ebx.\n      mov $2, %edx\n      mov $16, %ebx\n      call power\n      mov $0, %eax\n      int $32\n\npower: mov %edx, %ecx\nloop: imul %ecx, %edx\n      dec %ebx\n      cmp %ebx, $1\n      jne loop\n      ret\n';
+	}
+	document.getElementById('id_code').value = code_string;
+}
+function arithShift(flavor) {
+	code_string = '';
+	if (flavor == 'intel'){
+		code_string += 'mov [4], 1\nmov eax, 4\nmov ebx, 2\nmov ecx, 8\nmov edx, 16\nadd ebx, ecx\nsub edx, ecx\nimul eax, [4]\nshl [4], 2\n';
+	}
+	else if (flavor == 'att'){
+		code_string += 'mov $1, (4)\nmov $4, %eax\nmov $2, %ebx\nmov $8, %ecx\nmov $16, %edx\nadd %ecx, %ebx\nsub %ecx, %edx\nimul (4), %eax\nshl $2, (4)\n';
+	}
+	document.getElementById('id_code').value = code_string;
+}
+function data(flavor) {
+	code_string = '';
+	if (flavor == 'intel'){
+		code_string += '; First comes the data section, where we declare some names.\n.data\n    x DB 8\n    y DW 16\n    z DD 32\n\n; Next is the .text section, where we use them:\n.text\n    mov eax, [x]\n    mov ebx, [y]\n    mov ecx, [z]\n';
+	}
+	else if (flavor == 'att'){
+		code_string += '; First comes the data section, where we declare some names.\n.data\n    x: .byte 8\n    y: .short 16\n    z: .long 32\n\n; Next is the .text section, where we use them:\n.text\n    mov (x), %eax\n    mov (y), %ebx\n    mov (z), %ecx\n';
+	}
+	document.getElementById('id_code').value = code_string;
+}
+function keyInterrupt(flavor) {
+	code_string = '';
+	if (flavor == 'intel'){
+		code_string += 'INT 22\nMOV EBX, EAX\nMOV ECX, 0\nMOV ESI, 0\n\nL1: MOV [ESI], EAX\nMOV EAX, 0\nINT 22\nINC ECX\nCMP EBX,EAX\nINC ESI\nJNE L1\n\nL2: MOV EAX, 0\nINT 22\nDEC ECX\nCMP ECX, 1\nJNE L2\n\nMOV EAX, 0\nINT 22\nMOV EBX, EAX\n\nL3: MOV [ESI], EAX\nINC ESI\nMOV EAX, 0\nINT 22\nCMP EBX, EAX\nJNE L3\n';
+	}
+	else if (flavor == 'att'){
+		code_string += 'INT $22\nMOV %EAX, %EBX\nMOV $0, %ECX\nMOV $0, %ESI\n\nL1: MOV %EAX, (%ESI)\nMOV $0, %EAX\nINT $22\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L1\n\nL2: MOV $0, %EAX\nINT $22\nDEC %ECX\nCMP $1, %ECX\nJNE L2\n\nMOV $0, %EAX\nINT $22\nMOV %EAX, %EBX\n\nL3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0, %EAX\nINT $22\nCMP %EAX, %EBX\nJNE L3\n';
+	}
+	document.getElementById('id_code').value = code_string;
+}
+function array(flavor) {
+	code_string = '';
+	if (flavor == 'intel'){
+		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x DB 3, 8, 5, 2\n    y DW 13 DUP (-50)\n    z DD 'hello', 0\n\n; Store array values\n.text\n    mov eax, [x] \n    mov ebx, [y+4]\n    mov ecx, [z+3]\n    mov edx, [x+2]";
+	}
+	else if (flavor == 'att'){
+		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .byte 3, 8, 5, 2\n    y: .short 13 DUP (-50)\n    z: .long 'hello', 0\n\n; Store array values\n.text\n    mov (x), %eax \n    mov 4(y), %ebx\n    mov 3(z), %ecx\n    mov 2(x), %edx";
+	}
+	document.getElementById('id_code').value = code_string;
+}
