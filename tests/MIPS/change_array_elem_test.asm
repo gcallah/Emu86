@@ -22,5 +22,5 @@ ENDIFSMALL: 4002C LW R11, (R9)
             40030 ADD R8, R8, R11
             40034 ADDI R9, R9, 4
             40038 ADDI R10, R10, 1
-            4003C J FORCOUNT
+            4003C J 100060
 ENDCOUNT: 40040 ADD R13, R0, R8

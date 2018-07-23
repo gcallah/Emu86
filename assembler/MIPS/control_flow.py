@@ -81,15 +81,32 @@ class Slti(Instruction):
 class Jmp(Instruction):
     """
         <instr>
-            jmp
+            J
         </instr>
         <syntax>
-            JMP lbl
+            J lbl
+            J loc
         </syntax>
     """
     def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        raise Jump(target.name)
+        if isinstance(target, IntegerTok):
+            raise Jump(str(target.get_val()))
+        else:
+            raise Jump(target.name)
+
+class Jal(Instruction):
+    """
+        <instr>
+            JAL
+        </instr>
+        <syntax>
+            JAL loc
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        target = get_one_op(self.get_nm(), ops)
+        raise Jump(str(target.get_val()))
 
 class Beq(Instruction):
     """
