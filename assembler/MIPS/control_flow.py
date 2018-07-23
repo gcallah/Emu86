@@ -47,13 +47,6 @@ class Slt(Instruction):
     def fhook(self, ops, vm):      
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
         res = op2.get_val() - op3.get_val()
-        # set the proper flags
-        # zero flag:
-        if res == 0:
-            vm.flags['ZF'] = 1
-        else:
-            vm.flags['ZF'] = 0
-        # sign flag:
         if res < 0:
             op1.set_val(1)
         else:
@@ -79,13 +72,6 @@ class Slti(Instruction):
     def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops)
         res = op2.get_val() - op3.get_val()
-        # set the proper flags
-        # zero flag:
-        if res == 0:
-            vm.flags['ZF'] = 1
-        else:
-            vm.flags['ZF'] = 0
-        # sign flag:
         if res < 0:
             op1.set_val(1)
         else:
@@ -174,99 +160,6 @@ class Bne(Instruction):
                 vm.set_ip(current_ip + disp * 4)
             else:
                 raise OutofBounds()
-
-class Jne(Instruction):
-    """
-        <instr>
-             jne
-        </instr>
-        <syntax>
-            JNE lbl
-        </syntax>
-        <descr>
-            Jumps if ZF is zero. <br>
-            Equivalent name: JNZ
-        </descr>
-    """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
-        if int(vm.flags['ZF']) == 0:
-            raise Jump(target.name)
-
-class Jg(Instruction):
-    """
-        <instr>
-             jg
-        </instr>
-        <syntax>
-            JG lbl
-        </syntax>
-        <descr>
-            Jumps if SF == 0 and ZF == 0. <br>
-            Equivalent name: JLNE
-        </descr>
-    """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
-        if (int(vm.flags['SF']) == 0 
-            and int(vm.flags['ZF']) == 0):
-            raise Jump(target.name)
-
-class Jge(Instruction):
-    """
-        <instr>
-             jge
-        </instr>
-        <syntax>
-            JGE lbl
-        </syntax>
-        <descr>
-            Jumps if SF == 0.
-        </descr>
-    """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
-        if int(vm.flags['SF']) == 0:
-            raise Jump(target.name)
-        return ''
-
-class Jl(Instruction):
-    """
-        <instr>
-             jl
-        </instr>
-        <syntax>
-            JL lbl
-        </syntax>
-        <descr>
-            Jumps if SF == 1. <br>
-            Equivalent name: JGNE
-        </descr>
-    """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
-        if int(vm.flags['SF']) == 1:
-            raise Jump(target.name)
-        return ''
-
-class Jle(Instruction):
-    """
-        <instr>
-             jle
-        </instr>
-        <syntax>
-            JLE lbl
-        </syntax>
-        <descr>
-            Jumps if SF == 1 or ZF == 1.
-        </descr>
-    """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
-        if (int(vm.flags['SF']) == 1
-            or int(vm.flags['ZF']) == 1):
-            raise Jump(target.name)
-        return ''
 
 class Call(Instruction):
     """
