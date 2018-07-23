@@ -672,6 +672,24 @@ def get_op(token_line, pos, flavor, vm):
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
+def get_mips_pc(token_line, pos):
+    """
+    Returns the PC counter of the instruction
+
+    Args:
+        token_line: Line of code
+        pos: Position of PC counter
+
+    Returns:
+        Integer token of PC counter value
+    """
+    if not isinstance(token_line[pos], IntegerTok):
+        raise InvalidArgument("Not a PC counter")
+    elif token_line[pos].get_val() % 4 != 0:
+        raise InvalidArgument("Not a PC counter")
+    else:
+        return token_line[pos]
+
 def parse_exec_unit(token_line, flavor, vm):
     """
     Parses instruction
@@ -687,6 +705,9 @@ def parse_exec_unit(token_line, flavor, vm):
     NEED_COMMA_OR_END = 1
     pos = 0
     token_instruction = []
+    if flavor == "mips":
+        token_instruction.append(get_mips_pc(token_line, pos))
+        pos += 1
     if not isinstance(token_line[pos], Instruction):
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
@@ -730,6 +751,7 @@ def parse(tok_lines, flavor, vm):
     parse_text = True
     token_instrs = []
     mem_loc = 0 
+    ip_init = None
     for tokens in tok_lines:
         if isinstance(tokens[0][TOKENS], Section):
             if tokens[0][TOKENS].get_nm() == "data":
@@ -748,4 +770,7 @@ def parse(tok_lines, flavor, vm):
             vm.set_data_init("off")
             token_instrs.append((parse_exec_unit(tokens[0], flavor, vm), 
                                  tokens[1]))
+            if flavor == "mips" and ip_init == None:
+                ip_init = token_instrs[0][TOKENS][0].get_val()
+                vm.start_ip = ip_init
     return token_instrs

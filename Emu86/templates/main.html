@@ -25,6 +25,8 @@
                 <input type="hidden" name="data_init" value = "off">
             {% endif %}
 
+            <input type="hidden" name="start_ip" value = "{{ start_ip }}" >
+
             Please select your number system: 
             {% if base == "dec" %}
                 <input type="radio" name="base" value="dec" checked="checked"> Decimal 

@@ -40,7 +40,7 @@ class VirtualMachine:
         self.symbols = {}
         self.flavor = None
         self.data_init = "on"
-
+        self.start_ip = 0
 
     def __str__(self):
         return ("Registers: " + str(self.registers) + "\n"
@@ -191,6 +191,7 @@ class MIPSMachine(VirtualMachine):
                     [
                         ('COND', 0),
                     ])
+
     def re_init(self):
         super().re_init()
         self.registers[STACK_PTR_MIPS] = STACK_TOP

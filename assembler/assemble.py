@@ -6,7 +6,7 @@ Executes assembly code typed in.
 import re
 
 from .flowbreak import FlowBreak
-from .errors import Error, InvalidInstruction, ExitProg
+from .errors import Error, InvalidInstruction, InvalidArgument, ExitProg
 from .parse import add_debug, parse
 from .lex import lex
 from .tokens import Instruction
@@ -16,8 +16,11 @@ MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 JMP_STR = "A jump instruction."
 
 
-INSTR = 0
-OPS = 1
+INSTR_INTEL = 0
+OPS_INTEL = 1
+PC_MIPS = 0
+INSTR_MIPS = 1
+OPS_MIPS = 2
 
 def dump_flags(vm):
     for flag, val in vm.flags.items():
@@ -26,7 +29,7 @@ def dump_flags(vm):
 def jump_to_label(label, source, vm):
     if label in vm.labels:
         ip = vm.labels[label]  # set i to line num of label
-        vm.set_ip(ip)
+        vm.set_ip(ip + vm.start_ip)
         return (True, source, "")
     else:
         return (False, source, "Invalid label: " + label)
@@ -40,22 +43,26 @@ def exec(tok_lines, flavor, vm, last_instr):
             err_msg: if no success, what went wrong?
     """
     try:
-        ip = vm.get_ip()
+        ip = vm.get_ip() - vm.start_ip
         curr_instr = None
         source = None
+        last_intr = None
         if flavor == "mips":
             if ip // 4 >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
 
             (curr_instr, source) = tok_lines[ip // 4]
+            if vm.get_ip() != curr_instr[PC_MIPS].get_val():
+                raise InvalidArgument(hex(curr_instr[PC_MIPS].get_val()))
             vm.inc_ip()
+            last_instr = curr_instr[INSTR_MIPS].f(curr_instr[OPS_MIPS:], vm)
         else:
             if ip >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
 
             (curr_instr, source) = tok_lines[ip]
             vm.inc_ip()
-        last_instr = curr_instr[INSTR].f(curr_instr[1:], vm)
+            last_instr = curr_instr[INSTR_INTEL].f(curr_instr[OPS_INTEL:], vm)
         return (True, source, "")
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
@@ -103,11 +110,10 @@ def assemble(code, flavor, vm, step=False):
     try:
         if not step:
             add_debug("Setting ip to 0", vm)
-            vm.set_ip(0)   # instruction pointer reset for 'run'
+            vm.set_ip(vm.start_ip)   # instruction pointer reset for 'run'
             count = 0
-            ip = vm.get_ip()
             if flavor == "mips":
-                while vm.get_ip() // 4 < len(tok_lines) and count < MAX_INSTRUCTIONS:
+                while (vm.get_ip() - vm.start_ip) // 4 < len(tok_lines) and count < MAX_INSTRUCTIONS:
                     (success, last_instr, error) = exec(tok_lines, flavor, vm, 
                                                         last_instr)
                     if not success:
@@ -122,7 +128,9 @@ def assemble(code, flavor, vm, step=False):
                     count += 1
         else:  # step through code
             count = 0
-            ip = vm.get_ip()
+            if vm.get_ip() == 0:
+                vm.set_ip(vm.start_ip)
+            ip = vm.get_ip() - vm.start_ip
             if flavor == "mips":
                 ip = ip // 4
             if ip < len(tok_lines):
@@ -132,7 +140,7 @@ def assemble(code, flavor, vm, step=False):
             else:
                 last_instr = "Reached end of executable code."
                 # rewind:
-                vm.set_ip(0)
+                vm.set_ip(vm.start_ip)
             return (last_instr, error)
     except ExitProg as ep:
         last_instr = "Exiting program"

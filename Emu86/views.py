@@ -90,7 +90,8 @@ def main_page(request):
                              'flavor': mips_machine.flavor,
                              'data_init': mips_machine.data_init,
                              'base': 'hex',
-                             'sample': 'none'
+                             'sample': 'none',
+                             'start_ip': mips_machine.start_ip
                             })
             else:
                 mips_machine.flavor = None
@@ -116,7 +117,8 @@ def main_page(request):
                                'flavor': intel_machine.flavor,
                                DATA_INIT: intel_machine.data_init,
                                'base': 'dec',
-                               'sample': 'none'
+                               'sample': 'none',
+                               'start_ip': intel_machine.start_ip
                               })
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
@@ -129,6 +131,7 @@ def main_page(request):
                 mips_machine.flavor = language
         base = request.POST['base']
         sample = request.POST['sample']
+
         if CLEAR in request.POST:
             intel_machine.re_init()
             mips_machine.re_init()
@@ -155,12 +158,14 @@ def main_page(request):
                 get_stack_contents(intel_machine.stack, request)
                 get_flag_contents(intel_machine.flags, request)
                 intel_machine.data_init = request.POST[DATA_INIT]
+                intel_machine.start_ip = int(request.POST['start_ip'])
             else:
                 get_reg_contents(mips_machine.registers, request)
                 get_mem_contents(mips_machine.memory, request)
                 get_stack_contents(mips_machine.stack, request)
                 get_flag_contents(mips_machine.flags, request)
                 mips_machine.data_init = request.POST[DATA_INIT]
+                mips_machine.start_ip = int(request.POST['start_ip'])
             if intel_machine.flavor == INTEL:
                 (last_instr, error) = assemble(request.POST[CODE], INTEL,
                                                intel_machine, step)
@@ -193,7 +198,8 @@ def main_page(request):
                      'flavor': mips_machine.flavor,
                      DATA_INIT: mips_machine.data_init,
                      'base': base,
-                     'sample': sample
+                     'sample': sample,
+                     'start_ip': mips_machine.start_ip
                     })
         
     if intel_machine.flavor == INTEL:
@@ -219,7 +225,8 @@ def main_page(request):
                    'flavor': intel_machine.flavor,
                    DATA_INIT: intel_machine.data_init,
                    'base': base, 
-                   'sample': sample
+                   'sample': sample,
+                   'start_ip': intel_machine.start_ip
                   })
 
 def is_hex_form(request):

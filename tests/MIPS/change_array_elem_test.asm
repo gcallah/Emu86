@@ -7,20 +7,20 @@
 
 ; Change any numbers less than min to min:
 .text
-    ADD R8, R0, R0
-    ADD R9, R0, R0
-    ADD R10, R0, R0
-    ADDI R11, R0, nbrArray
-    LW R16, nbrMin(R28)
-    LW R17, nbrElts(R28)
-FORCOUNT: BEQ R10, R17, 9
-BODY: LW R12, (R9)
-      SLT R13, R16, R12
-      BNE R13, R0, 1
-      SW R16, (R9)
-ENDIFSMALL: LW R11, (R9)
-            ADD R8, R8, R11
-            ADDI R9, R9, 4
-            ADDI R10, R10, 1
-            J FORCOUNT
-ENDCOUNT: ADD R13, R0, R8
+    40000 ADD R8, R0, R0
+    40004 ADD R9, R0, R0
+    40008 ADD R10, R0, R0
+    4000C ADDI R11, R0, nbrArray
+    40010 LW R16, nbrMin(R28)
+    40014 LW R17, nbrElts(R28)
+FORCOUNT: 40018 BEQ R10, R17, 9
+BODY: 4001C LW R12, (R9)
+      40020 SLT R13, R16, R12
+      40024 BNE R13, R0, 1
+      40028 SW R16, (R9)
+ENDIFSMALL: 4002C LW R11, (R9)
+            40030 ADD R8, R8, R11
+            40034 ADDI R9, R9, 4
+            40038 ADDI R10, R10, 1
+            4003C J FORCOUNT
+ENDCOUNT: 40040 ADD R13, R0, R8
