@@ -98,31 +98,23 @@ class AssembleTestCase(TestCase):
     def test_slt_eq(self):
         mips_machine.registers["R8"] = 1
         mips_machine.registers["R9"] = 1
-        mips_machine.flags["ZF"] = 0
         assemble("SLT R10, R8, R9", 'mips', mips_machine)
-        self.assertEqual(mips_machine.flags["ZF"], 1)
         self.assertEqual(mips_machine.registers["R10"], 0)
 
     def test_slt_l(self):
         mips_machine.registers["R8"] = 0
         mips_machine.registers["R9"] = 1
-        mips_machine.flags["ZF"] = 0
         assemble("SLT R10, R8, R9", 'mips', mips_machine)
-        self.assertEqual(mips_machine.flags["ZF"], 0)
         self.assertEqual(mips_machine.registers["R10"], 1)
 
     def test_slti_eq(self):
         mips_machine.registers["R9"] = 1
-        mips_machine.flags["ZF"] = 0
         assemble("SLTI R10, R9, 1", 'mips', mips_machine)
-        self.assertEqual(mips_machine.flags["ZF"], 1)
         self.assertEqual(mips_machine.registers["R10"], 0)
 
     def test_slti_l(self):
         mips_machine.registers["R9"] = 0
-        mips_machine.flags["ZF"] = 0
         assemble("SLTI R10, R9, 1", 'mips', mips_machine)
-        self.assertEqual(mips_machine.flags["ZF"], 0)
         self.assertEqual(mips_machine.registers["R10"], 1)
 
     def test_sll(self):
