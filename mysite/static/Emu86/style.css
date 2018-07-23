@@ -817,7 +817,7 @@ td#unwritable {
     vertical-align: middle
 }
 
-td#contents, input#reg-cont, input#flag-cont {
+td#contents, input#flag-cont {
     background: #eff;
 }
 

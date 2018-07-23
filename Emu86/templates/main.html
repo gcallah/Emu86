@@ -184,17 +184,32 @@
                                 </td>
 
                                 <td id="contents">
-                                    <input
-                                        {% if reg in unwritable %}
-                                            id="unwr-cont"
-                                        {% else %}
-                                            id="reg-cont"
-                                        {% endif %}
-                                        value="{{ cont }}"
-                                        name="{{ reg }}"
-                                        size="10"
-                                        readonly="readonly"
-                                    onclick=convert(name,value)>
+                                    {% if data_init == "on" %}
+                                        <input
+                                            {% if reg in unwritable %}
+                                                id="unwr-cont"
+                                                readonly = "readonly"
+                                            {% else %}
+                                                id="reg-cont"
+                                            {% endif %}
+                                            value="{{ cont }}"
+                                            name="{{ reg }}"
+                                            size="10"
+                                        onclick=convert(name,value)>
+                                    {% else %}
+                                        <input
+                                            {% if reg in unwritable %}
+                                                id="unwr-cont"
+                                            {% else %}
+                                                id="reg-cont"
+                                            {% endif %}
+                                            value="{{ cont }}"
+                                            name="{{ reg }}"
+                                            size="10"
+                                            readonly="readonly"
+                                            style="background-color:#eff;"
+                                        onclick=convert(name,value)>
+                                    {% endif %}
                                 </td>
                             {% endfor %}
                             </tr>
@@ -263,7 +278,6 @@
                         <table id="memory-table">
                             <script>
                                 var flav = document.getElementsByName("flavor")[0].value;
-                                console.log (flav);
                                 var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
                                 if (flav == "mips"){ 
                                     for (var i = 0; i < 16; i += 4) {
@@ -290,12 +304,23 @@
                                     <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:":-1"}} </td>
                                 {% endif %}
                                     <td id="contents" style="height:5px">
-                                        <input
-                                            id="mem-cont"
-                                            value="{{ cont }}"
-                                            name="{{ addr }}"
-                                            size="5"
-                                        >
+                                        {% if data_init == "on" %}
+                                            <input
+                                                id="mem-cont"
+                                                value="{{ cont }}"
+                                                name="{{ addr }}"
+                                                size="5"
+                                            >
+                                        {% else %}
+                                            <input
+                                                id="mem-cont"
+                                                value="{{ cont }}"
+                                                name="{{ addr }}"
+                                                size="5"
+                                                readonly="readonly"
+                                                style="background-color:#eff;"
+                                            >
+                                        {% endif %}
                                     </td>
                                 {% if flavor == "mips" %}
                                     {% if addr|slice:"-1:" == "C" %}
@@ -343,12 +368,23 @@
                                     <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:"1:-1"}} </td>
                                 {% endif %}
                                     <td id="contents" style="height:5px">
-                                        <input
-                                            id="mem-cont"
-                                            value="{{ cont }}"
-                                            name="{{ addr }}"
-                                            size="5"
-                                        >
+                                        {% if data_init == "on" %}
+                                            <input
+                                                id="mem-cont"
+                                                value="{{ cont }}"
+                                                name="{{ addr }}"
+                                                size="5"
+                                            >
+                                        {% else %}
+                                            <input
+                                                id="mem-cont"
+                                                value="{{ cont }}"
+                                                name="{{ addr }}"
+                                                size="5"
+                                                readonly="readonly"
+                                                style="background-color:#eff;"
+                                            >
+                                        {% endif %}
                                     </td>
                                 {% if addr|slice:"-1:" == "0" %}
                                     </tr>
