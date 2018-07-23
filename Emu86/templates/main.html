@@ -262,13 +262,24 @@
                     <div style="height:235px;overflow:auto;">
                         <table id="memory-table">
                             <script>
+                                var flav = document.getElementsByName("flavor")[0].value;
+                                console.log (flav);
                                 var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
-                                for (var i = 0; i < 16; i++) {
-                                    text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
-                                    if (i == 15){
-                                        text += "</tr>"
+                                if (flav == "mips"){ 
+                                    for (var i = 0; i < 16; i += 4) {
+                                        text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
+                                        if (i == 12){
+                                            text += "</tr>";
+                                        }
                                     }
-
+                                }
+                                else {
+                                    for (var i = 0; i < 16; i++) {
+                                        text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
+                                        if (i == 15){
+                                            text += "</tr>";
+                                        }
+                                    }
                                 }
                                 document.getElementById("memory-table").innerHTML = text;
                             </script>
@@ -286,8 +297,14 @@
                                             size="5"
                                         >
                                     </td>
-                                {% if addr|slice:"-1:" == "F" %}
-                                    </tr>
+                                {% if flavor == "mips" %}
+                                    {% if addr|slice:"-1:" == "C" %}
+                                        </tr>
+                                    {% endif %}
+                                {% else %}
+                                    {% if addr|slice:"-1:" == "F" %}
+                                        </tr>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </table>

@@ -101,7 +101,7 @@ class TestPrograms(TestCase):
     def test_sum_calculation(self):
         self.run_mips_test_code("tests/MIPS/sum_test.asm")
         self.assertEqual(mips_machine.registers["R8"],  53)
-        self.assertEqual(mips_machine.memory["1"], 53)
+        self.assertEqual(mips_machine.memory["4"], 53)
 
     def test_arithmetic_expression(self):
         self.run_mips_test_code("tests/MIPS/arithmetic_expression.asm")
@@ -119,7 +119,7 @@ class TestPrograms(TestCase):
     def test_celsius_conversion(self):
         self.run_mips_test_code("tests/MIPS/cel_to_fah.asm")
         self.assertEqual(mips_machine.registers["R8"], 95)
-        self.assertEqual(mips_machine.memory["1"], 95)
+        self.assertEqual(mips_machine.memory["4"], 95)
         self.assertEqual(mips_machine.registers["HI"], 2)
         self.assertEqual(mips_machine.registers["R9"], 5)
 
@@ -141,7 +141,7 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R16"], 10)
         self.assertEqual(mips_machine.registers["R8"], 89)
         self.assertEqual(mips_machine.registers["R9"], 10)
-        self.assertEqual(mips_machine.registers["R10"], 10)
+        self.assertEqual(mips_machine.registers["R10"], 40)
         self.assertEqual(mips_machine.registers["R12"], 8)
         self.assertEqual(mips_machine.registers["R13"], 9)
 
@@ -154,7 +154,8 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R8"], 361)
         self.assertEqual(mips_machine.registers["R13"], 361)
         self.assertEqual(mips_machine.registers["R17"], 10)
-        self.assertEqual(mips_machine.registers["R9"], 10)
+        self.assertEqual(mips_machine.registers["R9"], 40)
+        self.assertEqual(mips_machine.registers["R10"], 10)
 
 if __name__ == '__main__':
     main()

@@ -20,7 +20,7 @@ function avg(flavor) {
 		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .short 25, 47, -15, -50, 32, 95 DUP (10)\n    nbrElts: .short 100\n\n; Calculate the average of the array:\n.text\n    mov 0, %eax\n    mov 0, %ebx\n    mov 0, %edx\n    mov (nbrElts), %ecx\nforCount1: cmp %ebx, %ecx\n           je endCount\nbody: add (%ebx), %eax\n      inc %ebx\n      jmp forCount1\nendCount: idiv %ecx \n\n\n';
 	}
 	else{
-		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .word 19, 2F, -0xF, -32, 20, 0A, 0A, 0A, 0A, 0A\n    nbrElts: .word 0A\n\n; Calculate the average of the array:\n.text\n    ADD R8, R0, R0\n    ADD R9, R0, R0\n    LW R16, nbrElts(R28)\n    ADDI R10, R28, nbrArray \nFORCOUNT: BEQ R9, R16, 5\nBODY: LW R11, (R10)\n      ADD R8, R8, R11\n      ADDI R9, R9, 1\n      ADDI R10, R10, 1\n      J FORCOUNT\nENDCOUNT: DIV R8, R16\nMFLO R12\nMFHI R13\n';
+		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .word 19, 2F, -0xF, -32, 20, 0A, 0A, 0A, 0A, 0A\n    nbrElts: .word 0A\n\n; Calculate the average of the array:\n.text\n    ADD R8, R0, R0\n    ADD R9, R0, R0\n    LW R16, nbrElts(R28)\n    ADDI R10, R28, nbrArray \nFORCOUNT: BEQ R9, R16, 5\nBODY: LW R11, (R10)\n      ADD R8, R8, R11\n      ADDI R9, R9, 1\n      ADDI R10, R10, 4\n      J FORCOUNT\nENDCOUNT: DIV R8, R16\nMFLO R12\nMFHI R13\n';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -85,7 +85,7 @@ function modify(flavor) {
 		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .short 25, 47, 15, 50, 32, 95 DUP (10)\n    nbrElts: .short 100\n    nbrMin: .short 33\n\n; Change any numbers less than min to min:\n.text\n    mov 0, %eax\n    mov 0, %ebx\n    mov 0, %edx\n    mov (nbrElts), %ecx\nforCount1: cmp %ecx, %ebx\n           je endCount\nbody: cmp (nbrMin), (%ebx)\n      jge endIfSmall\n      mov (nbrMin), (%ebx)\nendIfSmall: add (%ebx), %eax\n            inc %ebx\n            jmp forCount1\nendCount: mov %eax, %edx\n\n\n';
 	}
 	else{
-		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .word 19, 2F, 0F, 32, 20, 0A, 0A, 0A, 0A, 0A\n    nbrElts: .word 0A\n    nbrMin: .word 21\n\n; Change any numbers less than min to min:\n.text\n    ADD R8, R0, R0\n    ADD R9, R0, R0\n    ADDI R10, R0, nbrArray\n    LW R16, nbrMin(R28)\n    LW R17, nbrElts(R28)\nFORCOUNT: BEQ R9, R17, 8\nBODY: LW R11, (R9)\n      SLT R12, R16, R11\n      BNE R12, R0, 1\n      SW R16, (R9)\nENDIFSMALL: LW R11, (R9)\n            ADD R8, R8, R11\n            ADDI R9, R9, 1\n            J FORCOUNT\nENDCOUNT: ADD R13, R0, R8';
+		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .word 19, 2F, 0F, 32, 20, 0A, 0A, 0A, 0A, 0A\n    nbrElts: .word 0A\n    nbrMin: .word 21\n\n; Change any numbers less than min to min:\n.text\n    ADD R8, R0, R0\n    ADD R9, R0, R0\n    ADDI R10, R0, nbrArray\n    LW R16, nbrMin(R28)\n    LW R17, nbrElts(R28)\nFORCOUNT: BEQ R9, R17, 8\nBODY: LW R11, (R9)\n      SLT R12, R16, R11\n      BNE R12, R0, 1\n      SW R16, (R9)\nENDIFSMALL: LW R11, (R9)\n            ADD R8, R8, R11\n            ADDI R9, R9, 4\n            J FORCOUNT\nENDCOUNT: ADD R13, R0, R8';
 	}
 	document.getElementById('id_code').value = code_string;
 }
