@@ -49,10 +49,6 @@ class VirtualMachine:
                 + "Stack: " + str(self.stack) + "\n"
                 + "Labels: " + str(self.labels))
 
-    def stack_init(self):
-        for i in range(STACK_TOP, STACK_BOTTOM - 1, -1):
-            self.stack[hex(i).split('x')[-1].upper()] = 0
-
     def re_init(self):
         self.nxt_key = 0
         self.ip = 0
@@ -108,6 +104,10 @@ class IntelMachine(VirtualMachine):
     def mem_init(self):
         for i in range(0, MEM_SIZE):
             self.memory[hex(i).split('x')[-1].upper()] = 0
+
+    def stack_init(self):
+        for i in range(STACK_TOP, STACK_BOTTOM - 1, -1):
+            self.stack[hex(i).split('x')[-1].upper()] = 0
 
     def inc_ip(self):
         ip = self.get_ip()
@@ -198,6 +198,10 @@ class MIPSMachine(VirtualMachine):
     def mem_init(self):
         for i in range(0, MEM_SIZE, 4):
             self.memory[hex(i).split('x')[-1].upper()] = 0
+
+    def stack_init(self):
+        for i in range(STACK_TOP - 3, STACK_BOTTOM - 1, -4):
+            self.stack[hex(i).split('x')[-1].upper()] = 0
 
     def inc_ip(self):
         ip = self.get_ip()

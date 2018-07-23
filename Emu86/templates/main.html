@@ -352,20 +352,34 @@
                         <table id="stack-table">
                             <script>
                                 var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
-                                for (var i = 15; i >= 0; i--) {
-                                    text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
-                                    if (i == 0){
-                                        text += "</tr>"
+                                var flav = document.getElementsByName("flavor")[0].value;
+                                if (flav == "mips") {
+                                    for (var i = 12; i >= 0; i -= 4) {
+                                        text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
+                                        if (i == 0){
+                                            text += "</tr>";
+                                        }
                                     }
-
+                                }
+                                else {
+                                    for (var i = 15; i >= 0; i--) {
+                                        text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
+                                        if (i == 0){
+                                            text += "</tr>";
+                                        }
+                                    }
                                 }
                                 document.getElementById("stack-table").innerHTML = text;
                             </script>
                              {% for addr, cont in stack.items %}
-                                {% if addr == "F" %}
-                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> 0 </td>
-                                {% elif addr|slice:"-1:" == "F" %}
-                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:"1:-1"}} </td>
+                                {% if flavor == "mips" %}
+                                    {% if addr|slice:"-1:" == "C" %}
+                                        <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:"1:-1"}} </td>
+                                    {% endif %}
+                                {% else %}
+                                    {% if addr|slice:"-1:" == "F" %}
+                                        <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:"1:-1"}} </td>
+                                    {% endif %}
                                 {% endif %}
                                     <td id="contents" style="height:5px">
                                         {% if data_init == "on" %}
@@ -386,9 +400,6 @@
                                             >
                                         {% endif %}
                                     </td>
-                                {% if addr|slice:"-1:" == "0" %}
-                                    </tr>
-                                {% endif %}
                             {% endfor %}
                         </table>
                     </div>
