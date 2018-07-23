@@ -10,6 +10,7 @@ from .errors import Error, InvalidInstruction, InvalidArgument, ExitProg
 from .parse import add_debug, parse
 from .lex import lex
 from .tokens import Instruction
+from .MIPS.control_flow import Jal
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 
@@ -32,7 +33,12 @@ def jump_to_label(label, source, vm):
         vm.set_ip(ip + vm.start_ip)
         return (True, source, "")
     else:
-        return (False, source, "Invalid label: " + label)
+        try:
+            ip = int(label) >> 2
+            vm.set_ip(ip)
+            return (True, source, "")
+        except:
+            return (False, source, "Invalid label: " + label)
 
 def exec(tok_lines, flavor, vm, last_instr):
     """
@@ -68,6 +74,8 @@ def exec(tok_lines, flavor, vm, last_instr):
         # we have hit one of the JUMP instructions: jump to that line.
         add_debug("In FlowBreak", vm)
         dump_flags(vm)
+        if isinstance(curr_instr[INSTR_MIPS], Jal):
+            vm.registers["R31"] = vm.get_ip()
         return jump_to_label(brk.label, source, vm)
     except ExitProg as ep:
         raise ExitProg
