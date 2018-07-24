@@ -46,7 +46,7 @@ function sqrt(flavor) {
 		code_string += '; Declare a number\n.data\n    number: .short 100\n\n; Calculate square root of the number\n.text\n    mov (number), %eax\n    push %ebx\n    push %ecx\n    mov $0, %ebx\nWhileLE: mov %ebx, %ecx\n         imul %ebx, %ecx\n         cmp %eax, %ecx\n         jnle EndWhileLE\n         inc %ebx\n         jmp WhileLE\nEndWhileLE: dec %ebx\n            mov %ebx, %eax\n            pop %ecx\n            pop %ebx';
 	}
 	else{
-		code_string += '; Declare a number\n.data\n    number: .word 64\n\n; Calculate square root of the number\n.text\n    40000 LW R8, number(R28)\n\nWHILELE: 40004 ADD R10, R0, R9\n         40008 MULT R10, R9\n         4000C MFLO R10\n         40010 SUB R11, R10, R8\n         40014 SLT R12, R0, R11\n         40018 BNE R12, R0, 2\n         4001C ADDI R9, R9, 1\n         40020 J WHILELE\nENDWHILELE: 40024 SUBI R9, R9, 1\n            40028 ADD R8, R0, R9\n            ';
+		code_string += '; Declare a number\n.data\n    number: .word 64\n\n; Calculate square root of the number\n.text\n    40000 LW R8, number(R28)\n\nWHILELE: 40004 ADD R10, R0, R9\n         40008 MULT R10, R9\n         4000C MFLO R10\n         40010 SUB R11, R10, R8\n         40014 SLT R12, R0, R11\n         40018 BNE R12, R0, 2\n         4001C ADDI R9, R9, 1\n         40020 J WHILELE\nENDWHILELE: 40024 ADDI R9, R9, -1\n            40028 ADD R8, R0, R9\n            ';
 	}
 	document.getElementById('id_code').value = code_string;
 }
