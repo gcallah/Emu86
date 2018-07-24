@@ -83,18 +83,6 @@ class Sub(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.sub)
 
-class Subi(Instruction):
-    """
-        <instr>
-             SUBI
-        </instr>
-        <syntax>
-            SUBI reg, reg, con
-        </syntax>
-    """
-    def fhook(self, ops, vm):
-        three_op_arith_immediate(ops, vm, self.name, opfunc.sub)
-
 class Mult(Instruction):
     """
         <instr>

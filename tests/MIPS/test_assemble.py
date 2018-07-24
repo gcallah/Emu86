@@ -72,10 +72,7 @@ class AssembleTestCase(TestCase):
 
     def test_add_imm(self):
         self.two_op_test_imm(opfunc.add, "ADDI")
-
-    def test_sub_imm(self):
-        self.two_op_test_imm(opfunc.sub, "SUBI")
-
+        
     def test_and_imm(self):
         self.two_op_test_imm(opfunc.and_, "ANDI")
 
