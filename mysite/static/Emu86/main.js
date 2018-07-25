@@ -169,9 +169,16 @@ function loadcode()
 
 function Savecode()
 {
-    var file_name = prompt("Please enter file name to save as, ending in .asm or .bin: ");
+    var flav = document.getElementsByName("flavor")[0].value;
+    var file_name = null;
+    if (flav == "mips"){
+        file_name = prompt("Please enter file name to save as, ending in .asm or .bin: ");
+    }
+    else{
+        file_name = prompt("Please enter file name to save as, ending in .asm: ");
+    }
     if (file_name == null){
-        alert("Save cancelled")
+        alert("Save cancelled");
     }
     else if (file_name == ""){
         alert("Invalid file name");
@@ -179,7 +186,10 @@ function Savecode()
     else if (file_name.length < 5){
         alert("Invalid file name: " + file_name);
     }
-    else if (file_name.slice(file_name.length - 4) != ".asm" && file_name.slice(file_name.length - 4) != ".bin") {
+    else if (flav == "mips" && file_name.slice(file_name.length - 4) != ".asm" && file_name.slice(file_name.length - 4) != ".bin" ) {
+        alert("Invalid file name: " + file_name);
+    }
+    else if (flav != "mips" && file_name.slice(file_name.length - 4) != ".asm"){
         alert("Invalid file name: " + file_name);
     }
     else {
