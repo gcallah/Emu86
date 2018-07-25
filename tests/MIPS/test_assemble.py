@@ -48,12 +48,8 @@ class AssembleTestCase(TestCase):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
-            hex_string = "0x"
-            if b < 0:
-                hex_string = "-" + hex_string + str(-b)
-            else:
-                hex_string += str(b)
-            correct = operator(a, int(str(b), 16))
+            hex_string = hex(b)
+            correct = operator(a, int(hex(b), 16))
             mips_machine.registers["R9"] = a
             assemble("40000 " + instr + " R10, R9, " + hex_string, 'mips', mips_machine)
             self.assertEqual(mips_machine.registers["R10"], correct)
@@ -115,12 +111,12 @@ class AssembleTestCase(TestCase):
         self.assertEqual(mips_machine.registers["R10"], 1)
 
     def test_sll(self):
-        self.two_op_test(opfunc.lshift, "SLL",
+        self.two_op_test_imm(opfunc.lshift, "SLL",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
 
     def test_srl(self):
-        self.two_op_test(opfunc.rshift, "SRL",
+        self.two_op_test_imm(opfunc.rshift, "SRL",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
         

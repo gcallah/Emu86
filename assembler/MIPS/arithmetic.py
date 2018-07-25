@@ -189,11 +189,11 @@ class Sll(Instruction):
              sll
         </instr>
         <syntax>
-            SLL reg, reg, reg
+            SLL reg, reg, con
         </syntax>
     """
     def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.lshift)
+        three_op_arith_immediate(ops, vm, self.name, opfunc.lshift)
         return ''
 
 class Srl(Instruction):
@@ -202,11 +202,11 @@ class Srl(Instruction):
              srl
         </instr>
         <syntax>
-            SRL reg, reg, reg
+            SRL reg, reg, con
         </syntax>
     """
     def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.rshift)
+        three_op_arith_immediate(ops, vm, self.name, opfunc.rshift)
 
 class Notf(Instruction):
     """
