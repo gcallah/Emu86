@@ -23,15 +23,15 @@ from assembler.errors import UNKNOWN_NM
 class ErrorTestCase(TestCase):
 
     def test_invalid_instr(self):
-        (output, error) = assemble("40000 shove_up_reg R8, 1", 'mips', mips_machine)
+        (output, error, bit_code) = assemble("40000 shove_up_reg R8, 1", 'mips', mips_machine)
         self.assertTrue(error.startswith(INVALID_INSTR))
 
     def test_invalid_mem_loc(self):
-        (output, error) = assemble("40000 SW R10, 3(hell)", 'mips', mips_machine)
+        (output, error, bit_code) = assemble("40000 SW R10, 3(hell)", 'mips', mips_machine)
         self.assertTrue(error.startswith(INVALID_MEM_LOC))
 
     def test_invalid_num_args(self):
-        (output, error) = assemble("40000 ADDI R10, 10, 22, 34", 'mips', mips_machine)
+        (output, error, bit_code) = assemble("40000 ADDI R10, 10, 22, 34", 'mips', mips_machine)
         self.assertTrue(error.startswith(INVALID_NUM_ARGS))
 
 # we have to clear up symbol handling to make this test work.
@@ -40,19 +40,19 @@ class ErrorTestCase(TestCase):
 #        self.assertTrue(error.startswith(UNKNOWN_NM))
 
     def test_reg_unwritable(self):
-        (output, error) = assemble("40000 ADDI R0, R8, 10", 'mips', mips_machine)
+        (output, error, bit_code) = assemble("40000 ADDI R0, R8, 10", 'mips', mips_machine)
         self.assertTrue(error.startswith(REG_UNWRITABLE))
 
     def test_comma_error(self):
-        (output, error) = assemble("40000 SUBI R8 R8 1", 'mips', mips_machine)
+        (output, error, bit_code) = assemble("40000 SUBI R8 R8 1", 'mips', mips_machine)
         self.assertTrue(error.startswith(MISSING_COMMA))
 
     def test_comma_error(self):
-        (output, error) = assemble("40000 ORI R10,,,, 1", 'mips', mips_machine)
+        (output, error, bit_code) = assemble("40000 ORI R10,,,, 1", 'mips', mips_machine)
         self.assertTrue(error.startswith(INVALID_TOKEN))
 
     def test_data_error(self):
-        (output, error) = assemble(".data \n  x: .word", 'mips', mips_machine)
+        (output, error, bit_code) = assemble(".data \n  x: .word", 'mips', mips_machine)
         self.assertTrue(error.startswith(MISSING_DATA))
 
 

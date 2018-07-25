@@ -50,6 +50,7 @@ def main_page(request):
     error = ""
     base = ""
     sample = ""
+    bit_code = ""
 
     site_hdr = get_hdr()
     if request.method == 'GET':
@@ -91,7 +92,8 @@ def main_page(request):
                              'data_init': mips_machine.data_init,
                              'base': 'hex',
                              'sample': 'none',
-                             'start_ip': mips_machine.start_ip
+                             'start_ip': mips_machine.start_ip,
+                             'bit_code': ""
                             })
             else:
                 mips_machine.flavor = None
@@ -118,7 +120,8 @@ def main_page(request):
                                DATA_INIT: intel_machine.data_init,
                                'base': 'dec',
                                'sample': 'none',
-                               'start_ip': intel_machine.start_ip
+                               'start_ip': intel_machine.start_ip,
+                               'bit_code': ""
                               })
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
@@ -167,15 +170,14 @@ def main_page(request):
                 mips_machine.data_init = request.POST[DATA_INIT]
                 mips_machine.start_ip = int(request.POST['start_ip'])
             if intel_machine.flavor == INTEL:
-                (last_instr, error) = assemble(request.POST[CODE], INTEL,
+                (last_instr, error, bit_code) = assemble(request.POST[CODE], INTEL,
                                                intel_machine, step)
             elif intel_machine.flavor == ATT:
-                (last_instr, error) = assemble(request.POST[CODE], ATT, 
+                (last_instr, error, bit_code) = assemble(request.POST[CODE], ATT, 
                                                intel_machine, step)
             else:
-                (last_instr, error) = assemble(request.POST[CODE], MIPS, 
+                (last_instr, error, bit_code) = assemble(request.POST[CODE], MIPS, 
                                                mips_machine, step)
-
 
     if mips_machine.flavor == MIPS:
         site_hdr += ": MIPS"
@@ -199,7 +201,8 @@ def main_page(request):
                      DATA_INIT: mips_machine.data_init,
                      'base': base,
                      'sample': sample,
-                     'start_ip': mips_machine.start_ip
+                     'start_ip': mips_machine.start_ip,
+                     'bit_code': bit_code
                     })
         
     if intel_machine.flavor == INTEL:
@@ -226,7 +229,8 @@ def main_page(request):
                    DATA_INIT: intel_machine.data_init,
                    'base': base, 
                    'sample': sample,
-                   'start_ip': intel_machine.start_ip
+                   'start_ip': intel_machine.start_ip,
+                   'bit_code': bit_code
                   })
 
 def is_hex_form(request):

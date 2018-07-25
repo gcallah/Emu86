@@ -1,4 +1,4 @@
-from .arithmetic import Add, Sub, Addi, Subi, Mult, Div
+from .arithmetic import Add, Sub, Addi, Mult, Div
 from .arithmetic import Andf, Andi, Orf, Ori, Xor, Nor, Sll, Srl
 from .arithmetic import Mflo, Mfhi
 from .data_mov import Load, Store
@@ -18,7 +18,6 @@ key_words = {
 	'ADD': Add('ADD'),
 	'ADDI': Addi('ADDI'),
 	'SUB': Sub('SUB'),
-	'SUBI': Subi('SUBI'),
 	'MULT': Mult('MULT'),
 	'DIV': Div('DIV'),
 	'MFLO': Mflo('MFLO'),
@@ -39,4 +38,35 @@ key_words = {
 	'BNE': Bne('BNE'),
 	'J': Jmp('J'),
 	'JAL': Jal('JAL')
+}
+
+op_func_codes = {
+	# R-format
+	'ADD': ('000000', '100000'),
+	'SUB': ('000000', '100010'),
+	'MULT': ('000000', '011000'),
+	'DIV': ('000000', '011010'),
+	'MFLO': ('000000', '010010'),
+	'MFHI': ('000000', '010000'),
+	'AND': ('000000', '100100'),
+	'OR': ('000000', '100101'),
+	'XOR': ('000000', '100110'),
+	'NOR': ('000000', '100111'),
+	'SLL': ('000000', '000000'),
+	'SRL': ('000000', '000010'),
+	'SLT': ('000000', '101010'),
+
+    # I-format
+	'LW': '100011',
+	'SW': '101011',
+	'ADDI': '001000',
+	'ANDI': '001100',
+	'ORI': '001101',
+	'SLTI': '001010',
+	'BEQ': '000100',
+	'BNE': '000101',
+
+	#J-format
+	'J': '000010',
+	'JAL': '000011'
 }

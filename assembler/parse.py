@@ -768,8 +768,8 @@ def parse(tok_lines, flavor, vm):
             mem_loc = parse_data_token(tokens[0], vm, flavor, mem_loc)
         elif parse_text:
             vm.set_data_init("off")
-            token_instrs.append((parse_exec_unit(tokens[0], flavor, vm), 
-                                 tokens[1]))
+            parsed_unit = parse_exec_unit(tokens[0], flavor, vm)
+            token_instrs.append((parsed_unit, tokens[1]))
             if flavor == "mips" and ip_init == None:
                 ip_init = token_instrs[0][TOKENS][0].get_val()
                 vm.start_ip = ip_init

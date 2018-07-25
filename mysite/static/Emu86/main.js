@@ -170,7 +170,10 @@ function loadcode()
 function Savecode()
 {
     var file_name = prompt("Please enter file name to save as, ending in .asm or .bin: ");
-    if (file_name == ""){
+    if (file_name == null){
+        alert("Save cancelled")
+    }
+    else if (file_name == ""){
         alert("Invalid file name");
     }
     else if (file_name.length < 5){
@@ -180,7 +183,13 @@ function Savecode()
         alert("Invalid file name: " + file_name);
     }
     else {
-        data = document.getElementById("id_code").value;
+        data = null;
+        if (file_name.slice(file_name.length - 4) == ".asm"){
+            data = document.getElementById("id_code").value;
+        }
+        else{
+            data = document.getElementsByName("bit_code")[0].value;
+        }
         var file_blob = new Blob([data], {type: 'text/plain'});
         if (window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveOrOpenBlob(file_blob, file);
