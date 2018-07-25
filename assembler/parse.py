@@ -713,9 +713,9 @@ def parse_exec_unit(token_line, flavor, vm):
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
     pos += 1 
-    if isinstance(token_instruction[0], Ret):
+    if isinstance(token_line[-1], Ret):
         state = NEED_COMMA_OR_END
-    elif isinstance(token_instruction[1], Syscall):
+    elif isinstance(token_line[-1], Syscall):
         state = NEED_COMMA_OR_END
     else:
         state = NEED_OP

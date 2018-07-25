@@ -176,8 +176,9 @@ def exec(tok_lines, flavor, vm, last_instr):
         dump_flags(vm)
         if isinstance(curr_instr[INSTR_MIPS], Jal):
             vm.registers["R31"] = vm.get_ip()
-            return jump_to_label(brk.label, source, vm, True)
-        return jump_to_label(brk.label, source, vm)
+        if isinstance(curr_instr[INSTR_MIPS], Jr):
+            return jump_to_label(brk.label, source, vm)
+        return jump_to_label(brk.label, source, vm, True)
     except ExitProg as ep:
         raise ExitProg
     except Error as err:

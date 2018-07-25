@@ -4,6 +4,8 @@ function_names = {
 	"sum_test.asm": "addTwo",
 	"arithmetic_expression.asm": "arithExpr",
 	"area.asm": "area",
+	"power.asm": "power",
+	"data.asm": "data",
 	"loop.asm": "loop",
 	"log.asm": "log",
 	"array_average_test.asm": "avg",
@@ -14,8 +16,6 @@ function_names = {
 
 intel_function_names = {
 	"arithmetic_shift.asm": "arithShift",
-	"power.asm": "power",
-	"data.asm": "data",
 	"key_test.asm": "keyInterrupt",
 	"array.asm": "array"
 }

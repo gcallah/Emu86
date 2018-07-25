@@ -34,9 +34,9 @@ class TestPrograms(TestCase):
         self.run_mips_test_code("tests/MIPS/loop.asm")
         self.assertEqual(mips_machine.registers["R11"], 16)
 
-    # def test_power(self):
-    #     self.run_intel_test_code("tests/Intel/power.asm")
-    #     self.assertEqual(intel_machine.registers["EDX"], 65536)
+    def test_power(self):
+        self.run_mips_test_code("tests/MIPS/power.asm")
+        self.assertEqual(mips_machine.registers["R8"], 65536)
 
     def test_gt(self):
         self.run_mips_test_code("tests/MIPS/gt.asm")
@@ -73,11 +73,11 @@ class TestPrograms(TestCase):
         self.run_mips_test_code("tests/MIPS/test_jump.asm")
         self.assertEqual(mips_machine.registers["R8"], 3)
 
-    # def test_data(self):
-    #     self.run_intel_test_code("tests/Intel/data.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"],  8)
-    #     self.assertEqual(intel_machine.registers["EBX"], 16)
-    #     self.assertEqual(intel_machine.registers["ECX"], 32)
+    def test_data(self):
+        self.run_mips_test_code("tests/MIPS/data.asm")
+        self.assertEqual(mips_machine.registers["R8"],  8)
+        self.assertEqual(mips_machine.registers["R9"], 16)
+        self.assertEqual(mips_machine.registers["R10"], 32)
 
     # def test_array(self):
     #     self.run_intel_test_code("tests/Intel/array.asm")
