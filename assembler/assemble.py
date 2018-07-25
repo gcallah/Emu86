@@ -10,7 +10,7 @@ from .errors import Error, InvalidInstruction, InvalidArgument, ExitProg
 from .parse import add_debug, parse
 from .lex import lex
 from .tokens import Instruction
-from .MIPS.control_flow import Jal
+from .MIPS.control_flow import Jal, Jr
 from .MIPS.key_words import op_func_codes
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
@@ -28,14 +28,16 @@ def dump_flags(vm):
     for flag, val in vm.flags.items():
         add_debug("Flag = " + flag + "; val = " + str(val), vm)
 
-def jump_to_label(label, source, vm):
+def jump_to_label(label, source, vm, jal = False):
     if label in vm.labels:
         ip = vm.labels[label]  # set i to line num of label
         vm.set_ip(ip + vm.start_ip)
         return (True, source, "")
     else:
         try:
-            ip = int(label) >> 2
+            ip = int(label)
+            if jal:
+                ip = ip >> 2
             vm.set_ip(ip)
             return (True, source, "")
         except:
@@ -76,6 +78,11 @@ def create_bit_instr(instr_lst, bit_code):
         elif instr_nm == "MFLO" or instr_nm == "MFHI":
             try:
                 rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
+            except:
+                pass
+        elif instr_nm == "JR":
+            try:
+                rs = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
             except:
                 pass
         else:
@@ -150,7 +157,6 @@ def exec(tok_lines, flavor, vm, last_instr):
         if flavor == "mips":
             if ip // 4 >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
-
             (curr_instr, source) = tok_lines[ip // 4]
             if vm.get_ip() != curr_instr[PC_MIPS].get_val():
                 raise InvalidArgument(hex(curr_instr[PC_MIPS].get_val()))
@@ -170,6 +176,7 @@ def exec(tok_lines, flavor, vm, last_instr):
         dump_flags(vm)
         if isinstance(curr_instr[INSTR_MIPS], Jal):
             vm.registers["R31"] = vm.get_ip()
+            return jump_to_label(brk.label, source, vm, True)
         return jump_to_label(brk.label, source, vm)
     except ExitProg as ep:
         raise ExitProg

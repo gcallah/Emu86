@@ -108,6 +108,19 @@ class Jal(Instruction):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(str(target.get_val()))
 
+class Jr(Instruction):
+    """
+        <instr>
+            Jr
+        </instr>
+        <syntax>
+            Jr reg
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        target = get_one_op(self.get_nm(), ops)
+        raise Jump(str(target.get_val()))
+
 class Beq(Instruction):
     """
         <instr>

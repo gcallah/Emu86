@@ -17,6 +17,7 @@ from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
 from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign
 from .Intel.control_flow import Ret
+from .MIPS.interrupts import Syscall
 from .virtual_machine import MEM_SIZE
 
 TOKENS = 0
@@ -713,6 +714,8 @@ def parse_exec_unit(token_line, flavor, vm):
     token_instruction.append(token_line[pos])
     pos += 1 
     if isinstance(token_instruction[0], Ret):
+        state = NEED_COMMA_OR_END
+    elif isinstance(token_instruction[1], Syscall):
         state = NEED_COMMA_OR_END
     else:
         state = NEED_OP

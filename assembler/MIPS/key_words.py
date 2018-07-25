@@ -2,7 +2,8 @@ from .arithmetic import Add, Sub, Addi, Mult, Div
 from .arithmetic import Andf, Andi, Orf, Ori, Xor, Nor, Sll, Srl
 from .arithmetic import Mflo, Mfhi
 from .data_mov import Load, Store
-from .control_flow import Slt, Slti, Beq, Bne, Jmp, Jal
+from .control_flow import Slt, Slti, Beq, Bne, Jmp, Jal, Jr
+from .interrupts import Syscall
 from assembler.tokens import DataType
 
 key_words = {
@@ -31,13 +32,18 @@ key_words = {
 	'SLL': Sll('SLL'),
 	'SRL': Srl('SRL'),
 
-	#control 
+	# control 
 	'SLT': Slt('SLT'),
 	'SLTI': Slti('SLTI'),
 	'BEQ': Beq('BEQ'),
 	'BNE': Bne('BNE'),
 	'J': Jmp('J'),
-	'JAL': Jal('JAL')
+	'JAL': Jal('JAL'),
+	'JR': Jr('JR'),
+
+	# interrupts
+	'SYSCALL': Syscall('SYSCALL')
+
 }
 
 op_func_codes = {
@@ -55,7 +61,7 @@ op_func_codes = {
 	'SLL': ('000000', '000000'),
 	'SRL': ('000000', '000010'),
 	'SLT': ('000000', '101010'),
-
+	'JR': ('000000', '001000'),
     # I-format
 	'LW': '100011',
 	'SW': '101011',
@@ -65,6 +71,7 @@ op_func_codes = {
 	'SLTI': '001010',
 	'BEQ': '000100',
 	'BNE': '000101',
+	'SYSCALL': '001100',
 
 	#J-format
 	'J': '000010',
