@@ -57,6 +57,16 @@
                 {% else %}
                     <option value="arithExpr">Arithmetic expression</option>
                 {% endif %}
+                {% if sample == "arithShift" %}
+                    <option value="arithShift" selected>Arithmetic shift</option>
+                {% else %}
+                    <option value="arithShift">Arithmetic shift</option>
+                {% endif %}
+                {% if sample == "array" %}
+                    <option value="array" selected>Declare an array</option>
+                {% else %}
+                    <option value="array">Declare an array</option>
+                {% endif %}
                 {% if sample == "area" %}
                     <option value="area" selected>Area of a rectangle</option>
                 {% else %}
@@ -103,16 +113,6 @@
                     <option value="data">Use the data section</option>
                 {% endif %}
                 {% if flavor != "mips" %}
-                    {% if sample == "arithShift" %}
-                        <option value="arithShift" selected>Arithmetic shift</option>
-                    {% else %}
-                        <option value="arithShift">Arithmetic shift</option>
-                    {% endif %}
-                    {% if sample == "array" %}
-                        <option value="array" selected>Declare an array</option>
-                    {% else %}
-                        <option value="array">Declare an array</option>
-                    {% endif %}
                     {% if sample == "keyInterrupt" %}
                         <option value="keyInterrupt" selected>Keyboard interrupt</option>
                     {% else %}

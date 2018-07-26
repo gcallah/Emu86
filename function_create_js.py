@@ -11,13 +11,13 @@ function_names = {
 	"array_average_test.asm": "avg",
 	"cel_to_fah.asm": "celFah",
 	"change_array_elem_test.asm": "modify",
-	"int_square_root.asm": "sqrt"
+	"int_square_root.asm": "sqrt",
+	"arithmetic_shift.asm": "arithShift",
+	"array.asm": "array"
 }
 
 intel_function_names = {
-	"arithmetic_shift.asm": "arithShift",
 	"key_test.asm": "keyInterrupt",
-	"array.asm": "array"
 }
 
 INTEL = 0
