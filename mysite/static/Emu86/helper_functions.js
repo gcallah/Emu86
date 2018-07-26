@@ -89,6 +89,19 @@ function area(flavor) {
 	}
 	document.getElementById('id_code').value = code_string;
 }
+function arithShift(flavor) {
+	code_string = '';
+	if (flavor == 'intel'){
+		code_string += 'mov [4], 1\nmov eax, 4\nmov ebx, 2\nmov ecx, 8\nmov edx, 16\nadd ebx, ecx\nsub edx, ecx\nimul eax, [4]\nshl [4], 2\n';
+	}
+	else if (flavor == 'att'){
+		code_string += 'mov $1, (4)\nmov $4, %eax\nmov $2, %ebx\nmov $8, %ecx\nmov $16, %edx\nadd %ecx, %ebx\nsub %ecx, %edx\nimul (4), %eax\nshl $2, (4)\n';
+	}
+	else{
+		code_string += '400000 ADDI R8, R0, 4\n400004 ADDI R9, R0, 1\n400008 SW R9, 0(R8)\n40000C ADD R10, R0, R8\n400010 ADDI R11, R0, 2\n400014 ADDI R12, R0, 8\n400018 ADDI R13, R0, 10\n40001C ADD R11, R11, R12\n400020 SUB R13, R13, R12\n400024 MULT R10, R9\n400028 MFLO R10 \n40002C SLL R9, R9, 2\n400030 SW R9, 0(R8)';
+	}
+	document.getElementById('id_code').value = code_string;
+}
 function log(flavor) {
 	code_string = '';
 	if (flavor == 'intel'){
@@ -112,6 +125,19 @@ function addTwo(flavor) {
 	}
 	else{
 		code_string += '; Declare number and sum.\n.data\n    number: .word -69\n    sum: .word 0\n\n; Store first number to R8\n; Add 158 to value in R8\n; Store total to sum\n.text\n    40000 LW R8, number(R28)\t\t\n    40004 ADDI R8, R8, 9E\t\n    40008 SW R8, sum(R28)';
+	}
+	document.getElementById('id_code').value = code_string;
+}
+function array(flavor) {
+	code_string = '';
+	if (flavor == 'intel'){
+		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element -50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x DB 3, 8, 5, 2\n    y DW 13 DUP (-50)\n    z DD 'hello', 0\n\n; Store array values\n.text\n    mov eax, [x] \n    mov ebx, [y+4]\n    mov ecx, [z+3]\n    mov edx, [x+2]";
+	}
+	else if (flavor == 'att'){
+		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .byte 3, 8, 5, 2\n    y: .short 13 DUP (-50)\n    z: .long 'hello', 0\n\n; Store array values\n.text\n    mov (x), %eax \n    mov 4(y), %ebx\n    mov 3(z), %ecx\n    mov 2(x), %edx";
+	}
+	else{
+		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .word 3, 8, 5, 2\n    y: .word 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32\n    z: .word 'hello', 0\n\n; Store array values\n.text\n    400000 LW R8, x(R28) \n    400004 LW R9, 20(R28)\n    400008 LW R10, 50(R28)\n    40000C LW R11, 8(R28)";
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -141,16 +167,6 @@ function modify(flavor) {
 	}
 	document.getElementById('id_code').value = code_string;
 }
-function arithShift(flavor) {
-	code_string = '';
-	if (flavor == 'intel'){
-		code_string += 'mov [4], 1\nmov eax, 4\nmov ebx, 2\nmov ecx, 8\nmov edx, 16\nadd ebx, ecx\nsub edx, ecx\nimul eax, [4]\nshl [4], 2\n';
-	}
-	else if (flavor == 'att'){
-		code_string += 'mov $1, (4)\nmov $4, %eax\nmov $2, %ebx\nmov $8, %ecx\nmov $16, %edx\nadd %ecx, %ebx\nsub %ecx, %edx\nimul (4), %eax\nshl $2, (4)\n';
-	}
-	document.getElementById('id_code').value = code_string;
-}
 function keyInterrupt(flavor) {
 	code_string = '';
 	if (flavor == 'intel'){
@@ -158,16 +174,6 @@ function keyInterrupt(flavor) {
 	}
 	else if (flavor == 'att'){
 		code_string += 'INT $22\nMOV %EAX, %EBX\nMOV $0, %ECX\nMOV $0, %ESI\n\nL1: MOV %EAX, (%ESI)\nMOV $0, %EAX\nINT $22\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L1\n\nL2: MOV $0, %EAX\nINT $22\nDEC %ECX\nCMP $1, %ECX\nJNE L2\n\nMOV $0, %EAX\nINT $22\nMOV %EAX, %EBX\n\nL3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0, %EAX\nINT $22\nCMP %EAX, %EBX\nJNE L3\n';
-	}
-	document.getElementById('id_code').value = code_string;
-}
-function array(flavor) {
-	code_string = '';
-	if (flavor == 'intel'){
-		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element -50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x DB 3, 8, 5, 2\n    y DW 13 DUP (-50)\n    z DD 'hello', 0\n\n; Store array values\n.text\n    mov eax, [x] \n    mov ebx, [y+4]\n    mov ecx, [z+3]\n    mov edx, [x+2]";
-	}
-	else if (flavor == 'att'){
-		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .byte 3, 8, 5, 2\n    y: .short 13 DUP (-50)\n    z: .long 'hello', 0\n\n; Store array values\n.text\n    mov (x), %eax \n    mov 4(y), %ebx\n    mov 3(z), %ecx\n    mov 2(x), %edx";
 	}
 	document.getElementById('id_code').value = code_string;
 }
