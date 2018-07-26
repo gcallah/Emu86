@@ -13,7 +13,7 @@ WHILELE: 40004 ADD R10, R0, R9
          40014 SLT R12, R0, R11
          40018 BNE R12, R0, 2
          4001C ADDI R9, R9, 1
-         40020 J WHILELE
+         40020 J 100010
 ENDWHILELE: 40024 ADDI R9, R9, -1
             40028 ADD R8, R0, R9
             

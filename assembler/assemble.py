@@ -44,11 +44,160 @@ def jump_to_label(label, source, vm, jal = False):
             return (False, source, "Invalid label: " + label)
 
 def create_bit_pc(instr_lst):
+    """
+    Converts the PC value into a string of bits 
+
+    Args:
+        instr_lst: Line of code
+
+    Returns:
+        Formatted value of PC in 32 bits 
+    """
     pc_bit = instr_lst[PC_MIPS].get_val()
     pc_bit = format(pc_bit, '#34b').split('b')[1]
     return pc_bit
 
-def create_bit_instr(instr_lst, bit_code):
+def create_bit_r_format(instr_lst, op_func, func_code):
+    """
+    Converts an R-format instruction into a string of bits
+
+    Args:
+        instr_lst: Line of code
+
+    Returns: 
+        Formatted version of instruction 
+    """
+    rs = 0
+    rt = 0
+    shamt = 0
+    rd = 0
+
+    # if instruction has shift value
+    if func_code == "000000" or func_code == "000010":
+        try:
+            rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
+            rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
+            shamt = instr_lst[OPS_MIPS + 2].get_val()
+        except: 
+            pass 
+
+    # if function does not use rd 
+    elif func_code == "011000" or func_code == "011010":
+        try:
+            rs = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
+            rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
+        except:
+            pass
+
+    # if function only uses rd 
+    elif func_code == "010010" or func_code == "010000":
+        try:
+            rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
+        except:
+            pass
+
+    # if function only uses rs 
+    elif func_code == "001000":
+        try:
+            rs = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
+        except:
+            pass
+
+    # other arithmetic, logic functions 
+    else:
+        try:
+            rs = int(instr_lst[OPS_MIPS + 2].get_nm().split('R')[1])
+            rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
+            rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
+        except: 
+            pass
+    # format the rs, rt, rd, shamt values into 5 bits 
+    rs = format(rs, '#07b').split('b')[1]
+    rt = format(rt, '#07b').split('b')[1]
+    rd = format(rd, '#07b').split('b')[1]
+    shamt = format(shamt, '#07b').split('b')[1]
+    code_lst = [op_func, rs, rt, rd, shamt, func_code, "\n"]
+    return " ".join(code_lst)
+
+def create_bit_i_format(instr_lst, op_func):
+    """
+    Converts an I-format instruction into a string of bits
+
+    Args:
+        instr_lst: Line of code
+
+    Returns: 
+        Formatted version of instruction 
+    """
+    imm = 0
+    rs = 0
+    rt = 0
+    # if not data movement instruction
+    if op_func != "100011" and op_func != "101011":
+        try:
+            rs = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
+            rt = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
+            imm = int(instr_lst[OPS_MIPS + 2].get_val())
+        except:
+            pass
+
+    # if LW or SW 
+    else:
+        try:
+            rs = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
+            rt = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
+            imm = int(instr_lst[OPS_MIPS + 1].displacement)
+        except:
+            pass
+
+    # format rs, rt into 5 bits
+    rs = format(rs, '#07b').split('b')[1]
+    rt = format(rt, '#07b').split('b')[1]
+
+    # format imm to 16 bits signed
+    imm_code = bin(imm).split('b')[1]
+    if imm < 0:
+        imm_code = '1'*(16 - len(imm_code)) + imm_code
+    else:
+        imm_code = '0'*(16 - len(imm_code)) + imm_code
+    code_lst = [op_func, rs, rt, imm_code, "\n"]
+    return " ".join(code_lst)
+
+def create_bit_j_format(instr_lst, op_func):
+    """
+    Converts an J-format instruction into a string of bits
+
+    Args:
+        instr_lst: Line of code
+
+    Returns: 
+        Formatted version of instruction 
+    """
+    imm = 0 
+    try:
+        imm = int(instr_lst[OPS_MIPS].get_val())
+    except:
+        pass
+
+    # format imm into 26 bits signed
+    imm_code = bin(imm).split('b')[1]
+    if imm < 0:
+        imm_code = '1'*(26 - len(imm_code)) + imm_code
+    else:
+        imm_code = '0'*(26 - len(imm_code)) + imm_code
+    code_lst = [op_func, imm_code, "\n"]
+    return " ".join(code_lst)
+
+def create_bit_instr(instr_lst):
+    """
+    Converts the instruction into code of bits 
+
+    Args:
+        instr_lst: Line of code
+
+    Returns:
+        Formatted version of the instruction in bits
+    """
     op_func = None 
     func_code = None
     instr_nm = instr_lst[INSTR_MIPS].get_nm()
@@ -59,86 +208,12 @@ def create_bit_instr(instr_lst, bit_code):
     except:
         op_func = op_func_codes[instr_lst[INSTR_MIPS].get_nm()]
     if func_code != None:
-        shamt = 0
-        rd = 0
-        if instr_nm == "SLL" or instr_nm == "SRL":
-            try:
-                rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-                rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
-                shamt = instr_lst[OPS_MIPS + 2].get_val()
-            except: 
-                pass 
-        elif instr_nm == "MULT" or instr_nm == "DIV":
-            try:
-                rs = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-                rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
-                shamt = instr_lst[OPS_MIPS + 2].get_val()
-            except:
-                pass
-        elif instr_nm == "MFLO" or instr_nm == "MFHI":
-            try:
-                rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-            except:
-                pass
-        elif instr_nm == "JR":
-            try:
-                rs = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-            except:
-                pass
-        else:
-            try:
-                rs = int(instr_lst[OPS_MIPS + 2].get_nm().split('R')[1])
-                rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
-                rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-            except: 
-                pass
-        rs = format(rs, '#07b').split('b')[1]
-        rt = format(rt, '#07b').split('b')[1]
-        rd = format(rd, '#07b').split('b')[1]
-        shamt = format(shamt, '#07b').split('b')[1]
-        code_lst = [op_func, rs, rt, rd, shamt, func_code, "\n"]
-        bit_code += " ".join(code_lst)
+        return create_bit_r_format(instr_lst, op_func, func_code)
     else:
-        imm = 0
         if instr_nm != "JAL" and instr_nm != "J":
-            if instr_nm != "LW" and instr_nm != "SW":
-                try:
-                    rs = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
-                    rt = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-                    imm = int(instr_lst[OPS_MIPS + 2].get_val())
-                except:
-                    pass
-            else:
-                try:
-                    rs = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
-                    rt = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-                    imm = int(instr_lst[OPS_MIPS + 1].displacement)
-                except:
-                    pass
-
-            rs = format(rs, '#07b').split('b')[1]
-            rt = format(rt, '#07b').split('b')[1]
-
-            imm_code = bin(imm).split('b')[1]
-            if imm < 0:
-                imm_code = '1'*(16 - len(imm_code)) + imm_code
-            else:
-                imm_code = '0'*(16 - len(imm_code)) + imm_code
-            code_lst = [op_func, rs, rt, imm_code, "\n"]
-            bit_code += " ".join(code_lst)
+            return create_bit_i_format(instr_lst, op_func)
         else:
-            try:
-                imm = int(instr_lst[OPS_MIPS].get_val())
-            except:
-                pass
-            imm_code = bin(imm).split('b')[1]
-            if imm < 0:
-                imm_code = '1'*(26 - len(imm_code)) + imm_code
-            else:
-                imm_code = '0'*(26 - len(imm_code)) + imm_code
-            code_lst = [op_func, imm_code, "\n"]
-            bit_code += " ".join(code_lst)
-    return bit_code
+            return create_bit_j_format(instr_lst, op_func)
 
 
 def exec(tok_lines, flavor, vm, last_instr):
@@ -221,8 +296,7 @@ def assemble(code, flavor, vm, step=False):
     try:
         if flavor == "mips":
             for curr_instr, source in tok_lines:
-                bit_code += create_bit_pc(curr_instr) + " "
-                bit_code = create_bit_instr(curr_instr, bit_code)
+                bit_code += create_bit_pc(curr_instr) + " " + create_bit_instr(curr_instr)
         if not step:
             add_debug("Setting ip to 0", vm)
             vm.set_ip(vm.start_ip)   # instruction pointer reset for 'run'
