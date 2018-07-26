@@ -43,6 +43,25 @@ def jump_to_label(label, source, vm, jal = False):
         except:
             return (False, source, "Invalid label: " + label)
 
+def create_bit_negative(value, bits):
+    imm_code = '0'*(bits - len(value)) + value
+    imm_lst = []
+    for bit in imm_code:
+        imm_lst.append(bit)
+    flip_bit = False
+    place = bits - 1
+    while place >= 0:
+        if flip_bit == False and imm_lst[place] == "1":
+            flip_bit = True
+        elif flip_bit: 
+            if imm_lst[place] == "0":
+                imm_lst[place] = "1"
+            else:
+                imm_lst[place] = "0"
+        place -= 1
+    return "".join(imm_lst)
+
+
 def create_bit_pc(instr_lst):
     """
     Converts the PC value into a string of bits 
@@ -157,7 +176,7 @@ def create_bit_i_format(instr_lst, op_func):
     # format imm to 16 bits signed
     imm_code = bin(imm).split('b')[1]
     if imm < 0:
-        imm_code = '1'*(16 - len(imm_code)) + imm_code
+        imm_code = create_bit_negative(imm_code, 16)
     else:
         imm_code = '0'*(16 - len(imm_code)) + imm_code
     code_lst = [op_func, rs, rt, imm_code, "\n"]
@@ -182,7 +201,7 @@ def create_bit_j_format(instr_lst, op_func):
     # format imm into 26 bits signed
     imm_code = bin(imm).split('b')[1]
     if imm < 0:
-        imm_code = '1'*(26 - len(imm_code)) + imm_code
+        imm_code = create_bit_negative(imm_code, 26)
     else:
         imm_code = '0'*(26 - len(imm_code)) + imm_code
     code_lst = [op_func, imm_code, "\n"]

@@ -93,7 +93,7 @@ function loadcode()
         var mips_ip = document.getElementsByName("PC");
         var intel_ip = document.getElementsByName("EIP");
         var ip_val = null;
-        var hex_or_dec = null
+        var hex_or_dec = null;
         var radios = document.getElementsByName("base");
         for (var index = 0; index < radios.length; index++) {
             if (radios[index].checked) {
@@ -255,7 +255,21 @@ function stepButton(){
 function convert(name,value)
 {
     var message= "Binary value of " + " " + name + ": ";
-    var value1=parseInt(value)
+    var hex_or_dec = null;
+    var radios = document.getElementsByName("base");
+    for (var index = 0; index < radios.length; index++) {
+        if (radios[index].checked) {
+            hex_or_dec = radios[index].value;
+            break;
+        }
+    }
+    var value1 = null;
+    if (hex_or_dec == "hex"){
+        value1=parseInt(value, 16);
+    }
+    else{
+        value1=parseInt(value);
+    }
     if(value1>=0) {
 
         message=message+((value1).toString(2));
