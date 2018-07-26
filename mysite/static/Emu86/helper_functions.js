@@ -164,7 +164,7 @@ function keyInterrupt(flavor) {
 function array(flavor) {
 	code_string = '';
 	if (flavor == 'intel'){
-		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x DB 3, 8, 5, 2\n    y DW 13 DUP (-50)\n    z DD 'hello', 0\n\n; Store array values\n.text\n    mov eax, [x] \n    mov ebx, [y+4]\n    mov ecx, [z+3]\n    mov edx, [x+2]";
+		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element -50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x DB 3, 8, 5, 2\n    y DW 13 DUP (-50)\n    z DD 'hello', 0\n\n; Store array values\n.text\n    mov eax, [x] \n    mov ebx, [y+4]\n    mov ecx, [z+3]\n    mov edx, [x+2]";
 	}
 	else if (flavor == 'att'){
 		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .byte 3, 8, 5, 2\n    y: .short 13 DUP (-50)\n    z: .long 'hello', 0\n\n; Store array values\n.text\n    mov (x), %eax \n    mov 4(y), %ebx\n    mov 3(z), %ecx\n    mov 2(x), %edx";
