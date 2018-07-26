@@ -217,6 +217,40 @@ function Savecode()
     }
 }
 
+function SubmitForm(){
+    document.getElementById("codeForm").submit();
+    document.getElementById("clear-button").disabled="true";
+    document.getElementById("run-button").disabled="true";
+    document.getElementById("save-button").disabled="true";
+    document.getElementById("step-button").disabled="true";
+}
+
+function clearButton(){
+    if (document.readyState == "complete") {
+        if (document.getElementById("clear-button").hasAttribute("disabled") == false){
+            document.getElementsByName("button_type")[0].value = "clear";
+            SubmitForm();
+        }
+    }
+}
+
+function runButton(){
+    if (document.readyState == "complete") {
+        if (document.getElementById("run-button").hasAttribute("disabled") == false){
+            document.getElementsByName("button_type")[0].value = "run";
+            SubmitForm();
+        }
+    }
+}
+
+function stepButton(){
+    if (document.readyState == "complete") {
+        if (document.getElementById("step-button").hasAttribute("disabled") == false){
+            document.getElementsByName("button_type")[0].value = "step";
+            SubmitForm();
+        }
+    }
+}
 
 function convert(name,value)
 {

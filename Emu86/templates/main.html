@@ -5,29 +5,30 @@
 
 
     <div class="module">
-        <form action="{% url 'Emu86:main_page' %}" method="post">
+        <form id="codeForm" action="{% url 'Emu86:main_page' %}" method="post">
             <br>
             <input type="hidden" name="nxt_key">
             <input type="hidden" name="unwritable">
             {% if flavor == "intel" %}
-                <input type="hidden" name="flavor" value = "intel">
+                <input type="hidden" name="flavor" value="intel">
             {% elif flavor == "att" %}
-                <input type="hidden" name="flavor" value = "att">
+                <input type="hidden" name="flavor" value="att">
             {% elif flavor == "mips" %}
-                <input type="hidden" name="flavor" value = "mips">
+                <input type="hidden" name="flavor" value="mips">
             {% else %}
                 <input type="hidden" name="flavor">
             {% endif %}
 
             {% if data_init == "on" %}
-                <input type="hidden" name="data_init" value = "on">
+                <input type="hidden" name="data_init" value="on">
             {% else %}
-                <input type="hidden" name="data_init" value = "off">
+                <input type="hidden" name="data_init" value="off">
             {% endif %}
 
-            <input type="hidden" name="start_ip" value = "{{ start_ip }}" >
-            <input type="hidden" name="bit_code" value = "{{ bit_code }}" >
-
+            <input type="hidden" name="start_ip" value="{{ start_ip }}" >
+            <input type="hidden" name="bit_code" value="{{ bit_code }}" >
+            <input type="hidden" name="button_type" value="{{ button_type }}" >
+            
             Please select your number system: 
             {% if base == "dec" %}
                 <input type="radio" name="base" value="dec" checked="checked"> Decimal 
@@ -126,18 +127,21 @@
                             {% csrf_token %}
                             {{ form.as_p }}
 
-                            <input type="submit" name="clear"
+                            <input type="button" name="clear"
                                 value="Reinitialize"
                                 title="Clear the contents of memory and the stack."
-                                id="clear-button">
-                            <input type="submit" name="run"
+                                id="clear-button"
+                                onclick="clearButton()">
+                            <input type="button" name="run"
                                 value="Run Code"
                                 title="Execute all lines of code"
-                                id="run-button">
-                            <input type="submit" name="step"
+                                id="run-button"
+                                onclick="runButton()">
+                            <input type="button" name="step"
                                 value="Step Code"
                                 title="Execute one instruction at a time."
-                                id="step-button">
+                                id="step-button"
+                                onclick="stepButton()">
                             <input type="button" name="save"
                                 value="Save Code"
                                 id="save-button"

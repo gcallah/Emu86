@@ -93,7 +93,8 @@ def main_page(request):
                              'base': 'hex',
                              'sample': 'none',
                              'start_ip': mips_machine.start_ip,
-                             'bit_code': ""
+                             'bit_code': "",
+                             'button_type': ""
                             })
             else:
                 mips_machine.flavor = None
@@ -121,7 +122,8 @@ def main_page(request):
                                'base': 'dec',
                                'sample': 'none',
                                'start_ip': intel_machine.start_ip,
-                               'bit_code': ""
+                               'bit_code': "",
+                               'button_type': ""
                               })
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
@@ -134,12 +136,12 @@ def main_page(request):
                 mips_machine.flavor = language
         base = request.POST['base']
         sample = request.POST['sample']
-
-        if CLEAR in request.POST:
+        button = request.POST['button_type']
+        if button == CLEAR:
             intel_machine.re_init()
             mips_machine.re_init()
         else:
-            step = (STEP in request.POST)
+            step = (button == STEP)
             intel_machine.nxt_key = 0
             mips_machine.nxt_key = 0
             if step:
@@ -202,7 +204,8 @@ def main_page(request):
                      'base': base,
                      'sample': sample,
                      'start_ip': mips_machine.start_ip,
-                     'bit_code': bit_code
+                     'bit_code': bit_code,
+                     'button_type': ""
                     })
         
     if intel_machine.flavor == INTEL:
@@ -230,7 +233,8 @@ def main_page(request):
                    'base': base, 
                    'sample': sample,
                    'start_ip': intel_machine.start_ip,
-                   'bit_code': bit_code
+                   'bit_code': bit_code,
+                   'button_type': ""
                   })
 
 def is_hex_form(request):
