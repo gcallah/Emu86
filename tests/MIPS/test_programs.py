@@ -61,13 +61,13 @@ class TestPrograms(TestCase):
     #     self.assertEqual(intel_machine.registers["ESP"], 511)
     #     self.assertEqual(intel_machine.memory["9"], 83)
 
-    # def test_arithmetic_shift(self):
-    #     self.run_intel_test_code("tests/Intel/arithmetic_shift.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"], 4)
-    #     self.assertEqual(intel_machine.registers["EBX"], 10)
-    #     self.assertEqual(intel_machine.registers["ECX"], 8)
-    #     self.assertEqual(intel_machine.registers["EDX"], 8)
-    #     self.assertEqual(intel_machine.memory["4"], 4)
+    def test_arithmetic_shift(self):
+        self.run_mips_test_code("tests/MIPS/arithmetic_shift.asm")
+        self.assertEqual(mips_machine.registers["R10"], 4)
+        self.assertEqual(mips_machine.registers["R11"], 10)
+        self.assertEqual(mips_machine.registers["R12"], 8)
+        self.assertEqual(mips_machine.registers["R13"], 8)
+        self.assertEqual(mips_machine.memory["4"], 4)
 
     def test_jump(self):
         self.run_mips_test_code("tests/MIPS/test_jump.asm")
@@ -79,24 +79,24 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R9"], 16)
         self.assertEqual(mips_machine.registers["R10"], 32)
 
-    # def test_array(self):
-    #     self.run_intel_test_code("tests/Intel/array.asm")
-    #     self.assertEqual(intel_machine.registers["EAX"],  3)
-    #     self.assertEqual(intel_machine.registers["EBX"], -50)
-    #     self.assertEqual(intel_machine.registers["ECX"], ord ('l'))
-    #     self.assertEqual(intel_machine.registers["EDX"], 5)
-    #     list_x = [3, 8, 5, 2]
-    #     string_z = "hello"
-    #     for position in range(0, 4):
-    #         self.assertEqual(intel_machine.memory[str(position)], list_x[position])
-    #     for position in range(4, 17):
-    #         self.assertEqual(intel_machine.memory[(hex(position).split('x')
-    #                                          [-1]).upper()], -50)
-    #     for position in range(17, 22):
-    #         self.assertEqual(intel_machine.memory[(hex(position).split('x')
-    #                                          [-1]).upper()], 
-    #                          ord(string_z[position - 17]))
-    #     self.assertEqual(intel_machine.memory[hex(22).split('x')[-1]], 0)
+    def test_array(self):
+        self.run_mips_test_code("tests/MIPS/array.asm")
+        self.assertEqual(mips_machine.registers["R8"],  3)
+        self.assertEqual(mips_machine.registers["R9"], 50)
+        self.assertEqual(mips_machine.registers["R10"], ord ('l'))
+        self.assertEqual(mips_machine.registers["R11"], 5)
+        # list_x = [3, 8, 5, 2]
+        # string_z = "hello"
+        # for position in range(0, 4):
+        #     self.assertEqual(intel_machine.memory[str(position)], list_x[position])
+        # for position in range(4, 17):
+        #     self.assertEqual(intel_machine.memory[(hex(position).split('x')
+        #                                      [-1]).upper()], -50)
+        # for position in range(17, 22):
+        #     self.assertEqual(intel_machine.memory[(hex(position).split('x')
+        #                                      [-1]).upper()], 
+        #                      ord(string_z[position - 17]))
+        # self.assertEqual(intel_machine.memory[hex(22).split('x')[-1]], 0)
 
     def test_sum_calculation(self):
         self.run_mips_test_code("tests/MIPS/sum_test.asm")

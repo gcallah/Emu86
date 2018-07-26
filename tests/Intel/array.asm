@@ -1,5 +1,5 @@
 ; Declare arrays x, y, z
-; y is an array of size 13, holding element 50
+; y is an array of size 13, holding element -50
 ; z is an array of the ASCII values of 'hello', ends in 0 
 .data
     x DB 3, 8, 5, 2
