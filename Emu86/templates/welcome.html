@@ -3,19 +3,21 @@
     <div class="module">
 
         <body>
-            Welcome to Emu, your online assembly language emulator. 
-            Currently we support three distinct assembly languages, with more
-            to come.
-            <form action="{% url 'Emu86:main_page' %}" method="post">
-                {% csrf_token %}
-                <br>Select your language
-                <select name="language">
-                    <option value="intel"> Intel </option>
-                    <option value="att"> AT&amp;T </option>
-                    <option value="mips"> MIPS </option>
-                </select>
-                <br><input type = "submit" value= "Submit">
-            </form>
+            <h4>
+                Welcome to Emu, your online assembly language emulator. 
+                Currently we support three distinct assembly languages, with more
+                to come.
+                <form action="{% url 'Emu86:main_page' %}" method="post">
+                    {% csrf_token %}
+                    <br>Select your language
+                    <select name="language">
+                        <option value="intel"> Intel </option>
+                        <option value="att"> AT&amp;T </option>
+                        <option value="mips"> MIPS </option>
+                    </select>
+                    <input type = "submit" value= "Submit">
+                </form>
+            </h4>
         </body>
     </div>
 
