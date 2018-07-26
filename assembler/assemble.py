@@ -44,22 +44,36 @@ def jump_to_label(label, source, vm, jal = False):
             return (False, source, "Invalid label: " + label)
 
 def create_bit_negative(value, bits):
-    imm_code = '0'*(bits - len(value)) + value
-    imm_lst = []
-    for bit in imm_code:
-        imm_lst.append(bit)
-    flip_bit = False
-    place = bits - 1
-    while place >= 0:
-        if flip_bit == False and imm_lst[place] == "1":
-            flip_bit = True
-        elif flip_bit: 
-            if imm_lst[place] == "0":
-                imm_lst[place] = "1"
-            else:
-                imm_lst[place] = "0"
-        place -= 1
-    return "".join(imm_lst)
+    """
+    Converts an immediate value into a string of bits
+
+    Args:
+        value: Immediat value
+        bits: Number of bits needed
+
+    Returns:
+        Formatted binary value of immediate 
+        in the number of bits inputted
+    """
+    imm_code = bin(value).split('b')[1]
+    imm_code = '0'*(bits - len(imm_code)) + imm_code
+    if value < 0:
+        imm_lst = []
+        for bit in imm_code:
+            imm_lst.append(bit)
+        flip_bit = False
+        place = bits - 1
+        while place >= 0:
+            if flip_bit == False and imm_lst[place] == "1":
+                flip_bit = True
+            elif flip_bit: 
+                if imm_lst[place] == "0":
+                    imm_lst[place] = "1"
+                else:
+                    imm_lst[place] = "0"
+            place -= 1
+        imm_code = "".join(imm_lst)
+    return imm_code
 
 
 def create_bit_pc(instr_lst):
@@ -174,11 +188,7 @@ def create_bit_i_format(instr_lst, op_func):
     rt = format(rt, '#07b').split('b')[1]
 
     # format imm to 16 bits signed
-    imm_code = bin(imm).split('b')[1]
-    if imm < 0:
-        imm_code = create_bit_negative(imm_code, 16)
-    else:
-        imm_code = '0'*(16 - len(imm_code)) + imm_code
+    imm_code = create_bit_negative(imm, 16)
     code_lst = [op_func, rs, rt, imm_code, "\n"]
     return " ".join(code_lst)
 
@@ -199,11 +209,7 @@ def create_bit_j_format(instr_lst, op_func):
         pass
 
     # format imm into 26 bits signed
-    imm_code = bin(imm).split('b')[1]
-    if imm < 0:
-        imm_code = create_bit_negative(imm_code, 26)
-    else:
-        imm_code = '0'*(26 - len(imm_code)) + imm_code
+    imm_code = create_bit_negative(imm, 26)
     code_lst = [op_func, imm_code, "\n"]
     return " ".join(code_lst)
 
