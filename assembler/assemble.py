@@ -321,20 +321,23 @@ def assemble(code, flavor, vm, step=False):
     try:
         if flavor == "mips":
             for curr_instr, source in tok_lines:
-                bit_code += create_bit_pc(curr_instr) + " " + create_bit_instr(curr_instr)
+                bit_code += create_bit_pc(curr_instr) + " " 
+                bit_code += create_bit_instr(curr_instr)
         if not step:
             add_debug("Setting ip to 0", vm)
             vm.set_ip(vm.start_ip)   # instruction pointer reset for 'run'
             count = 0
             if flavor == "mips":
-                while (vm.get_ip() - vm.start_ip) // 4 < len(tok_lines) and count < MAX_INSTRUCTIONS:
+                while ((vm.get_ip() - vm.start_ip) // 4 < len(tok_lines) and 
+                       count < MAX_INSTRUCTIONS):
                     (success, last_instr, error) = exec(tok_lines, flavor, vm, 
                                                         last_instr)
                     if not success:
                         return (last_instr, error, bit_code)
                     count += 1
             else:
-                while vm.get_ip() < len(tok_lines) and count < MAX_INSTRUCTIONS:
+                while (vm.get_ip() < len(tok_lines) and 
+                       count < MAX_INSTRUCTIONS):
                     (success, last_instr, error) = exec(tok_lines, flavor, vm, 
                                                         last_instr)
                     if not success:
