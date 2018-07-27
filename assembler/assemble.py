@@ -75,21 +75,6 @@ def create_bit_negative(value, bits):
         imm_code = "".join(imm_lst)
     return imm_code
 
-
-def create_bit_pc(instr_lst):
-    """
-    Converts the PC value into a string of bits 
-
-    Args:
-        instr_lst: Line of code
-
-    Returns:
-        Formatted value of PC in 32 bits 
-    """
-    pc_bit = instr_lst[PC_MIPS].get_val()
-    pc_bit = format(pc_bit, '#34b').split('b')[1]
-    return pc_bit
-
 def create_bit_r_format(instr_lst, op_func, func_code):
     """
     Converts an R-format instruction into a string of bits
@@ -321,7 +306,6 @@ def assemble(code, flavor, vm, step=False):
     try:
         if flavor == "mips":
             for curr_instr, source in tok_lines:
-                bit_code += create_bit_pc(curr_instr) + " " 
                 bit_code += create_bit_instr(curr_instr)
         if not step:
             add_debug("Setting ip to 0", vm)

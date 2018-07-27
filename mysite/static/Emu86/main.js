@@ -172,7 +172,7 @@ function Savecode()
     var flav = document.getElementsByName("flavor")[0].value;
     var file_name = null;
     if (flav == "mips"){
-        file_name = prompt("Please enter file name to save as, ending in .asm or .bin: ");
+        file_name = prompt("Please enter file name to save as, ending in .asm or .txt (for binary code): ");
     }
     else{
         file_name = prompt("Please enter file name to save as, ending in .asm: ");
@@ -186,7 +186,7 @@ function Savecode()
     else if (file_name.length < 5){
         alert("Invalid file name: " + file_name);
     }
-    else if (flav == "mips" && file_name.slice(file_name.length - 4) != ".asm" && file_name.slice(file_name.length - 4) != ".bin" ) {
+    else if (flav == "mips" && file_name.slice(file_name.length - 4) != ".asm" && file_name.slice(file_name.length - 4) != ".txt" ) {
         alert("Invalid file name: " + file_name);
     }
     else if (flav != "mips" && file_name.slice(file_name.length - 4) != ".asm"){
