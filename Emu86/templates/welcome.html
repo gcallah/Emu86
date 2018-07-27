@@ -1,24 +1,20 @@
 {% extends "ebase.html" %}
 {% block content %}
-    <div class="module">
-
-        <body>
-            <h5 style="font-weight: normal; text-transform: none; color: #000">
-                Welcome to Emu, your online assembly language emulator. 
-                Currently we support three distinct assembly languages, with more
-                to come.
-                <form action="{% url 'Emu86:main_page' %}" method="post">
-                    {% csrf_token %}
-                    <br>Select your language
-                    <select name="language">
-                        <option value="intel"> Intel </option>
-                        <option value="att"> AT&amp;T </option>
-                        <option value="mips"> MIPS </option>
-                    </select>
-                    <input type = "submit" value= "Submit">
-                </form>
-            </h5>
-        </body>
-    </div>
-
+    <body>
+        <h5 style="font-weight: normal; text-transform: none; color: #000;">
+            Welcome to Emu, your online assembly language emulator. 
+            Currently we support three distinct assembly languages, with more
+            to come.
+            <form action="{% url 'Emu86:main_page' %}" method="post">
+                {% csrf_token %}
+                <br>Select your language
+                <select name="language">
+                    <option value="intel"> Intel </option>
+                    <option value="att"> AT&amp;T </option>
+                    <option value="mips"> MIPS </option>
+                </select>
+                <input type = "submit" value= "Submit">
+            </form>
+        </h5>
+    </body>
 {% endblock content %}
