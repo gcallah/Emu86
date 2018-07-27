@@ -14,6 +14,7 @@ INVALID_DATA_TYPE = "Invalid data type: "
 INVALID_DATA_VAL = "Invalid data value: "
 INVALID_SECTION = "Invalid section: "
 INVALID_TOKEN = "Invalid argument: "
+INVALID_PC = "Invalid PC: "
 LABEL_NOT_SETTABLE = "Label values can't be reset."
 NOT_SETTABLE = "This operand type can't have its value set: "
 PROGRAM_EXIT = "Program exit"
@@ -25,6 +26,7 @@ UNKNOWN_INT = "Unknown interrupt instruction: "
 UNKNOWN_NM = "Unknown symbol: "
 UNKNOWN_LABEL = "Unknown label: "
 MISSING_OPS = "Missing operands where expected"
+MISSING_PC = "Missing PC where expected"
 MISSING_DATA = "Missing data values"
 MISSING_COMMA = "Missing comma"
 MISSING_OPENBRACK = "Missing opening bracket"
@@ -75,6 +77,10 @@ class InvalidSection(Error):
 class InvalidArgument(Error):
     def __init__(self, offender):
         self.msg = INVALID_TOKEN + offender
+
+class InvalidPc(Error):
+    def __init__(self, offender):
+        self.msg = INVALID_PC + offender
 
 class NotSettable(Error):
     def __init__(self, offender):
@@ -138,6 +144,10 @@ class ExitProg(Error):
 class MissingOps(Error):
     def __init__(self):
         self.msg = MISSING_OPS
+
+class MissingPc(Error):
+    def __init__(self):
+        self.msg = MISSING_PC
 
 class MissingData(Error):
     def __init__(self):

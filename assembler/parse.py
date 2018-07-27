@@ -11,7 +11,7 @@ from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
 from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack
-from .errors import MissingCloseBrack, MissingOps
+from .errors import MissingCloseBrack, MissingOps, InvalidPc, MissingPc
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
@@ -685,9 +685,9 @@ def get_mips_pc(token_line, pos):
         Integer token of PC counter value
     """
     if not isinstance(token_line[pos], IntegerTok):
-        raise InvalidArgument("Not a PC counter")
+        raise MissingPC()
     elif token_line[pos].get_val() % 4 != 0:
-        raise InvalidArgument("Not a PC counter")
+        raise InvalidPc(str(token_line[pos].get_val()))
     else:
         return token_line[pos]
 
