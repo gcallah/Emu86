@@ -278,6 +278,13 @@
                         Memory:
                         <br>
                     </th>
+                    {% if flavor == "mips" %}
+                        <th id="MemStack">
+                            <br>
+                                Stack:
+                            <br>
+                        </th>
+                    {% endif %}
                 </tr>
                 <tr>
                     <td>
@@ -286,29 +293,28 @@
                             <script>
                                 var flav = document.getElementsByName("flavor")[0].value;
                                 var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
-                                if (flav == "mips"){ 
-                                    for (var i = 0; i < 16; i += 4) {
-                                        text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
-                                        if (i == 12){
-                                            text += "</tr>";
-                                        }
-                                    }
-                                }
-                                else {
+                                if (flav != "mips"){ 
                                     for (var i = 0; i < 16; i++) {
                                         text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
                                         if (i == 15){
                                             text += "</tr>";
                                         }
                                     }
+                                    document.getElementById("memory-table").innerHTML = text;
                                 }
-                                document.getElementById("memory-table").innerHTML = text;
                             </script>
                             {% for addr, cont in memory.items %}
-                                {% if addr == "0" %}
-                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> 0 </td>
-                                {% elif addr|slice:"-1:" == "0" %}
-                                    <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:":-1"}} </td>
+                                {% if flavor == "mips" %}
+                                    <tr>
+                                    <td id="mem-loc" style="height:5px">
+                                        {{ addr }}
+                                    </td>
+                                {% else %}
+                                    {% if addr == "0" %}
+                                        <tr style='height:5px'><td id='mem-loc' style='height:5px'> 0 </td>
+                                    {% elif addr|slice:"-1:" == "0" %}
+                                        <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:":-1"}} </td>
+                                    {% endif %}
                                 {% endif %}
                                     <td id="contents" style="height:5px">
                                         {% if data_init == "on" %}
@@ -329,22 +335,22 @@
                                             >
                                         {% endif %}
                                     </td>
-                                {% if flavor == "mips" %}
-                                    {% if addr|slice:"-1:" == "C" %}
-                                        </tr>
-                                    {% endif %}
-                                {% else %}
+                                {% if flavor != "mips" %}
                                     {% if addr|slice:"-1:" == "F" %}
                                         </tr>
                                     {% endif %}
+                                {% else %}
+                                    </tr>
                                 {% endif %}
                             {% endfor %}
                         </table>
                     </div>
                     </td>
+                {% if flavor != "mips" %}
                 </tr>
             </table>
             <br>
+
             <table>
                 <tr>
                 <th id="MemStack">
@@ -354,35 +360,29 @@
                     </th>
                 </tr>
                 <tr>
+                {% endif %}
                     <td>
                         <div style="height:235px;overflow:auto;">
                         <table id="stack-table">
                             <script>
                                 var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
                                 var flav = document.getElementsByName("flavor")[0].value;
-                                if (flav == "mips") {
-                                    for (var i = 12; i >= 0; i -= 4) {
-                                        text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
-                                        if (i == 0){
-                                            text += "</tr>";
-                                        }
-                                    }
-                                }
-                                else {
+                                if (flav != "mips") {
                                     for (var i = 15; i >= 0; i--) {
                                         text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
                                         if (i == 0){
                                             text += "</tr>";
                                         }
                                     }
+                                    document.getElementById("stack-table").innerHTML = text;
                                 }
-                                document.getElementById("stack-table").innerHTML = text;
                             </script>
                              {% for addr, cont in stack.items %}
                                 {% if flavor == "mips" %}
-                                    {% if addr|slice:"-1:" == "C" %}
-                                        <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:"1:-1"}} </td>
-                                    {% endif %}
+                                    <tr>
+                                    <td id="mem-loc" style="height:5px">
+                                        {{ addr }}
+                                    </td>
                                 {% else %}
                                     {% if addr|slice:"-1:" == "F" %}
                                         <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:"1:-1"}} </td>
@@ -412,6 +412,7 @@
                     </div>
                     </td>
                 </tr>
+            
             </table>
         </form>
         <br>

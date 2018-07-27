@@ -10,14 +10,14 @@ sys.path.append(".")
 
 from unittest import TestCase, main
 
-from assembler.virtual_machine import mips_machine, STACK_BOTTOM, STACK_TOP
+from assembler.virtual_machine import mips_machine
 from assembler.assemble import assemble
 # UNKNOWN_ERR should NOT show up, so we won't write a test case for it.
 from assembler.errors import UNKNOWN_ERR, INVALID_INSTR, INVALID_OPRND
 from assembler.errors import INVALID_NUM_ARGS, INVALID_MEM_LOC, INVALID_REG
 from assembler.errors import MISSING_COMMA, MISSING_DATA, INVALID_TOKEN
 from assembler.errors import REG_UNWRITABLE, STACK_OVERFLOW, STACK_UNDERFLOW
-from assembler.errors import UNKNOWN_NM
+from assembler.errors import UNKNOWN_NM, MISSING_PC
 
 
 class ErrorTestCase(TestCase):
@@ -54,6 +54,10 @@ class ErrorTestCase(TestCase):
     def test_data_error(self):
         (output, error, bit_code) = assemble(".data \n  x: .word", 'mips', mips_machine)
         self.assertTrue(error.startswith(MISSING_DATA))
+
+    def pc_data_error(self):
+        (output, error, bit_code) = assemble(".data \n  x: .word", 'mips', mips_machine)
+        self.assertTrue(error.startswith(MISSING_PC))
 
 
 if __name__ == '__main__':

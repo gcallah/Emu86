@@ -12,8 +12,6 @@ from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
 from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen
-from .virtual_machine import MEM_SIZE
-
 
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)

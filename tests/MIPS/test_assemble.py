@@ -13,7 +13,7 @@ import functools
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
-from assembler.virtual_machine import mips_machine, STACK_TOP, STACK_BOTTOM
+from assembler.virtual_machine import mips_machine
 from assembler.assemble import assemble
 
 NUM_TESTS = 100
