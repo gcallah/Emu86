@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #  This file should include all tests run on our assembly emulator.
 
 # exit on any error with that error status:
