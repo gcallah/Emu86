@@ -14,8 +14,8 @@ def read_key(vm):
     vm.registers[EAX] = ord(c)
     return ""
 
-def exit_prog(vm):
-    raise ExitProg()
+def exit_prog(vm, msg):
+    raise ExitProg(msg)
 
 
 int_vectors = {
@@ -56,5 +56,5 @@ class Interrupt(Instruction):
         except KeyError:
             raise UnknownInt(str(ops[0].get_val()) + ": "
                             + vm.registers[EAX]) 
-        c = interrupt_handler(vm)
+        c = interrupt_handler(vm, self.get_nm())
         return str(c)

@@ -265,7 +265,7 @@ def exec(tok_lines, flavor, vm, last_instr):
             return jump_to_label(brk.label, source, vm)
         return jump_to_label(brk.label, source, vm, True)
     except ExitProg as ep:
-        raise ExitProg
+        raise ExitProg(source)
     except Error as err:
         return (False, last_instr, err.msg)
 
@@ -344,7 +344,7 @@ def assemble(code, flavor, vm, step=False):
                 vm.set_ip(vm.start_ip)
             return (last_instr, error, bit_code)
     except ExitProg as ep:
-        last_instr = "Exiting program"
+        last_instr = ep.msg.split(":")[0] + ": Exiting program"
 
     if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: "

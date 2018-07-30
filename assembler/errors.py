@@ -138,8 +138,8 @@ class StackUnderflow(Error):
         self.msg = STACK_UNDERFLOW
 
 class ExitProg(Error):
-    def __init__(self):
-        self.msg = PROGRAM_EXIT
+    def __init__(self, offender):
+        self.msg = offender + ": " + PROGRAM_EXIT
 
 class MissingOps(Error):
     def __init__(self):

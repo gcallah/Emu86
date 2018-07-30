@@ -20,4 +20,4 @@ class Syscall(Instruction):
 
     def fhook(self, ops, vm):
         check_num_args("SYSCALL", ops, 0)
-        raise ExitProg()
+        raise ExitProg(self.get_nm())

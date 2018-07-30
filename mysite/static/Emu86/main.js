@@ -90,6 +90,10 @@ function loadcode()
     {
         AlertError();
         var instr = document.getElementsByName("last_instr")[0];
+        var lastInstr = instr.value;
+        if (lastInstr.indexOf(": Exiting program") != -1){
+            lastInstr = lastInstr.substring(0, lastInstr.indexOf(": Exiting program"));
+        }
         var mips_ip = document.getElementsByName("PC");
         var intel_ip = document.getElementsByName("EIP");
         var ip_val = null;
@@ -140,19 +144,19 @@ function loadcode()
                     if (!(string === "") && textArea && string[0] != ";"){
                         countCode++; 
                     }
-                    if (string == instr.value){
+                    if (string == lastInstr){
                         countRepeats++;
                     }
                 }
                 input.focus();
                 var startIndex = 0;
                 for (var time = 0; time < countRepeats; time++) {
-                    startIndex = input.value.indexOf(instr.value, startIndex) 
-                                 + instr.value.length;
+                    startIndex = input.value.indexOf(lastInstr, startIndex) 
+                                 + lastInstr.length;
                 }
-                startIndex -= instr.value.length;
+                startIndex -= lastInstr.length;
                 input.setSelectionRange(startIndex, 
-                       startIndex + instr.value.length);
+                       startIndex + lastInstr.length);
             }
         }
         return;
