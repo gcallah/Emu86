@@ -7,7 +7,7 @@ from assembler.tokens import Instruction, IntegerTok
 
 EAX = 'EAX'
 
-def read_key(vm):
+def read_key(vm, msg = None):
     # we are faking 'reading' from the keyboard
     c = vm.ret_str[vm.nxt_key]
     vm.nxt_key = (vm.nxt_key + 1) % len(vm.ret_str)
