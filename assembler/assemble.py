@@ -345,6 +345,8 @@ def assemble(code, flavor, vm, step=False):
             return (last_instr, error, bit_code)
     except ExitProg as ep:
         last_instr = ep.msg.split(":")[0] + ": Exiting program"
+        if flavor == "mips":
+            vm.set_ip(2147484032)
 
     if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: "
