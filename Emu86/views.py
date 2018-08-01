@@ -262,11 +262,16 @@ def get_flag_contents(flags, request):
 
 def get_mem_contents(memory, request):
     hex_term = is_hex_form(request)
-    for loc in memory:
-        if hex_term:
-            memory[loc] = int(request.POST[str(loc)], 16)
-        else:
-            memory[loc] = request.POST[str(loc)]
+    mem_data = request.POST["mem_data"]
+    if mem_data != "": 
+        mem_data = mem_data.split(", ")
+        for key_val in mem_data:
+            if key_val != "":
+                key_mem, val_mem = key_val.split(":")[0], key_val.split(":")[1]
+                if hex_term:
+                    memory[key_mem] = int(val_mem, 16)
+                else:
+                    memory[key_mem] = int(val_mem)
 
 def get_stack_contents(stack, request):
     hex_term = is_hex_form(request)

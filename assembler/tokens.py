@@ -156,7 +156,10 @@ class Address(Location):
         return "[" + str(self.name) + "]"
 
     def get_val(self):
-        return int(self.mem[self.name])
+        if self.name in self.mem:
+            return int(self.mem[self.name])
+        else:
+            return 0
 
     def set_val(self, val):
         self.mem[self.name] = val
@@ -185,15 +188,14 @@ class RegAddress(Address):
         elif self.displacement != 0:
             address = hex(int(self.regs[self.name]) * self.multiplier + 
                           self.displacement).split('x')[-1].upper()
-        if address in self.mem:
-            return address
-        else:
-            # can't let user expand memory just by addressing it!
-            raise InvalidMemLoc(address)
+        return address
 
     def get_val(self):
         mem_addr = self.get_mem_addr()
-        return int(self.mem[str(mem_addr)])
+        if mem_addr in self.mem:
+            return int(self.mem[str(mem_addr)])
+        else:
+            return 0
 
     def set_val(self, val):
         mem_addr = self.get_mem_addr()

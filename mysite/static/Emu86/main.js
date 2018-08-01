@@ -285,3 +285,25 @@ function convert(name,value)
         alert(message);
     }
 }
+
+// function AddMem()
+// {
+//     var loc = document.getElementById("memText").value;
+//     var val = document.getElementById("valueText").value;
+//     var repeat = document.getElementById("repeatText").value;
+//     if (loc == ""){
+//         alert("Cannot set an invisible location");
+//     }
+//     else if (val == ""){
+//         alert("Cannot set using an invisible value");
+//     }
+//     if (repeat != ""){
+//         repeat = parseInt(repeat);
+//     }
+//     else {
+//         repeat = 0;
+//     }
+//     for (var i = 0; i <= repeat; i++) {
+        
+//     }
+// }

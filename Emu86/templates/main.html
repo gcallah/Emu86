@@ -28,7 +28,8 @@
             <input type="hidden" name="start_ip" value="{{ start_ip }}" >
             <input type="hidden" name="bit_code" value="{{ bit_code }}" >
             <input type="hidden" name="button_type" value="{{ button_type }}" >
-            
+            <input type="hidden" name="mem_data" value="">
+
             Please select your number system: 
             {% if base == "dec" %}
                 <input type="radio" name="base" value="dec" checked="checked"> Decimal 
@@ -39,6 +40,15 @@
             {% else %}
                 <input type="radio" name="base" value="dec"> Decimal
                 <input type="radio" name="base" value="hex"> Hexidecimal <br>
+            {% endif %}
+            {% if data_init == "on" %}
+                <br>
+                Set Memory: 
+                Location: <input type="text" id="memText"> 
+                <br>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;Value:&ensp;&ensp;&ensp;<input type="text" id="valueText"> 
+                <br>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;Repeat:&ensp;&ensp;<input type="text" id="repeatText">
+                <input type="button" id="setMem" value="Set" onclick="AddMem()">
+                <br> <br>
             {% endif %}
             Sample Programs: 
             <select name="sample" onchange="selectSample()">
@@ -275,47 +285,28 @@
                 <tr>
                     <th id="MemStack">
                         <br>
-                        Memory:
+                        Memory Used:
                         <br>
                     </th>
-                    {% if flavor == "mips" %}
-                        <th id="MemStack">
-                            <br>
-                                Stack:
-                            <br>
-                        </th>
-                    {% endif %}
+                    <th id="MemStack">
+                        <br>
+                            Stack:
+                        <br>
+                    </th>
                 </tr>
                 <tr>
                     <td>
-                    <div style="height:235px;overflow:auto;">
+                    <div style="height:300px;overflow:auto;">
                         <table id="memory-table">
-                            <script>
-                                var flav = document.getElementsByName("flavor")[0].value;
-                                var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
-                                if (flav != "mips"){ 
-                                    for (var i = 0; i < 16; i++) {
-                                        text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
-                                        if (i == 15){
-                                            text += "</tr>";
-                                        }
-                                    }
-                                    document.getElementById("memory-table").innerHTML = text;
-                                }
-                            </script>
+                            <tr style='height:5px'>
                             {% for addr, cont in memory.items %}
-                                {% if flavor == "mips" %}
+                                <script> 
+                                    document.getElementsByName("mem_data")[0].value += "{{ addr }}:{{ cont }}, "; 
+                                </script>
                                     <tr>
                                     <td id="mem-loc" style="height:5px">
                                         {{ addr }}
                                     </td>
-                                {% else %}
-                                    {% if addr == "0" %}
-                                        <tr style='height:5px'><td id='mem-loc' style='height:5px'> 0 </td>
-                                    {% elif addr|slice:"-1:" == "0" %}
-                                        <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:":-1"}} </td>
-                                    {% endif %}
-                                {% endif %}
                                     <td id="contents" style="height:5px">
                                         {% if data_init == "on" %}
                                             <input
@@ -335,59 +326,19 @@
                                             >
                                         {% endif %}
                                     </td>
-                                {% if flavor != "mips" %}
-                                    {% if addr|slice:"-1:" == "F" %}
-                                        </tr>
-                                    {% endif %}
-                                {% else %}
-                                    </tr>
-                                {% endif %}
+                                </tr>
                             {% endfor %}
                         </table>
                     </div>
                     </td>
-                {% if flavor != "mips" %}
-                </tr>
-            </table>
-            <br>
-
-            <table>
-                <tr>
-                <th id="MemStack">
-                        <br>
-                        Stack:
-                        <br>
-                    </th>
-                </tr>
-                <tr>
-                {% endif %}
                     <td>
-                        <div style="height:235px;overflow:auto;">
+                        <div style="height:300px;overflow:auto;">
                         <table id="stack-table">
-                            <script>
-                                var text = "<tr style='height:5px'><td id='mem-loc' style='height:5px'></td>";
-                                var flav = document.getElementsByName("flavor")[0].value;
-                                if (flav != "mips") {
-                                    for (var i = 15; i >= 0; i--) {
-                                        text += "<td id='mem-loc' style='height:5px'>" + i.toString(16).toUpperCase() + "</td>";
-                                        if (i == 0){
-                                            text += "</tr>";
-                                        }
-                                    }
-                                    document.getElementById("stack-table").innerHTML = text;
-                                }
-                            </script>
                              {% for addr, cont in stack.items %}
-                                {% if flavor == "mips" %}
-                                    <tr>
+                                <tr>
                                     <td id="mem-loc" style="height:5px">
                                         {{ addr }}
                                     </td>
-                                {% else %}
-                                    {% if addr|slice:"-1:" == "F" %}
-                                        <tr style='height:5px'><td id='mem-loc' style='height:5px'> {{addr|slice:"1:-1"}} </td>
-                                    {% endif %}
-                                {% endif %}
                                     <td id="contents" style="height:5px">
                                         {% if data_init == "on" %}
                                             <input

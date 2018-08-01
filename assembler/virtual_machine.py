@@ -61,6 +61,9 @@ class VirtualMachine:
         self.stack_init()
         self.data_init = "on"
 
+    def mem_init(self):
+        self.memory.clear()
+
     def empty_cell(self):
         return EMPTY_CELL
 
@@ -100,10 +103,6 @@ class IntelMachine(VirtualMachine):
     def re_init(self):
         super().re_init()
         self.registers[STACK_PTR_INTEL] = STACK_TOP
-
-    def mem_init(self):
-        for i in range(0, MEM_SIZE):
-            self.memory[hex(i).split('x')[-1].upper()] = 0
 
     def stack_init(self):
         for i in range(STACK_TOP, STACK_BOTTOM - 1, -1):
@@ -195,10 +194,6 @@ class MIPSMachine(VirtualMachine):
     def re_init(self):
         super().re_init()
         self.registers[STACK_PTR_MIPS] = STACK_TOP
-
-    def mem_init(self):
-        for i in range(0, MEM_SIZE, 4):
-            self.memory[hex(i).split('x')[-1].upper()] = 0
 
     def stack_init(self):
         for i in range(STACK_TOP - 3, STACK_BOTTOM - 1, -4):
