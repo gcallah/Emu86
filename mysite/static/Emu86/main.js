@@ -286,24 +286,52 @@ function convert(name,value)
     }
 }
 
-// function AddMem()
-// {
-//     var loc = document.getElementById("memText").value;
-//     var val = document.getElementById("valueText").value;
-//     var repeat = document.getElementById("repeatText").value;
-//     if (loc == ""){
-//         alert("Cannot set an invisible location");
-//     }
-//     else if (val == ""){
-//         alert("Cannot set using an invisible value");
-//     }
-//     if (repeat != ""){
-//         repeat = parseInt(repeat);
-//     }
-//     else {
-//         repeat = 0;
-//     }
-//     for (var i = 0; i <= repeat; i++) {
-        
-//     }
-// }
+function AddMem()
+{
+    mem_data = document.getElementsByName("mem_data")[0].value;
+    var loc = document.getElementById("memText").value;
+    var val = document.getElementById("valueText").value;
+    var repeat = document.getElementById("repeatText").value;
+    var flav = document.getElementsByName("flavor")[0].value;
+    if (loc == ""){
+        alert("Cannot set an invisible location");
+    }
+    else if (val == ""){
+        alert("Cannot set using an invisible value");
+    }
+    if (repeat != ""){
+        repeat = parseInt(repeat);
+    }
+    else {
+        repeat = 0;
+    }
+    var current_html = document.getElementById("memory-table").innerHTML;
+    console.log(current_html);
+    var add_html = "";
+    for (var i = 0; i <= repeat; i++) {
+        if (current_html.indexOf('name="' + loc + '"') != -1) {
+            var find_value = current_html.indexOf('value="', current_html.indexOf('name="' + loc + '"'));
+            var find_end = current_html.indexOf('"', find_value);
+            current_html = current_html.substring(0, find_value + 7) + val.toString() + current_html.substring(find_end);
+            var location_index = mem_data.indexOf(loc + ":");
+            var comma_index = mem_data.indexOf(",", location_index);
+            mem_data = mem_data.substring(0, location_index + loc.length + 1) + val + mem_data.substring(comma_index);
+        }
+        else {
+            add_html += "<tr><td id='mem-loc' style='height:5px'>" + loc + "</td>";
+            add_html += "<td id='contents' style='height:5px'>"
+            add_html += "<input id='mem-cont' name='" + loc + "' value='" + val.toString() + "' size ='5' readonly='readonly' style='background-color:#eff;'></td></tr>";
+            mem_data += loc + ":" + val + ", ";
+        }
+        var location = null;
+        if (flav != "mips") {
+            location = parseInt(loc, 16) + 1;
+        }
+        else {
+            location = parseInt(loc, 16) + 4;
+        }
+        loc = location.toString(16).toUpperCase();
+    }
+    document.getElementById("memory-table").innerHTML = current_html + add_html;
+    document.getElementsByName("mem_data")[0].value = mem_data;
+}

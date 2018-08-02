@@ -298,33 +298,23 @@
                     <td>
                     <div style="height:300px;overflow:auto;">
                         <table id="memory-table">
-                            <tr style='height:5px'>
                             {% for addr, cont in memory.items %}
                                 <script> 
                                     document.getElementsByName("mem_data")[0].value += "{{ addr }}:{{ cont }}, "; 
                                 </script>
-                                    <tr>
+                                <tr>
                                     <td id="mem-loc" style="height:5px">
                                         {{ addr }}
                                     </td>
                                     <td id="contents" style="height:5px">
-                                        {% if data_init == "on" %}
-                                            <input
-                                                id="mem-cont"
-                                                value="{{ cont }}"
-                                                name="{{ addr }}"
-                                                size="5"
-                                            >
-                                        {% else %}
-                                            <input
-                                                id="mem-cont"
-                                                value="{{ cont }}"
-                                                name="{{ addr }}"
-                                                size="5"
-                                                readonly="readonly"
-                                                style="background-color:#eff;"
-                                            >
-                                        {% endif %}
+                                        <input
+                                            id="mem-cont"
+                                            value="{{ cont }}"
+                                            name="{{ addr }}"
+                                            size="5"
+                                            readonly="readonly"
+                                            style="background-color:#eff;"
+                                        >
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -358,6 +348,7 @@
                                             >
                                         {% endif %}
                                     </td>
+                                </tr>
                             {% endfor %}
                         </table>
                     </div>
