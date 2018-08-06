@@ -97,9 +97,9 @@ def symbol_token(token_line, pos, flavor, vm):
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     elif (pos + 1 < len (token_line) and 
           isinstance(token_line[pos + 1], OpenParen)):
-        reg, disp, pos = get_address_mips(token_line, 
-                                      pos + 2, vm, 
-                                      vm.symbols[token_line[pos].get_nm()])
+        reg, disp, pos = get_address_mips(token_line, pos + 2, vm, 
+                                          vm.symbols[token_line[pos].
+                                          get_nm()])
         return (RegAddress(reg.get_nm(), vm, disp, 
                            reg.get_multiplier()), pos)
     else:
