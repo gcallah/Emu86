@@ -62,20 +62,16 @@ def number_token(token_line, pos, flavor, vm):
         reg = None
         disp = None
         if flavor == "att":
-            reg, disp, pos = get_address_att(token_line, 
-                                             pos + 2, vm, 
+            reg, disp, pos = get_address_att(token_line, pos + 2, vm, 
                                              token_line[pos].get_val())
         else:
-            reg, disp, pos = get_address_mips(token_line, 
-                                              pos + 2, vm, 
+            reg, disp, pos = get_address_mips(token_line, pos + 2, vm, 
                                               token_line[pos].get_val())
         if reg: 
-            return (RegAddress(reg.get_nm(), 
-                               vm, disp, 
+            return (RegAddress(reg.get_nm(), vm, disp, 
                                reg.get_multiplier()), pos)
         else:
-            return (Address(hex(disp).split('x')[-1].upper(), 
-                            vm), pos)
+            return (Address(hex(disp).split('x')[-1].upper(), vm), pos)
     else:
         return (token_line[pos], pos + 1)
 
