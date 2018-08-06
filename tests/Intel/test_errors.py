@@ -65,10 +65,6 @@ class ErrorTestCase(TestCase):
         (output, error, bit_code) = assemble(".data \n  x DW", 'intel', intel_machine)
         self.assertTrue(error.startswith(MISSING_DATA))
 
-    def test_mem_error_over(self):
-        (output, error, bit_code) = assemble("mov [256], 0", 'intel', intel_machine)
-        self.assertTrue(error.startswith(INVALID_MEM_LOC))
-
     def test_mem_error_less(self):
         (output, error, bit_code) = assemble("mov [-30], 0", 'intel', intel_machine)
         self.assertTrue(error.startswith(INVALID_MEM_LOC))

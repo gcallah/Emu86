@@ -59,6 +59,10 @@ class ErrorTestCase(TestCase):
         (output, error, bit_code) = assemble(".data \n  x: .word", 'mips', mips_machine)
         self.assertTrue(error.startswith(MISSING_PC))
 
+    def test_mem_error_less(self):
+        (output, error, bit_code) = assemble("40000 SW R10, -3(R28)", 'mips', mips_machine)
+        self.assertTrue(error.startswith(INVALID_MEM_LOC))
+
 
 if __name__ == '__main__':
     main()

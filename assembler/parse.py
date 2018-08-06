@@ -371,8 +371,11 @@ def get_term(token_line, pos, vm):
     """
     # call function again to get the negated term
     if isinstance(token_line[pos], MinusTok):
-        token_line[pos + 1].negate_val()
-        return get_term(token_line, pos + 1, vm)
+        try:
+            token_line[pos + 1].negate_val()
+            return get_term(token_line, pos + 1, vm)
+        except:
+            raise InvalidArgument(token_line[pos].get_nm())
     # integer or register term
     elif (isinstance(token_line[pos], IntegerTok) or 
           isinstance(token_line[pos], Register)):
@@ -454,11 +457,8 @@ def get_address(token_line, pos, vm):
         Address token 
     """
 
-    NEED_VAL = 0
-    NEED_CLOSE_BRACK = 1
     if pos >= len(token_line):
         raise InvalidMemLoc("")
-    state = NEED_VAL
     reg = None
     disp = 0
     reg, disp, pos = get_expression(token_line, pos, vm, reg)
@@ -568,11 +568,8 @@ def get_address_mips(token_line, pos, vm, disp = 0):
         Address token 
     """
 
-    NEED_VAL = 0
-    NEED_CLOSE_PAREN = 1
     if pos >= len(token_line):
         raise InvalidMemLoc("")
-    state = NEED_VAL
     reg = None
     int_disp = 0
     value, pos = get_expr_mips(token_line, pos, vm)
@@ -614,7 +611,8 @@ def get_address_location(token_line, pos, flavor, vm):
         return (RegAddress(reg.get_nm(), vm, 
                            disp, reg.get_multiplier()), pos)
     else:
-        if disp >= 256 or disp < 0:
+        # eliminates negative memory locations
+        if disp < 0:
             raise InvalidMemLoc(str(disp))
         return (Address(hex(disp).split('x')[-1].upper(), vm), 
                 pos)

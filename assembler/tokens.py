@@ -183,11 +183,17 @@ class RegAddress(Address):
                     total_disp += disp.get_val() * disp.get_multiplier()
                 else:
                     total_disp += disp
-            address = hex(int(self.regs[self.name]) * self.multiplier + 
-                          total_disp).split('x')[-1].upper()
+            addr_val = (int(self.regs[self.name]) * 
+                        self.multiplier) + total_disp
+            if addr_val < 0: 
+                raise InvalidMemLoc(str(addr_val))
+            address = hex(addr_val).split('x')[-1].upper()
         elif self.displacement != 0:
-            address = hex(int(self.regs[self.name]) * self.multiplier + 
-                          self.displacement).split('x')[-1].upper()
+            addr_val = (int(self.regs[self.name]) * 
+                        self.multiplier) + self.displacement
+            if addr_val < 0: 
+                raise InvalidMemLoc(str(addr_val))
+            address = hex(addr_val).split('x')[-1].upper()
         return address
 
     def get_val(self):
