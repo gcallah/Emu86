@@ -178,7 +178,6 @@ class RegAddress(Address):
                           self.multiplier).split('x')[-1].upper()
         disp = 0
         if isinstance(self.displacement, list):
-            total_disp = 0
             for disp_item in self.displacement: 
                 if isinstance(disp_item, Register):
                     disp += disp_item.get_val() * disp_item.get_multiplier()
