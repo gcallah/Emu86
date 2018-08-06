@@ -376,7 +376,7 @@ def get_expr_intel(token_line, pos, vm, reg):
         vm: Virtual machine
 
     Returns:
-        Found register, integer value of expression, next position
+        Register token, displacement, next position
     """
     if len(token_line) < pos + 2:
         return MissingOps()
@@ -406,7 +406,7 @@ def get_expr_att(token_line, pos, vm, reg, disp_list):
         vm: Virtual machine
 
     Returns:
-        Expression, next position
+        Register token, displacement(s), next position 
     """
     if len(token_line) < pos + 2:
         return MissingOps()
@@ -450,7 +450,7 @@ def get_expr_mips(token_line, pos, vm):
         vm: Virtual machine
 
     Returns:
-        Expression, next position
+        Token term, next position
     """
 
     if pos >= len(token_line):
@@ -472,7 +472,7 @@ def get_address_intel(token_line, pos, vm):
         vm: Virtual machine
 
     Returns: 
-        Address token 
+        Register token, displacement, next position 
     """
 
     if pos >= len(token_line):
@@ -498,7 +498,7 @@ def get_address_att(token_line, pos, vm, disp = 0):
         vm: Virtual machine
 
     Returns: 
-        Address token 
+        Register token, displacement(s), next position 
     """
     if pos >= len(token_line):
         raise InvalidMemLoc("")
@@ -527,7 +527,7 @@ def get_address_mips(token_line, pos, vm, disp = 0):
         vm: Virtual machine
 
     Returns: 
-        Address token 
+        Register token, displacement, next position 
     """
 
     if pos >= len(token_line):
@@ -651,6 +651,7 @@ def parse_exec_unit(token_line, flavor, vm):
 
     Args:
         token_line: Tokenized instruction
+        flavor: Coding language
         vm: Virtual machine
 
     Returns: 
@@ -699,6 +700,7 @@ def parse(tok_lines, flavor, vm):
 
     Args:
         tok_lines: Lines containing each line of code
+        flavor: Coding language
         vm: Virtual machine
 
     Returns:
