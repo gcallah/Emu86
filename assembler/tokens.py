@@ -176,24 +176,20 @@ class RegAddress(Address):
         # right now, memory addresses are strings. eeh!
         address = hex(int(self.regs[self.name]) * 
                           self.multiplier).split('x')[-1].upper()
+        disp = 0
         if isinstance(self.displacement, list):
             total_disp = 0
-            for disp in self.displacement: 
-                if isinstance(disp, Register):
-                    total_disp += disp.get_val() * disp.get_multiplier()
+            for disp_item in self.displacement: 
+                if isinstance(disp_item, Register):
+                    disp += disp_item.get_val() * disp_item.get_multiplier()
                 else:
-                    total_disp += disp
-            addr_val = (int(self.regs[self.name]) * 
-                        self.multiplier) + total_disp
-            if addr_val < 0: 
-                raise InvalidMemLoc(str(addr_val))
-            address = hex(addr_val).split('x')[-1].upper()
+                    disp += disp_item
         elif self.displacement != 0:
-            addr_val = (int(self.regs[self.name]) * 
-                        self.multiplier) + self.displacement
-            if addr_val < 0: 
-                raise InvalidMemLoc(str(addr_val))
-            address = hex(addr_val).split('x')[-1].upper()
+            disp = self.displacement
+        addr_val = int(self.regs[self.name]) * self.multiplier + disp
+        if addr_val < 0: 
+            raise InvalidMemLoc(str(addr_val))
+        address = hex(addr_val).split('x')[-1].upper()
         return address
 
     def get_val(self):
