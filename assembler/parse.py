@@ -244,18 +244,16 @@ def parse_dup_token(token_line, data_type, pos):
     Returns:
         List of duplicated values
     """
-    dup_list = []
+    dup_list = None
     duplicate = token_line[pos].get_val()
     value, pos = get_DUP_value(token_line, pos + 2)
-    for times in range(duplicate):
-        if value == DONT_INIT:
-            dup_list.append(randrange(0, 
-                     dtype_info[data_type][MAX_VAL]))
-        else:
-            dup_list.append(value)
+    if value == DONT_INIT:
+        dup_list = [randrange(0, dtype_info[data_type][MAX_VAL])] * duplicate
+    else:
+        dup_list = [value] * duplicate
     return (dup_list, pos)
 
-def get_values(token_line, data_type, pos):
+def get_values(token_line, data_type, pos, values_list):
     """
     Creates a list of values for each variable when it is declared.
 
@@ -267,56 +265,47 @@ def get_values(token_line, data_type, pos):
     Returns:
         List of integer values
     """
-    values_list = []
     if pos >= len(token_line):
         raise MissingData()
-
-    # negate integer value if minus sign found
-    elif isinstance(token_line[pos], MinusTok):
-        try:
-            if isinstance(token_line[pos + 1], IntegerTok):
-                token_line[pos + 1].negate_val()
-            else:
-                raise InvalidArgument(token_line[pos + 1].get_nm())
-            values_list.append(token_line[pos + 1].get_val())
-            return (values_list, pos + 2)
-        except:
-            raise InvalidDataVal(token_line[pos].get_nm())
-    elif isinstance(token_line[pos], IntegerTok):
-        if pos + 1 < len(token_line):
-            # if DUP token found
-            if isinstance(token_line[pos + 1], DupTok):
-                dup_list, pos = parse_dup_token(token_line, data_type, pos)
-                values_list.extend(dup_list)
-                return (values_list, pos)
-            # otherwise return int
-            else:
-                return ([token_line[pos].get_val()], pos + 1)
-        else:
-            return ([token_line[pos].get_val()], pos + 1)
-
-    # if value is a string token
     elif isinstance(token_line[pos], StringTok):
         ascii_list, pos = parse_string_token(token_line, pos)
         values_list.extend(ascii_list)
-        return (values_list, pos)
-    elif isinstance(token_line[pos], QuestionTok):
-        values_list.append(randrange(0, dtype_info[data_type][MAX_VAL]))
-        return (values_list, pos + 1)
     else:
-        raise InvalidDataVal(token_line[pos].get_nm())
+        first_data, pos = get_data_token(token_line, pos)
+        if first_data == DONT_INIT:
+            values_list.append(randrange(0, dtype_info[data_type][MAX_VAL]))
+        else:
+            values_list.append(first_data)
+
+    if pos >= len(token_line):
+        return values_list, pos
+    else:
+        next_term = token_line[pos]
+        if isinstance(next_term, DupTok):
+            values_list.pop()
+            dup_list, pos = parse_dup_token(token_line, data_type, pos - 1)
+            values_list.extend(dup_list)
+            try:
+                next_term = token_line[pos]
+            except:
+                return values_list, pos
+        if isinstance(next_term, Comma):
+            return get_values(token_line, data_type, pos + 1, values_list)
+        else:
+            raise InvalidDataVal(token_line[pos].get_nm())
 
 def parse_data_token(token_line, vm, flavor, mem_loc):
     """
-    Parses data tokens 
+    Parses data tokens, assigns each value to a memory location
 
     Args:
         token_line: List of data tokens
         vm: Virtual machine
         mem_loc: Starting memory storage location
+
+    Returns:
+        Returns the next memory location to be used
     """
-    NEED_VAL = 0
-    NEED_COMMA_OR_END = 1
     pos = 0
     symbol = ""
     data_vals = []
@@ -326,20 +315,8 @@ def parse_data_token(token_line, vm, flavor, mem_loc):
         symbol = token_line[pos].get_nm()
     data_type = get_data_type(token_line, pos + 1)
     pos += 2
-    state = NEED_VAL
-    while True: 
-        if state == NEED_VAL:
-            val, pos = get_values(token_line, data_type, pos)
-            data_vals.extend(val)
-            state = NEED_COMMA_OR_END
-        elif state == NEED_COMMA_OR_END:
-            if pos >= len(token_line):
-                break
-            elif isinstance(token_line[pos], Comma):
-                state = NEED_VAL
-                pos += 1
-            else:
-                MissingComma()
+    data_vals, pos = get_values(token_line, data_type, pos, data_vals)
+           
 
     # store memory location 
     vm.symbols[symbol] = mem_loc
