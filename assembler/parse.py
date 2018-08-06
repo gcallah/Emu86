@@ -439,15 +439,16 @@ def get_expr_att(token_line, pos, vm, reg, disp_list):
         reg = left
     elif isinstance(left, Register) and disp_list[SEC_REG] == None:
         disp_list[SEC_REG] = left
+
+    # at most two registers allowed
     elif isinstance(left, Register):
         raise InvalidMemLoc(token_line[pos].get_nm())
 
     # Retrieved Integer term
     elif isinstance(left, IntegerTok):
-        if token_line[pos - 2] == reg and reg != None:
+        if token_line[pos - 2] == reg:
             reg.set_multiplier(left.get_val())
-        elif (token_line[pos - 2] == disp_list[SEC_REG] and 
-              disp_list[SEC_REG] != None):
+        elif token_line[pos - 2] == disp_list[SEC_REG]:
             disp_list[SEC_REG].set_multiplier(left.get_val())
         else:
             disp_list.append(left.get_val())
