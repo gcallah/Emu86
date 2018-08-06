@@ -147,6 +147,35 @@ def get_data_type(token_line, pos):
     else:
         raise InvalidDataType(token_line[pos].get_nm())
 
+def get_data_token(token_line, pos):
+    """
+    Returns the data token found
+
+    Args:
+        token_line: Line of code
+        pos: Position to find data token
+
+    Returns:
+        Data value, next position
+    """
+    if pos >= len(token_line):
+        raise MissingData()
+    if isinstance(token_line[pos], MinusTok):
+        try:
+            if isinstance(token_line[pos + 1], IntegerTok):
+                token_line[pos + 1].negate_val()
+                return get_data_token(token_line, pos + 1)
+            else:
+                raise InvalidDataVal("-")
+        except: 
+            raise InvalidDataVal("-")
+    elif isinstance(token_line[pos], IntegerTok):
+        return token_line[pos].get_val(), pos + 1
+    elif isinstance(token_line[pos], QuestionTok):
+        return DONT_INIT, pos + 1 
+    else:
+        raise InvalidArgument(token_line[pos].get_nm())
+
 def get_DUP_value(token_line, pos):
     """
     Finds the value to duplicate if found
@@ -156,43 +185,17 @@ def get_DUP_value(token_line, pos):
         pos: Beginning position to parse for DUP
 
     Returns:
-        Integer value to duplicate
+        Integer value to duplicate, next position
     """
-    NEED_OPEN_PAREN = 0
-    NEED_VAL = 1
-    NEED_CLOSE_PAREN = 2
-    state = NEED_OPEN_PAREN
-    dup_value = None
-    while pos < len(token_line):
-        if state == NEED_OPEN_PAREN: 
-            if isinstance(token_line[pos], OpenParen):
-                state = NEED_VAL
-                pos += 1
-            else:
-                raise MissingOpenParen()
-        elif state == NEED_VAL:
-            if isinstance(token_line[pos], QuestionTok):
-                dup_value = DONT_INIT
-            elif isinstance(token_line[pos], MinusTok):
-                try:
-                    token_line[pos + 1].negate_val()
-                    pos += 1
-                except: 
-                    raise InvalidDataVal("-")
-            elif isinstance(token_line[pos], IntegerTok):
-                dup_value = token_line[pos].get_val()
-                state = NEED_CLOSE_PAREN
-                pos += 1
-            else:
-                raise MissingData()
-        elif state == NEED_CLOSE_PAREN:
-            if isinstance(token_line[pos], CloseParen):
-                pos += 1 
-                break
-            else: 
-                raise MissingCloseParen()
-
-    return (dup_value, pos)
+    if isinstance(token_line[pos], OpenParen):
+        pos += 1
+    else:
+        raise MissingOpenParen()
+    dup_value, pos = get_data_token(token_line, pos)
+    if isinstance(token_line[pos], CloseParen):
+        return dup_value, pos + 1
+    else: 
+        raise MissingCloseParen()
 
 def is_str_termin(token_line, pos):
     if not isinstance(token_line[pos], IntegerTok):
@@ -275,7 +278,10 @@ def get_values(token_line, data_type, pos):
     # negate integer value if minus sign found
     elif isinstance(token_line[pos], MinusTok):
         try:
-            token_line[pos + 1].negate_val()
+            if isinstance(token_line[pos + 1], IntegerTok):
+                token_line[pos + 1].negate_val()
+            else:
+                raise InvalidArgument(token_line[pos + 1].get_nm())
             values_list.append(token_line[pos + 1].get_val())
             return (values_list, pos + 2)
         except:
@@ -322,9 +328,8 @@ def parse_data_token(token_line, vm, flavor, mem_loc):
         raise InvalidArgument(token_line[pos].get_nm())
     else:
         symbol = token_line[pos].get_nm()
-    pos += 1
-    data_type = get_data_type(token_line, pos)
-    pos += 1
+    data_type = get_data_type(token_line, pos + 1)
+    pos += 2
     state = NEED_VAL
     while True: 
         if state == NEED_VAL:
