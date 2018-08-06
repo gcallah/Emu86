@@ -308,7 +308,7 @@ function AddMem()
     var current_html = document.getElementById("memory-table").innerHTML;
     console.log(current_html);
     var add_html = "";
-    for (var i = 0; i <= repeat; i++) {
+    for (var i = 0; i < repeat; i++) {
         if (current_html.indexOf('name="' + loc + '"') != -1) {
             var find_value = current_html.indexOf('value="', current_html.indexOf('name="' + loc + '"'));
             var find_end = current_html.indexOf('"', find_value);
@@ -334,4 +334,9 @@ function AddMem()
     }
     document.getElementById("memory-table").innerHTML = current_html + add_html;
     document.getElementsByName("mem_data")[0].value = mem_data;
+
+    // reset the values
+    document.getElementById("memText").value = "";
+    document.getElementById("valueText").value = "";
+    document.getElementById("repeatText").value = "1";
 }

@@ -64,6 +64,19 @@ class VirtualMachine:
     def mem_init(self):
         self.memory.clear()
 
+    def order_mem(self):
+        lst = []
+        for key in self.memory: 
+            lst.append(key)
+        for hex_key in range(0, len(lst)):
+            lst[hex_key] = int(lst[hex_key], 16)
+        lst.sort()
+        sorted_mem = OrderedDict()
+        for decimal_key in lst:
+            hex_sorted_key = hex(decimal_key).split('x')[-1].upper()
+            sorted_mem[hex_sorted_key] = self.memory[hex_sorted_key]
+        self.memory = sorted_mem
+
     def empty_cell(self):
         return EMPTY_CELL
 

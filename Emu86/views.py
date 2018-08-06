@@ -182,6 +182,7 @@ def main_page(request):
                                                mips_machine, step)
 
     if mips_machine.flavor == MIPS:
+        mips_machine.order_mem()
         site_hdr += ": MIPS"
         if base == "hex":
             convert_reg_contents(mips_machine.registers)
@@ -212,6 +213,7 @@ def main_page(request):
         site_hdr += ": Intel"
     else:
         site_hdr += ": AT&T"
+    intel_machine.order_mem()
     if base == "hex":
         convert_reg_contents(intel_machine.registers)
         convert_mem_contents(intel_machine.memory)
