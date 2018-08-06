@@ -97,16 +97,11 @@ def symbol_token(token_line, pos, flavor, vm):
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     elif (pos + 1 < len (token_line) and 
           isinstance(token_line[pos + 1], OpenParen)):
-        reg, disp, pos = get_address_att(token_line, 
+        reg, disp, pos = get_address_mips(token_line, 
                                       pos + 2, vm, 
                                       vm.symbols[token_line[pos].get_nm()])
-        if reg: 
-            return (RegAddress(reg.get_nm(), 
-                               vm, disp, 
-                               reg.get_multiplier()), pos)
-        else:
-            return (Address(hex(disp).split('x')[-1].upper(), 
-                            vm), pos)
+        return (RegAddress(reg.get_nm(), vm, disp, 
+                           reg.get_multiplier()), pos)
     else:
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
 
@@ -451,7 +446,8 @@ def get_expr_att(token_line, pos, vm, reg, disp_list):
     elif isinstance(left, IntegerTok):
         if token_line[pos - 2] == reg and reg != None:
             reg.set_multiplier(left.get_val())
-        elif token_line[pos - 2] == disp_list[SEC_REG] and disp_list[SEC_REG] != None:
+        elif (token_line[pos - 2] == disp_list[SEC_REG] and 
+              disp_list[SEC_REG] != None):
             disp_list[SEC_REG].set_multiplier(left.get_val())
         else:
             disp_list.append(left.get_val())
@@ -464,7 +460,6 @@ def get_expr_att(token_line, pos, vm, reg, disp_list):
         return get_expr_att(token_line, pos + 2, vm, reg, disp_list)
     else:
         return (reg, disp_list, pos + 1)
-
 
 def get_expr_mips(token_line, pos, vm):
     """
@@ -482,7 +477,7 @@ def get_expr_mips(token_line, pos, vm):
     if pos >= len(token_line):
         raise MissingOps()
     left, pos = get_term(token_line, pos, vm)
-    if isinstance(left, Register) or isinstance(left, IntegerTok):
+    if isinstance(left, Register):
         return (left, pos + 1)
     else:
         raise InvalidMemLoc(left.get_nm())
@@ -558,13 +553,7 @@ def get_address_mips(token_line, pos, vm, disp = 0):
 
     if pos >= len(token_line):
         raise InvalidMemLoc("")
-    reg = None
-    int_disp = 0
-    value, pos = get_expr_mips(token_line, pos, vm)
-    if isinstance(value, IntegerTok):
-        int_disp += value.get_val()
-    else:
-        reg = value
+    reg, pos = get_expr_mips(token_line, pos, vm)
     if pos >= len(token_line):
         raise MissingCloseParen()
     elif isinstance(token_line[pos], CloseParen):
