@@ -15,6 +15,7 @@ def one_op_arith(ops, vm, instr, operator):
     """
     check_num_args(instr, ops, 1)
     ops[0].set_val(operator(ops[0].get_val()))
+    vm.changes.add(ops[0].get_nm())
 
 
 def two_op_arith(ops, vm, instr, operator):
@@ -27,6 +28,7 @@ def two_op_arith(ops, vm, instr, operator):
         checkflag(operator(ops[0].get_val(),
                            ops[1].get_val()), 
                            vm))
+    vm.changes.add(ops[0].get_nm())
 
 
 def checkflag(val, vm):
@@ -179,6 +181,7 @@ class Inc(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() + 1)
+        vm.changes.add(ops[0].get_nm())
 
 class Dec(Instruction):
     """
@@ -192,6 +195,7 @@ class Dec(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() - 1)
+        vm.changes.add(ops[0].get_nm())
 
 class Neg(Instruction):
     """
@@ -234,4 +238,6 @@ class Idiv(Instruction):
             raise DivisionZero()
         vm.registers['EAX'] = dividend // ops[0].get_val()
         vm.registers['EDX'] = dividend % ops[0].get_val()
+        vm.changes.add('EAX')
+        vm.changes.add('EDX')
         return ''

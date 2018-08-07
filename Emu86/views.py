@@ -94,7 +94,8 @@ def main_page(request):
                              'sample': 'none',
                              'start_ip': mips_machine.start_ip,
                              'bit_code': "",
-                             'button_type': ""
+                             'button_type': "",
+                             'changes': []
                             })
             else:
                 mips_machine.flavor = None
@@ -123,7 +124,8 @@ def main_page(request):
                                'sample': 'none',
                                'start_ip': intel_machine.start_ip,
                                'bit_code': "",
-                               'button_type': ""
+                               'button_type': "",
+                               'changes': []
                               })
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
@@ -141,6 +143,8 @@ def main_page(request):
             intel_machine.re_init()
             mips_machine.re_init()
         else:
+            intel_machine.changes_init()
+            mips_machine.changes_init()
             step = (button == STEP)
             intel_machine.nxt_key = 0
             mips_machine.nxt_key = 0
@@ -206,7 +210,8 @@ def main_page(request):
                      'sample': sample,
                      'start_ip': mips_machine.start_ip,
                      'bit_code': bit_code,
-                     'button_type': ""
+                     'button_type': "",
+                     'changes': mips_machine.changes
                     })
         
     if intel_machine.flavor == INTEL:
@@ -236,7 +241,8 @@ def main_page(request):
                    'sample': sample,
                    'start_ip': intel_machine.start_ip,
                    'bit_code': bit_code,
-                   'button_type': ""
+                   'button_type': "",
+                   'changes': intel_machine.changes
                   })
 
 def is_hex_form(request):

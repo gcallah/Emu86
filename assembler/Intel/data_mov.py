@@ -2,7 +2,7 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args
-from assembler.tokens import Instruction
+from assembler.tokens import Instruction, Register
 class Mov(Instruction):
     """
         <instr>
@@ -22,6 +22,8 @@ class Mov(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 2)
         ops[0].set_val(ops[1].get_val())
+        if isinstance(ops[0], Register):
+            vm.changes.add(ops[0].get_nm())
 
 class Pop(Instruction):
     """

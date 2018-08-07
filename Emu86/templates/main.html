@@ -202,7 +202,11 @@
                                     {{ reg }}
                                 </td>
 
-                                <td id="contents">
+                                {% if reg in changes %}
+                                    <td id="contents" style="background-color:#FFFF00;">
+                                {% else %}
+                                    <td id="contents">
+                                {% endif %}
                                     {% if data_init == "on" %}
                                         <input
                                             {% if reg in unwritable %}
@@ -226,7 +230,11 @@
                                             name="{{ reg }}"
                                             size="10"
                                             readonly="readonly"
-                                            style="background-color:#eff;"
+                                            {% if reg in changes %}
+                                                style="background-color:#FFFF00;"
+                                            {% else %}
+                                                style="background-color:#eff;"
+                                            {% endif %}
                                         onclick=convert(name,value)>
                                     {% endif %}
                                 </td>
