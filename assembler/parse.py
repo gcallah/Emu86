@@ -625,18 +625,28 @@ def get_op(token_line, pos, flavor, vm):
     """
     if pos >= len(token_line):
         raise MissingOps()
+
+    # Register
     elif isinstance(token_line[pos], Register):
         return (token_line[pos], pos + 1)
+
+    # Constant Token
     elif isinstance(token_line[pos], ConstantSign):
         if flavor == "att" and check_constant(token_line, pos):
             return get_op(token_line, pos + 1, flavor, vm)
         else:
             raise InvalidArgument("$")
+
+    # Minus Token
     elif isinstance(token_line[pos], MinusTok):
         minus_token(token_line, pos)
         return get_op(token_line, pos + 1, flavor, vm)
+
+    # Integer Token
     elif isinstance(token_line[pos], IntegerTok):
         return number_token(token_line, pos, flavor, vm)
+
+    # Symbol/Label Token
     elif isinstance(token_line[pos], NewSymbol):
         if token_line[pos].get_nm() in vm.labels:
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
@@ -644,6 +654,8 @@ def get_op(token_line, pos, flavor, vm):
             return symbol_token(token_line, pos, flavor, vm)
         else:
             raise UnknownName(token_line[pos].get_nm())
+            
+    # Address Token
     elif is_start_address(token_line, pos, flavor):
         return get_address_location (token_line, pos + 1, flavor, vm)
     else:
@@ -709,16 +721,24 @@ def parse_exec_unit(token_line, flavor, vm):
     pos = 0
     token_instruction = []
     op_lst = []
+
+    # retrieve PC counter 
     if flavor == "mips":
         token_instruction.append(get_mips_pc(token_line, pos))
         pos += 1
+
+    # retrieve instruction
     if not isinstance(token_line[pos], Instruction):
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
     pos += 1 
+
+    # retrieve ops
     if pos < len(token_line):
         op_lst, pos = get_op_list(token_line, pos, flavor, vm, op_lst)
     token_instruction.extend(op_lst)
+
+    # switch ops if flavor is AT&T
     if flavor == 'att' and len(token_instruction) > 2:
         switch_vals = token_instruction[1], token_instruction[2]
         token_instruction[1] = switch_vals[1]
