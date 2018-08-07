@@ -278,6 +278,7 @@ def get_values(token_line, data_type, pos, values_list):
         token_line: List of data tokens
         data_type: Data type of variable
         pos: Beginning pos to parse from
+        values_list: List of values
 
     Returns:
         List of integer values
@@ -318,6 +319,7 @@ def parse_data_token(token_line, vm, flavor, mem_loc):
     Args:
         token_line: List of data tokens
         vm: Virtual machine
+        flavor: Coding language
         mem_loc: Starting memory storage location
 
     Returns:
@@ -421,6 +423,7 @@ def get_expr_att(token_line, pos, vm, reg, disp_list):
         token_line: Line of code
         pos: Position of address
         vm: Virtual machine
+        disp_list: List of displacements
 
     Returns:
         Register token, displacement(s), next position 
@@ -513,6 +516,7 @@ def get_address_att(token_line, pos, vm, disp = 0):
         token_line: List of instruction tokens
         pos: Beginning position in list
         vm: Virtual machine
+        Disp: Numeric displacement
 
     Returns: 
         Register token, displacement(s), next position 
@@ -654,7 +658,7 @@ def get_op(token_line, pos, flavor, vm):
             return symbol_token(token_line, pos, flavor, vm)
         else:
             raise UnknownName(token_line[pos].get_nm())
-            
+
     # Address Token
     elif is_start_address(token_line, pos, flavor):
         return get_address_location (token_line, pos + 1, flavor, vm)
