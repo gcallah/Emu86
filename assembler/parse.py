@@ -649,6 +649,32 @@ def get_op(token_line, pos, flavor, vm):
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
+def get_op_list(token_line, pos, flavor, vm, op_lst):
+    """
+    Returns a list of ops
+
+    Args:
+        token_line: Line of code
+        pos: Starting position to retrieve op
+        flavor: Coding language
+        vm: Virtual machine
+        op_lst: List of ops
+
+    Returns:
+        A list of ops, next position
+    """
+    op, pos = get_op(token_line, pos, flavor, vm)
+    op_lst.append(op)
+
+    if pos >= len(token_line):
+        return op_lst, pos
+    else:
+        next_op = token_line[pos]
+        if isinstance(next_op, Comma):
+            return get_op_list(token_line, pos + 1, flavor, vm, op_lst)
+        else:
+            raise MissingComma()
+
 def get_mips_pc(token_line, pos):
     """
     Returns the PC counter of the instruction
@@ -676,17 +702,13 @@ def parse_exec_unit(token_line, flavor, vm):
         flavor: Coding language
         vm: Virtual machine
 
-    Syntax: INS OP, OP 
-            INS OP
-            INS OP, OP, OP
-
     Returns: 
-        List of tokens: instruction, operand, operand
+        List of tokens: instruction, operand(s)
+        If MIPS: PC, instruction, operand(s)
     """
-    NEED_OP = 0
-    NEED_COMMA_OR_END = 1
     pos = 0
     token_instruction = []
+    op_lst = []
     if flavor == "mips":
         token_instruction.append(get_mips_pc(token_line, pos))
         pos += 1
@@ -694,26 +716,9 @@ def parse_exec_unit(token_line, flavor, vm):
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
     pos += 1 
-    if isinstance(token_line[-1], Ret):
-        state = NEED_COMMA_OR_END
-    elif isinstance(token_line[-1], Syscall):
-        state = NEED_COMMA_OR_END
-    else:
-        state = NEED_OP
-    while True:
-        if state == NEED_OP:
-            # get_op will throw excep if no op present
-            op, pos = get_op(token_line, pos, flavor, vm)
-            token_instruction.append(op)
-            state = NEED_COMMA_OR_END
-        elif state == NEED_COMMA_OR_END:
-            if pos >= len(token_line):
-                break  # end of tokens
-            elif isinstance(token_line[pos], Comma): 
-                pos += 1
-                state = NEED_OP
-            else:
-                raise MissingComma()
+    if pos < len(token_line):
+        op_lst, pos = get_op_list(token_line, pos, flavor, vm, op_lst)
+    token_instruction.extend(op_lst)
     if flavor == 'att' and len(token_instruction) > 2:
         switch_vals = token_instruction[1], token_instruction[2]
         token_instruction[1] = switch_vals[1]
