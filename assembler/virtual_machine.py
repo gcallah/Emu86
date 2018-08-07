@@ -41,6 +41,7 @@ class VirtualMachine:
         self.flavor = None
         self.data_init = "on"
         self.start_ip = 0
+        self.changes = set()
 
     def __str__(self):
         return ("Registers: " + str(self.registers) + "\n"
@@ -60,6 +61,7 @@ class VirtualMachine:
         self.mem_init()
         self.stack_init()
         self.data_init = "on"
+        self.changes.clear()
 
     def mem_init(self):
         self.memory.clear()
@@ -207,6 +209,7 @@ class MIPSMachine(VirtualMachine):
     def re_init(self):
         super().re_init()
         self.registers[STACK_PTR_MIPS] = STACK_TOP
+        self.changes.clear()
 
     def stack_init(self):
         for i in range(STACK_TOP - 3, STACK_BOTTOM - 1, -4):

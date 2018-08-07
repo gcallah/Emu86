@@ -51,6 +51,7 @@ class Slt(Instruction):
             op1.set_val(1)
         else:
             op1.set_val(0)
+        vm.changes.add(op1.get_nm())
 
 class Slti(Instruction):
     """
@@ -76,6 +77,7 @@ class Slti(Instruction):
             op1.set_val(1)
         else:
             op1.set_val(0)
+        vm.changes.add(op1.get_nm())
     
 
 class Jmp(Instruction):
@@ -190,41 +192,3 @@ class Bne(Instruction):
                 vm.set_ip(current_ip + disp * 4)
             else:
                 raise OutofBounds()
-
-class Call(Instruction):
-    """
-        <instr>
-             call
-        </instr>
-        <syntax>
-            CALL lbl
-        </syntax>
-        <descr>
-            Pushes value of EIP to stack and jumps to the internal subroutine.
-        </descr>
-    """
-    def fhook(self, ops, vm):
-        check_num_args("CALL", ops, 1)
-        vm.dec_sp()
-        vm.stack[hex(vm.get_sp() + 1).split('x')[-1].upper()] = vm.get_ip()
-        target = get_one_op(self.get_nm(), ops)
-        raise Jump(target.name)
-
-class Ret(Instruction):
-    """
-        <instr>
-             ret
-        </instr>
-        <syntax>
-            RET
-        </syntax>
-        <descr>
-            Pops value from stack to EIP and returns control to the 
-            the line after the subroutine call.
-        </descr>
-    """
-    def fhook(self, ops, vm):
-        check_num_args("RET", ops, 0)
-        vm.inc_sp()
-        vm.set_ip(int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]))
-        vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()

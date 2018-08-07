@@ -6,7 +6,6 @@ import re
 import pdb
 from random import randrange
 
-from .lex import DONT_INIT
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
@@ -22,6 +21,8 @@ from .virtual_machine import MEM_SIZE
 
 TOKENS = 0
 CODE = 1
+
+DONT_INIT = "?"
 
 MAX_BYTE = 255
 MAX_SHORT = 65535

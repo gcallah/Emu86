@@ -16,6 +16,7 @@ def one_op_arith(ops, vm, instr, operator):
     """
     check_num_args(instr, ops, 1)
     ops[0].set_val(operator(ops[0].get_val()))
+    vm.changes.add(ops[0].get_nm())
 
 def three_op_arith_reg(ops, vm, instr, operator):
     """
@@ -27,7 +28,8 @@ def three_op_arith_reg(ops, vm, instr, operator):
     ops[0].set_val(
     check_overflow(operator(ops[1].get_val(),
                        ops[2].get_val()), 
-                       vm))
+                       vm)) 
+    vm.changes.add(ops[0].get_nm())
 
 def three_op_arith_immediate(ops, vm, instr, operator):
     """
@@ -40,6 +42,7 @@ def three_op_arith_immediate(ops, vm, instr, operator):
     check_overflow(operator(ops[1].get_val(),
                        ops[2].get_val()), 
                        vm))
+    vm.changes.add(ops[0].get_nm()) 
 
 def check_overflow(val, vm):
     if(val > MAX_INT):
@@ -102,6 +105,8 @@ class Mult(Instruction):
         else:
             vm.registers['LO'] = result
             vm.registers['HI'] = 0
+        vm.changes.add('LO')
+        vm.changes.add('HI')
         return ''
 
 class Andf(Instruction):
@@ -208,57 +213,6 @@ class Srl(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_immediate(ops, vm, self.name, opfunc.rshift)
 
-class Notf(Instruction):
-    """
-        <instr>
-             not
-        </instr>
-        <syntax>
-            NOT reg
-        </syntax>
-    """
-    def fhook(self, ops, vm):
-        one_op_arith(ops, vm, self.name, opfunc.inv)
-
-class Inc(Instruction):
-    """
-        <instr>
-             inc
-        </instr>
-        <syntax>
-            INC reg
-        </syntax>
-    """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
-        ops[0].set_val(ops[0].get_val() + 1)
-
-class Dec(Instruction):
-    """
-        <instr>
-             dec
-        </instr>
-        <syntax>
-            DEC reg
-        </syntax>
-    """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
-        ops[0].set_val(ops[0].get_val() - 1)
-
-class Neg(Instruction):
-    """
-        <instr>
-             neg
-        </instr>
-        <syntax>
-            NEG reg
-        </syntax>
-    """
-    def fhook(self, ops, vm):
-        one_op_arith(ops, vm, self.name, opfunc.neg)
-        return ''
-
 class Div(Instruction):
     """
         <instr>
@@ -284,6 +238,8 @@ class Div(Instruction):
         remainder = ops[0].get_val() % ops[1].get_val()
         vm.registers['LO'] = quotient
         vm.registers['HI'] = remainder
+        vm.changes.add('LO')
+        vm.changes.add('HI')
         return ''
 
 class Mfhi(Instruction):
@@ -304,6 +260,7 @@ class Mfhi(Instruction):
         if not isinstance(ops[0], Register):
             raise InvalidArgument(ops[0].get_nm())
         ops[0].set_val(vm.registers['HI'])
+        vm.changes.add(ops[0].get_nm())
         return ''
 
 class Mflo(Instruction):
@@ -324,5 +281,6 @@ class Mflo(Instruction):
         if not isinstance(ops[0], Register):
             raise InvalidArgument(ops[0].get_nm())
         ops[0].set_val(vm.registers['LO'])
+        vm.changes.add(ops[0].get_nm())
         return ''
         

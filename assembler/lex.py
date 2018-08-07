@@ -21,8 +21,6 @@ label_match = re.compile(LABEL_RE)
 DATA_SECT = ".data"
 TEXT_SECT = ".text"
 
-DONT_INIT = "?"
-
 SEPARATORS = set([',', '(', ')', '[', ']', '+', '-'])
 
 keywords_to_tokens = {
