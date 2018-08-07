@@ -41,6 +41,23 @@ PARAM_VAL = 0
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
+def minus_token(token_line, pos):
+    """
+    Negates the next token if minus token found
+
+    Args:
+        token_line: Line of code
+        pos: Position of minus token
+    """
+    try:
+        if isinstance(token_line[pos + 1], IntegerTok):
+            token_line[pos + 1].negate_val()
+        else:
+            raise InvalidArgument("-")
+    except:
+        raise InvalidArgument("-")
+
+
 def number_token(token_line, pos, flavor, vm):
     """
     If token seen is an integer, determine by flavor whether 
@@ -573,6 +590,26 @@ def get_address_location(token_line, pos, flavor, vm):
         return (Address(hex(disp).split('x')[-1].upper(), vm), 
                 pos)
 
+def check_constant(token_line, pos):
+    """
+    Checks if the following token after constant token is valid
+
+    Args:
+        token_line: Line of code
+        pos: Position of constant token
+
+    Returns:
+        True if valid, False otherwise
+    """
+    try:
+        if (not isinstance(token_line[pos + 1], MinusTok) or
+            not isinstance(token_line[pos + 1], IntegerTok)):
+            return False
+        return True
+    except:
+        raise InvalidArgument("$")
+
+
 def get_op(token_line, pos, flavor, vm):
     """
     Retrieves operand of instruction
@@ -591,28 +628,13 @@ def get_op(token_line, pos, flavor, vm):
     elif isinstance(token_line[pos], Register):
         return (token_line[pos], pos + 1)
     elif isinstance(token_line[pos], ConstantSign):
-        if flavor != "att":
-            raise InvalidArgument("$")
+        if flavor == "att" and check_constant:
+            return get_op(token_line, pos + 1, flavor, vm)
         else:
-            try: 
-                if isinstance(token_line[pos + 1], MinusTok):
-                    token_line[pos + 2].negate_val()
-                    return get_op(token_line, pos + 2, flavor, vm)
-                elif isinstance(token_line[pos + 1], IntegerTok):
-                    return (token_line[pos + 1], pos + 2)
-                else:
-                    raise InvalidArgument("$")
-            except:
-                raise InvalidArgument("$")
+            raise InvalidArgument("$")
     elif isinstance(token_line[pos], MinusTok):
-        try:
-            token_line[pos + 1].negate_val()
-            if flavor == "intel":
-                return (token_line[pos + 1], pos + 2)
-            else:
-                return get_op(token_line, pos + 1, flavor, vm)
-        except:
-            raise InvalidArgument("-")
+        minus_token(token_line, pos)
+        return get_op(token_line, pos + 1, flavor, vm)
     elif isinstance(token_line[pos], IntegerTok):
         return number_token(token_line, pos, flavor, vm)
     elif isinstance(token_line[pos], NewSymbol):
@@ -653,6 +675,10 @@ def parse_exec_unit(token_line, flavor, vm):
         token_line: Tokenized instruction
         flavor: Coding language
         vm: Virtual machine
+
+    Syntax: INS OP, OP 
+            INS OP
+            INS OP, OP, OP
 
     Returns: 
         List of tokens: instruction, operand, operand
