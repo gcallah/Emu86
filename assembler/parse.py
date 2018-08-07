@@ -602,7 +602,7 @@ def check_constant(token_line, pos):
         True if valid, False otherwise
     """
     try:
-        if (not isinstance(token_line[pos + 1], MinusTok) or
+        if (not isinstance(token_line[pos + 1], MinusTok) and
             not isinstance(token_line[pos + 1], IntegerTok)):
             return False
         return True
@@ -628,7 +628,7 @@ def get_op(token_line, pos, flavor, vm):
     elif isinstance(token_line[pos], Register):
         return (token_line[pos], pos + 1)
     elif isinstance(token_line[pos], ConstantSign):
-        if flavor == "att" and check_constant:
+        if flavor == "att" and check_constant(token_line, pos):
             return get_op(token_line, pos + 1, flavor, vm)
         else:
             raise InvalidArgument("$")
