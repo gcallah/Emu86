@@ -62,7 +62,7 @@ help: $(SRCS) samples
 zip: 
 	git archive --format zip --output Haldun.zip master 
 	git add Haldun.zip
-	-git commit -a
+	git commit -m 'Updating zip file'
 	git push origin master
 
 dev: $(SRCS) $(OBJS) 
