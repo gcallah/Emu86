@@ -224,7 +224,10 @@ function Savecode()
     }
 }
 
-function SubmitForm(){
+async function SubmitForm(demo_on = false){
+    if (demo_on){
+        await asyncCall()
+    }
     document.getElementById("codeForm").submit();
     document.getElementById("clear-button").disabled="true";
     document.getElementById("run-button").disabled="true";
@@ -352,4 +355,16 @@ function AddMem()
     document.getElementById("memText").value = "";
     document.getElementById("valueText").value = "";
     document.getElementById("repeatText").value = "1";
+}
+
+function resolveAfter2Seconds() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 1500);
+  });
+}
+
+async function asyncCall() {
+  var result = await resolveAfter2Seconds();
 }
