@@ -226,7 +226,7 @@ function Savecode()
 
 async function SubmitForm(demo_on = false){
     if (demo_on){
-        await asyncCall()
+        await slowCall()
     }
     document.getElementById("codeForm").submit();
     document.getElementById("clear-button").disabled="true";
@@ -357,7 +357,7 @@ function AddMem()
     document.getElementById("repeatText").value = "1";
 }
 
-function resolveAfter2Seconds() {
+function resolveAfter1HalfSeconds() {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('resolved');
@@ -365,6 +365,6 @@ function resolveAfter2Seconds() {
   });
 }
 
-async function asyncCall() {
-  var result = await resolveAfter2Seconds();
+async function slowCall() {
+  var result = await resolveAfter1HalfSeconds();
 }
