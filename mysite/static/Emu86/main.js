@@ -89,76 +89,6 @@ function loadcode()
     if(sessionStorage.loadonce)
     {
         AlertError();
-        var instr = document.getElementsByName("last_instr")[0];
-        var lastInstr = instr.value;
-        if (lastInstr.indexOf(": Exiting program") != -1){
-            lastInstr = lastInstr.substring(0, lastInstr.indexOf(": Exiting program"));
-        }
-        var mips_ip = document.getElementsByName("PC");
-        var intel_ip = document.getElementsByName("EIP");
-        var ip_val = null;
-        var hex_or_dec = null;
-        var radios = document.getElementsByName("base");
-        for (var index = 0; index < radios.length; index++) {
-            if (radios[index].checked) {
-                hex_or_dec = radios[index].value;
-                break;
-            }
-        }
-        if (mips_ip.length != 0){
-            if (hex_or_dec == "hex") {
-                ip_val = parseInt(mips_ip[0].value, 16)/4;
-            }
-            else {
-                ip_val = parseInt(mips_ip[0].value)/4;
-            }
-        }
-        else if (intel_ip.length != 0) {
-            if (hex_or_dec == "hex") {
-                ip_val = parseInt(intel_ip[0].value, 16);
-            }
-            else {
-                ip_val = parseInt(intel_ip[0].value);
-            }
-        }
-        if (instr && ip_val) {
-            var input = document.getElementById("id_code");
-            var countCode = 0;
-            var countRepeats = 0;
-            var codeArray = input.value.split("\n");
-            var textArea = true; 
-            if (instr.value != "") {
-                for (var index = 0; index < codeArray.length; index++) {
-                    var string = codeArray[index].trim();
-                    if (countCode == ip_val){
-                        break;
-                    }
-                    if (string == ".data"){
-                        textArea = false;
-                        continue;
-                    }
-                    else if (string == ".text"){
-                        textArea = true;
-                        continue;
-                    }
-                    if (!(string === "") && textArea && string[0] != ";"){
-                        countCode++; 
-                    }
-                    if (string == lastInstr){
-                        countRepeats++;
-                    }
-                }
-                input.focus();
-                var startIndex = 0;
-                for (var time = 0; time < countRepeats; time++) {
-                    startIndex = input.value.indexOf(lastInstr, startIndex) 
-                                 + lastInstr.length;
-                }
-                startIndex -= lastInstr.length;
-                input.setSelectionRange(startIndex, 
-                       startIndex + lastInstr.length);
-            }
-        }
         return;
     }
     else
@@ -167,6 +97,79 @@ function loadcode()
         code = localStorage.Code;
         if(code!=undefined || code!=null) {
             document.getElementById("id_code").value = code;
+        }
+    }
+}
+
+function highlightCode(){
+    var instr = document.getElementsByName("last_instr")[0];
+    var lastInstr = instr.value;
+    if (lastInstr.indexOf(": Exiting program") != -1){
+        lastInstr = lastInstr.substring(0, lastInstr.indexOf(": Exiting program"));
+    }
+    var mips_ip = document.getElementsByName("PC");
+    var intel_ip = document.getElementsByName("EIP");
+    var ip_val = null;
+    var hex_or_dec = null;
+    var radios = document.getElementsByName("base");
+    for (var index = 0; index < radios.length; index++) {
+        if (radios[index].checked) {
+            hex_or_dec = radios[index].value;
+            break;
+        }
+    }
+    if (mips_ip.length != 0){
+        if (hex_or_dec == "hex") {
+            ip_val = parseInt(mips_ip[0].value, 16)/4;
+        }
+        else {
+            ip_val = parseInt(mips_ip[0].value)/4;
+        }
+    }
+    else if (intel_ip.length != 0) {
+        if (hex_or_dec == "hex") {
+            ip_val = parseInt(intel_ip[0].value, 16);
+        }
+        else {
+            ip_val = parseInt(intel_ip[0].value);
+        }
+    }
+    if (instr && ip_val) {
+        var input = document.getElementById("id_code");
+        var countCode = 0;
+        var countRepeats = 0;
+        var codeArray = input.value.split("\n");
+        var textArea = true; 
+        if (instr.value != "") {
+            for (var index = 0; index < codeArray.length; index++) {
+                var string = codeArray[index].trim();
+                if (countCode == ip_val){
+                    break;
+                }
+                if (string == ".data"){
+                    textArea = false;
+                    continue;
+                }
+                else if (string == ".text"){
+                    textArea = true;
+                    continue;
+                }
+                if (!(string === "") && textArea && string[0] != ";"){
+                    countCode++; 
+                }
+                if (string == lastInstr){
+                    countRepeats++;
+                }
+            }
+            input.focus();
+            var startIndex = 0;
+            for (var time = 0; time < countRepeats; time++) {
+                startIndex = input.value.indexOf(lastInstr, startIndex) 
+                             + lastInstr.length;
+            }
+            startIndex -= lastInstr.length;
+            input.setSelectionRange(startIndex, 
+                   startIndex + lastInstr.length);
         }
     }
 }
@@ -227,6 +230,7 @@ function SubmitForm(){
     document.getElementById("run-button").disabled="true";
     document.getElementById("save-button").disabled="true";
     document.getElementById("step-button").disabled="true";
+    document.getElementById("demo-button").disabled="true";
 }
 
 function clearButton(){
@@ -251,6 +255,15 @@ function stepButton(){
     if (document.readyState == "complete") {
         if (document.getElementById("step-button").hasAttribute("disabled") == false){
             document.getElementsByName("button_type")[0].value = "step";
+            SubmitForm();
+        }
+    }
+}
+
+function demoButton(){
+    if (document.readyState == "complete") {
+        if (document.getElementById("demo-button").hasAttribute("disabled") == false){
+            document.getElementsByName("button_type")[0].value = "demo";
             SubmitForm();
         }
     }

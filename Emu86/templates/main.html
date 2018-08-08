@@ -143,22 +143,42 @@
                                 value="Reinitialize"
                                 title="Clear the contents of memory and the stack."
                                 id="clear-button"
-                                onclick="clearButton()">
+                                onclick="clearButton()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
                             <input type="button" name="run"
                                 value="Run Code"
                                 title="Execute all lines of code"
                                 id="run-button"
-                                onclick="runButton()">
+                                onclick="runButton()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
                             <input type="button" name="step"
                                 value="Step Code"
                                 title="Execute one instruction at a time."
                                 id="step-button"
-                                onclick="stepButton()">
+                                onclick="stepButton()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
+                            <input type="button" name="demo"
+                                value="Demo Code"
+                                title="Demo code line by line."
+                                id="demo-button"
+                                onclick="demoButton()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
                             <input type="button" name="save"
                                 value="Save Code"
                                 id="save-button"
                                 title="Saves the code "
-                                onclick="Savecode()">
+                                onclick="Savecode()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
                             <br>
                     </td>
                     <td id="registers-cell">
@@ -289,6 +309,9 @@
             <input type="text" name="error" max_length="64"
                 size="64" readonly="readonly" value="{{ error }}"
                 id="error">
+            <script>
+                highlightCode();
+            </script>
             <br>
             <br>
             <table>
@@ -377,5 +400,11 @@
             {{ debug }}
         </textarea>
     </div>
+
+    <script>
+        if (document.getElementsByName("button_type")[0].value == "demo"){
+            SubmitForm();
+        }
+    </script>
 
 {% endblock content %}

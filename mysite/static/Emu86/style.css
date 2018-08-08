@@ -786,8 +786,15 @@ a.deletelink:focus, a.deletelink:hover {
     border: 1px solid #003366;
 }
 
+#demo-button {
+    margin: 10px 5px 20px 5px;
+    font-size: 13px;
+    background: #6A5ACD;
+    border-radius: 10px;
+    border: 1px solid #003366;
+}
+
 #save-button {
-    
     font-size: 13px;
     margin: 10px 1px 20px 2px;
     color:#ffcc33;

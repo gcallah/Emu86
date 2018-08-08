@@ -15,6 +15,7 @@ from assembler.assemble import assemble, add_debug
 CODE = 'code'
 NXT_KEY = 'nxt_key'
 STEP = 'step'
+DEMO = 'demo'
 CLEAR = 'clear'
 HEADER = 'header'
 INTEL = 'intel'
@@ -51,6 +52,7 @@ def main_page(request):
     base = ""
     sample = ""
     bit_code = ""
+    button = ""
 
     site_hdr = get_hdr()
     if request.method == 'GET':
@@ -145,7 +147,7 @@ def main_page(request):
         else:
             intel_machine.changes_init()
             mips_machine.changes_init()
-            step = (button == STEP)
+            step = (button == STEP) or (button == DEMO)
             intel_machine.nxt_key = 0
             mips_machine.nxt_key = 0
             if step:
@@ -184,7 +186,14 @@ def main_page(request):
             else:
                 (last_instr, error, bit_code) = assemble(request.POST[CODE], MIPS, 
                                                mips_machine, step)
-
+    if button == DEMO:
+        if (last_instr == "Reached end of executable code." or 
+            last_instr.find("Exiting program") != -1):
+            button = ""
+        elif error != "":
+            button = ""
+    else:
+        button = ""
     if mips_machine.flavor == MIPS:
         mips_machine.order_mem()
         site_hdr += ": MIPS"
@@ -210,7 +219,7 @@ def main_page(request):
                      'sample': sample,
                      'start_ip': mips_machine.start_ip,
                      'bit_code': bit_code,
-                     'button_type': "",
+                     'button_type': button,
                      'changes': mips_machine.changes
                     })
         
@@ -241,7 +250,7 @@ def main_page(request):
                    'sample': sample,
                    'start_ip': intel_machine.start_ip,
                    'bit_code': bit_code,
-                   'button_type': "",
+                   'button_type': button,
                    'changes': intel_machine.changes
                   })
 
