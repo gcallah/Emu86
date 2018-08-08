@@ -59,6 +59,9 @@ help: $(SRCS) samples
 	$(UDIR)/django2ptml.awk <$(ODIR)/help.html title="Language Description" >$(PTML_DIR)/help.ptml
 	-git commit $(ODIR)/help.html
 
+zip: 
+	git archive --format zip --output Haldun.zip master 
+
 dev: $(SRCS) $(OBJS) 
 	./all_tests.sh
 	-git commit -a
