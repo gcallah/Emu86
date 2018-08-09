@@ -95,7 +95,7 @@ function arithShift(flavor) {
 		code_string += 'mov [4], 1\nmov eax, 4\nmov ebx, 2\nmov ecx, 8\nmov edx, 16\nadd ebx, ecx\nsub edx, ecx\nimul eax, [4]\nshl [4], 2\n';
 	}
 	else if (flavor == 'att'){
-		code_string += 'mov $1, (4)\nmov $4, %eax\nmov $2, %ebx\nmov $8, %ecx\nmov $16, %edx\nadd %ecx, %ebx\nsub %ecx, %edx\nimul (4), %eax\nshl $2, (4)\n';
+		code_string += 'movb $1, (4)\nmov $4, %eax\nmov $2, %ebx\nmov $8, %ecx\nmov $16, %edx\nadd %ecx, %ebx\nsub %ecx, %edx\nimul (4), %eax\nshl $2, (4)\n';
 	}
 	else{
 		code_string += '400000 ADDI R8, R0, 4\n400004 ADDI R9, R0, 1\n400008 SW R9, 0(R8)\n40000C ADD R10, R0, R8\n400010 ADDI R11, R0, 2\n400014 ADDI R12, R0, 8\n400018 ADDI R13, R0, 10\n40001C ADD R11, R11, R12\n400020 SUB R13, R13, R12\n400024 MULT R10, R9\n400028 MFLO R10 \n40002C SLL R9, R9, 2\n400030 SW R9, 0(R8)';
