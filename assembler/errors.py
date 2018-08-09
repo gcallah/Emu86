@@ -12,6 +12,7 @@ INVALID_REG = "Invalid register: "
 INVALID_VAR_DECL = "Invalid variable declaration: "
 INVALID_DATA_TYPE = "Invalid data type: "
 INVALID_DATA_VAL = "Invalid data value: "
+INVALID_CONSTANT_VAL = "Invalid constant value: "
 INVALID_SECTION = "Invalid section: "
 INVALID_TOKEN = "Invalid argument: "
 INVALID_PC = "Invalid PC: "
@@ -65,6 +66,10 @@ class InvalidDataType(Error):
 class InvalidDataVal(Error):
     def __init__(self, offender):
         self.msg = INVALID_DATA_VAL + offender
+
+class InvalidConVal(Error):
+    def __init__(self, offender):
+        self.msg = INVALID_CONSTANT_VAL + offender
 
 class InvalidInstruction(Error):
     def __init__(self, offender):

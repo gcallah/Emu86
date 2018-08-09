@@ -194,7 +194,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                 try:
                     analysis.append(IntegerTok(int(word, 16)))
                 except:
-                    raise InvalidArgument(word)
+                    raise InvalidConVal(word)
             # dec number:
             else:
                 try:
