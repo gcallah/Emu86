@@ -3,6 +3,7 @@ from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
+from .data_mov_att import Movb, Movw, Movl
 from .interrupts import Interrupt
 from assembler.tokens import DataType, ConstantSign, DupTok
 
@@ -60,6 +61,11 @@ intel_key_words = {
 }
 
 att_key_words = {
+        # other mov instructions
+        'MOVB': Mov('MOVB'),
+        'MOVW': Mov('MOVW'),
+        'MOVL': Mov('MOVL'),
+
         #data-types
         '.BYTE': DataType('DB'),
         '.SHORT': DataType('DW'),

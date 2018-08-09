@@ -1,4 +1,4 @@
-mov $1, (4)
+movb $1, (4)
 mov $4, %eax
 mov $2, %ebx
 mov $8, %ecx
