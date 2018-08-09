@@ -67,6 +67,9 @@ function selectSample()
         else if (selected == "array") {
             array(flav.value);
         }
+        else if (selected == "dataAccess") {
+            dataAccess(flav.value);
+        }
     }
 }
 
