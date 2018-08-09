@@ -62,9 +62,9 @@ intel_key_words = {
 
 att_key_words = {
         # other mov instructions
-        'MOVB': Mov('MOVB'),
-        'MOVW': Mov('MOVW'),
-        'MOVL': Mov('MOVL'),
+        'MOVB': Movb('MOVB'),
+        'MOVW': Movw('MOVW'),
+        'MOVL': Movl('MOVL'),
 
         #data-types
         '.BYTE': DataType('DB'),

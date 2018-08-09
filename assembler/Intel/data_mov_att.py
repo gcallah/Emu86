@@ -2,23 +2,23 @@
 data_mov_att.py: other data movement instructions for AT&T
 """
 
-from assembler.errors import check_num_args
+from assembler.errors import check_num_args, InvalidConVal, InvalidArgument
 from assembler.tokens import Instruction, RegAddress, Address, IntegerTok
 
-def check_constant_val(instr, ops, type):
+def check_constant_val(instr, ops, data_type):
     if isinstance(ops[0], RegAddress) or isinstance(ops[0], Address):
         if not isinstance(ops[1], IntegerTok):
-            raise InvalidArgument(ops[1].get_nm())
+            raise InvalidConVal(ops[1].get_nm())
         else:
-            if type == "b":
+            if data_type == "b":
                 if ops[1].get_val() >= 2 ** 8:
-                    raise InvalidArgument(ops[1].get_val())
-            elif type == "w":
+                    raise InvalidConVal(str(ops[1].get_val()))
+            elif data_type == "w":
                 if ops[1].get_val() >= 2 ** 16:
-                    raise InvalidArgument(ops[1].get_val())
+                    raise InvalidConVal(str(ops[1].get_val()))
             else:
                 if ops[1].get_val() >= 2 ** 32:
-                    raise InvalidArgument(ops[1].get_val())
+                    raise InvalidConVal(str(ops[1].get_val()))
     else:
         raise InvalidArgument(ops[0].get_nm())
 
@@ -28,7 +28,7 @@ class Movb(Instruction):
              movb
         </instr>
         <syntax>
-            MOVB con, reg
+            MOVB con, mem
         </syntax>
         <descr>
             Copies the value of op1 to the location mentioned in op2. 
@@ -38,7 +38,6 @@ class Movb(Instruction):
         check_num_args(self.get_nm(), ops, 2)
         check_constant_val(self.get_nm(), ops, 'b')
         ops[0].set_val(ops[1].get_val())
-        vm.changes.add(ops[0].get_nm())
 
 class Movw(Instruction):
     """
@@ -46,7 +45,7 @@ class Movw(Instruction):
              movw
         </instr>
         <syntax>
-            MOVW con, reg
+            MOVW con, mem
         </syntax>
         <descr>
             Copies the value of op1 to the location mentioned in op2. 
@@ -56,7 +55,6 @@ class Movw(Instruction):
         check_num_args(self.get_nm(), ops, 2)
         check_constant_val(self.get_nm(), ops, 'w')
         ops[0].set_val(ops[1].get_val())
-        vm.changes.add(ops[0].get_nm())
 
 class Movl(Instruction):
     """
@@ -64,7 +62,7 @@ class Movl(Instruction):
              movl
         </instr>
         <syntax>
-            MOVL con, reg
+            MOVL con, mem
         </syntax>
         <descr>
             Copies the value of op1 to the location mentioned in op2. 
@@ -74,4 +72,3 @@ class Movl(Instruction):
         check_num_args(self.get_nm(), ops, 2)
         check_constant_val(self.get_nm(), ops, 'l')
         ops[0].set_val(ops[1].get_val())
-        vm.changes.add(ops[0].get_nm())

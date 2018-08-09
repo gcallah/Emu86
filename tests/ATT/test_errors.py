@@ -17,7 +17,7 @@ from assembler.errors import UNKNOWN_ERR, INVALID_INSTR, INVALID_OPRND
 from assembler.errors import INVALID_NUM_ARGS, INVALID_MEM_LOC, INVALID_REG
 from assembler.errors import MISSING_COMMA, MISSING_DATA, INVALID_TOKEN
 from assembler.errors import REG_UNWRITABLE, STACK_OVERFLOW, STACK_UNDERFLOW
-from assembler.errors import UNKNOWN_NM
+from assembler.errors import UNKNOWN_NM, INVALID_CONSTANT_VAL
 
 
 class ErrorTestCase(TestCase):
@@ -69,6 +69,17 @@ class ErrorTestCase(TestCase):
         (output, error, bit_code) = assemble("mov $0, (-30)", 'att', intel_machine)
         self.assertTrue(error.startswith(INVALID_MEM_LOC))
 
+    def test_incorrect_con_b(self):
+        (output, error, bit_code) = assemble("movb $10000, (30)", 'att', intel_machine)
+        self.assertTrue(error.startswith(INVALID_CONSTANT_VAL))
+
+    def test_incorrect_con_w(self):
+        (output, error, bit_code) = assemble("movw $70000, (30)", 'att', intel_machine)
+        self.assertTrue(error.startswith(INVALID_CONSTANT_VAL))
+
+    def test_incorrect_con_l(self):
+        (output, error, bit_code) = assemble("movl $4294967296, (30)", 'att', intel_machine)
+        self.assertTrue(error.startswith(INVALID_CONSTANT_VAL))
 
 if __name__ == '__main__':
     main()

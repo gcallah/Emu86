@@ -6,7 +6,7 @@ import re
 import pdb
 from random import randrange
 from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
-from .errors import UnknownName, InvalidDataType, InvalidArgument
+from .errors import UnknownName, InvalidDataType, InvalidArgument, InvalidConVal
 from .tokens import Location, Address, Register, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
 from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
@@ -200,7 +200,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                 try:
                     analysis.append(IntegerTok(int(word)))
                 except:
-                    raise InvalidArgument(word)
+                    raise InvalidConVal(word)
     return (analysis, code)
 
 def lex(code, flavor, vm):

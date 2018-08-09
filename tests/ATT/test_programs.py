@@ -162,6 +162,12 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.memory["1B"], 5)
         self.assertEqual(intel_machine.memory["24"], 5)
 
+    def test_mov_extra_att(self):
+        self.run_att_test_code("tests/ATT/mov_extra_test.asm")
+        self.assertEqual(intel_machine.memory["0"], 104)
+        self.assertEqual(intel_machine.memory["2"], 24931098)
+        self.assertEqual(intel_machine.memory["3"], 10000)
+
 
 if __name__ == '__main__':
     main()
