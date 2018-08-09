@@ -130,6 +130,11 @@
                     {% else %}
                         <option value="keyInterrupt">Keyboard interrupt</option>
                     {% endif %}
+                    {% if sample == "dataAccess" %}
+                        <option value="dataAccess" selected>Accessing data in memory</option>
+                    {% else %}
+                        <option value="dataAccess">Accessing data in memory</option>
+                    {% endif %}
                 {% endif %}
                 </select>
                 <br>

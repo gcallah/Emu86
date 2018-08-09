@@ -126,10 +126,15 @@ class TestPrograms(TestCase):
     def test_mem_register_att(self):
         self.run_att_test_code("tests/ATT/mem_register_test.asm")
         self.assertEqual(intel_machine.registers["EAX"], 6)
+        self.assertEqual(intel_machine.registers["EBX"], 0)
+        self.assertEqual(intel_machine.registers["ECX"], 3)
         self.assertEqual(intel_machine.memory["6"], 3)
         self.assertEqual(intel_machine.memory["8"], 8)
         self.assertEqual(intel_machine.memory["0"], 50)
-        self.assertEqual(intel_machine.memory["1"], 32)
+        self.assertEqual(intel_machine.memory["D"], 32)
+        self.assertEqual(intel_machine.memory["F"], 5)
+        self.assertEqual(intel_machine.memory["1B"], 5)
+        self.assertEqual(intel_machine.memory["24"], 5)
 
     def test_array_avg_att(self):
         self.run_att_test_code("tests/ATT/array_average_test.asm")
@@ -148,19 +153,6 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.registers["EDX"], 3331)
         self.assertEqual(intel_machine.registers["ECX"], 100)
         self.assertEqual(intel_machine.registers["EBX"], 100)
-
-    def test_reg_mem_addition_att(self):
-        self.run_att_test_code("tests/ATT/reg_mem_addition_test.asm")
-        self.assertEqual(intel_machine.registers["EAX"], 6)
-        self.assertEqual(intel_machine.registers["EBX"], 0)
-        self.assertEqual(intel_machine.registers["ECX"], 3)
-        self.assertEqual(intel_machine.memory["6"], 3)
-        self.assertEqual(intel_machine.memory["8"], 8)
-        self.assertEqual(intel_machine.memory["0"], 50)
-        self.assertEqual(intel_machine.memory["D"], 32)
-        self.assertEqual(intel_machine.memory["F"], 5)
-        self.assertEqual(intel_machine.memory["1B"], 5)
-        self.assertEqual(intel_machine.memory["24"], 5)
 
     def test_mov_extra_att(self):
         self.run_att_test_code("tests/ATT/mov_extra_test.asm")

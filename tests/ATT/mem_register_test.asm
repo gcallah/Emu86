@@ -10,4 +10,8 @@
 	mov 2(x), (%eax)
 	mov 3(y), 2(%eax)
 	mov (z), (%ebx)
-	mov 2(y), -5(%eax)
+	mov 3, %ecx
+	mov 2(y), -5(%eax, 3)
+	mov 4(x), (%eax, 2, %ecx)
+	mov 4(x), 12(%eax, 2, %ecx)
+	mov 4(x), 12(%eax, 2, %ecx, 4)
