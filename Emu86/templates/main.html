@@ -391,14 +391,17 @@
             </table>
         </form>
         <br>
-        <br>
-        Debug Information:
-        <br>
+
+        {% if "development" in header %}
+            <br>
+            Debug Information:
+            <br>
 
 
-        <textarea rows="12" cols="60" readonly="readonly">
-            {{ debug }}
-        </textarea>
+            <textarea rows="12" cols="60" readonly="readonly">
+                {{ debug }}
+            </textarea>
+        {% endif %}
     </div>
 
     <script>
