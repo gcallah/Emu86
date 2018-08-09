@@ -14,11 +14,11 @@ function_names = {
 	"int_square_root.asm": "sqrt",
 	"arithmetic_shift.asm": "arithShift",
 	"array.asm": "array",
-	"mem_register_test.asm": "dataAccess"
 }
 
 intel_function_names = {
 	"key_test.asm": "keyInterrupt",
+	"mem_register_test.asm": "dataAccess"
 }
 
 INTEL = 0
@@ -58,7 +58,6 @@ def create_js_file():
 	file_code += function_directory(intel_function_names, intel_directory)
 	js_file.write(file_code)
 	js_file.close()
-
 
 
 def main():
