@@ -59,8 +59,9 @@ help: $(SRCS) samples
 	$(UDIR)/django2ptml.awk <$(ODIR)/help.html title="Language Description" >$(PTML_DIR)/help.ptml
 	-git commit $(ODIR)/help.html
 
-javafile:
+jsfile:
 	python3 function_create_js.py
+	git add function_create_js.py
 	git add mysite/static/Emu86/helper_functions.js
 	git commit -m "Updating js helper file"
 	git push origin master
