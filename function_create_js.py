@@ -13,7 +13,8 @@ function_names = {
 	"change_array_elem_test.asm": "modify",
 	"int_square_root.asm": "sqrt",
 	"arithmetic_shift.asm": "arithShift",
-	"array.asm": "array"
+	"array.asm": "array",
+	"mem_register_test.asm": "dataAccess"
 }
 
 intel_function_names = {

@@ -59,6 +59,12 @@ help: $(SRCS) samples
 	$(UDIR)/django2ptml.awk <$(ODIR)/help.html title="Language Description" >$(PTML_DIR)/help.ptml
 	-git commit $(ODIR)/help.html
 
+javafile:
+	python3 function_create_js.py
+	git add mysite/static/Emu86/helper_functions.js
+	git commit -m "Updating js helper file"
+	git push origin master
+
 zip: 
 	git archive --format zip --output Haldun.zip master 
 	git add Haldun.zip
