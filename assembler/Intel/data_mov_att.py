@@ -6,21 +6,31 @@ from assembler.errors import check_num_args, InvalidConVal, InvalidArgument
 from assembler.tokens import Instruction, RegAddress, Address, IntegerTok
 
 def check_constant_val(instr, ops, data_type):
-    if isinstance(ops[0], RegAddress) or isinstance(ops[0], Address):
-        if not isinstance(ops[1], IntegerTok):
-            raise InvalidConVal(ops[1].get_nm())
-        else:
-            if data_type == "b":
-                if ops[1].get_val() >= 2 ** 8:
-                    raise InvalidConVal(str(ops[1].get_val()))
-            elif data_type == "w":
-                if ops[1].get_val() >= 2 ** 16:
-                    raise InvalidConVal(str(ops[1].get_val()))
-            else:
-                if ops[1].get_val() >= 2 ** 32:
-                    raise InvalidConVal(str(ops[1].get_val()))
+    """
+    Checks if the constant value matches the transfer size
+
+    Args: 
+        instr: Instruction name
+        ops: Operand list
+        data_type: Transfer size
+                   'b': byte
+                   'w': word
+                   'l': long
+
+    Raises an Invalid Constant Value error if mismatch found
+    """
+    if not isinstance(ops[1], IntegerTok):
+        raise InvalidConVal(ops[1].get_nm())
     else:
-        raise InvalidArgument(ops[0].get_nm())
+        if data_type == "b":
+            if ops[1].get_val() >= 2 ** 8 or ops[1].get_val() <= -(2 ** 8):
+                raise InvalidConVal(str(ops[1].get_val()))
+        elif data_type == "w":
+            if ops[1].get_val() >= 2 ** 16 or ops[1].get_val() <= -(2 ** 16):
+                raise InvalidConVal(str(ops[1].get_val()))
+        else:
+            if ops[1].get_val() >= 2 ** 32 or ops[1].get_val() <= -(2 ** 32):
+                raise InvalidConVal(str(ops[1].get_val()))
 
 class Movb(Instruction):
     """
