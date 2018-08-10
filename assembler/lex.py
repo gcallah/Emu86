@@ -5,7 +5,7 @@ lex.py: performs lexical analysis
 import re
 import pdb
 from random import randrange
-from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
+from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction, IntOutOfRng
 from .errors import UnknownName, InvalidDataType, InvalidArgument, InvalidConVal
 from .tokens import Location, Address, Register, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
@@ -193,14 +193,23 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
             if flavor == "mips":
                 try:
                     analysis.append(IntegerTok(int(word, 16)))
+                except IntOutOfRng as err: 
+                    raise IntOutOfRng(word)
                 except:
-                    raise InvalidConVal(word)
+                    raise InvalidArgument(word)
             # dec number:
             else:
                 try:
                     analysis.append(IntegerTok(int(word)))
+                except IntOutOfRng as err: 
+                    raise IntOutOfRng(word)
                 except:
-                    raise InvalidConVal(word)
+                    try:
+                        analysis.append(IntegerTok(int(word, 16)))
+                    except IntOutOfRng as err: 
+                        raise IntOutOfRng(word)
+                    except:
+                        raise InvalidArgument(word)
     return (analysis, code)
 
 def lex(code, flavor, vm):

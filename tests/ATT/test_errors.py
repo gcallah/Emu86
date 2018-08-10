@@ -17,7 +17,7 @@ from assembler.errors import UNKNOWN_ERR, INVALID_INSTR, INVALID_OPRND
 from assembler.errors import INVALID_NUM_ARGS, INVALID_MEM_LOC, INVALID_REG
 from assembler.errors import MISSING_COMMA, MISSING_DATA, INVALID_TOKEN
 from assembler.errors import REG_UNWRITABLE, STACK_OVERFLOW, STACK_UNDERFLOW
-from assembler.errors import UNKNOWN_NM, INVALID_CONSTANT_VAL
+from assembler.errors import UNKNOWN_NM, INVALID_CONSTANT_VAL, INT_OUT_OF_RNG
 
 
 class ErrorTestCase(TestCase):
@@ -79,7 +79,7 @@ class ErrorTestCase(TestCase):
 
     def test_incorrect_con_l(self):
         (output, error, bit_code) = assemble("movl $4294967296, (30)", 'att', intel_machine)
-        self.assertTrue(error.startswith(INVALID_CONSTANT_VAL))
+        self.assertTrue(error.startswith(INT_OUT_OF_RNG))
 
 if __name__ == '__main__':
     main()

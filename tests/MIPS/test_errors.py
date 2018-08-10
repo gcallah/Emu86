@@ -17,7 +17,7 @@ from assembler.errors import UNKNOWN_ERR, INVALID_INSTR, INVALID_OPRND
 from assembler.errors import INVALID_NUM_ARGS, INVALID_MEM_LOC, INVALID_REG
 from assembler.errors import MISSING_COMMA, MISSING_DATA, INVALID_TOKEN
 from assembler.errors import REG_UNWRITABLE, STACK_OVERFLOW, STACK_UNDERFLOW
-from assembler.errors import UNKNOWN_NM, MISSING_PC
+from assembler.errors import UNKNOWN_NM, MISSING_PC, INT_OUT_OF_RNG
 
 
 class ErrorTestCase(TestCase):
@@ -62,6 +62,10 @@ class ErrorTestCase(TestCase):
     def test_mem_error_less(self):
         (output, error, bit_code) = assemble("40000 SW R10, -3(R28)", 'mips', mips_machine)
         self.assertTrue(error.startswith(INVALID_MEM_LOC))
+
+    def test_out_of_range(self):
+        (output, error, bit_code) = assemble("40000 ADDI R8, R8, 100000000", 'mips', mips_machine)
+        self.assertTrue(error.startswith(INT_OUT_OF_RNG))
 
 
 if __name__ == '__main__':
