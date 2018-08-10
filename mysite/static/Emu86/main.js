@@ -1,5 +1,6 @@
 /**
  * Created by Varun on 19/06/17.
+ * Edited by Cindy
  */
 
 function AlertError()
@@ -370,4 +371,31 @@ function resolveAfter1HalfSeconds() {
 
 async function slowCall() {
   var result = await resolveAfter1HalfSeconds();
+}
+
+function displayHelp(button_type){
+    var string = "";
+    if (button_type == "clear"){
+        string = "Reset register and memory values.";
+    }
+    else if (button_type == "step"){
+        string = "Execute one instruction at a time.";
+    }
+    else if (button_type == "run"){
+        string = "Execute all lines of code.";
+    }
+    else if (button_type == "demo"){
+        string = "Demo code line by line.";
+    }
+    else if (button_type == "save"){
+        string = "Save code as a file.";
+    }
+
+    var spanNode = document.getElementById("help-desc");
+    spanNode.classList.toggle("show");
+    spanNode.textContent = string;
+}
+
+function hideHelp(){
+    document.getElementById("help-desc").classList.toggle("show");
 }

@@ -714,6 +714,29 @@ a.deletelink:focus, a.deletelink:hover {
     width: auto;
 }
 
+.help-pop{
+    visibility: hidden;
+    position: relative;
+    display: inline-block;
+}
+
+.help-pop .show {
+    visibility: visible;
+}
+
+.help-pop .help-text{
+    width: 540px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    float: left;
+    font-size: 13px;
+    margin: 10px 10px 20px 15px;
+    position:relative;
+}
+
 /* HEADER */
 
 #header {
@@ -766,8 +789,6 @@ a.deletelink:focus, a.deletelink:hover {
     text-align: center;
 }
 
-
-
 #run-button {
     text-align: center;
     font-size: 13px;
@@ -803,7 +824,7 @@ a.deletelink:focus, a.deletelink:hover {
     border: 1px solid #003366;
 }
 
-#clear-button {
+#clear-button{
     float: left;
     font-size: 13px;
     margin: 10px 10px 20px 15px;

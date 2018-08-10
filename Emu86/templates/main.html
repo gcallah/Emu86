@@ -149,6 +149,8 @@
                                 title="Clear the contents of memory and the stack."
                                 id="clear-button"
                                 onclick="clearButton()"
+                                onmouseover="displayHelp(this.name)" 
+                                onmouseleave="hideHelp()" 
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
@@ -157,6 +159,8 @@
                                 title="Execute all lines of code"
                                 id="run-button"
                                 onclick="runButton()"
+                                onmouseover="displayHelp(this.name)" 
+                                onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
@@ -165,6 +169,8 @@
                                 title="Execute one instruction at a time."
                                 id="step-button"
                                 onclick="stepButton()"
+                                onmouseover="displayHelp(this.name)" 
+                                onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
@@ -173,6 +179,8 @@
                                 title="Demo code line by line."
                                 id="demo-button"
                                 onclick="demoButton()"
+                                onmouseover="displayHelp(this.name)" 
+                                onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
@@ -181,9 +189,16 @@
                                 id="save-button"
                                 title="Saves the code "
                                 onclick="Savecode()"
+                                onmouseover="displayHelp(this.name)" 
+                                onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
+                            <br>
+                            <div class="help-pop">
+                                <span class="help-text" id="help-desc">
+                                </span>
+                            </div>
                             <br>
                     </td>
                     <td id="registers-cell">
