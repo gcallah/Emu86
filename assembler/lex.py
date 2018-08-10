@@ -188,21 +188,23 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         elif re.match(sym_match, word) is not None:
 
             analysis.append(NewSymbol(word, vm))
-        # hex number:
+# Integers
         else:
             if flavor == "mips":
+                 # hex number:
                 try:
                     analysis.append(IntegerTok(int(word, 16)))
                 except IntOutOfRng as err: 
                     raise IntOutOfRng(word)
                 except:
                     raise InvalidArgument(word)
-            # dec number:
             else:
+                # dec number:
                 try:
                     analysis.append(IntegerTok(int(word)))
                 except IntOutOfRng as err: 
                     raise IntOutOfRng(word)
+                # hex number:
                 except:
                     try:
                         analysis.append(IntegerTok(int(word, 16)))
