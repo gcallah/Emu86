@@ -228,8 +228,20 @@
                             <tr>
                             {% for reg, cont in registers.items %} 
                                 {% if registers|length > 10 %}
-                                    {% if forloop.counter0|divisibleby:3 %}
+                                    {% if reg == "R9" %}
+                                        <td id="register"></td><td id="contents"></td></tr><tr>
+                                    {% elif reg == "R10" or reg == "R11" %}
                                         </tr> <tr>
+                                    {% elif reg == "PC" %}
+                                        <td id="register"></td><td id="contents"></td></tr><tr>
+                                        <td id="register" style="visibility: hidden;"></td><td id="contents" style="visibility: hidden;">
+                                        <td id="register" style="visibility: hidden;"></td><td id="contents" style="visibility: hidden;">
+                                    {% else %}
+                                        {% if forloop.counter0|divisibleby:3 %}
+                                            {% if reg != "R21" and reg != "R22" and reg != "R23" %}
+                                                </tr> <tr>
+                                            {% endif %}
+                                        {% endif %}
                                     {% endif %}
                                 {% else %}
                                     </tr> <tr>

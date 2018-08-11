@@ -183,7 +183,7 @@ class MIPSMachine(VirtualMachine):
                         ('R28', 0),
                         ('R5', 0),
                         ('R17', 0),
-                        ('R29', STACK_TOP),
+                        ('R29', 0),
                         ('R6', 0),
                         ('R18', 0),
                         ('R30', 0),
@@ -192,16 +192,15 @@ class MIPSMachine(VirtualMachine):
                         ('R31', 0),
                         ('R8', 0),
                         ('R20', 0),
-                        ('HI', 0),
-                        ('R20', 0),
                         ('R9', 0),
                         ('R21', 0),
-                        ('LO', 0),
+                        ('HI', 0),
                         ('R10', 0),
                         ('R22', 0),
-                        (INSTR_PTR_MIPS, 0),
+                        ('LO', 0),
                         ('R11', 0),
                         ('R23', 0),
+                        (INSTR_PTR_MIPS, 0),
                     ])
 
         self.flags = OrderedDict(
