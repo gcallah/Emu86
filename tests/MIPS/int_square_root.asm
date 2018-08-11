@@ -4,7 +4,7 @@
 
 ; Calculate square root of the number
 .text
-    40000 LW R8, number(R28)
+    40000 LW R8, 0(R28)
 
 WHILELE: 40004 ADD R10, R0, R9
          40008 MULT R10, R9

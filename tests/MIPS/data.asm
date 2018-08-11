@@ -6,6 +6,6 @@
 
 ; Next is the .text section, where we use them:
 .text
-    400000 LW R8, x(R28)
-    400004 LW R9, y(R28)
-    400008 LW R10, z(R28)
+    400000 LW R8, 0(R28)
+    400004 LW R9, 4(R28)
+    400008 LW R10, 8(R28)

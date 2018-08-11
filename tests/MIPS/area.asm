@@ -5,7 +5,7 @@
 
 ; Calculate area of rectangle
 .text
-    40000 LW R8, long(R28)
-    40004 LW R9, wide(R28)
+    40000 LW R8, 0(R28)
+    40004 LW R9, 4(R28)
     40008 MULT R8, R9
     4000C MFLO R10

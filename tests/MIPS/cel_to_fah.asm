@@ -7,7 +7,7 @@
 ; Convert from Celsius to Fahrenheit
 ; Store result in fTemp
 .text
-    40000 LW R8, cTemp(R28)
+    40000 LW R8, 0(R28)
     40004 ADDI R9, R0, 9
     40008 MULT R8, R9
     4000C MFLO R8
@@ -16,4 +16,4 @@
     40018 DIV R8, R9
     4001C MFLO R8
     40020 ADDI R8, R8, 20
-    40024 SW R8, fTemp(R28)
+    40024 SW R8, 4(R28)

@@ -8,7 +8,7 @@
 
 ; Store array values
 .text
-    400000 LW R8, x(R28) 
+    400000 LW R8, 0(R28) 
     400004 LW R9, 20(R28)
     400008 LW R10, 50(R28)
     40000C LW R11, 8(R28)

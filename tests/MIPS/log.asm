@@ -6,7 +6,7 @@
 .text
     40000 ADD R8, R8, R0
     40004 ADDI R9, R9, 1
-    40008 LW R10, number(R28)
+    40008 LW R10, 0(R28)
 
 WHILELE: 4000C SUB R11, R9, R10
          40010 SLT R12, R0, R11
