@@ -183,7 +183,7 @@ function Savecode()
     var flav = document.getElementsByName("flavor")[0].value;
     var file_name = null;
     if (flav == "mips"){
-        file_name = prompt("Please enter file name to save as, ending in .asm or .txt (for binary code): ");
+        file_name = prompt("Please enter file name to save as, ending in .asm or .txt (for machine code): ");
     }
     else{
         file_name = prompt("Please enter file name to save as, ending in .asm: ");
