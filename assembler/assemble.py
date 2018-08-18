@@ -238,7 +238,7 @@ def exec(tok_lines, flavor, vm, last_instr):
         ip = vm.get_ip() - vm.start_ip
         curr_instr = None
         source = None
-        last_intr = None
+        last_instr = None
         if flavor == "mips":
             if ip // 4 >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
