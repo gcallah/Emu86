@@ -64,6 +64,7 @@ class Addi(Instruction):
     """
     def fhook(self, ops, vm):
         three_op_arith_immediate(ops, vm, self.name, opfunc.add)
+        return "wheee"
 
 class Sub(Instruction):
     """
