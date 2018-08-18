@@ -7,16 +7,8 @@ control_flow.py: control flow instructions,
 from assembler.errors import check_num_args, OutofBounds
 from assembler.tokens import Instruction, Register, IntegerTok
 from assembler.flowbreak import Jump
+from assembler.ops_check import get_one_op, get_two_ops
 from .argument_check import *
-
-
-def get_one_op(instr, ops):
-    check_num_args(instr, ops, 1)
-    return ops[0]
-
-def get_two_ops(instr, ops):
-    check_num_args(instr, ops, 2)
-    return (ops[0], ops[1])
 
 def get_three_ops(instr, ops):
     check_num_args(instr, ops, 3)

@@ -6,17 +6,7 @@ import operator as opfunc
 
 from assembler.errors import *
 from assembler.tokens import Instruction, MAX_INT
-
-
-def one_op_arith(ops, vm, instr, operator):
-    """
-        operator: this is the functional version of Python's
-            +, -, *, etc.
-    """
-    check_num_args(instr, ops, 1)
-    ops[0].set_val(operator(ops[0].get_val()))
-    vm.changes.add(ops[0].get_nm())
-
+from assembler.ops_check import one_op_arith
 
 def two_op_arith(ops, vm, instr, operator):
     """
