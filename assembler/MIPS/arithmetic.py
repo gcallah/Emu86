@@ -52,7 +52,6 @@ class Add(Instruction):
     """
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.add)
-        ops[0].set_val(5)
 
 class Addi(Instruction):
     """
