@@ -43,13 +43,14 @@ def welcome(request):
     mips_machine.re_init()
     intel_machine.flavor = None
     mips_machine.flavor = None
+    intel_machine.base = None
+    mips_machine.base = None
     site_hdr = get_hdr()
     return render(request, 'welcome.html', {HEADER: site_hdr})
 
 def main_page(request):
     last_instr = ""
     error = ""
-    base = ""
     sample = ""
     bit_code = ""
     button = ""
@@ -61,19 +62,17 @@ def main_page(request):
         intel_machine.re_init()
         mips_machine.re_init()
         form = MainForm()
-        if intel_machine.flavor != None:
-            base = "dec"
-        else:
-            base = "hex"
     else:
         if 'language' in request.POST:
             intel_machine.re_init()
             mips_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
+            base = request.POST['base']
             if lang == MIPS:
                 intel_machine.flavor = None
                 mips_machine.flavor = MIPS
+                mips_machine.base = base
                 site_hdr += ": MIPS"
                 convert_reg_contents(mips_machine.registers)
                 convert_mem_contents(mips_machine.memory)
@@ -92,7 +91,7 @@ def main_page(request):
                              'flags': mips_machine.flags,
                              'flavor': mips_machine.flavor,
                              'data_init': mips_machine.data_init,
-                             'base': 'hex',
+                             'base': mips_machine.base,
                              'sample': 'none',
                              'start_ip': mips_machine.start_ip,
                              'bit_code': "",
@@ -101,6 +100,7 @@ def main_page(request):
                             })
             else:
                 mips_machine.flavor = None
+                intel_machine.base = base
                 header_line = site_hdr
                 if lang == ATT:
                     intel_machine.flavor = ATT
@@ -122,7 +122,7 @@ def main_page(request):
                                'flags': intel_machine.flags,
                                'flavor': intel_machine.flavor,
                                DATA_INIT: intel_machine.data_init,
-                               'base': 'dec',
+                               'base': intel_machine.base,
                                'sample': 'none',
                                'start_ip': intel_machine.start_ip,
                                'bit_code': "",
@@ -138,7 +138,6 @@ def main_page(request):
             elif language == MIPS:
                 intel_machine.flavor = None
                 mips_machine.flavor = language
-        base = request.POST['base']
         sample = request.POST['sample']
         button = request.POST['button_type']
         if button == CLEAR:
@@ -197,7 +196,7 @@ def main_page(request):
     if mips_machine.flavor == MIPS:
         mips_machine.order_mem()
         site_hdr += ": MIPS"
-        if base == "hex":
+        if mips_machine.base == "hex":
             convert_reg_contents(mips_machine.registers)
             convert_mem_contents(mips_machine.memory)
             convert_stack_contents(mips_machine.stack)
@@ -215,7 +214,7 @@ def main_page(request):
                      'flags': mips_machine.flags,
                      'flavor': mips_machine.flavor,
                      DATA_INIT: mips_machine.data_init,
-                     'base': base,
+                     'base': mips_machine.base,
                      'sample': sample,
                      'start_ip': mips_machine.start_ip,
                      'bit_code': bit_code,
@@ -228,7 +227,7 @@ def main_page(request):
     else:
         site_hdr += ": AT&T"
     intel_machine.order_mem()
-    if base == "hex":
+    if intel_machine.base == "hex":
         convert_reg_contents(intel_machine.registers)
         convert_mem_contents(intel_machine.memory)
         convert_stack_contents(intel_machine.stack)
@@ -246,7 +245,7 @@ def main_page(request):
                    'flags': intel_machine.flags,
                    'flavor': intel_machine.flavor,
                    DATA_INIT: intel_machine.data_init,
-                   'base': base, 
+                   'base': intel_machine.base, 
                    'sample': sample,
                    'start_ip': intel_machine.start_ip,
                    'bit_code': bit_code,

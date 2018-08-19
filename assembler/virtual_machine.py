@@ -42,6 +42,7 @@ class VirtualMachine:
         self.data_init = "on"
         self.start_ip = 0
         self.changes = set()
+        self.base = None
 
     def __str__(self):
         return ("Registers: " + str(self.registers) + "\n"
