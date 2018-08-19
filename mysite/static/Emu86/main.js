@@ -306,6 +306,15 @@ function convert(name,value)
     }
 }
 
+function parseIntegerBase(val, base){
+    for (var i = 0; i < val.length; i++){
+        if (isNaN(parseInt(val.charAt(i), base))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function AddMem()
 {
     mem_data = document.getElementsByName("mem_data")[0].value;
@@ -313,12 +322,38 @@ function AddMem()
     var val = document.getElementById("valueText").value;
     var repeat = document.getElementById("repeatText").value;
     var flav = document.getElementsByName("flavor")[0].value;
+    var base = document.getElementsByName("base")[0].value;
     if (loc == ""){
         alert("Cannot set an invisible location");
+        document.getElementById("memText").value = "";
+        document.getElementById("valueText").value = "";
+        document.getElementById("repeatText").value = "1";
+        return;
     }
     else if (val == ""){
         alert("Cannot set using an invisible value");
     }
+
+    if (base == "dec") {
+        if (!parseIntegerBase(val, 10)) {
+            alert("Not a valid value for decimal number system");
+            document.getElementById("memText").value = "";
+            document.getElementById("valueText").value = "";
+            document.getElementById("repeatText").value = "1";
+            return;
+        }
+    }
+
+    else {
+        if (!parseIntegerBase(val, 16)) {
+            alert("Not a valid value for hexadecimal number system");
+            document.getElementById("memText").value = "";
+            document.getElementById("valueText").value = "";
+            document.getElementById("repeatText").value = "1";
+            return;
+        }
+    }
+
     if (repeat != ""){
         repeat = parseInt(repeat);
     }
@@ -326,7 +361,6 @@ function AddMem()
         repeat = 0;
     }
     var current_html = document.getElementById("memory-table").innerHTML;
-    console.log(current_html);
     var add_html = "";
     for (var i = 0; i < repeat; i++) {
         if (current_html.indexOf('name="' + loc + '"') != -1) {
