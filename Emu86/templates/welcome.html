@@ -8,17 +8,32 @@
             <form action="{% url 'Emu86:main_page' %}" method="post">
                 {% csrf_token %}
                 <br>Select your language
-                <select name="language">
+                <select name="language" onchange="SetBase()">
                     <option value="intel"> Intel </option>
                     <option value="att"> AT&amp;T </option>
                     <option value="mips"> MIPS </option>
                 </select>
                 <br>
                 Please select your number system: 
-                <input type="radio" name="base" value="dec"> Decimal
+                <input type="radio" name="base" value="dec" checked> Decimal
                 <input type="radio" name="base" value="hex"> Hexadecimal <br>
                 <input type = "submit" value= "Submit">
             </form>
+
+            <script>
+                function SetBase(){
+                    langBar = document.getElementsByName("language")[0];
+                    var language = langBar.options[langBar.selectedIndex].value
+                    if (language == "mips"){
+                        document.getElementsByName("base")[0].removeAttribute("checked");
+                        document.getElementsByName("base")[1].checked = true;
+                    }
+                    else {
+                        document.getElementsByName("base")[0].checked = true;
+                        document.getElementsByName("base")[1].removeAttribute("checked");
+                    }
+                }
+            </script>
         </h5>
     </body>
 {% endblock content %}
