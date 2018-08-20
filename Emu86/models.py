@@ -1,6 +1,6 @@
 from django.db import models
 
-HEADER_LEN = 64
+HEADER_LEN = 128
 
 
 class SingleNameModel(models.Model):
