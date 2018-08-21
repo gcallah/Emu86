@@ -39,6 +39,7 @@ class AssembleTestCase(TestCase):
             correct = operator(a, b)
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
+            intel_machine.base = "dec"
             assemble(instr + " eax, ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
@@ -80,6 +81,7 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct = operator(a)
             intel_machine.registers["EAX"] = a
+            intel_machine.base = "dec"
             assemble(instr + " eax", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
@@ -107,6 +109,7 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct_stack[i] = a
             intel_machine.registers["EAX"] = a
+            intel_machine.base = "dec"
             assemble("push eax", 'intel', intel_machine)
 
         for i in range(STACK_BOTTOM, STACK_TOP+1):
@@ -122,6 +125,7 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct = a
             intel_machine.registers["EAX"] = a
+            intel_machine.base = "dec"
             assemble("mov eax, " + str(a), 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
@@ -137,6 +141,7 @@ class AssembleTestCase(TestCase):
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EDX"] = d
             intel_machine.registers["EBX"] = b
+            intel_machine.base = "dec"
             assemble("idiv ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct_quotient)
             self.assertEqual(intel_machine.registers["EDX"], correct_remainder)
@@ -146,6 +151,7 @@ class AssembleTestCase(TestCase):
         intel_machine.registers["EBX"] = 1
         intel_machine.flags["ZF"] = 0
         intel_machine.flags["SF"] = 0
+        intel_machine.base = "dec"
         assemble("cmp eax, ebx", 'intel', intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 1)
         self.assertEqual(intel_machine.flags["SF"], 0)
@@ -155,6 +161,7 @@ class AssembleTestCase(TestCase):
         intel_machine.registers["EBX"] = 1
         intel_machine.flags["ZF"] = 0
         intel_machine.flags["SF"] = 0
+        intel_machine.base = "dec"
         assemble("cmp eax, ebx", 'intel', intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
