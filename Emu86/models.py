@@ -4,7 +4,7 @@ HEADER_LEN = 128
 
 
 class SingleNameModel(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
@@ -15,7 +15,7 @@ class SingleNameModel(models.Model):
 
 
 class UrlModel(models.Model):
-    url = models.CharField(max_length=512, default="",
+    url = models.CharField(max_length=256, default="",
             blank=True, null=True)
 
     class Meta:

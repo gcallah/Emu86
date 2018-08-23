@@ -1,10 +1,8 @@
 @*
 *~
 *.pyc
-migrations/
 ansible/
 .*swp
 *.log
 *.txt
 __pycache__/
-db.sqlite3
