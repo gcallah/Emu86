@@ -27,6 +27,7 @@ class TestPrograms(TestCase):
 
     def run_att_test_code (self, filnm):
         intel_machine.re_init()
+        intel_machine.base = "dec"
         test_code = self.read_test_code(filnm)
         assemble(test_code, 'att', intel_machine)
 

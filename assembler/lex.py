@@ -200,12 +200,15 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                     raise InvalidArgument(word)
             else:
                 # dec number:
-                try:
-                    analysis.append(IntegerTok(int(word)))
-                except IntOutOfRng as err: 
-                    raise IntOutOfRng(word)
+                if vm.base == "dec":
+                    try:
+                        analysis.append(IntegerTok(int(word)))
+                    except IntOutOfRng as err: 
+                        raise IntOutOfRng(word)
+                    except:
+                        raise InvalidArgument(word)
                 # hex number:
-                except:
+                else:
                     try:
                         analysis.append(IntegerTok(int(word, 16)))
                     except IntOutOfRng as err: 

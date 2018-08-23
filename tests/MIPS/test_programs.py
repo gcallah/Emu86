@@ -27,6 +27,7 @@ class TestPrograms(TestCase):
 
     def run_mips_test_code (self, filnm):
         mips_machine.re_init()
+        mips_machine.base = "hex"
         test_code = self.read_test_code(filnm)
         assemble(test_code, 'mips', mips_machine)
 

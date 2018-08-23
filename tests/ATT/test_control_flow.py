@@ -26,6 +26,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
+            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             assemble("jmp test_label", 'att', intel_machine)
@@ -38,6 +39,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
+            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             zero_flag = random.getrandbits(1)
@@ -54,6 +56,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
+            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             zero_flag = random.getrandbits(1)
@@ -70,6 +73,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
           intel_machine.re_init()
+          intel_machine.base = "dec"
           label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
           intel_machine.labels["test_label"] = label_addr
           sign_flag = random.getrandbits(1)
@@ -88,6 +92,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
           intel_machine.re_init()
+          intel_machine.base = "dec"
           label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
           intel_machine.labels["test_label"] = label_addr
           sign_flag = random.getrandbits(1)
@@ -105,6 +110,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
+            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
@@ -121,6 +127,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
+            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS,MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
@@ -143,6 +150,7 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
+            intel_machine.base = "dec"
             call_instr_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
 
