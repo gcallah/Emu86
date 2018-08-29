@@ -6,7 +6,8 @@ PTML_DIR = html_src
 ADIR = ansible
 SDIR = assembler
 INTEL_DIR = $(SDIR)/Intel
-ODIR = Emu86/templates
+EMUDIR = Emu86
+ODIR = $(EMUDIR)/templates
 MUDIR = myutils
 UDIR = utils
 TDIR = tests
@@ -67,9 +68,19 @@ jsfile:
 	git push origin master
 
 zip: 
+	-git rm Haldun.zip
+	git commit -m 'Removing old zip file'
+	git push origin master
 	git archive --format zip --output Haldun.zip master 
 	git add Haldun.zip
 	git commit -m 'Updating zip file'
+	git push origin master
+
+db:
+	python3 manage.py makemigrations
+	python3 manage.py migrate
+	git add $(EMUDIR)/migrations/*.py
+	-git commit $(EMUDIR)/migrations/*.py
 	git push origin master
 
 dev: $(SRCS) $(OBJS) 
