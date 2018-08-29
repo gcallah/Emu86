@@ -18,10 +18,15 @@ STEP = 'step'
 DEMO = 'demo'
 CLEAR = 'clear'
 HEADER = 'header'
-INTEL = 'intel'
-ATT = 'att'
-MIPS = 'mips'
 DATA_INIT = 'data_init'
+
+MIPS = {'mips_asm': 'MIPS Assembly', 
+        'mips_mml': 'MIPS Mnemonic Machine Language'
+        }
+
+INTEL = {'intel': 'Intel', 
+         'att': 'AT&T'
+        }
 
 
 def get_hdr():
@@ -69,11 +74,11 @@ def main_page(request):
             form = MainForm()
             lang = request.POST['language']
             base = request.POST['base']
-            if lang == MIPS:
+            if lang in MIPS:
                 intel_machine.flavor = None
-                mips_machine.flavor = MIPS
+                mips_machine.flavor = lang
                 mips_machine.base = base
-                site_hdr += ": MIPS"
+                site_hdr += ": " + MIPS[lang]
                 convert_reg_contents(mips_machine.registers)
                 convert_mem_contents(mips_machine.memory)
                 convert_stack_contents(mips_machine.stack)
@@ -101,13 +106,9 @@ def main_page(request):
             else:
                 mips_machine.flavor = None
                 intel_machine.base = base
+                intel_machine.flavor = lang
                 header_line = site_hdr
-                if lang == ATT:
-                    intel_machine.flavor = ATT
-                    site_hdr += ": AT&T"
-                else:
-                    intel_machine.flavor = INTEL
-                    site_hdr += ": Intel"
+                site_hdr += ": " + INTEL[lang]
                 return render(request, 'main.html',
                               {'form': form,
                                HEADER: site_hdr,
@@ -132,10 +133,10 @@ def main_page(request):
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
             language = request.POST['flavor']
-            if language == INTEL or language == ATT:
+            if language in INTEL:
                 intel_machine.flavor = language
                 mips_machine.flavor = None
-            elif language == MIPS:
+            else:
                 intel_machine.flavor = None
                 mips_machine.flavor = language
         sample = request.POST['sample']
@@ -176,14 +177,11 @@ def main_page(request):
                 get_flag_contents(mips_machine.flags, request)
                 mips_machine.data_init = request.POST[DATA_INIT]
                 mips_machine.start_ip = int(request.POST['start_ip'])
-            if intel_machine.flavor == INTEL:
-                (last_instr, error, bit_code) = assemble(request.POST[CODE], INTEL,
-                                               intel_machine, step)
-            elif intel_machine.flavor == ATT:
-                (last_instr, error, bit_code) = assemble(request.POST[CODE], ATT, 
+            if intel_machine.flavor in INTEL:
+                (last_instr, error, bit_code) = assemble(request.POST[CODE], intel_machine.flavor,
                                                intel_machine, step)
             else:
-                (last_instr, error, bit_code) = assemble(request.POST[CODE], MIPS, 
+                (last_instr, error, bit_code) = assemble(request.POST[CODE], mips_machine.flavor, 
                                                mips_machine, step)
     if button == DEMO:
         if (last_instr == "Reached end of executable code." or 
@@ -193,9 +191,9 @@ def main_page(request):
             button = ""
     else:
         button = ""
-    if mips_machine.flavor == MIPS:
+    if mips_machine.flavor in MIPS:
         mips_machine.order_mem()
-        site_hdr += ": MIPS"
+        site_hdr += ": " + MIPS[mips_machine.flavor]
         if mips_machine.base == "hex":
             convert_reg_contents(mips_machine.registers)
             convert_mem_contents(mips_machine.memory)
@@ -222,10 +220,7 @@ def main_page(request):
                      'changes': mips_machine.changes
                     })
         
-    if intel_machine.flavor == INTEL:
-        site_hdr += ": Intel"
-    else:
-        site_hdr += ": AT&T"
+    site_hdr += ": " + INTEL[intel_machine.flavor]
     intel_machine.order_mem()
     if intel_machine.base == "hex":
         convert_reg_contents(intel_machine.registers)

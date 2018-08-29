@@ -58,6 +58,18 @@ def minus_token(token_line, pos):
     except:
         raise InvalidArgument("-")
 
+def register_token(token_line, pos, flavor, vm):
+    if flavor == "intel" or flavor == "att":
+        return (token_line[pos], pos + 1)
+    elif (pos + 1 < len(token_line) and 
+          isinstance(token_line[pos + 1], OpenParen)):
+        reg = None
+        disp = None
+        reg, disp, pos = get_address_mips(token_line, pos + 2, vm, 
+                                          token_line[pos])
+        return (RegAddress(reg.get_nm(), vm, disp), pos)
+    else:
+        return (token_line[pos], pos + 1)
 
 def number_token(token_line, pos, flavor, vm):
     """
@@ -107,7 +119,7 @@ def symbol_token(token_line, pos, flavor, vm):
     Returns:
         Symbol or address token, next positon to look at
     """
-    if flavor != "mips":
+    if flavor != "mips_asm":
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     elif (pos + 1 < len (token_line) and 
           isinstance(token_line[pos + 1], OpenParen)):
@@ -133,7 +145,8 @@ def is_start_address(token_line, pos, flavor):
     """
     if isinstance(token_line[pos], OpenParen) and flavor == "att":
         return True
-    elif isinstance(token_line[pos], OpenParen) and flavor == "mips":
+    elif (isinstance(token_line[pos], OpenParen) and 
+         (flavor == "mips_asm" or flavor == "mips_mml")):
         return True
     elif isinstance(token_line[pos], OpenBracket) and flavor == "intel":
         return True
@@ -344,7 +357,7 @@ def parse_data_token(token_line, vm, flavor, mem_loc):
     for value in data_vals:
         if vm.get_data_init() == "on":
             vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
-        if flavor == "mips":
+        if flavor == "mips_asm":
             mem_loc += 4
         else:
             mem_loc += 1
@@ -631,27 +644,27 @@ def get_op(token_line, pos, flavor, vm):
     if pos >= len(token_line):
         raise MissingOps()
 
-    # Register
+# Register
     elif isinstance(token_line[pos], Register):
-        return (token_line[pos], pos + 1)
+        return register_token(token_line, pos, flavor, vm)
 
-    # Constant Token
+# Constant Token
     elif isinstance(token_line[pos], ConstantSign):
         if flavor == "att" and check_constant(token_line, pos):
             return get_op(token_line, pos + 1, flavor, vm)
         else:
             raise InvalidArgument("$")
 
-    # Minus Token
+# Minus Token
     elif isinstance(token_line[pos], MinusTok):
         minus_token(token_line, pos)
         return get_op(token_line, pos + 1, flavor, vm)
 
-    # Integer Token
+# Integer Token
     elif isinstance(token_line[pos], IntegerTok):
         return number_token(token_line, pos, flavor, vm)
 
-    # Symbol/Label Token
+# Symbol/Label Token
     elif isinstance(token_line[pos], NewSymbol):
         if token_line[pos].get_nm() in vm.labels:
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
@@ -660,7 +673,7 @@ def get_op(token_line, pos, flavor, vm):
         else:
             raise UnknownName(token_line[pos].get_nm())
 
-    # Address Token
+# Address Token
     elif is_start_address(token_line, pos, flavor):
         return get_address_location (token_line, pos + 1, flavor, vm)
     else:
@@ -728,7 +741,7 @@ def parse_exec_unit(token_line, flavor, vm):
     op_lst = []
 
     # retrieve PC counter 
-    if flavor == "mips":
+    if flavor == "mips_asm" or flavor == "mips_mml":
         token_instruction.append(get_mips_pc(token_line, pos))
         pos += 1
 
@@ -785,7 +798,7 @@ def parse(tok_lines, flavor, vm):
             vm.set_data_init("off")
             parsed_unit = parse_exec_unit(tokens[0], flavor, vm)
             token_instrs.append((parsed_unit, tokens[1]))
-            if flavor == "mips" and ip_init == None:
+            if (flavor == "mips_asm" or flavor == "mips_mml") and ip_init == None:
                 ip_init = token_instrs[0][TOKENS][0].get_val()
                 vm.start_ip = ip_init
     return token_instrs

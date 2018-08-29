@@ -182,8 +182,11 @@ function Savecode()
 {
     var flav = document.getElementsByName("flavor")[0].value;
     var file_name = null;
-    if (flav == "mips"){
+    if (flav == "mips_asm"){
         file_name = prompt("Please enter file name to save as, ending in .asm or .txt (for machine code): ");
+    }
+    else if (flav == "mips_mml"){
+        file_name = prompt("Please enter file name to save as, ending in .txt (for machine code): ");
     }
     else{
         file_name = prompt("Please enter file name to save as, ending in .asm: ");
@@ -197,7 +200,10 @@ function Savecode()
     else if (file_name.length < 5){
         alert("Invalid file name: " + file_name);
     }
-    else if (flav == "mips" && file_name.slice(file_name.length - 4) != ".asm" && file_name.slice(file_name.length - 4) != ".txt" ) {
+    else if (flav == "mips_asm" && file_name.slice(file_name.length - 4) != ".asm" && file_name.slice(file_name.length - 4) != ".txt" ) {
+        alert("Invalid file name: " + file_name);
+    }
+    else if (flav == "mips_mml" && file_name.slice(file_name.length - 4) != ".txt" ) {
         alert("Invalid file name: " + file_name);
     }
     else if (flav != "mips" && file_name.slice(file_name.length - 4) != ".asm"){
@@ -378,7 +384,7 @@ function AddMem()
             mem_data += loc + ":" + val + ", ";
         }
         var location = null;
-        if (flav != "mips") {
+        if (flav != "mips_asm" && flav != "mips_mml") {
             location = parseInt(loc, 16) + 1;
         }
         else {

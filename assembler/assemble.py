@@ -239,7 +239,7 @@ def exec(tok_lines, flavor, vm, last_instr):
         curr_instr = None
         source = None
         last_instr = None
-        if flavor == "mips":
+        if flavor == "mips_asm" or flavor == "mips_mml":
             if ip // 4 >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
             (curr_instr, source) = tok_lines[ip // 4]
@@ -304,14 +304,14 @@ def assemble(code, flavor, vm, step=False):
         return (last_instr, err.msg, bit_code)
 
     try:
-        if flavor == "mips":
+        if flavor == "mips_asm" or flavor == "mips_mml":
             for curr_instr, source in tok_lines:
                 bit_code += create_bit_instr(curr_instr)
         if not step:
             add_debug("Setting ip to 0", vm)
             vm.set_ip(vm.start_ip)   # instruction pointer reset for 'run'
             count = 0
-            if flavor == "mips":
+            if flavor == "mips_asm" or flavor == "mips_mml":
                 while ((vm.get_ip() - vm.start_ip) // 4 < len(tok_lines) and 
                        count < MAX_INSTRUCTIONS):
                     (success, last_instr, error) = exec(tok_lines, flavor, vm, 
@@ -332,7 +332,7 @@ def assemble(code, flavor, vm, step=False):
             if vm.get_ip() == 0:
                 vm.set_ip(vm.start_ip)
             ip = vm.get_ip() - vm.start_ip
-            if flavor == "mips":
+            if flavor == "mips_asm" or flavor == "mips_mml":
                 ip = ip // 4
             if ip < len(tok_lines):
                 (success, last_instr, error) = exec(tok_lines, flavor, vm,
@@ -345,7 +345,7 @@ def assemble(code, flavor, vm, step=False):
             return (last_instr, error, bit_code)
     except ExitProg as ep:
         last_instr = ep.msg.split(":")[0] + ": Exiting program"
-        if flavor == "mips":
+        if flavor == "mips_asm" or flavor == "mips_mml":
             vm.set_ip(2147484032)
 
     if count >= MAX_INSTRUCTIONS:

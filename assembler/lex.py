@@ -69,7 +69,7 @@ def make_language_keys(vm, flavor):
     language_keys = {}
     language_keys.update(keywords_to_tokens)
     language_keys.update(generate_reg_dict(vm, flavor))
-    if flavor == "mips":
+    if flavor == "mips_asm" or flavor == "mips_mml":
         from .MIPS.key_words import key_words
         language_keys.update(key_words)
         return language_keys
@@ -181,7 +181,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                 if data_sec:
                     analysis.append(NewSymbol(word[:-1], vm))
                 else:
-                    if flavor == "mips":
+                    if flavor == "mips_asm":
                         vm.labels[word[:-1]] = i * 4
                     else:
                         vm.labels[word[:-1]] = i
@@ -190,31 +190,56 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
             analysis.append(NewSymbol(word, vm))
 # Integers
         else:
-            if flavor == "mips":
-                 # hex number:
+            if vm.base == "dec":
+                try:
+                    analysis.append(IntegerTok(int(word)))
+                except IntOutOfRng as err: 
+                    raise IntOutOfRng(word)
+                except:
+                    raise InvalidArgument(word)
+            else:
                 try:
                     analysis.append(IntegerTok(int(word, 16)))
                 except IntOutOfRng as err: 
                     raise IntOutOfRng(word)
                 except:
                     raise InvalidArgument(word)
-            else:
-                # dec number:
-                if vm.base == "dec":
-                    try:
-                        analysis.append(IntegerTok(int(word)))
-                    except IntOutOfRng as err: 
-                        raise IntOutOfRng(word)
-                    except:
-                        raise InvalidArgument(word)
-                # hex number:
-                else:
-                    try:
-                        analysis.append(IntegerTok(int(word, 16)))
-                    except IntOutOfRng as err: 
-                        raise IntOutOfRng(word)
-                    except:
-                        raise InvalidArgument(word)
+    return (analysis, code)
+
+def sep_line_mml(code, i, vm, language_keys):
+    """
+    Returns a list of tokens created 
+
+    Args:
+        code: Line of code 
+        i: Line number of code
+           Needed for determining label location
+        flavor: AT&T or MIPS
+        data_sec: Boolean, determines if we are in the data section
+                  Needed to differentiate between label and symbol
+        vm: Virtual machine
+        key_words: Dictionary of key words for the flavor
+
+    Returns:
+        Tuple of the lexical analysis of the line
+        The first member is the tokens and the second is the
+        text of the code.
+    """
+    analysis = []
+    words = split_code(code, vm.flavor)
+
+    for word in words:
+# keyword:
+        if word.upper() in language_keys:
+            analysis.append(language_keys[word.upper()])
+# Integers
+        else:
+            try:
+                analysis.append(IntegerTok(int(word, 16)))
+            except IntOutOfRng as err: 
+                raise IntOutOfRng(word)
+            except:
+                raise InvalidArgument(word)
     return (analysis, code)
 
 def lex(code, flavor, vm):
@@ -255,8 +280,11 @@ def lex(code, flavor, vm):
     for line in pre_processed_lines:
 # create language-specific dictionary:
         language_keys = make_language_keys(vm, flavor)
-        tok_lines.append(sep_line(line, i, flavor, data_sec, 
-                                  vm, language_keys))
+        if flavor == "mips_mml":
+            tok_lines.append(sep_line_mml(line, i, vm, language_keys))
+        else:
+            tok_lines.append(sep_line(line, i, flavor, data_sec, 
+                                      vm, language_keys))
         if line == ".data":
             add_to_ip = False
             data_sec = True
@@ -269,5 +297,5 @@ def lex(code, flavor, vm):
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
-
+    
     return tok_lines

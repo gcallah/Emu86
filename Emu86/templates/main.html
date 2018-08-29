@@ -13,8 +13,10 @@
                 <input type="hidden" name="flavor" value="intel">
             {% elif flavor == "att" %}
                 <input type="hidden" name="flavor" value="att">
-            {% elif flavor == "mips" %}
-                <input type="hidden" name="flavor" value="mips">
+            {% elif flavor == "mips_asm" %}
+                <input type="hidden" name="flavor" value="mips_asm">
+            {% elif flavor == "mips_mml" %}
+                <input type="hidden" name="flavor" value="mips_mml">
             {% else %}
                 <input type="hidden" name="flavor">
             {% endif %}
@@ -114,7 +116,7 @@
                 {% else %}
                     <option value="data">Use the data section</option>
                 {% endif %}
-                {% if flavor != "mips" %}
+                {% if flavor != "mips_asm" and flavor != "mips_mml" %}
                     {% if sample == "keyInterrupt" %}
                         <option value="keyInterrupt" selected>Keyboard interrupt</option>
                     {% else %}

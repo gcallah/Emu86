@@ -7,11 +7,12 @@
             to come.
             <form action="{% url 'Emu86:main_page' %}" method="post">
                 {% csrf_token %}
-                <br>Select your language
+                <br>Select your language:
                 <select name="language" onchange="SetBase()">
                     <option value="intel"> Intel </option>
                     <option value="att"> AT&amp;T </option>
-                    <option value="mips"> MIPS </option>
+                    <option value="mips_asm"> MIPS Assembly </option>
+                    <option value="mips_mml"> MIPS Mnemonic Machine Language </option>
                 </select>
                 <br>
                 Please select your number system: 
@@ -25,7 +26,7 @@
                 function SetBase(){
                     langBar = document.getElementsByName("language")[0];
                     var language = langBar.options[langBar.selectedIndex].value
-                    if (language == "mips"){
+                    if (language == "mips_asm" || language == "mips_mml"){
                         document.getElementsByName("base")[0].removeAttribute("checked");
                         document.getElementsByName("base")[1].checked = true;
                     }

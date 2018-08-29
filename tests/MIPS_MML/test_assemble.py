@@ -40,7 +40,7 @@ class AssembleTestCase(TestCase):
             mips_machine.registers["R8"] = a
             mips_machine.registers["R9"] = b
             mips_machine.base = "hex"
-            assemble("40000 " + instr + " R10, R8, R9", 'mips', mips_machine)
+            assemble("40000 " + instr + " R10, R8, R9", 'mips_mml', mips_machine)
             self.assertEqual(mips_machine.registers["R10"], correct)
 
     def two_op_test_imm(self, operator, instr,
@@ -53,7 +53,7 @@ class AssembleTestCase(TestCase):
             correct = operator(a, int(hex(b), 16))
             mips_machine.registers["R9"] = a
             mips_machine.base = "hex"
-            assemble("40000 " + instr + " R10, R9, " + hex_string, 'mips', mips_machine)
+            assemble("40000 " + instr + " R10, R9, " + hex_string, 'mips_mml', mips_machine)
             self.assertEqual(mips_machine.registers["R10"], correct)
 
     def test_add(self):
@@ -88,33 +88,33 @@ class AssembleTestCase(TestCase):
             mips_machine.registers["R8"] = a
             mips_machine.registers["R9"] = b
             mips_machine.base = "hex"
-            assemble("40000 NOR R10, R8, R9", 'mips', mips_machine)
+            assemble("40000 NOR R10, R8, R9", 'mips_mml', mips_machine)
             self.assertEqual(mips_machine.registers["R10"], correct)
 
     def test_slt_eq(self):
         mips_machine.registers["R8"] = 1
         mips_machine.registers["R9"] = 1
         mips_machine.base = "hex"
-        assemble("40000 SLT R10, R8, R9", 'mips', mips_machine)
+        assemble("40000 SLT R10, R8, R9", 'mips_mml', mips_machine)
         self.assertEqual(mips_machine.registers["R10"], 0)
 
     def test_slt_l(self):
         mips_machine.registers["R8"] = 0
         mips_machine.registers["R9"] = 1
         mips_machine.base = "hex"
-        assemble("40000 SLT R10, R8, R9", 'mips', mips_machine)
+        assemble("40000 SLT R10, R8, R9", 'mips_mml', mips_machine)
         self.assertEqual(mips_machine.registers["R10"], 1)
 
     def test_slti_eq(self):
         mips_machine.registers["R9"] = 1
         mips_machine.base = "hex"
-        assemble("40000 SLTI R10, R9, 1", 'mips', mips_machine)
+        assemble("40000 SLTI R10, R9, 1", 'mips_mml', mips_machine)
         self.assertEqual(mips_machine.registers["R10"], 0)
 
     def test_slti_l(self):
         mips_machine.registers["R9"] = 0
         mips_machine.base = "hex"
-        assemble("40000 SLTI R10, R9, 1", 'mips', mips_machine)
+        assemble("40000 SLTI R10, R9, 1", 'mips_mml', mips_machine)
         self.assertEqual(mips_machine.registers["R10"], 1)
 
     def test_sll(self):

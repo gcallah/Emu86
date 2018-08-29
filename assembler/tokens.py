@@ -183,6 +183,8 @@ class RegAddress(Address):
                     disp += disp_item.get_val() * disp_item.get_multiplier()
                 else:
                     disp += disp_item
+        elif isinstance(self.displacement, Register):
+            disp = self.displacement.get_val()
         elif self.displacement != 0:
             disp = self.displacement
         addr_val = int(self.regs[self.name]) * self.multiplier + disp
