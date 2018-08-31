@@ -74,35 +74,35 @@ class TestPrograms(TestCase):
     #     self.run_mips_test_code("tests/MIPS/test_jump.asm")
     #     self.assertEqual(mips_machine.registers["R8"], 3)
 
-    # def test_data(self):
-    #     self.run_mips_test_code("tests/MIPS/data.asm")
-    #     self.assertEqual(mips_machine.registers["R8"],  8)
-    #     self.assertEqual(mips_machine.registers["R9"], 16)
-    #     self.assertEqual(mips_machine.registers["R10"], 32)
+    def test_data(self):
+        self.run_mips_test_code("data.asm")
+        self.assertEqual(mips_machine.registers["R8"],  8)
+        self.assertEqual(mips_machine.registers["R9"], 16)
+        self.assertEqual(mips_machine.registers["R10"], 32)
 
     def test_array(self):
         self.run_mips_test_code("array.asm")
         self.assertEqual(mips_machine.registers["R8"],  3)
         self.assertEqual(mips_machine.registers["R9"], 50)
 
-    # def test_sum_calculation(self):
-    #     self.run_mips_test_code("tests/MIPS/sum_test.asm")
-    #     self.assertEqual(mips_machine.registers["R8"],  53)
-    #     self.assertEqual(mips_machine.memory["4"], 53)
+    def test_sum_calculation(self):
+        self.run_mips_test_code("sum_test.asm")
+        self.assertEqual(mips_machine.registers["R8"], 263)
+        self.assertEqual(mips_machine.memory["24"], 263)
 
     def test_arithmetic_expression(self):
         self.run_mips_test_code("arithmetic_expression.asm")
         self.assertEqual(mips_machine.registers["R8"], -31)
         self.assertEqual(mips_machine.registers["R10"], 52)
 
-    # def test_area(self):
-    #     self.run_mips_test_code("area.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], 35)
-    #     self.assertEqual(mips_machine.registers["R9"], 27)
-    #     self.assertEqual(mips_machine.registers["R10"], 35 * 27)
-    #     self.assertEqual(mips_machine.registers["LO"], 35 * 27)
-    #     self.assertEqual(mips_machine.registers["HI"], 0)
-    #     self.assertEqual(mips_machine.memory["4096"], 35 * 27)
+    def test_area(self):
+        self.run_mips_test_code("area.asm")
+        self.assertEqual(mips_machine.registers["R8"], 35)
+        self.assertEqual(mips_machine.registers["R9"], 27)
+        self.assertEqual(mips_machine.registers["R10"], 35 * 27)
+        self.assertEqual(mips_machine.registers["LO"], 35 * 27)
+        self.assertEqual(mips_machine.registers["HI"], 0)
+        self.assertEqual(mips_machine.memory["1000"], 35 * 27)
 
     def test_celsius_conversion(self):
         self.run_mips_test_code("cel_to_fah.asm")
@@ -133,9 +133,9 @@ class TestPrograms(TestCase):
     #     self.assertEqual(mips_machine.registers["R12"], 8)
     #     self.assertEqual(mips_machine.registers["R13"], 9)
 
-    # def test_int_square_root(self):
-    #     self.run_mips_test_code("tests/MIPS/int_square_root.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], 10)
+    def test_int_square_root(self):
+        self.run_mips_test_code("int_square_root.asm")
+        self.assertEqual(mips_machine.registers["R8"], 10)
 
     # def test_add_to_array_elem_test(self):
     #     self.run_mips_test_code("tests/MIPS/change_array_elem_test.asm")
