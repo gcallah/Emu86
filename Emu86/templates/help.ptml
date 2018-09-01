@@ -76,9 +76,16 @@
 
             <details> 
                 <summary class="sum3">
-                    MIPS Programs
+                    MIPS Assembler Programs
                 </summary>
-<!--include sample_programs_mips.txt -->
+<!--include sample_programs_mips_asm.txt -->
+            </details>
+
+            <details> 
+                <summary class="sum3">
+                    MIPS Mnemonic Machine Language Programs
+                </summary>
+<!--include sample_programs_mips_mml.txt -->
             </details>
         </details>
 
