@@ -1,26 +1,47 @@
-; Declare an array and declare size of the array
-; Declare the minimum of the array
-.data
-    nbrArray: .word 19, 2F, 0F, 32, 20, 0A, 0A, 0A, 0A, 0A
-    nbrElts: .word 0A
-    nbrMin: .word 21
+; Create an array
+    3FFEC ADDI R7, R0, A
+    3FFF0 SW R7, 100(R0)
+    3FFF4 ADDI R7, R0, 21
+    3FFF8 SW R7, 104(R0)
+    3FFFC ADDI R6, R0, 0
+    40000 ADDI R7, R0, 19
+    40004 SW R7, R6(R0)
+    40008 ADDI R6, R6, 4
+    4000C ADDI R7, R0, 2F
+    40010 SW R7, R6(R0)
+    40014 ADDI R6, R6, 4
+    40018 ADDI R7, R0, F
+    4001C SW R7, R6(R0)
+    40020 ADDI R6, R6, 4
+    40024 ADDI R7, R0, 32
+    40028 SW R7, R6(R0)
+    4002C ADDI R6, R6, 4
+    40030 ADDI R7, R0, 20
+    40034 SW R7, R6(R0)
+    40038 ADDI R6, R6, 4
+    4003C ADDI R7, R0, A
+    40040 ADDI R14, R14, 5
+    40044 BEQ R14, R0, 4
+    40048 SW R7, R6(R0)
+    4004C ADDI R6, R6, 4
+    40050 ADDI R14, R14, -1
+    40054 J 100110
 
-; Change any numbers less than min to min:
-.text
-    40000 ADD R8, R0, R0
-    40004 ADD R9, R0, R0
-    40008 ADD R10, R0, R0
-    4000C ADD R11, R0, R0
-    40010 LW R16, 2C(R28)
-    40014 LW R17, 28(R28)
-FORCOUNT: 40018 BEQ R10, R17, 9
-BODY: 4001C LW R12, (R9)
-      40020 SLT R13, R16, R12
-      40024 BNE R13, R0, 1
-      40028 SW R16, (R9)
-ENDIFSMALL: 4002C LW R11, (R9)
-            40030 ADD R8, R8, R11
-            40034 ADDI R9, R9, 4
-            40038 ADDI R10, R10, 1
-            4003C J 100060
-ENDCOUNT: 40040 ADD R13, R0, R8
+; Change any numbers in array less than 33 to 33:
+    40058 ADD R8, R0, R0
+    4005C ADD R9, R0, R0
+    40060 ADD R10, R0, R0
+    40064 ADD R11, R0, R0
+    40068 LW R16, 104(R28)
+    4006C LW R17, 100(R28)
+    40070 BEQ R10, R17, 9
+    40074 LW R12, (R9)
+    40078 SLT R13, R16, R12
+    4007C BNE R13, R0, 1
+    40080 SW R16, (R9)
+    40084 LW R11, (R9)
+    40088 ADD R8, R8, R11
+    4008C ADDI R9, R9, 4
+    40090 ADDI R10, R10, 1
+    40094 J 1001A0
+    40098 ADD R13, R0, R8

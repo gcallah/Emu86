@@ -70,9 +70,9 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R13"], 8)
         self.assertEqual(mips_machine.memory["4"], 4)
 
-    # def test_jump(self):
-    #     self.run_mips_test_code("tests/MIPS/test_jump.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], 3)
+    def test_jump(self):
+        self.run_mips_test_code("test_jump.asm")
+        self.assertEqual(mips_machine.registers["R8"], 3)
 
     def test_data(self):
         self.run_mips_test_code("data.asm")
@@ -124,26 +124,26 @@ class TestPrograms(TestCase):
     #     self.assertEqual(intel_machine.memory["0"], 50)
     #     self.assertEqual(intel_machine.memory["1"], 32)
 
-    # def test_array_avg(self):
-    #     self.run_mips_test_code("tests/MIPS/array_average_test.asm")
-    #     self.assertEqual(mips_machine.registers["R16"], 10)
-    #     self.assertEqual(mips_machine.registers["R8"], 89)
-    #     self.assertEqual(mips_machine.registers["R9"], 10)
-    #     self.assertEqual(mips_machine.registers["R10"], 40)
-    #     self.assertEqual(mips_machine.registers["R12"], 8)
-    #     self.assertEqual(mips_machine.registers["R13"], 9)
+    def test_array_avg(self):
+        self.run_mips_test_code("array_average_test.asm")
+        self.assertEqual(mips_machine.registers["R16"], 10)
+        self.assertEqual(mips_machine.registers["R8"], 89)
+        self.assertEqual(mips_machine.registers["R9"], 10)
+        self.assertEqual(mips_machine.registers["R10"], 40)
+        self.assertEqual(mips_machine.registers["R12"], 8)
+        self.assertEqual(mips_machine.registers["R13"], 9)
 
     def test_int_square_root(self):
         self.run_mips_test_code("int_square_root.asm")
         self.assertEqual(mips_machine.registers["R8"], 10)
 
-    # def test_add_to_array_elem_test(self):
-    #     self.run_mips_test_code("tests/MIPS/change_array_elem_test.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], 361)
-    #     self.assertEqual(mips_machine.registers["R13"], 361)
-    #     self.assertEqual(mips_machine.registers["R17"], 10)
-    #     self.assertEqual(mips_machine.registers["R9"], 40)
-    #     self.assertEqual(mips_machine.registers["R10"], 10)
+    def test_add_to_array_elem_test(self):
+        self.run_mips_test_code("change_array_elem_test.asm")
+        self.assertEqual(mips_machine.registers["R8"], 361)
+        self.assertEqual(mips_machine.registers["R13"], 361)
+        self.assertEqual(mips_machine.registers["R17"], 10)
+        self.assertEqual(mips_machine.registers["R9"], 40)
+        self.assertEqual(mips_machine.registers["R10"], 10)
 
 if __name__ == '__main__':
     main()
