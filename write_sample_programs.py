@@ -21,7 +21,7 @@ link_names = {
 
 def create_href():
 	tab = '\t'
-	directories = ["tests/Intel", "tests/ATT", "tests/MIPS"]
+	directories = ["tests/Intel", "tests/ATT", "tests/MIPS_ASM", "tests/MIPS_MML"]
 	for dire in directories: 
 		directory_intel = os.fsencode(dire)
 		name = "templates/sample_programs" 
@@ -29,8 +29,10 @@ def create_href():
 			name += "_intel"
 		elif dire == "tests/ATT":
 			name += "_att"
+		elif dire == "tests/MIPS_ASM":
+			name += "_mips_asm"
 		else:
-			name += "_mips"
+			name += "_mips_mml"
 		file_name = open(name + ".txt", "w")
 		file_name.write(tab * 3 + '<ul class="nested">\n')
 		for file in os.listdir(directory_intel):

@@ -51,6 +51,9 @@ website: $(INCS) $(HTML_FILES) help
 # build instruction help material from python source:
 help: $(SRCS) samples
 	python3 write_sample_programs.py
+	git add $(TEMPLATE_DIR)/sample_programs_*.txt -f
+	git commit -m "Updating sample files"
+	git push origin master
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
 	$(EXTR) <$(INTEL_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
 	$(EXTR) <$(INTEL_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
