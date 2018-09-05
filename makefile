@@ -67,7 +67,8 @@ jsfile:
 	python3 function_create_js.py
 	git add function_create_js.py
 	git add mysite/static/Emu86/helper_functions.js
-	git commit -m "Updating js helper file"
+	git add mysite/static/Emu86/helper_functions_hex.js
+	git commit -m "Updating js helper files"
 	git push origin master
 
 zip: 
