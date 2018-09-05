@@ -22,7 +22,8 @@ function selectSample()
     selectBar = document.getElementsByName("sample")[0];
     var selected = selectBar.options[selectBar.selectedIndex].value
     var flav = document.getElementsByName("flavor")[0];
-    if (flav){
+    var base = document.getElementsByName("base")[0].value;
+    if (flav && base == "dec"){
         if (selected == "none"){
             document.getElementById("id_code").value = "";
         }
@@ -70,6 +71,56 @@ function selectSample()
         }
         else if (selected == "dataAccess") {
             dataAccess(flav.value);
+        }
+    }
+    else if (flav && base == "hex"){
+        if (selected == "none"){
+            document.getElementById("id_code").value = "";
+        }
+        else if (selected == "addTwo") {
+            addTwo_hex(flav.value);
+        }
+        else if (selected == "arithExpr") {
+            arithExpr_hex(flav.value);
+        }
+        else if (selected == "log") {
+            log_hex(flav.value);
+        }
+        else if (selected == "modify") {
+            modify_hex(flav.value);
+        }
+        else if (selected == "loop") {
+            loop_hex(flav.value);
+        }
+        else if (selected == "avg") {
+            avg_hex(flav.value);
+        }
+        else if (selected == "celFah") {
+            celFah_hex(flav.value);
+        }
+        else if (selected == "sqrt") {
+            sqrt_hex(flav.value);
+        }
+        else if (selected == "area") {
+            area_hex(flav.value);
+        }
+        else if (selected == "power") {
+            power_hex(flav.value);
+        }
+        else if (selected == "arithShift") {
+            arithShift_hex(flav.value);
+        }
+        else if (selected == "data") {
+            data_hex(flav.value);
+        }
+        else if (selected == "keyInterrupt") {
+            keyInterrupt_hex(flav.value);
+        }
+        else if (selected == "array") {
+            array_hex(flav.value);
+        }
+        else if (selected == "dataAccess") {
+            dataAccess_hex(flav.value);
         }
     }
 }
