@@ -6,8 +6,11 @@ function addTwo(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; Declare number and sum.\n.data\n    number: .short -105\n    sum: .short ?\n\n; Store first number to EAX\n; Add 158 to value in EAX\n; Store total to sum\n.text\n    mov (number), %eax\t\t\n    add $158, %eax\t\n    mov %eax, (sum)';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Declare number and sum.\n.data\n    number: .word -105\n    sum: .word 0\n\n; Store first number to R8\n; Add 158 to value in R8\n; Store total to sum\n.text\n    262144 LW R8, 0(R28)\t\t\n    262148 ADDI R8, R8, 158\t\n    262152 SW R8, 4(R28)';
+	}
 	else{
-		code_string += '; Declare number and sum.\n.data\n    number: .word -69\n    sum: .word 0\n\n; Store first number to R8\n; Add 158 to value in R8\n; Store total to sum\n.text\n    40000 LW R8, 0(R28)\t\t\n    40004 ADDI R8, R8, 9E\t\n    40008 SW R8, 4(R28)';
+		code_string += '; Store first addend\n    40000 ADDI R7, R0, 69\n    40004 SW R7, 20(R28)\n\n; Load first number to R8\n; Add 158 to value in R8\n; Store sum to next location\n    40008 LW R8, 20(R28)\t\t\n    4000C ADDI R8, R8, 9E\t\n    40010 SW R8, 24(R28)';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -19,8 +22,11 @@ function arithExpr(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; Declare x, y, and z variables \n.data\n    x: .short 35\n    y: .short 47\n    z: .short 26\n\n; Calculate -(x + y - 2 * z + 1)\n.text\n    mov (x), %eax\t\t\n    add (y), %eax\t\n    mov (z), %ebx\n    add %ebx, %ebx\n    sub %ebx, %eax\n    inc %eax \n    neg %eax';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Declare x, y, and z variables \n.data\n    x: .word 35\n    y: .word 47\n    z: .word 26\n\n; Calculate -(x + y - 2 * z + 1)\n.text\n    40000 LW R8, 0(R28)\n    40004 LW R9, 4(R28)\n    40008 ADD R8, R8, R9\n    4000C LW R10, 8(R28)\n    40010 ADD R10, R10, R10\n    40014 SUB R8, R8, R10\n    40018 ADDI R8, R8, 1\n    4001C SUB R8, R0, R8';
+	}
 	else{
-		code_string += '; Declare x, y, and z variables \n.data\n    x: .word 23\n    y: .word 2F\n    z: .word 1A\n\n; Calculate -(x + y - 2 * z + 1)\n.text\n    40000 LW R8, 0(R28)\n    40004 LW R9, 4(R28)\n    40008 ADD R8, R8, R9\n    4000C LW R10, 8(R28)\n    40010 ADD R10, R10, R10\n    40014 SUB R8, R8, R10\n    40018 ADDI R8, R8, 1\n    4001C SUB R8, R0, R8';
+		code_string += '; Calculate -(x + y - 2 * z + 1)\n; x = 35, y = 47, z = 26\n\n    40000 ADDI R8, R0, 23\n    40004 ADDI R9, R9, 2F\n    40008 ADD R8, R8, R9\n    4000C ADDI R10, R0, 1A\n    40010 ADD R10, R10, R10\n    40014 SUB R8, R8, R10\n    40018 ADDI R8, R8, 1\n    4001C SUB R8, R0, R8';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -32,8 +38,11 @@ function area(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; Declare length and width\n.data\n    long: .short 35\n    wide: .short 27\n\n; Calculate area of rectangle\n.text\n    mov (long), %eax\n    imul (wide), %eax';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Declare length and width\n.data\n    long: .word 35\n    wide: .word 27\n\n; Calculate area of rectangle\n.text\n    262144 LW R8, 0(R28)\n    262148 LW R9, 4(R28)\n    262152 MULT R8, R9\n    262156 MFLO R10';
+	}
 	else{
-		code_string += '; Declare length and width\n.data\n    long: .word 23\n    wide: .word 1B\n\n; Calculate area of rectangle\n.text\n    40000 LW R8, 0(R28)\n    40004 LW R9, 4(R28)\n    40008 MULT R8, R9\n    4000C MFLO R10';
+		code_string += '; Calculate area of rectangle\n    40000 ADDI R8, R0, 23\n    40004 ADDI R9, R0, 1B\n    40008 MULT R8, R9\n    4000C MFLO R10\n    40010 SW R10, 1000(R0)';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -45,8 +54,11 @@ function power(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; In edx, we put the number to raise to the power we put in ebx.\n      mov $2, %edx\n      mov $16, %ebx\n      call power\n      mov $0, %eax\n      int $32\n\npower: mov %edx, %ecx\nloop: imul %ecx, %edx\n      dec %ebx\n      cmp %ebx, $1\n      jne loop\n      ret\n';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; In R8, we put the number to raise to the power we put in R9.\n      4194304 ADDI R8, R0, 2\n      4194308 ADDI R9, R9, 10\n      4194312 JAL 16777280\n      4194316 SYSCALL\n\npower: 4194320 ADD R16, R0, R8\nloop: 4194324 MULT R8, R16\n      4194328 MFLO R8\n      4194332 ADDI R9, R9, -1\n      4194336 ADDI R10, R0, 1\n      4194340 BNE R9, R10, -5\n      4194344 JR R31';
+	}
 	else{
-		code_string += '; In R8, we put the number to raise to the power we put in R9.\n      400000 ADDI R8, R0, 2\n      400004 ADDI R9, R9, 10\n      400008 JAL 1000040\n      40000C SYSCALL\n\npower: 400010 ADD R16, R0, R8\nloop: 400014 MULT R8, R16\n      400018 MFLO R8\n      40001C ADDI R9, R9, -1\n      400020 ADDI R10, R0, 1\n      400024 BNE R9, R10, -5\n      400028 JR R31';
+		code_string += '; In R8, we put the number to raise to the power we put in R9.\n    400000 ADDI R8, R0, 2\n    400004 ADDI R9, R9, 10\n    400008 JAL 1000040\n    40000C SYSCALL\n\n    400010 ADD R16, R0, R8\n    400014 MULT R8, R16\n    400018 MFLO R8\n    40001C ADDI R9, R9, -1\n    400020 ADDI R10, R0, 1\n    400024 BNE R9, R10, -5\n    400028 JR R31';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -58,8 +70,11 @@ function data(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; First comes the data section, where we declare some names.\n.data\n    x: .byte 8\n    y: .short 16\n    z: .long 32\n\n; Next is the .text section, where we use them:\n.text\n    mov (x), %eax\n    mov (y), %ebx\n    mov (z), %ecx\n';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; First comes the data section, where we declare some names.\n.data\n    x: .word 8\n    y: .word 16\n    z: .word 32\n\n; Next is the .text section, where we use them:\n.text\n    4194304 LW R8, 0(R28)\n    4194308 LW R9, 4(R28)\n    4194312 LW R10, 8(R28)';
+	}
 	else{
-		code_string += '; First comes the data section, where we declare some names.\n.data\n    x: .word 8\n    y: .word 10\n    z: .word 20\n\n; Next is the .text section, where we use them:\n.text\n    400000 LW R8, 0(R28)\n    400004 LW R9, 4(R28)\n    400008 LW R10, 8(R28)';
+		code_string += '; Storing and fetching data\n    400000 ADDI R7, R0, 8\n    400004 SW R7, 0(R28)\n    400008 ADDI R7, R7, 8\n    40000C SW R7, 4(R28)\n    400010 ADDI R7, R7, 10\n    400014 SW R7, 8(R28)\n\n    400018 LW R8, 0(R28)\n    40001C LW R9, 4(R28)\n    400020 LW R10, 8(R28)';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -70,6 +85,9 @@ function loop(flavor) {
 	}
 	else if (flavor == 'att'){
 		code_string += '      mov $16, %eax\n      mov $0, %ebx\n\n; Compare eax and ebx and loop until equal\nloop: cmp %eax, %ebx\n      jz done\n      inc %ebx\n      dec %edx\n      jnz loop\n\ndone: mov %ebx, %ecx  ; when done, store ebx in ecx\n';
+	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Compare R8 and R9 and loop until equal\n; When done, store R9 to R11\n    262144 ADDI R8, R0, 10\n    262148 ADD R9, R0, R0\n    262152 ADDI R9, R9, 1\n    262156 ADDI R10, R10, -1\n    262160 BNE R8, R9, -3\n    262164 ADD R11, R11, R9';
 	}
 	else{
 		code_string += '; Compare R8 and R9 and loop until equal\n; When done, store R9 to R11\n    40000 ADDI R8, R0, 10\n    40004 ADD R9, R0, R0\n    40008 ADDI R9, R9, 1\n    4000C ADDI R10, R10, -1\n    40010 BNE R8, R9, -3\n    40014 ADD R11, R11, R9';
@@ -84,8 +102,11 @@ function log(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; Declare a number\n.data\n    number: .short 759\n\n; Calculating log (base 2) of a number\n.text\n    mov $0, %ecx\n    mov $1, %eax\nwhileLE: cmp (number), %eax\n         jnle endWhileLE\nbody: add %eax, %eax\n      inc %ecx\n      jmp whileLE\n\nendWhileLE: dec %ecx ';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Declare a number\n.data\n    number: .word 477\n\n; Calculating log (base 2) of a number\n.text\n    262144 ADD R8, R8, R0\n    262148 ADDI R9, R9, 1\n    262152 LW R10, 0(R28)\n\nWHILELE: 262156 SUB R11, R9, R10\n         262160 SLT R12, R0, R11\n         262164 BNE R12, R0, 3\nBODY: 262168 ADD R9, R9, R9\n      262172 ADDI R8, R8, 1\n      262176 J 1048624\n\nENDWHILELE: 262180 ADDI R8, R8, -1';
+	}
 	else{
-		code_string += '; Declare a number\n.data\n    number: .word 2F7\n\n; Calculating log (base 2) of a number\n.text\n    40000 ADD R8, R8, R0\n    40004 ADDI R9, R9, 1\n    40008 LW R10, 0(R28)\n\nWHILELE: 4000C SUB R11, R9, R10\n         40010 SLT R12, R0, R11\n         40014 BNE R12, R0, 3\nBODY: 40018 ADD R9, R9, R9\n      4001C ADDI R8, R8, 1\n      40020 J 100030\n\nENDWHILELE: 40024 ADDI R8, R8, -1';
+		code_string += '; Calculating log (base 2) of 759\n    40000 ADD R8, R8, R0\n    40004 ADDI R9, R9, 1\n    40008 ADDI R10, R0, 2F7\n\n    4000C SUB R11, R9, R10\n    40010 SLT R12, R0, R11\n    40014 BNE R12, R0, 3\n    40018 ADD R9, R9, R9\n    4001C ADDI R8, R8, 1\n    40020 J 100030\n\n    40024 ADDI R8, R8, -1';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -97,8 +118,11 @@ function avg(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .short 25, 47, -15, -50, 32, 95 DUP (10)\n    nbrElts: .short 100\n\n; Calculate the average of the array:\n.text\n    mov 0, %eax\n    mov 0, %ebx\n    mov 0, %edx\n    mov (nbrElts), %ecx\nforCount1: cmp %ebx, %ecx\n           je endCount\nbody: add (%ebx), %eax\n      inc %ebx\n      jmp forCount1\nendCount: idiv %ecx \n\n\n';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .word 25, 47, -15, -50, 32, 10, 10, 10, 10, 10\n    nbrElts: .word 10\n\n; Calculate the average of the array:\n.text\n    262144 ADD R8, R0, R0\n    262148 ADD R9, R0, R0\n    262152 LW R16, 28(R28)\n    262156 ADD R10, R0, R0\nFORCOUNT: 262160 BEQ R9, R16, 5\nBODY: 262164 LW R11, (R10)\n      262168 ADD R8, R8, R11\n      262172 ADDI R9, R9, 1\n      262176 ADDI R10, R10, 4\n      262180 J 1048640\nENDCOUNT: 262184 DIV R8, R16\n262188 MFLO R12\n262192 MFHI R13\n';
+	}
 	else{
-		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .word 19, 2F, -0F, -32, 20, 0A, 0A, 0A, 0A, 0A\n    nbrElts: .word 0A\n\n; Calculate the average of the array:\n.text\n    40000 ADD R8, R0, R0\n    40004 ADD R9, R0, R0\n    40008 LW R16, 28(R28)\n    4000C ADD R10, R0, R0\nFORCOUNT: 40010 BEQ R9, R16, 5\nBODY: 40014 LW R11, (R10)\n      40018 ADD R8, R8, R11\n      4001C ADDI R9, R9, 1\n      40020 ADDI R10, R10, 4\n      40024 J 100040\nENDCOUNT: 40028 DIV R8, R16\n4002C MFLO R12\n40030 MFHI R13\n';
+		code_string += '; Create an array\n    3FFF4 ADDI R7, R0, A\n    3FFF8 SW R7, 104(R0)\n    3FFFC ADDI R6, R0, 0\n    40000 ADDI R7, R0, 19\n    40004 SW R7, R6(R0)\n    40008 ADDI R6, R6, 4\n    4000C ADDI R7, R0, 2F\n    40010 SW R7, R6(R0)\n    40014 ADDI R6, R6, 4\n    40018 ADDI R7, R0, -F\n    4001C SW R7, R6(R0)\n    40020 ADDI R6, R6, 4\n    40024 ADDI R7, R0, -32\n    40028 SW R7, R6(R0)\n    4002C ADDI R6, R6, 4\n    40030 ADDI R7, R0, 20\n    40034 SW R7, R6(R0)\n    40038 ADDI R6, R6, 4\n    4003C ADDI R7, R0, A\n    40040 ADDI R14, R14, 5\n    40044 BEQ R14, R0, 4\n    40048 SW R7, R6(R0)\n    4004C ADDI R6, R6, 4\n    40050 ADDI R14, R14, -1\n    40054 J 100110\n\n; Calculate the average of the array:\n    40058 ADD R8, R0, R0\n    4005C ADD R9, R0, R0\n    40060 LW R16, 104(R28)\n    40064 ADD R10, R0, R0\n    40068 BEQ R9, R16, 5\n    4006C LW R11, (R10)\n    40070 ADD R8, R8, R11\n    40074 ADDI R9, R9, 1\n    40078 ADDI R10, R10, 4\n    4007C J 1001A0\n    40080 DIV R8, R16\n    40084 MFLO R12\n    40088 MFHI R13\n';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -110,8 +134,11 @@ function celFah(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; Declare a Celsius temperature\n; Uninitialized fTemp \n.data\n    cTemp: .short 35\n    fTemp: .short ?\n\n; Convert from Celsius to Fahrenheit\n; Store result in fTemp\n.text\n    mov (cTemp), %eax\n    imul $9, %eax\n    add $2, %eax\n    mov $5, %ebx\n    idiv %ebx \n    add $32, %eax\n    mov %eax, (fTemp)';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Declare a Celsius temperature\n\n.data\n    cTemp: .word 35\n    fTemp: .word 0\n\n; Convert from Celsius to Fahrenheit\n; Store result in fTemp\n.text\n    262144 LW R8, 0(R28)\n    262148 ADDI R9, R0, 9\n    262152 MULT R8, R9\n    262156 MFLO R8\n    262160 ADDI R8, R8, 2\n    262164 ADDI R9, R0, 5\n    262168 DIV R8, R9\n    262172 MFLO R8\n    262176 ADDI R8, R8, 32\n    262180 SW R8, 4(R28)';
+	}
 	else{
-		code_string += '; Declare a Celsius temperature\n\n.data\n    cTemp: .word 23\n    fTemp: .word 0\n\n; Convert from Celsius to Fahrenheit\n; Store result in fTemp\n.text\n    40000 LW R8, 0(R28)\n    40004 ADDI R9, R0, 9\n    40008 MULT R8, R9\n    4000C MFLO R8\n    40010 ADDI R8, R8, 2\n    40014 ADDI R9, R0, 5\n    40018 DIV R8, R9\n    4001C MFLO R8\n    40020 ADDI R8, R8, 20\n    40024 SW R8, 4(R28)';
+		code_string += '; Convert from Celsius to Fahrenheit\n; Store result in memory location 100\n    40000 ADDI R8, R0, 23\n    40004 ADDI R9, R0, 9\n    40008 MULT R8, R9\n    4000C MFLO R8\n    40010 ADDI R8, R8, 2\n    40014 ADDI R9, R0, 5\n    40018 DIV R8, R9\n    4001C MFLO R8\n    40020 ADDI R8, R8, 20\n    40024 SW R8, 100(R28)';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -123,8 +150,11 @@ function modify(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .short 25, 47, 15, 50, 32, 95 DUP (10)\n    nbrElts: .short 100\n    nbrMin: .short 33\n\n; Change any numbers less than min to min:\n.text\n    mov 0, %eax\n    mov 0, %ebx\n    mov 0, %edx\n    mov (nbrElts), %ecx\nforCount1: cmp %ecx, %ebx\n           je endCount\nbody: cmp (nbrMin), (%ebx)\n      jge endIfSmall\n      mov (nbrMin), (%ebx)\nendIfSmall: add (%ebx), %eax\n            inc %ebx\n            jmp forCount1\nendCount: mov %eax, %edx\n\n\n';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .word 25, 47, 15, 50, 32, 10, 10, 10, 10, 10\n    nbrElts: .word 10\n    nbrMin: .word 33\n\n; Change any numbers less than min to min:\n.text\n    262144 ADD R8, R0, R0\n    262148 ADD R9, R0, R0\n    262152 ADD R10, R0, R0\n    262156 ADD R11, R0, R0\n    262160 LW R16, 44(R28)\n    262164 LW R17, 40(R28)\nFORCOUNT: 262168 BEQ R10, R17, 9\nBODY: 262172 LW R12, (R9)\n      262176 SLT R13, R16, R12\n      262180 BNE R13, R0, 1\n      262184 SW R16, (R9)\nENDIFSMALL: 262188 LW R11, (R9)\n            262192 ADD R8, R8, R11\n            262196 ADDI R9, R9, 4\n            262200 ADDI R10, R10, 1\n            262204 J 1048672\nENDCOUNT: 262208 ADD R13, R0, R8';
+	}
 	else{
-		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .word 19, 2F, 0F, 32, 20, 0A, 0A, 0A, 0A, 0A\n    nbrElts: .word 0A\n    nbrMin: .word 21\n\n; Change any numbers less than min to min:\n.text\n    40000 ADD R8, R0, R0\n    40004 ADD R9, R0, R0\n    40008 ADD R10, R0, R0\n    4000C ADD R11, R0, R0\n    40010 LW R16, 2C(R28)\n    40014 LW R17, 28(R28)\nFORCOUNT: 40018 BEQ R10, R17, 9\nBODY: 4001C LW R12, (R9)\n      40020 SLT R13, R16, R12\n      40024 BNE R13, R0, 1\n      40028 SW R16, (R9)\nENDIFSMALL: 4002C LW R11, (R9)\n            40030 ADD R8, R8, R11\n            40034 ADDI R9, R9, 4\n            40038 ADDI R10, R10, 1\n            4003C J 100060\nENDCOUNT: 40040 ADD R13, R0, R8';
+		code_string += '; Create an array\n    3FFEC ADDI R7, R0, A\n    3FFF0 SW R7, 100(R0)\n    3FFF4 ADDI R7, R0, 21\n    3FFF8 SW R7, 104(R0)\n    3FFFC ADDI R6, R0, 0\n    40000 ADDI R7, R0, 19\n    40004 SW R7, R6(R0)\n    40008 ADDI R6, R6, 4\n    4000C ADDI R7, R0, 2F\n    40010 SW R7, R6(R0)\n    40014 ADDI R6, R6, 4\n    40018 ADDI R7, R0, F\n    4001C SW R7, R6(R0)\n    40020 ADDI R6, R6, 4\n    40024 ADDI R7, R0, 32\n    40028 SW R7, R6(R0)\n    4002C ADDI R6, R6, 4\n    40030 ADDI R7, R0, 20\n    40034 SW R7, R6(R0)\n    40038 ADDI R6, R6, 4\n    4003C ADDI R7, R0, A\n    40040 ADDI R14, R14, 5\n    40044 BEQ R14, R0, 4\n    40048 SW R7, R6(R0)\n    4004C ADDI R6, R6, 4\n    40050 ADDI R14, R14, -1\n    40054 J 100110\n\n; Change any numbers in array less than 33 to 33:\n    40058 ADD R8, R0, R0\n    4005C ADD R9, R0, R0\n    40060 ADD R10, R0, R0\n    40064 ADD R11, R0, R0\n    40068 LW R16, 104(R28)\n    4006C LW R17, 100(R28)\n    40070 BEQ R10, R17, 9\n    40074 LW R12, (R9)\n    40078 SLT R13, R16, R12\n    4007C BNE R13, R0, 1\n    40080 SW R16, (R9)\n    40084 LW R11, (R9)\n    40088 ADD R8, R8, R11\n    4008C ADDI R9, R9, 4\n    40090 ADDI R10, R10, 1\n    40094 J 1001A0\n    40098 ADD R13, R0, R8';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -136,8 +166,11 @@ function sqrt(flavor) {
 	else if (flavor == 'att'){
 		code_string += '; Declare a number\n.data\n    number: .short 100\n\n; Calculate square root of the number\n.text\n    mov (number), %eax\n    push %ebx\n    push %ecx\n    mov $0, %ebx\nWhileLE: mov %ebx, %ecx\n         imul %ebx, %ecx\n         cmp %eax, %ecx\n         jnle EndWhileLE\n         inc %ebx\n         jmp WhileLE\nEndWhileLE: dec %ebx\n            mov %ebx, %eax\n            pop %ecx\n            pop %ebx';
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += '; Declare a number\n.data\n    number: .word 100\n\n; Calculate square root of the number\n.text\n    262144 LW R8, 0(R28)\n\nWHILELE: 262148 ADD R10, R0, R9\n         262152 MULT R10, R9\n         262156 MFLO R10\n         262160 SUB R11, R10, R8\n         262164 SLT R12, R0, R11\n         262168 BNE R12, R0, 2\n         262172 ADDI R9, R9, 1\n         262176 J 1048592\nENDWHILELE: 262180 ADDI R9, R9, -1\n            262184 ADD R8, R0, R9\n            ';
+	}
 	else{
-		code_string += '; Declare a number\n.data\n    number: .word 64\n\n; Calculate square root of the number\n.text\n    40000 LW R8, 0(R28)\n\nWHILELE: 40004 ADD R10, R0, R9\n         40008 MULT R10, R9\n         4000C MFLO R10\n         40010 SUB R11, R10, R8\n         40014 SLT R12, R0, R11\n         40018 BNE R12, R0, 2\n         4001C ADDI R9, R9, 1\n         40020 J 100010\nENDWHILELE: 40024 ADDI R9, R9, -1\n            40028 ADD R8, R0, R9\n            ';
+		code_string += '; Store a number\n    40000 ADDI R7, R0, 64\n    40004 SW R7, 100(R28)\n\n; Calculate square root of the number\n    40008 LW R8, 100(R28)\n    4000C ADD R10, R0, R9\n    40010 MULT R10, R9\n    40014 MFLO R10\n    40018 SUB R11, R10, R8\n    4001C SLT R12, R0, R11\n    40020 BNE R12, R0, 2\n    40024 ADDI R9, R9, 1\n    40028 J 100010\n    4002C ADDI R9, R9, -1\n    40030 ADD R8, R0, R9\n            ';
 	}
 	document.getElementById('id_code').value = code_string;
 }
@@ -148,6 +181,9 @@ function arithShift(flavor) {
 	}
 	else if (flavor == 'att'){
 		code_string += 'movb $1, (4)\nmov $4, %eax\nmov $2, %ebx\nmov $8, %ecx\nmov $16, %edx\nadd %ecx, %ebx\nsub %ecx, %edx\nimul (4), %eax\nshl $2, (4)\n';
+	}
+	else if (flavor == 'mips_asm'){
+		code_string += '4194304 ADDI R8, R0, 4\n4194308 ADDI R9, R0, 1\n4194312 SW R9, 0(R8)\n4194316 ADD R10, R0, R8\n4194320 ADDI R11, R0, 2\n4194324 ADDI R12, R0, 8\n4194328 ADDI R13, R0, 10\n4194332 ADD R11, R11, R12\n4194336 SUB R13, R13, R12\n4194340 MULT R10, R9\n4194344 MFLO R10 \n4194348 SLL R9, R9, 2\n4194352 SW R9, 0(R8)';
 	}
 	else{
 		code_string += '400000 ADDI R8, R0, 4\n400004 ADDI R9, R0, 1\n400008 SW R9, 0(R8)\n40000C ADD R10, R0, R8\n400010 ADDI R11, R0, 2\n400014 ADDI R12, R0, 8\n400018 ADDI R13, R0, 10\n40001C ADD R11, R11, R12\n400020 SUB R13, R13, R12\n400024 MULT R10, R9\n400028 MFLO R10 \n40002C SLL R9, R9, 2\n400030 SW R9, 0(R8)';
@@ -162,8 +198,11 @@ function array(flavor) {
 	else if (flavor == 'att'){
 		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .byte 3, 8, 5, 2\n    y: .short 13 DUP (-50)\n    z: .long 'hello', 0\n\n; Store array values\n.text\n    mov (x), %eax \n    mov 4(y), %ebx\n    mov 3(z), %ecx\n    mov 2(x), %edx";
 	}
+	else if (flavor == 'mips_asm'){
+		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .word 3, 8, 5, 2\n    y: .word 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50\n    z: .word 'hello', 0\n\n; Store array values\n.text\n    4194304 LW R8, 0(R28) \n    4194308 LW R9, 32(R28)\n    4194312 LW R10, 80(R28)\n    4194316 LW R11, 8(R28)";
+	}
 	else{
-		code_string += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .word 3, 8, 5, 2\n    y: .word 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32\n    z: .word 'hello', 0\n\n; Store array values\n.text\n    400000 LW R8, 0(R28) \n    400004 LW R9, 20(R28)\n    400008 LW R10, 50(R28)\n    40000C LW R11, 8(R28)";
+		code_string += '; Declare array 3, 8, 5, 2, 32, 32, etc.\n\n\t400000 ADDI R12, R12, 3\n\t400004 SW R12, 0(R0)\n\t400008 ADDI R12, R12, 5\n\t40000C SW R12, 4(R0)\n\t400010 ADDI R12, R12, -3\n\t400014 SW R12, 8(R0)\n\t400018 ADDI R12, R12, -3\n\t40001C SW R12, C(R0)\n\t400020 ADDI R12, R0, 32\n\t400024 ADDI R13, R0, 10\n\t400028 ADDI R14, R0, 38\n\t40002C BEQ R13, R14, 3\n\t400030 SW R12, R13(R0)\n\t400034 ADDI R13, R13, 4\n\t400038 J 10000B0\n\n    40003C LW R8, 0(R28) \n    400040 LW R9, 20(R28)';
 	}
 	document.getElementById('id_code').value = code_string;
 }
