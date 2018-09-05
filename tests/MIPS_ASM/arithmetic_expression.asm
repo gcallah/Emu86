@@ -1,8 +1,8 @@
 ; Declare x, y, and z variables 
 .data
-    x: .word 23
-    y: .word 2F
-    z: .word 1A
+    x: .word 0x23
+    y: .word 0x2F
+    z: .word 0x1A
 
 ; Calculate -(x + y - 2 * z + 1)
 .text

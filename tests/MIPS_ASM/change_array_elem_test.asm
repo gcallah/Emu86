@@ -1,26 +1,26 @@
 ; Declare an array and declare size of the array
 ; Declare the minimum of the array
 .data
-    nbrArray: .word 19, 2F, 0F, 32, 20, 0A, 0A, 0A, 0A, 0A
-    nbrElts: .word 0A
-    nbrMin: .word 21
+    nbrArray: .word 0x19, 0x2F, 0xF, 0x32, 0x20, 0xA, 0xA, 0xA, 0xA, 0xA
+    nbrElts: .word 0xA
+    nbrMin: .word 0x21
 
 ; Change any numbers less than min to min:
 .text
-    40000 ADD R8, R0, R0
-    40004 ADD R9, R0, R0
-    40008 ADD R10, R0, R0
-    4000C ADD R11, R0, R0
-    40010 LW R16, 2C(R28)
-    40014 LW R17, 28(R28)
-FORCOUNT: 40018 BEQ R10, R17, 9
-BODY: 4001C LW R12, (R9)
-      40020 SLT R13, R16, R12
-      40024 BNE R13, R0, 1
-      40028 SW R16, (R9)
-ENDIFSMALL: 4002C LW R11, (R9)
-            40030 ADD R8, R8, R11
-            40034 ADDI R9, R9, 4
-            40038 ADDI R10, R10, 1
-            4003C J 100060
-ENDCOUNT: 40040 ADD R13, R0, R8
+    0x40000 ADD R8, R0, R0
+    0x40004 ADD R9, R0, R0
+    0x40008 ADD R10, R0, R0
+    0x4000C ADD R11, R0, R0
+    0x40010 LW R16, 0x2C(R28)
+    0x40014 LW R17, 0x28(R28)
+FORCOUNT: 0x40018 BEQ R10, R17, 9
+BODY: 0x4001C LW R12, (R9)
+      0x40020 SLT R13, R16, R12
+      0x40024 BNE R13, R0, 1
+      0x40028 SW R16, (R9)
+ENDIFSMALL: 0x4002C LW R11, (R9)
+            0x40030 ADD R8, R8, R11
+            0x40034 ADDI R9, R9, 4
+            0x40038 ADDI R10, R10, 1
+            0x4003C J 0x100060
+ENDCOUNT: 0x40040 ADD R13, R0, R8
