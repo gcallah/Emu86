@@ -109,6 +109,10 @@ def main_page(request):
                 intel_machine.flavor = lang
                 header_line = site_hdr
                 site_hdr += ": " + INTEL[lang]
+                if base == "hex":
+                    convert_reg_contents(intel_machine.registers)
+                    convert_mem_contents(intel_machine.memory)
+                    convert_stack_contents(intel_machine.stack)
                 return render(request, 'main.html',
                               {'form': form,
                                HEADER: site_hdr,
@@ -249,14 +253,9 @@ def main_page(request):
                   })
 
 def is_hex_form(request):
-    hex_term = False
-    if "R29" in request.POST:
-        if request.POST["R29"] == "1FF":
-            hex_term = True
-    elif "ESP" in request.POST:
-        if request.POST["ESP"] == "1FF":
-            hex_term = True
-    return hex_term
+    if request.POST['base'] == "hex":
+        return True
+    return False
 
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
