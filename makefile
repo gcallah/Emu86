@@ -48,6 +48,9 @@ website: $(INCS) $(HTML_FILES) help
 	git pull origin master
 	git push origin master
 
+container:
+	docker build -t emu86 docker
+
 # build instruction help material from python source:
 help: $(SRCS) samples
 	python3 write_sample_programs.py
