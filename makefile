@@ -53,8 +53,14 @@ website: $(INCS) $(HTML_FILES) help
 container:
 	docker build -t emu86 docker
 
+help_mips: $(MIPS_SRCS)
+	$(EXTR) <$(MIPS_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_arithmetic.txt
+	$(EXTR) <$(MIPS_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_control_flow.txt
+	$(EXTR) <$(MIPS_DIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_data_mov.txt
+	$(EXTR) <$(MIPS_DIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_interrupts.txt
+
 # build instruction help material from python source:
-help: $(SRCS) $(MIPS_SRCS) samples
+help: $(SRCS) samples help_mips
 	python3 write_sample_programs.py
 	git add $(TEMPLATE_DIR)/sample_programs_*.txt -f
 	git commit -m "Updating sample files"
@@ -64,10 +70,6 @@ help: $(SRCS) $(MIPS_SRCS) samples
 	$(EXTR) <$(INTEL_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
 	$(EXTR) <$(INTEL_DIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/data_mov.txt
 	$(EXTR) <$(INTEL_DIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/interrupts.txt
-	$(EXTR) <$(MIPS_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_arithmetic.txt
-	$(EXTR) <$(MIPS_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_control_flow.txt
-	$(EXTR) <$(MIPS_DIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_data_mov.txt
-	$(EXTR) <$(MIPS_DIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_interrupts.txt
 	$(UDIR)/html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
 	$(UDIR)/django2ptml.awk <$(ODIR)/help.html title="Language Description" >$(PTML_DIR)/help.ptml
 	-git commit $(ODIR)/help.html
