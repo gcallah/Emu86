@@ -104,7 +104,7 @@ dev: $(SRCS) $(MIPS_SRCS) $(OBJS)
 	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
-prod: $(SRCS) $(MIPS_SRCS) $(OBJ)
+prod: $(SRCS) $(OBJ)
 	./all_tests.sh
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'
