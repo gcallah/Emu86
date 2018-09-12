@@ -76,7 +76,7 @@ jsfile:
 
 zip: 
 	-git rm Haldun.zip
-	git commit -m 'Removing old zip file'
+	-git commit -m 'Removing old zip file'
 	git push origin master
 	git archive --format zip --output Haldun.zip master 
 	git add Haldun.zip
