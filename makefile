@@ -6,6 +6,7 @@ PTML_DIR = html_src
 ADIR = ansible
 SDIR = assembler
 INTEL_DIR = $(SDIR)/Intel
+MIPS_DIR = $(SDIR)/MIPS
 EMUDIR = Emu86
 ODIR = $(EMUDIR)/templates
 MUDIR = myutils
@@ -62,6 +63,10 @@ help: $(SRCS) samples
 	$(EXTR) <$(INTEL_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
 	$(EXTR) <$(INTEL_DIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/data_mov.txt
 	$(EXTR) <$(INTEL_DIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/interrupts.txt
+	$(EXTR) <$(MIPS_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_arithmetic.txt
+	$(EXTR) <$(MIPS_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_control_flow.txt
+	$(EXTR) <$(MIPS_DIR)/data_mov.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_data_mov.txt
+	$(EXTR) <$(MIPS_DIR)/interrupts.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_interrupts.txt
 	$(UDIR)/html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
 	$(UDIR)/django2ptml.awk <$(ODIR)/help.html title="Language Description" >$(PTML_DIR)/help.ptml
 	-git commit $(ODIR)/help.html
