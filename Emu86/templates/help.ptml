@@ -141,28 +141,28 @@
                 </summary>
 
                 <details>
-                    <summary class="sum3">
+                    <summary class="sum4">
                     Interrupts
                     </summary>
 <!--include interrupts.txt -->
                 </details>
 
                 <details>
-                    <summary class="sum3">
+                    <summary class="sum4">
                     Data Movement
                     </summary>
 <!--include data_mov.txt -->
                 </details>
                     
                 <details>
-                    <summary class="sum3">
+                    <summary class="sum4">
                     Control Flow
                     </summary>
 <!--include control_flow.txt -->
                 </details>
 
                 <details>
-                    <summary class="sum3">
+                    <summary class="sum4">
                     Arithmetic and Logic
                     </summary>
 <!--include arithmetic.txt -->
@@ -175,28 +175,28 @@
                 </summary>
 
                 <details>
-                    <summary class="sum3">
+                    <summary class="sum4">
                     Interrupts
                     </summary>
 <!--include mips_interrupts.txt -->
                 </details>
 
                 <details>
-                    <summary class="sum3">
+                    <summary class="sum4">
                     Data Movement
                     </summary>
 <!--include mips_data_mov.txt -->
                 </details>
                     
                 <details>
-                    <summary class="sum3">
+                    <summary class="sum4">
                     Control Flow
                     </summary>
 <!--include mips_control_flow.txt -->
                 </details>
 
                 <details>
-                    <summary class="sum3">
+                    <summary class="sum4">
                     Arithmetic and Logic
                     </summary>
 <!--include mips_arithmetic.txt -->

@@ -63,7 +63,7 @@ help_mips: $(MIPS_SRCS)
 help: $(SRCS) samples help_mips
 	python3 write_sample_programs.py
 	git add $(TEMPLATE_DIR)/sample_programs_*.txt -f
-	git commit -m "Updating sample files"
+	-git commit -m "Updating sample files"
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
 	$(EXTR) <$(INTEL_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
 	$(EXTR) <$(INTEL_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
