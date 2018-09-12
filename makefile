@@ -12,7 +12,6 @@ ODIR = $(EMUDIR)/templates
 MUDIR = myutils
 UDIR = utils
 TDIR = tests
-INTEL_TEST_DIR = $(TDIR)/Intel
 SRCS = $(INTEL_DIR)/arithmetic.py $(INTEL_DIR)/control_flow.py $(INTEL_DIR)/data_mov.py $(INTEL_DIR)/interrupts.py 
 MIPS_SRCS = $(MIPS_DIR)/arithmetic.py $(MIPS_DIR)/control_flow.py $(MIPS_DIR)/data_mov.py $(MIPS_DIR)/interrupts.py 
 INTER2 = $(ODIR)/help.ptml
@@ -24,7 +23,7 @@ INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
 ASM_FILES = $(shell ls $(TDIR)/*/.asm)
-ASM_PTMLS = $(shell ls $(INTEL_TEST_DIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
+ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel/html_src/')
 
 # this rule builds the menu for the static server:
 navbar:
