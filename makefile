@@ -13,6 +13,7 @@ MUDIR = myutils
 UDIR = utils
 TDIR = tests
 SRCS = $(INTEL_DIR)/arithmetic.py $(INTEL_DIR)/control_flow.py $(INTEL_DIR)/data_mov.py $(INTEL_DIR)/interrupts.py 
+MIPS_SRCS = $(MIPS_DIR)/arithmetic.py $(MIPS_DIR)/control_flow.py $(MIPS_DIR)/data_mov.py $(MIPS_DIR)/interrupts.py 
 INTER2 = $(ODIR)/help.ptml
 OBJS = $(ODIR)/help.html
 EXTR = $(UDIR)/extract_doc.awk
@@ -53,7 +54,7 @@ container:
 	docker build -t emu86 docker
 
 # build instruction help material from python source:
-help: $(SRCS) samples
+help: $(SRCS) $(MIPS_SRCS) samples
 	python3 write_sample_programs.py
 	git add $(TEMPLATE_DIR)/sample_programs_*.txt -f
 	git commit -m "Updating sample files"
@@ -95,13 +96,13 @@ db:
 	-git commit $(EMUDIR)/migrations/*.py
 	git push origin master
 
-dev: $(SRCS) $(OBJS) 
+dev: $(SRCS) $(MIPS_SRCS) $(OBJS) 
 	./all_tests.sh
 	-git commit -a
 	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
-prod: $(SRCS) $(OBJ)
+prod: $(SRCS) $(MIPS_SRCS) $(OBJ)
 	./all_tests.sh
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'
