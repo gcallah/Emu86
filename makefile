@@ -7,6 +7,7 @@ ADIR = ansible
 SDIR = assembler
 INTEL_DIR = $(SDIR)/Intel
 MIPS_DIR = $(SDIR)/MIPS
+INTEL_TEST_DIR = $(TDIR)/Intel
 EMUDIR = Emu86
 ODIR = $(EMUDIR)/templates
 MUDIR = myutils
@@ -23,7 +24,7 @@ INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
 ASM_FILES = $(shell ls $(TDIR)/*/.asm)
-ASM_PTMLS = $(shell ls $(INTEL_DIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
+ASM_PTMLS = $(shell ls $(INTEL_TEST_DIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
 
 # this rule builds the menu for the static server:
 navbar:
