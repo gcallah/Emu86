@@ -79,9 +79,7 @@ def main_page(request):
                 mips_machine.flavor = lang
                 mips_machine.base = base
                 site_hdr += ": " + MIPS[lang]
-                convert_reg_contents(mips_machine.registers)
-                convert_mem_contents(mips_machine.memory)
-                convert_stack_contents(mips_machine.stack)
+                hex_conversion(mips_machine)
                 return render(request, 'main.html',
                             {'form': form,
                              HEADER: site_hdr,
@@ -109,6 +107,7 @@ def main_page(request):
                 intel_machine.flavor = lang
                 header_line = site_hdr
                 site_hdr += ": " + INTEL[lang]
+                hex_conversion(intel_machine)
                 return render(request, 'main.html',
                               {'form': form,
                                HEADER: site_hdr,
@@ -194,10 +193,7 @@ def main_page(request):
     if mips_machine.flavor in MIPS:
         mips_machine.order_mem()
         site_hdr += ": " + MIPS[mips_machine.flavor]
-        if mips_machine.base == "hex":
-            convert_reg_contents(mips_machine.registers)
-            convert_mem_contents(mips_machine.memory)
-            convert_stack_contents(mips_machine.stack)
+        hex_conversion(mips_machine)
         return render(request, 'main.html',
                     {'form': form,
                      HEADER: site_hdr,
@@ -222,10 +218,7 @@ def main_page(request):
         
     site_hdr += ": " + INTEL[intel_machine.flavor]
     intel_machine.order_mem()
-    if intel_machine.base == "hex":
-        convert_reg_contents(intel_machine.registers)
-        convert_mem_contents(intel_machine.memory)
-        convert_stack_contents(intel_machine.stack)
+    hex_conversion(intel_machine)
     return render(request, 'main.html',
                   {'form': form,
                    HEADER: site_hdr,
@@ -249,14 +242,9 @@ def main_page(request):
                   })
 
 def is_hex_form(request):
-    hex_term = False
-    if "R29" in request.POST:
-        if request.POST["R29"] == "1FF":
-            hex_term = True
-    elif "ESP" in request.POST:
-        if request.POST["ESP"] == "1FF":
-            hex_term = True
-    return hex_term
+    if request.POST['base'] == "hex":
+        return True
+    return False
 
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
@@ -318,6 +306,12 @@ def convert_stack_contents(stack):
             stack[loc] = "-" + hex_list[1]
         else:
             stack[loc] = hex_list[1]
+
+def hex_conversion(vm):
+    if vm.base == "hex":
+        convert_reg_contents(vm.registers)
+        convert_mem_contents(vm.memory)
+        convert_stack_contents(vm.stack)
 
 def help(request):
     intel_machine.re_init()
