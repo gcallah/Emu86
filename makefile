@@ -22,8 +22,8 @@ INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
-ASM_FILES = $(shell ls $(TDIR)/*.asm)
-ASM_PTMLS = $(shell ls $(TDIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
+ASM_FILES = $(shell ls $(TDIR)/*/.asm)
+ASM_PTMLS = $(shell ls $(INTEL_DIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
 
 # this rule builds the menu for the static server:
 navbar:
@@ -64,7 +64,6 @@ help: $(SRCS) samples help_mips
 	python3 write_sample_programs.py
 	git add $(TEMPLATE_DIR)/sample_programs_*.txt -f
 	git commit -m "Updating sample files"
-	git push origin master
 	$(EXTR) <$(SDIR)/parse.py | $(D2HTML) >$(TEMPLATE_DIR)/data.txt
 	$(EXTR) <$(INTEL_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/arithmetic.txt
 	$(EXTR) <$(INTEL_DIR)/control_flow.py | $(D2HTML) >$(TEMPLATE_DIR)/control_flow.txt
@@ -73,6 +72,7 @@ help: $(SRCS) samples help_mips
 	$(UDIR)/html_include.awk <$(ODIR)/help.ptml >$(ODIR)/help.html
 	$(UDIR)/django2ptml.awk <$(ODIR)/help.html title="Language Description" >$(PTML_DIR)/help.ptml
 	-git commit $(ODIR)/help.html
+	git push origin master
 
 jsfile:
 	python3 function_create_js.py
