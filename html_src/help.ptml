@@ -1352,18 +1352,7 @@
             <p>
                         Moves the value from the HI register into the 
                         destination register given.
-                """
-            
-                def fhook(self, ops, vm):
-                    check_num_args(self.name, ops, 1)
-                    if not isinstance(ops[0], Register):
-                        raise InvalidArgument(ops[0].get_nm())
-                    ops[0].set_val(vm.registers['HI'])
-                    vm.changes.add(ops[0].get_nm())
-                    return ''
-            
-            class Mflo(Instruction):
-                """
+            </p>
             <hr>
             <h4>
                          mflo
@@ -1381,18 +1370,10 @@
             <p>
                         Moves the value from the LO register into the 
                         destination register given.
-                """
-            
-                def fhook(self, ops, vm):
-                    check_num_args(self.name, ops, 1)
-                    if not isinstance(ops[0], Register):
-                        raise InvalidArgument(ops[0].get_nm())
-                    ops[0].set_val(vm.registers['LO'])
-                    vm.changes.add(ops[0].get_nm())
-                    return ''
-                    
+            </p>
                             </details>
                         </details>
+                    </details>
             
                     <details>
                         <summary class="sum2">

@@ -22,7 +22,7 @@ INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
-ASM_FILES = $(shell ls $(TDIR)/*/.asm)
+ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
 ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel/html_src/')
 
 # this rule builds the menu for the static server:
@@ -42,7 +42,7 @@ local: $(HTML_FILES)
 $(PTML_DIR)/%.ptml: $(TDIR)/%.asm
 	$(MUDIR)/asm2ptml.awk $< >$@
 
-samples: $(ASM_PTMLS)
+samples: $(ASM_PTMLS) $(TDIR)
 	
 # build the static website describing the project:
 website: $(INCS) $(HTML_FILES) help
