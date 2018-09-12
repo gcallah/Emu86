@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            Intel
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            Intel
+            </h1>
+            <p>
+First comes the data section, where we declare some names.
+            </p>
+            <pre>
+            <code>
+.data
+    x DB 8
+    y DW 16
+    z DD 32
+
+            </code>
+            </pre>
+            <p>
+Next is the .text section, where we use them:
+            </p>
+            <pre>
+            <code>
+.text
+    mov eax, [x]
+    mov ebx, [y]
+    mov ecx, [z]
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

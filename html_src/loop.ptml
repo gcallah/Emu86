@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            Intel
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            Intel
+            </h1>
+            <pre>
+            <code>
+      mov eax, 16
+      mov ebx, 0
+
+            </code>
+            </pre>
+            <p>
+Compare eax and ebx and loop until equal
+            </p>
+            <pre>
+            <code>
+loop: cmp eax, ebx
+      jz done
+      inc ebx
+      dec edx
+      jnz loop
+
+done: mov ecx, ebx  ; when done, store ebx in ecx
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

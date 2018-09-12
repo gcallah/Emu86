@@ -3,7 +3,7 @@
     <head>
 <!--include head.txt -->
         <title>
-            cel_to_fah.asm
+            Intel
         </title>
     </head>
     <body>
@@ -11,7 +11,7 @@
 <!--include navbar.txt -->
             <div id="content">
             <h1>
-            cel_to_fah.asm
+            Intel
             </h1>
             <p>
 Declare a Celsius temperature

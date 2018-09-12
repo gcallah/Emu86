@@ -3,7 +3,7 @@
     <head>
 <!--include head.txt -->
         <title>
-            mem_register_test.asm
+            Intel
         </title>
     </head>
     <body>
@@ -11,7 +11,7 @@
 <!--include navbar.txt -->
             <div id="content">
             <h1>
-            mem_register_test.asm
+            Intel
             </h1>
             <p>
 Declare arrays
@@ -36,6 +36,7 @@ Storing values into memory using register arithmetic
 	mov [eax+2], [y+3]
 	mov [ebx], [z]
 	mov [eax-5], [y+2]
+	mov [-5+eax], [y+2]
             </code>
             </pre>
             </div>

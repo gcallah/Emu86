@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<!--include head.txt -->
+        <title>
+            Intel
+        </title>
+    </head>
+    <body>
+        <div class="wrapper">
+<!--include navbar.txt -->
+            <div id="content">
+            <h1>
+            Intel
+            </h1>
+            <p>
+In edx, we put the number to raise to the power we put in ebx.
+            </p>
+            <pre>
+            <code>
+      mov edx, 2
+      mov ebx, 16
+      call power
+      mov eax, 0
+      int 32
+
+power: mov ecx, edx
+loop: imul edx, ecx
+      dec ebx
+      cmp ebx, 1
+      jne loop
+      ret
+            </code>
+            </pre>
+            </div>
+        </div>
+    </body>
+</html>

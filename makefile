@@ -23,7 +23,7 @@ INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
 ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
-ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel/html_src/')
+ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel\//html_src\//')
 
 # this rule builds the menu for the static server:
 navbar:
@@ -39,7 +39,7 @@ navbar:
 local: $(HTML_FILES)
 
 # build sample asm web pages for project web site:
-$(PTML_DIR)/%.ptml: $(TDIR)/%.asm
+$(PTML_DIR)/%.ptml: $(TDIR)/Intel/%.asm
 	$(MUDIR)/asm2ptml.awk $< >$@
 
 samples: $(ASM_PTMLS) $(TDIR)

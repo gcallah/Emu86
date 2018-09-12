@@ -3,16 +3,15 @@
     <head>
 <!--include head.txt -->
         <title>
-            test_interrupt.asm
+            Intel
         </title>
     </head>
-
     <body>
         <div class="wrapper">
 <!--include navbar.txt -->
             <div id="content">
             <h1>
-            test_interrupt.asm
+            Intel
             </h1>
             <pre>
             <code>
