@@ -20,7 +20,7 @@ link_names = {
 }
 
 def create_href():
-	tab = '\t'
+	tab = '    '
 	directories = ["tests/Intel", "tests/ATT", "tests/MIPS_ASM", "tests/MIPS_MML"]
 	for dire in directories: 
 		directory_intel = os.fsencode(dire)
@@ -50,7 +50,7 @@ def create_href():
 		file_name.close()
 
 def create_sidebar():
-	tab = '\t'
+	tab = '    '
 	directory = os.fsencode("tests/Intel")
 	file_name = open("templates/samples.txt", "w")
 	file_name.write(tab * 3 + 
