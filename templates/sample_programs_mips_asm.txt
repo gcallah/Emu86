@@ -1,76 +1,57 @@
-<<<<<<< HEAD
-			<ul class="nested">
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/area.asm">
-						Calculate area of a rectangle
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/arithmetic_expression.asm">
-						Calculate an arithmetic expression
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/arithmetic_shift.asm">
-						Arithmetic shift
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/array.asm">
-						Declare an array
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/array_average_test.asm">
-						Calculate average of an array of numbers
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/cel_to_fah.asm">
-						Convert from Celsius to Fahrenheit
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/change_array_elem_test.asm">
-						Change array elements below min to set minimum
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/data.asm">
-						How to use the .data section
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/int_square_root.asm">
-						Calculate square root of a number
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/log.asm">
-						Calculate log in base 2
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/loop.asm">
-						A simple loop
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/power.asm">
-						Raise a number to a power
-					</a>
-				</li>
-				<li>
-					<a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/sum_test.asm">
-						Add two numbers
-					</a>
-				</li>
-			</ul>
-=======
             <ul class="nested">
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/area.asm">
+                        Calculate area of a rectangle
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/arithmetic_expression.asm">
+                        Calculate an arithmetic expression
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/arithmetic_shift.asm">
+                        Arithmetic shift
+                    </a>
+                </li>
                 <li>
                     <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/array.asm">
                         Declare an array
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/array_average_test.asm">
+                        Calculate average of an array of numbers
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/cel_to_fah.asm">
+                        Convert from Celsius to Fahrenheit
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/change_array_elem_test.asm">
+                        Change array elements below min to set minimum
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/data.asm">
+                        How to use the .data section
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/int_square_root.asm">
+                        Calculate square root of a number
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/log.asm">
+                        Calculate log in base 2
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/loop.asm">
+                        A simple loop
                     </a>
                 </li>
                 <li>
@@ -83,55 +64,4 @@
                         Add two numbers
                     </a>
                 </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/change_array_elem_test.asm">
-                        Change array elements below min to set minimum
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/arithmetic_shift.asm">
-                        Arithmetic shift
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/area.asm">
-                        Calculate area of a rectangle
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/loop.asm">
-                        A simple loop
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/log.asm">
-                        Calculate log in base 2
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/array_average_test.asm">
-                        Calculate average of an array of numbers
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/int_square_root.asm">
-                        Calculate square root of a number
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/arithmetic_expression.asm">
-                        Calculate an arithmetic expression
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/cel_to_fah.asm">
-                        Convert from Celsius to Fahrenheit
-                    </a>
-                </li>
-                <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_ASM/data.asm">
-                        How to use the .data section
-                    </a>
-                </li>
             </ul>
->>>>>>> 9abd5311df5ad0f401d30ace0ad10db3142bb0cc
