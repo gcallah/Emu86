@@ -25,8 +25,11 @@ HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's
 ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
 ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel\//html_src\//')
 
+util: $(UDIR)
+	git pull --recurse-submodules
+
 # this rule builds the menu for the static server:
-navbar:
+navbar: util
 	$(UDIR)/html_include.awk <$(TEMPLATE_DIR)/navbar.pre >$(TEMPLATE_DIR)/navbar.txt
 	python3 write_sample_programs.py
 
