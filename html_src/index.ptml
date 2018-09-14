@@ -3,11 +3,8 @@
     <head>
 <!--include head.txt -->
         <title>
-<<<<<<< HEAD
             Emu86 Assembly Language Emulator
-=======
             Language Description
->>>>>>> 9abd5311df5ad0f401d30ace0ad10db3142bb0cc
         </title>
     </head>
 
@@ -47,8 +44,4 @@
         </div>
 
     </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 9abd5311df5ad0f401d30ace0ad10db3142bb0cc
