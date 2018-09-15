@@ -14,7 +14,7 @@ class Syscall(Instruction):
             SYSCALL
         </syntax>
         <descr>
-            Exit program
+            Exits program
         </descr>
     """
 

@@ -111,7 +111,7 @@
 
             <p>
                 Some of these are only partially done, i.e., some variant of
-                an instruciton may not work. We will do our best to note that
+                an instruction may not work. We will do our best to note that
                 where possible.
                 <br>
                 In the syntax descriptions, we have:
@@ -137,32 +137,71 @@
 
             <details>
                 <summary class="sum3">
-                Interrupts
+                    Intel
                 </summary>
+
+                <details>
+                    <summary class="sum4">
+                    Interrupts
+                    </summary>
 <!--include interrupts.txt -->
-            </details>
+                </details>
 
-            <details>
-                <summary class="sum3">
-                Data Movement
-                </summary>
+                <details>
+                    <summary class="sum4">
+                    Data Movement
+                    </summary>
 <!--include data_mov.txt -->
-            </details>
-                
-            <details>
-                <summary class="sum3">
-                Control Flow
-                </summary>
+                </details>
+                    
+                <details>
+                    <summary class="sum4">
+                    Control Flow
+                    </summary>
 <!--include control_flow.txt -->
+                </details>
+
+                <details>
+                    <summary class="sum4">
+                    Arithmetic and Logic
+                    </summary>
+<!--include arithmetic.txt -->
+                </details>
             </details>
 
             <details>
                 <summary class="sum3">
-                Arithmetic and Logic
+                    MIPS
                 </summary>
-<!--include arithmetic.txt -->
+
+                <details>
+                    <summary class="sum4">
+                    Interrupts
+                    </summary>
+<!--include mips_interrupts.txt -->
+                </details>
+
+                <details>
+                    <summary class="sum4">
+                    Data Movement
+                    </summary>
+<!--include mips_data_mov.txt -->
+                </details>
+                    
+                <details>
+                    <summary class="sum4">
+                    Control Flow
+                    </summary>
+<!--include mips_control_flow.txt -->
+                </details>
+
+                <details>
+                    <summary class="sum4">
+                    Arithmetic and Logic
+                    </summary>
+<!--include mips_arithmetic.txt -->
+                </details>
             </details>
-        </details>
 
         <details>
             <summary class="sum2">

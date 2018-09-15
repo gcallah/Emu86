@@ -68,12 +68,12 @@ def main_page(request):
         mips_machine.re_init()
         form = MainForm()
     else:
+        base = request.POST['base']
         if 'language' in request.POST:
             intel_machine.re_init()
             mips_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
-            base = request.POST['base']
             if lang in MIPS:
                 intel_machine.flavor = None
                 mips_machine.flavor = lang
@@ -134,10 +134,12 @@ def main_page(request):
             language = request.POST['flavor']
             if language in INTEL:
                 intel_machine.flavor = language
+                intel_machine.base = base
                 mips_machine.flavor = None
             else:
                 intel_machine.flavor = None
                 mips_machine.flavor = language
+                mips_machine.base = base
         sample = request.POST['sample']
         button = request.POST['button_type']
         if button == CLEAR:

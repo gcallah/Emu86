@@ -409,7 +409,7 @@
             
                         <p>
                             Some of these are only partially done, i.e., some variant of
-                            an instruciton may not work. We will do our best to note that
+                            an instruction may not work. We will do our best to note that
                             where possible.
                             <br>
                             In the syntax descriptions, we have:
@@ -435,8 +435,13 @@
             
                         <details>
                             <summary class="sum3">
-                            Interrupts
+                                Intel
                             </summary>
+            
+                            <details>
+                                <summary class="sum4">
+                                Interrupts
+                                </summary>
             <hr>
             <h4>
                          int
@@ -463,12 +468,12 @@
                         keyboard.
                         And INT 32, to exit the program. There should be a 0 in EAX.
             </p>
-                        </details>
+                            </details>
             
-                        <details>
-                            <summary class="sum3">
-                            Data Movement
-                            </summary>
+                            <details>
+                                <summary class="sum4">
+                                Data Movement
+                                </summary>
             <hr>
             <h4>
                          mov
@@ -555,12 +560,12 @@
             
             <ul class="nested">
             </ul>
-                        </details>
-                            
-                        <details>
-                            <summary class="sum3">
-                            Control Flow
-                            </summary>
+                            </details>
+                                
+                            <details>
+                                <summary class="sum4">
+                                Control Flow
+                                </summary>
             <hr>
             <h4>
                          cmp
@@ -740,12 +745,12 @@
                         Pops value from stack to EIP and returns control to the 
                         the line after the subroutine call.
             </p>
-                        </details>
+                            </details>
             
-                        <details>
-                            <summary class="sum3">
-                            Arithmetic and Logic
-                            </summary>
+                            <details>
+                                <summary class="sum4">
+                                Arithmetic and Logic
+                                </summary>
             <hr>
             <h4>
                          add
@@ -961,8 +966,433 @@
                         of the division is stored into EAX, while the
                         remainder is placed in EDX.
             </p>
+                            </details>
                         </details>
-                    </details>
+            
+                        <details>
+                            <summary class="sum3">
+                                MIPS
+                            </summary>
+            
+                            <details>
+                                <summary class="sum4">
+                                Interrupts
+                                </summary>
+            <hr>
+            <h4>
+                         SYSCALL
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        SYSCALL
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Exits program
+            </p>
+                            </details>
+            
+                            <details>
+                                <summary class="sum4">
+                                Data Movement
+                                </summary>
+            <hr>
+            <h4>
+                         LW
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        LW reg, reg
+            </li>
+            <li>
+                        LW reg, disp(reg)
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Copies the value of op2 to the location mentioned in op1. 
+            </p>
+            <hr>
+            <h4>
+                         SW
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        SW reg, reg
+            </li>
+            <li>
+                        SW reg, disp(reg)
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Copies the value of op2 to the location mentioned in op1. 
+            </p>
+                            </details>
+                                
+                            <details>
+                                <summary class="sum4">
+                                Control Flow
+                                </summary>
+            <hr>
+            <h4>
+                         slt
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        SLT reg, reg, reg
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Compares op2 and op3, and sets (right now) the SF and ZF flags.
+                        It is not clear at this moment how to 
+                        treat the OF and CF flags in Python,
+                        since Python integer arithmetic never carries or overflows!
+                        Store the result of SF flag into op1
+            </p>
+            <hr>
+            <h4>
+                         slti
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        SLTI reg, con, reg
+            </li>
+            <li>
+                        SLTI reg, reg, con
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Compares op2 and op3, and sets (right now) the SF and ZF flags.
+                        It is not clear at this moment how to 
+                        treat the OF and CF flags in Python,
+                        since Python integer arithmetic never carries or overflows!
+                        Store the result of SF flag into op1
+            </p>
+            <hr>
+            <h4>
+                        J
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        J lbl
+            </li>
+            <li>
+                        J loc
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                        JAL
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        JAL loc
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                        Jr
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        Jr reg
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         BEQ
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        BEQ reg, reg, con
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Jumps if registers are equal.
+            </p>
+            <hr>
+            <h4>
+                         BNE
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        BNE reg, reg, con
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Jumps if registers are equal.
+            </p>
+                            </details>
+            
+                            <details>
+                                <summary class="sum4">
+                                Arithmetic and Logic
+                                </summary>
+            <hr>
+            <h4>
+                         ADD
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        ADD reg, reg, reg
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         ADDI
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        ADDI reg, reg, con
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         SUB
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        SUB reg, reg, reg
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         MULT
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        MULT reg, reg
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         AND
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        AND reg, reg, reg
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         AND
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        ANDI reg, reg, con
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         OR
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        OR reg, reg, reg
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         OR
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        ORI reg, reg, con
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         NOR
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        NOR reg, reg, reg
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         XOR
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        XOR reg, reg, reg
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         sll
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        SLL reg, reg, con
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         srl
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        SRL reg, reg, con
+            </li>
+            </ul>
+            <hr>
+            <h4>
+                         DIV
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        DIV reg, reg
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        The div instruction divides the contents of
+                        the two registers. The quotient result
+                        of the division is stored into LO, while the
+                        remainder is placed in HI.
+            </p>
+            <hr>
+            <h4>
+                         mfhi
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        MFHI reg
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Moves the value from the HI register into the 
+                        destination register given.
+                """
+            
+                def fhook(self, ops, vm):
+                    check_num_args(self.name, ops, 1)
+                    if not isinstance(ops[0], Register):
+                        raise InvalidArgument(ops[0].get_nm())
+                    ops[0].set_val(vm.registers['HI'])
+                    vm.changes.add(ops[0].get_nm())
+                    return ''
+            
+            class Mflo(Instruction):
+                """
+            <hr>
+            <h4>
+                         mflo
+            </h4>
+            
+            <h5>Syntax</h5>
+            
+            <ul class="nested">
+            <li>
+                        MFLO reg
+            </li>
+            </ul>
+            <h5>Description</h5>
+            
+            <p>
+                        Moves the value from the LO register into the 
+                        destination register given.
+                """
+            
+                def fhook(self, ops, vm):
+                    check_num_args(self.name, ops, 1)
+                    if not isinstance(ops[0], Register):
+                        raise InvalidArgument(ops[0].get_nm())
+                    ops[0].set_val(vm.registers['LO'])
+                    vm.changes.add(ops[0].get_nm())
+                    return ''
+                    
+                            </details>
+                        </details>
             
                     <details>
                         <summary class="sum2">
