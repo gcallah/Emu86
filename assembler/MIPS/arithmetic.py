@@ -244,6 +244,7 @@ class Mfhi(Instruction):
         <descr>
             Moves the value from the HI register into the 
             destination register given.
+        </descr>
     """
 
     def fhook(self, ops, vm):
@@ -265,6 +266,7 @@ class Mflo(Instruction):
         <descr>
             Moves the value from the LO register into the 
             destination register given.
+        </descr>
     """
 
     def fhook(self, ops, vm):

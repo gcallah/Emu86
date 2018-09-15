@@ -3,7 +3,7 @@
     <head>
 <!--include head.txt -->
         <title>
-            array.asm
+            Intel
         </title>
     </head>
     <body>
@@ -11,13 +11,13 @@
 <!--include navbar.txt -->
             <div id="content">
             <h1>
-            array.asm
+            Intel
             </h1>
             <p>
 Declare arrays x, y, z
             </p>
             <p>
-y is an array of size 13, holding element 50
+y is an array of size 13, holding element -50
             </p>
             <p>
 z is an array of the ASCII values of 'hello', ends in 0 

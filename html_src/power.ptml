@@ -14,29 +14,22 @@
             Intel
             </h1>
             <p>
-Declare arrays
+In edx, we put the number to raise to the power we put in ebx.
             </p>
             <pre>
             <code>
-.data
-    x DB 1, 2, 3, 4, 5
-    y DW 2, 54, 32, 8
-    z DD 10 DUP (50)
+      mov edx, 2
+      mov ebx, 16
+      call power
+      mov eax, 0
+      int 32
 
-            </code>
-            </pre>
-            <p>
-Storing values into memory using register arithmetic
-            </p>
-            <pre>
-            <code>
-.text
-    mov eax, 6
-    mov [eax], [x+2]
-    mov [eax+2], [y+3]
-    mov [ebx], [z]
-    mov [eax-5], [y+2]
-    mov [-5+eax], [y+2]
+power: mov ecx, edx
+loop: imul edx, ecx
+      dec ebx
+      cmp ebx, 1
+      jne loop
+      ret
             </code>
             </pre>
             </div>

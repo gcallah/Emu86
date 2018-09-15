@@ -3,7 +3,7 @@
     <head>
 <!--include head.txt -->
         <title>
-            area.asm
+            Intel
         </title>
     </head>
     <body>
@@ -11,7 +11,7 @@
 <!--include navbar.txt -->
             <div id="content">
             <h1>
-            area.asm
+            Intel
             </h1>
             <p>
 Declare length and width

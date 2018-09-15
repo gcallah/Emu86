@@ -3,7 +3,7 @@
     <head>
 <!--include head.txt -->
         <title>
-            change_array_elem_test.asm
+            Intel
         </title>
     </head>
     <body>
@@ -11,7 +11,7 @@
 <!--include navbar.txt -->
             <div id="content">
             <h1>
-            change_array_elem_test.asm
+            Intel
             </h1>
             <p>
 Declare an array and declare size of the array

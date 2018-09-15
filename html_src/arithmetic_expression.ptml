@@ -3,7 +3,7 @@
     <head>
 <!--include head.txt -->
         <title>
-            arithmetic_expression.asm
+            Intel
         </title>
     </head>
     <body>
@@ -11,7 +11,7 @@
 <!--include navbar.txt -->
             <div id="content">
             <h1>
-            arithmetic_expression.asm
+            Intel
             </h1>
             <p>
 Declare x, y, and z variables 

@@ -22,11 +22,14 @@ INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
-ASM_FILES = $(shell ls $(TDIR)/*/.asm)
-ASM_PTMLS = $(shell ls $(INTEL_DIR)/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests/html_src/')
+ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
+ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel\//html_src\//')
+
+util: $(UDIR)
+	git pull --recurse-submodules
 
 # this rule builds the menu for the static server:
-navbar:
+navbar: util
 	$(UDIR)/html_include.awk <$(TEMPLATE_DIR)/navbar.pre >$(TEMPLATE_DIR)/navbar.txt
 	python3 write_sample_programs.py
 
@@ -39,10 +42,10 @@ navbar:
 local: $(HTML_FILES)
 
 # build sample asm web pages for project web site:
-$(PTML_DIR)/%.ptml: $(TDIR)/%.asm
+$(PTML_DIR)/%.ptml: $(TDIR)/Intel/%.asm
 	$(MUDIR)/asm2ptml.awk $< >$@
 
-samples: $(ASM_PTMLS)
+samples: $(ASM_PTMLS) $(TDIR)
 	
 # build the static website describing the project:
 website: $(INCS) $(HTML_FILES) help
@@ -104,7 +107,7 @@ dev: $(SRCS) $(MIPS_SRCS) $(OBJS)
 	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
-prod: $(SRCS) $(MIPS_SRCS) $(OBJ)
+prod: $(SRCS) $(OBJ)
 	./all_tests.sh
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'

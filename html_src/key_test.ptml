@@ -13,31 +13,37 @@
             <h1>
             Intel
             </h1>
-            <p>
-Declare a number
-            </p>
             <pre>
             <code>
-.data
-    number DW 759
+INT 22
+MOV EBX, EAX
+MOV ECX, 0
+MOV ESI, 0
 
-            </code>
-            </pre>
-            <p>
-Calculating log (base 2) of a number
-            </p>
-            <pre>
-            <code>
-.text
-    mov ecx, 0
-    mov eax, 1
-whileLE: cmp eax, [number]
-         jnle endWhileLE
-body: add eax, eax
-      inc ecx
-      jmp whileLE
+L1: MOV [ESI], EAX
+MOV EAX, 0
+INT 22
+INC ECX
+CMP EBX,EAX
+INC ESI
+JNE L1
 
-endWhileLE: dec ecx 
+L2: MOV EAX, 0
+INT 22
+DEC ECX
+CMP ECX, 1
+JNE L2
+
+MOV EAX, 0
+INT 22
+MOV EBX, EAX
+
+L3: MOV [ESI], EAX
+INC ESI
+MOV EAX, 0
+INT 22
+CMP EBX, EAX
+JNE L3
             </code>
             </pre>
             </div>

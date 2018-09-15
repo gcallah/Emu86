@@ -13,30 +13,25 @@
             <h1>
             Intel
             </h1>
-            <p>
-Declare arrays
-            </p>
             <pre>
             <code>
-.data
-    x DB 1, 2, 3, 4, 5
-    y DW 2, 54, 32, 8
-    z DD 10 DUP (50)
+      mov eax, 16
+      mov ebx, 0
 
             </code>
             </pre>
             <p>
-Storing values into memory using register arithmetic
+Compare eax and ebx and loop until equal
             </p>
             <pre>
             <code>
-.text
-    mov eax, 6
-    mov [eax], [x+2]
-    mov [eax+2], [y+3]
-    mov [ebx], [z]
-    mov [eax-5], [y+2]
-    mov [-5+eax], [y+2]
+loop: cmp eax, ebx
+      jz done
+      inc ebx
+      dec edx
+      jnz loop
+
+done: mov ecx, ebx  ; when done, store ebx in ecx
             </code>
             </pre>
             </div>

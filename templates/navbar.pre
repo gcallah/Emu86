@@ -48,6 +48,11 @@
                         Emu86 Presentation
                     </a>
                 </li>
+                <li>
+                    <a href="IntegratingJenkinsWGithubSlack.pdf">
+                    Our Jenkins Setup
+                    </a>
+                </li>
             </ul>
         </li>
 
