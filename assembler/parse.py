@@ -717,7 +717,7 @@ def get_mips_pc(token_line, pos):
         Integer token of PC counter value
     """
     if not isinstance(token_line[pos], IntegerTok):
-        raise MissingPC()
+        raise MissingPc()
     elif token_line[pos].get_val() % 4 != 0:
         raise InvalidPc(str(token_line[pos].get_val()))
     else:
