@@ -10,6 +10,8 @@ key_words = {
 	# data types
 	'.BYTE': DataType('DB'),
     '.WORD': DataType('DW'),
+    '.FLOAT': DataType('FL'),
+    '.DOUBLE': DataType('DD'),
 
     # data movement:
 	'LW': Load('LW'),
@@ -42,7 +44,13 @@ key_words = {
 	'JR': Jr('JR'),
 
 	# interrupts
-	'SYSCALL': Syscall('SYSCALL')
+	'SYSCALL': Syscall('SYSCALL'),
+
+	# floating point
+	#'ADD.S': Adds('ADD.S'),
+	#'SUB.S': Subs('SUB.S'),
+	#'MULT.S': Mults('MULT.S'),
+	#'DIV.S': Divs('DIV.S'),
 
 }
 
