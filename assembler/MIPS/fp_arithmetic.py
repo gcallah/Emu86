@@ -24,13 +24,13 @@ class Adds(Instruction):
         # three_op_arith_reg(ops, vm, self.name, opfunc.add)
         operator = opfunc.add
         check_num_args(instr, ops, 3)
-	    check_reg_only(instr, ops)
-	    ops[0].set_val(
-	    check_overflow(operator(ops[1].get_val(),
-	                       ops[2].get_val()), 
-	                       vm)) 
-	    # vm.changes is for the website stuff
-	    # vm.changes.add(ops[0].get_nm())
+        check_reg_only(instr, ops)
+        ops[0].set_val(
+        check_overflow(operator(ops[1].get_val(),
+                           ops[2].get_val()), 
+                           vm)) 
+        # vm.changes is for the website stuff
+        # vm.changes.add(ops[0].get_nm())
 
 #'SUB.S': Subs('SUB.S'),
 #'MULT.S': Mults('MULT.S'),

@@ -14,7 +14,7 @@ from .errors import MissingCloseBrack, MissingOps, InvalidPc, MissingPc
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
-from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign
+from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign, FloatPointTok
 from .Intel.control_flow import Ret
 from .MIPS.interrupts import Syscall
 from .virtual_machine import MEM_SIZE
@@ -33,7 +33,11 @@ MAX_VAL = 1
 dtype_info = {
     "DB": (1, MAX_BYTE),
     "DW": (MEM_SIZE / 16, MAX_SHORT),   # we should revisit this choice
-    "DD": (MEM_SIZE / 8, MAX_LONG), 
+    "DD": (MEM_SIZE / 8, MAX_LONG),
+    "REAL4": (1, MAX_BYTE),
+    "REAL8": (1, MAX_BYTE),
+    "DBL": (1, MAX_BYTE),
+    "FL": (1, MAX_BYTE)
 }
 
 PARAM_TYPE = 1
@@ -197,6 +201,8 @@ def get_data_token(token_line, pos):
         except: 
             raise InvalidDataVal("-")
     elif isinstance(token_line[pos], IntegerTok):
+        return token_line[pos].get_val(), pos + 1
+    elif isinstance(token_line[pos], FloatPointTok):
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], QuestionTok):
         return DONT_INIT, pos + 1 
@@ -647,6 +653,10 @@ def get_op(token_line, pos, flavor, vm):
 # Register
     elif isinstance(token_line[pos], Register):
         return register_token(token_line, pos, flavor, vm)
+
+    #TODO NIKHIL GIVE ME THE FLOATING POINT TOKEN CLASS NAME FROM TOKEN.PY
+    elif isinstance(token_line[pos], FloatPointTok):
+        return token_line[pos], pos+1
 
 # Constant Token
     elif isinstance(token_line[pos], ConstantSign):
