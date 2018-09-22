@@ -61,6 +61,8 @@ class AssembleTestCase(TestCase):
         self.two_op_test_float(opfunc.add, "FADD")
     def test_fsub(self):
         self.two_op_test_float(opfunc.sub, "FSUB")
+    def test_fmul(self):
+        self.two_op_test_float(opfunc.mul, "FMUL")
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
 
