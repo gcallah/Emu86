@@ -254,6 +254,8 @@ intel_machine = IntelMachine()
 mips_machine = MIPSMachine()
 
 class RISCV(VirtualMachine): 
+    # make sure to account for the lack of HI and LO in display
+    
     def __init__(self): 
         super().__init__()
         self.unwritable =[INSTR_PTR_RISCV, 'x0']
