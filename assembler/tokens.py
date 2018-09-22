@@ -111,6 +111,7 @@ class IntegerTok(Operand):
 
     def negate_val(self):
         self.value *= -1
+        
 class FloatTok(Operand):
     def __init__(self, val=0.0):
         super().__init__("Float", val)

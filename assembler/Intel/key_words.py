@@ -53,9 +53,9 @@ instructions = {
         'NEG': Neg('NEG'),
 
         #floating point
-        'FADD': FADD('FADD')
-        'FDIV': FDIV('FDIV')
-        'FMUL': FMUL('FMUL')
+        'FADD': FADD('FADD'),
+        'FDIV': FDIV('FDIV'),
+        'FMUL': FMUL('FMUL'),
         'FSUB': FSUB('FSUB')
         }
 
@@ -65,10 +65,10 @@ intel_key_words = {
         'DW': DataType('DW'),
         'DD': DataType('DD'),
         #floating point
-        "REAL4": DataType('REAL4')
-        "REAL8": DataType('REAL8')
-        "REAL16": DataType('REAL16')
-        "COMPLEX": DataType('COMPLEX')
+        "REAL4": DataType('REAL4'),
+        "REAL8": DataType('REAL8'),
+        "REAL16": DataType('REAL16'),
+        "COMPLEX": DataType('COMPLEX'),
         "DUP": DupTok()
 }
 
