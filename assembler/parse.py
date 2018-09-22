@@ -198,6 +198,8 @@ def get_data_token(token_line, pos):
             raise InvalidDataVal("-")
     elif isinstance(token_line[pos], IntegerTok):
         return token_line[pos].get_val(), pos + 1
+    elif isinstance(token_line[pos], FloatPointTok):
+        return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], QuestionTok):
         return DONT_INIT, pos + 1 
     else:
@@ -647,6 +649,10 @@ def get_op(token_line, pos, flavor, vm):
 # Register
     elif isinstance(token_line[pos], Register):
         return register_token(token_line, pos, flavor, vm)
+
+    #TODO NIKHIL GIVE ME THE FLOATING POINT TOKEN CLASS NAME FROM TOKEN.PY
+    elif isinstance(token_line[pos], FloatPointTok):
+        return token_line[pos], pos+1
 
 # Constant Token
     elif isinstance(token_line[pos], ConstantSign):
