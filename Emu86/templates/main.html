@@ -156,6 +156,16 @@
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
+                            <input type="button" name="pause"
+                                value="Pause Code"
+                                title="Pauses code."
+                                id="pause-button"
+                                onclick="pauseButton()"
+                                onmouseover="displayHelp(this.name)" 
+                                onmouseleave="hideHelp()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
                             <input type="button" name="step"
                                 value="Step Code"
                                 title="Execute one instruction at a time."
