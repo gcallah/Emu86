@@ -15,6 +15,10 @@ from .tokens import Comma, OpenParen, CloseParen
 
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
+
+FP_RE = "\d+\.\d+"
+fp_match = re.compile(FP_RE)
+
 LABEL_RE = SYM_RE + ":"
 label_match = re.compile(LABEL_RE)
 
@@ -188,6 +192,13 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         elif re.match(sym_match, word) is not None:
 
             analysis.append(NewSymbol(word, vm))
+#Floating Points
+        elif re.match(fp_match, word) is not None:
+            if vm.base == "dec":
+                #TODO: Screen shot to give me the floating point token class from token.py
+                analysis.append(FloatPointTok(float(word)))
+            else: #hexadecimal
+                analysis.append(FloatPointTok(float.fromhex(word)))
 # Integers
         else:
             if vm.base == "dec":
