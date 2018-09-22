@@ -121,7 +121,6 @@ def main():
     code = ""
     for line in asm_file:
         code += line
-    print (code)
     if flavor == "intel" or flavor == "att":
         intel_machine.flavor = flavor
         intel_machine.base = base
