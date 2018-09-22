@@ -12,7 +12,7 @@ MAX_INT = (2**(BITS-1)) - 1
 MIN_INT = -(2**(BITS-1))
 
 VALS = 0
-MEM_LOC = 1 
+MEM_LOC = 1
 
 def add_debug(s, vm):
     vm.debug += (s + "\n")
@@ -62,10 +62,10 @@ class DataType(Token):
 class Comma(Token):
     def __init__(self):
         super().__init__(",")
-        
+
 class ConstantSign(Token):
-    """ 
-    Class used to differentiate between 
+    """
+    Class used to differentiate between
     a constant and an offset
     """
     def __init__(self):
@@ -111,6 +111,18 @@ class IntegerTok(Operand):
 
     def negate_val(self):
         self.value *= -1
+class FloatTok(Operand):
+    def __init__(self, val=0.0):
+        super().__init__("Float", val)
+
+    def __str__(self):
+        return str(self.value)
+
+    def get_val(self):
+        return self.value
+
+    def negate_val(self):
+        self.value *= -1.0
 
 class StringTok(Token):
     def __init__(self, name):
@@ -174,11 +186,11 @@ class RegAddress(Address):
 
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
-        address = hex(int(self.regs[self.name]) * 
+        address = hex(int(self.regs[self.name]) *
                           self.multiplier).split('x')[-1].upper()
         disp = 0
         if isinstance(self.displacement, list):
-            for disp_item in self.displacement: 
+            for disp_item in self.displacement:
                 if isinstance(disp_item, Register):
                     disp += disp_item.get_val() * disp_item.get_multiplier()
                 else:
@@ -188,7 +200,7 @@ class RegAddress(Address):
         elif self.displacement != 0:
             disp = self.displacement
         addr_val = int(self.regs[self.name]) * self.multiplier + disp
-        if addr_val < 0: 
+        if addr_val < 0:
             raise InvalidMemLoc(str(addr_val))
         address = hex(addr_val).split('x')[-1].upper()
         return address
@@ -286,4 +298,3 @@ class Symbol(Location):
                   + str(self.vm.symbols[self.name]),
                   self.vm)
         return self.vm.symbols[self.name]
-

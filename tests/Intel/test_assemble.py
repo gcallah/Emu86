@@ -37,12 +37,28 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             correct = operator(a, b)
+            #comment
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
             assemble(instr + " eax, ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
-
+    def two_op_test_float(self, operator, instr,
+                    low1=MIN_TEST, high1=MAX_TEST,
+                    low2=MIN_TEST, high2=MAX_TEST):
+        for i in range(0, NUM_TESTS):
+            a = random.randint(low1, high1)
+            a= float(a)
+            b = random.randint(low2, high2)
+            b = float(b)
+            correct = operator(a, b)
+            intel_machine.registers["EAX"] = a
+            intel_machine.registers["EBX"] = b
+            intel_machine.base = "dec"
+            assemble(instr + " eax, ebx", 'intel', intel_machine)
+            self.assertEqual(intel_machine.registers["EAX"], correct)
+    def test_fadd(self):
+        self.two_op_test_float(opfunc.add, "FADD")
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
 
@@ -165,6 +181,6 @@ class AssembleTestCase(TestCase):
         assemble("cmp eax, ebx", 'intel', intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
-        
+
 if __name__ == '__main__':
     main()
