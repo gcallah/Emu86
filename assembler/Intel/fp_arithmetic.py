@@ -36,8 +36,7 @@ class FADD(Instruction):
 class FSUB(Instruction):
 
     def fhook(self, ops, vm):
-        return
-        #two_op_arith(ops, vm, self.name, opfunc.sub)
+        two_op_arith(ops, vm, self.name, opfunc.sub)
 class FMUL(Instruction):
     def fhook(self, ops, vm):
         return
