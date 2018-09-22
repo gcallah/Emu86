@@ -12,7 +12,7 @@ key_words = {
 	'.BYTE': DataType('DB'),
     '.WORD': DataType('DW'),
     '.FLOAT': DataType('FL'),
-    '.DOUBLE': DataType('DD'),
+    '.DOUBLE': DataType('DBL'),
 
     # data movement:
 	'LW': Load('LW'),
