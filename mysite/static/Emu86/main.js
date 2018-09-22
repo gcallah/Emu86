@@ -20,7 +20,7 @@ function AlertError()
 function selectSample()
 {
     selectBar = document.getElementsByName("sample")[0];
-    var selected = selectBar.options[selectBar.selectedIndex].value
+    var selected = selectBar.options[selectBar.selectedIndex].value;
     var flav = document.getElementsByName("flavor")[0];
     var base = document.getElementsByName("base")[0].value;
     if (flav && base == "dec"){
@@ -295,6 +295,7 @@ async function SubmitForm(demo_on = false){
     document.getElementById("save-button").disabled="true";
     document.getElementById("step-button").disabled="true";
     document.getElementById("demo-button").disabled="true";
+    document.getElementById("pause-button").disabled="true";
 }
 
 function clearButton(){
@@ -331,6 +332,15 @@ function demoButton(){
             SubmitForm();
         }
     }
+}
+
+function pauseButton(){
+    if (document.readyState == "complete") {
+        if (document.getElementById("pause-button").hasAttribute("disabled") == false){
+            document.getElementsByName("button_type")[0].value = "pause";
+            SubmitForm();
+        }
+    }   
 }
 
 function convert(name,value)

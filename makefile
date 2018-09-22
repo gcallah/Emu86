@@ -25,7 +25,8 @@ HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's
 ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
 ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel\//html_src\//')
 
-util: $(UDIR)
+# update our submodules:
+util: 
 	git pull --recurse-submodules
 
 # this rule builds the menu for the static server:
@@ -107,7 +108,7 @@ dev: $(SRCS) $(MIPS_SRCS) $(OBJS)
 	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
-prod: $(SRCS) $(OBJ)
+prod: $(SRCS) $(OBJ) navbar
 	./all_tests.sh
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'

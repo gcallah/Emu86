@@ -1,5 +1,6 @@
 from assembler.errors import check_num_args
-
+def checkFloat(ops):
+    return isinstance(ops[0].get_val(),float) and isinstance(ops[1].get_val(),float)
 def get_one_op(instr, ops):
     check_num_args(instr, ops, 1)
     return ops[0]
