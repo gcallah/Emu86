@@ -9,9 +9,18 @@ in the container and runs the django application on port 8000. Any changes
 made locally is reflected on http://localhost:8000 as port 8000 in the 
 container is mapped to port 8000 on the Docker host.
  
+## Usage
+The following commands must be run from the current directory.
+
 To start Emu86 application on docker ('-d' for detached):
 
     docker-compose up -d
 To stop the deployed Emu86 application:
 
     docker-compose down
+To see currently running containers, run:
+
+    docker ps
+To check the logs of the container, run:
+
+    docker logs CONTAINER-NAME
