@@ -74,7 +74,8 @@ def main():
     asm_file = open(file_nm, "r")
     code = ""
     for line in asm_file:
-        code += repr(line)
+        code += repr(line)[1:-1]
+    print (code)
     if flavor == "intel" or flavor == "att":
         intel_machine.flavor = flavor
         intel_machine.base = base
