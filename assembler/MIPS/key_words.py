@@ -48,7 +48,7 @@ key_words = {
 	'SYSCALL': Syscall('SYSCALL'),
 
 	# floating point
-	'ADD.S': Adds('ADD.S'),
+	'ADD.S': Adds('ADD.S')
 	#'SUB.S': Subs('SUB.S'),
 	#'MULT.S': Mults('MULT.S'),
 	#'DIV.S': Divs('DIV.S'),
