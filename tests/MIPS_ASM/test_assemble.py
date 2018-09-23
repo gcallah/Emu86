@@ -129,14 +129,14 @@ class AssembleTestCase(TestCase):
         
     def test_adds(self):
         for i in range(0, NUM_TESTS):
-            a = random.uniform(low1, high1)
-            b = random.uniform(low2, high2)
-            correct = operator(a, b)
+            a = random.uniform(MIN_TEST, MAX_TEST)
+            b = random.uniform(MIN_TEST, MAX_TEST)
+            correct = opfunc.add(a, b)
             mips_machine.registers["F8"] = a
             mips_machine.registers["F9"] = b
             mips_machine.base = "hex"
-            assemble("40000 " + instr + " F10, F8, F9", 'mips_asm', mips_machine)
-            self.assertEqual(mips_machine.registers["R10"], correct)
+            assemble("40000 ADD.S F10, F8, F9", 'mips_asm', mips_machine)
+            self.assertEqual(mips_machine.registers["F10"], correct)
 
 if __name__ == '__main__':
     main()
