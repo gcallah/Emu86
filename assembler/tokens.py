@@ -234,6 +234,8 @@ class Register(Location):
         return str(self.name)
 
     def get_val(self):
+        if self.name[0] == "F":
+            return float(self.registers[self.name])
         return int(self.registers[self.name])
 
     def set_val(self, val):

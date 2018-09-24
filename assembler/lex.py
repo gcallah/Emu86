@@ -16,7 +16,7 @@ from .tokens import Comma, OpenParen, CloseParen, FloatTok
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
 
-FP_RE = "\d+\.\d+"
+FP_RE = "([0-9]+\.[0-9]+)"
 fp_match = re.compile(FP_RE)
 
 LABEL_RE = SYM_RE + ":"

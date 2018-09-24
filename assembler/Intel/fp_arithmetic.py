@@ -7,6 +7,8 @@ import operator as opfunc
 from assembler.errors import *
 from assembler.tokens import Instruction, MAX_INT
 from assembler.ops_check import one_op_arith,checkFloat
+from .arithmetic import checkflag
+
 def two_op_arith(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
