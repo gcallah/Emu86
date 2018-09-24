@@ -107,6 +107,9 @@ def number_token(token_line, pos, flavor, vm):
                                reg.get_multiplier()), pos)
         else:
             return (Address(hex(disp).split('x')[-1].upper(), vm), pos)
+    elif flavor == "att" and token_line[pos].con == False:
+        mem_val = token_line[pos].get_val()
+        return (Address(hex(mem_val).split('x')[-1].upper(), vm), pos + 1)
     else:
         return (token_line[pos], pos + 1)
 
@@ -630,6 +633,13 @@ def check_constant(token_line, pos):
         if (not isinstance(token_line[pos + 1], MinusTok) and
             not isinstance(token_line[pos + 1], IntegerTok)):
             return False
+        if isinstance(token_line[pos + 1], IntegerTok):
+            token_line[pos + 1].con = True
+        else:
+            try:
+                token_line[pos + 2].con = True
+            except:
+                raise InvalidArgument("-")
         return True
     except:
         raise InvalidArgument("$")

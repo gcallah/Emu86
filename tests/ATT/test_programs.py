@@ -128,14 +128,14 @@ class TestPrograms(TestCase):
         self.run_att_test_code("tests/ATT/mem_register_test.asm")
         self.assertEqual(intel_machine.registers["EAX"], 6)
         self.assertEqual(intel_machine.registers["EBX"], 0)
-        self.assertEqual(intel_machine.registers["ECX"], 3)
+        self.assertEqual(intel_machine.registers["ECX"], 4)
         self.assertEqual(intel_machine.memory["6"], 3)
         self.assertEqual(intel_machine.memory["8"], 8)
         self.assertEqual(intel_machine.memory["0"], 50)
         self.assertEqual(intel_machine.memory["D"], 32)
-        self.assertEqual(intel_machine.memory["F"], 5)
-        self.assertEqual(intel_machine.memory["1B"], 5)
-        self.assertEqual(intel_machine.memory["24"], 5)
+        self.assertEqual(intel_machine.memory["10"], 5)
+        self.assertEqual(intel_machine.memory["1C"], 5)
+        self.assertEqual(intel_machine.memory["28"], 5)
 
     def test_array_avg_att(self):
         self.run_att_test_code("tests/ATT/array_average_test.asm")
