@@ -23,7 +23,7 @@ function arithExpr(flavor) {
 		code_string += '; Declare x, y, and z variables \n.data\n    x: .short 35\n    y: .short 47\n    z: .short 26\n\n; Calculate -(x + y - 2 * z + 1)\n.text\n    mov (x), %eax\t\t\n    add (y), %eax\t\n    mov (z), %ebx\n    add %ebx, %ebx\n    sub %ebx, %eax\n    inc %eax \n    neg %eax';
 	}
 	else if (flavor == 'mips_asm'){
-		code_string += '; Declare x, y, and z variables \n.data\n    x: .word 35\n    y: .word 47\n    z: .word 26\n\n; Calculate -(x + y - 2 * z + 1)\n.text\n    40000 LW R8, 0(R28)\n    40004 LW R9, 4(R28)\n    40008 ADD R8, R8, R9\n    4000C LW R10, 8(R28)\n    40010 ADD R10, R10, R10\n    40014 SUB R8, R8, R10\n    40018 ADDI R8, R8, 1\n    4001C SUB R8, R0, R8';
+		code_string += '; Declare x, y, and z variables \n.data\n    x: .word 35\n    y: .word 47\n    z: .word 26\n\n; Calculate -(x + y - 2 * z + 1)\n.text\n    262144 LW R8, 0(R28)\n    262148 LW R9, 4(R28)\n    262152 ADD R8, R8, R9\n    262156 LW R10, 8(R28)\n    262160 ADD R10, R10, R10\n    262164 SUB R8, R8, R10\n    262168 ADDI R8, R8, 1\n    262172 SUB R8, R0, R8';
 	}
 	else{
 		code_string += '; Calculate -(x + y - 2 * z + 1)\n; x = 35, y = 47, z = 26\n\n    40000 ADDI R8, R0, 23\n    40004 ADDI R9, R9, 2F\n    40008 ADD R8, R8, R9\n    4000C ADDI R10, R0, 1A\n    40010 ADD R10, R10, R10\n    40014 SUB R8, R8, R10\n    40018 ADDI R8, R8, 1\n    4001C SUB R8, R0, R8';
@@ -116,7 +116,7 @@ function avg(flavor) {
 		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray DW 25, 47, -15, -50, 32, 95 DUP (10)\n    nbrElts DW 100\n\n; Calculate the average of the array:\n.text\n    mov eax, 0\n    mov ebx, 0\n    mov edx, 0\n    mov ecx, [nbrElts]\nforCount1: cmp ebx, ecx\n           je endCount\nbody: add eax, [ebx]\n      inc ebx\n      jmp forCount1\nendCount: idiv ecx \n\n\n';
 	}
 	else if (flavor == 'att'){
-		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .short 25, 47, -15, -50, 32, 95 DUP (10)\n    nbrElts: .short 100\n\n; Calculate the average of the array:\n.text\n    mov 0, %eax\n    mov 0, %ebx\n    mov 0, %edx\n    mov (nbrElts), %ecx\nforCount1: cmp %ebx, %ecx\n           je endCount\nbody: add (%ebx), %eax\n      inc %ebx\n      jmp forCount1\nendCount: idiv %ecx \n\n\n';
+		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .short 25, 47, -15, -50, 32, 95 DUP (10)\n    nbrElts: .short 100\n\n; Calculate the average of the array:\n.text\n    mov $0, %eax\n    mov $0, %ebx\n    mov $0, %edx\n    mov (nbrElts), %ecx\nforCount1: cmp %ebx, %ecx\n           je endCount\nbody: add (%ebx), %eax\n      inc %ebx\n      jmp forCount1\nendCount: idiv %ecx \n\n\n';
 	}
 	else if (flavor == 'mips_asm'){
 		code_string += '; Declare an array and declare size of the array\n.data\n    nbrArray: .word 25, 47, -15, -50, 32, 10, 10, 10, 10, 10\n    nbrElts: .word 10\n\n; Calculate the average of the array:\n.text\n    262144 ADD R8, R0, R0\n    262148 ADD R9, R0, R0\n    262152 LW R16, 28(R28)\n    262156 ADD R10, R0, R0\nFORCOUNT: 262160 BEQ R9, R16, 5\nBODY: 262164 LW R11, (R10)\n      262168 ADD R8, R8, R11\n      262172 ADDI R9, R9, 1\n      262176 ADDI R10, R10, 4\n      262180 J 1048640\nENDCOUNT: 262184 DIV R8, R16\n262188 MFLO R12\n262192 MFHI R13\n';
@@ -148,7 +148,7 @@ function modify(flavor) {
 		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray DW 25, 47, 15, 50, 32, 95 DUP (10)\n    nbrElts DW 100\n    nbrMin DW 33\n\n; Change any numbers less than min to min:\n.text\n    mov eax, 0\n    mov ebx, 0\n    mov edx, 0\n    mov ecx, [nbrElts]\nforCount1: cmp ebx, ecx\n           je endCount\nbody: cmp [ebx], [nbrMin]\n      jge endIfSmall\n      mov [ebx], [nbrMin]\nendIfSmall: add eax, [ebx]\n            inc ebx\n            jmp forCount1\nendCount: mov edx, eax\n\n\n';
 	}
 	else if (flavor == 'att'){
-		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .short 25, 47, 15, 50, 32, 95 DUP (10)\n    nbrElts: .short 100\n    nbrMin: .short 33\n\n; Change any numbers less than min to min:\n.text\n    mov 0, %eax\n    mov 0, %ebx\n    mov 0, %edx\n    mov (nbrElts), %ecx\nforCount1: cmp %ecx, %ebx\n           je endCount\nbody: cmp (nbrMin), (%ebx)\n      jge endIfSmall\n      mov (nbrMin), (%ebx)\nendIfSmall: add (%ebx), %eax\n            inc %ebx\n            jmp forCount1\nendCount: mov %eax, %edx\n\n\n';
+		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .short 25, 47, 15, 50, 32, 95 DUP (10)\n    nbrElts: .short 100\n    nbrMin: .short 33\n\n; Change any numbers less than min to min:\n.text\n    mov $0, %eax\n    mov $0, %ebx\n    mov $0, %edx\n    mov (nbrElts), %ecx\nforCount1: cmp %ecx, %ebx\n           je endCount\nbody: cmp (nbrMin), (%ebx)\n      jge endIfSmall\n      mov (nbrMin), (%ebx)\nendIfSmall: add (%ebx), %eax\n            inc %ebx\n            jmp forCount1\nendCount: mov %eax, %edx\n\n\n';
 	}
 	else if (flavor == 'mips_asm'){
 		code_string += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .word 25, 47, 15, 50, 32, 10, 10, 10, 10, 10\n    nbrElts: .word 10\n    nbrMin: .word 33\n\n; Change any numbers less than min to min:\n.text\n    262144 ADD R8, R0, R0\n    262148 ADD R9, R0, R0\n    262152 ADD R10, R0, R0\n    262156 ADD R11, R0, R0\n    262160 LW R16, 44(R28)\n    262164 LW R17, 40(R28)\nFORCOUNT: 262168 BEQ R10, R17, 9\nBODY: 262172 LW R12, (R9)\n      262176 SLT R13, R16, R12\n      262180 BNE R13, R0, 1\n      262184 SW R16, (R9)\nENDIFSMALL: 262188 LW R11, (R9)\n            262192 ADD R8, R8, R11\n            262196 ADDI R9, R9, 4\n            262200 ADDI R10, R10, 1\n            262204 J 1048672\nENDCOUNT: 262208 ADD R13, R0, R8';
@@ -219,7 +219,7 @@ function keyInterrupt(flavor) {
 function dataAccess(flavor) {
 	code_string = '';
 	if (flavor == 'intel'){
-		code_string += '; Declare arrays\n.data\n    x DB 1, 2, 3, 4, 5\n    y DW 2, 54, 32, 8\n    z DD 10 DUP (50)\n\n; Storing values into memory using register arithmetic\n.text\n\tmov eax, 6\n\tmov [eax], [x+2]\n\tmov [eax+2], [y+3]\n\tmov [ebx], [z]\n\tmov [eax-5], [y+2]\n\tmov [-5+eax], [y+2]';
+		code_string += '; Declare arrays\n.data\n    x DB 1, 2, 3, 4, 5\n    y DW 2, 54, 32, 8\n    z DD 10 DUP (50)\n\n; Storing values into memory using register arithmetic\n.text\n    mov eax, 6\n    mov [eax], [x+2]\n    mov [eax+2], [y+3]\n    mov [ebx], [z]\n    mov [eax-5], [y+2]\n    mov [-5+eax], [y+2]';
 	}
 	else if (flavor == 'att'){
 		code_string += '; Declare arrays\n.data\n    x: .byte 1, 2, 3, 4, 5\n    y: .short 2, 54, 32, 8\n    z: .long 10 DUP (50)\n\n; Storing values into memory using register arithmetic\n.text\n\tmov $6, %eax\n\tmov 2(x), (%eax)\n\tmov 3(y), 2(%eax)\n\tmov (z), (%ebx)\n\tmov 3, %ecx\n\tmov 2(y), -5(%eax, 3)\n\tmov 4(x), (%eax, 2, %ecx)\n\tmov 4(x), 12(%eax, 2, %ecx)\n\tmov 4(x), 12(%eax, 2, %ecx, 4)';
