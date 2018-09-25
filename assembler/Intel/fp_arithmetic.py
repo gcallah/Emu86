@@ -39,9 +39,8 @@ class FSUB(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.sub)
 class FMUL(Instruction):
     def fhook(self, ops, vm):
-        return
-        #two_op_arith(ops, vm, self.name, opfunc.mul)
-        #return ''
+        two_op_arith(ops, vm, self.name, opfunc.mul)
+
 
 class FDIV(Instruction):
 
