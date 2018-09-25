@@ -5,9 +5,9 @@
 
 ; Calculate the average of the array:
 .text
-    mov 0, %eax
-    mov 0, %ebx
-    mov 0, %edx
+    mov $0, %eax
+    mov $0, %ebx
+    mov $0, %edx
     mov (nbrElts), %ecx
 forCount1: cmp %ebx, %ecx
            je endCount

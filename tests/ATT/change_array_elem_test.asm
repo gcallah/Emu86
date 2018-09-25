@@ -7,9 +7,9 @@
 
 ; Change any numbers less than min to min:
 .text
-    mov 0, %eax
-    mov 0, %ebx
-    mov 0, %edx
+    mov $0, %eax
+    mov $0, %ebx
+    mov $0, %edx
     mov (nbrElts), %ecx
 forCount1: cmp %ecx, %ebx
            je endCount

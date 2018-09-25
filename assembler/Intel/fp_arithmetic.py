@@ -7,6 +7,8 @@ import operator as opfunc
 from assembler.errors import *
 from assembler.tokens import Instruction, MAX_INT
 from assembler.ops_check import one_op_arith,checkFloat
+from .arithmetic import checkflag
+
 def two_op_arith(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
@@ -21,29 +23,29 @@ def two_op_arith(ops, vm, instr, operator):
         vm.changes.add(ops[0].get_nm())
 
 class FADD(Instruction):
-        """
-            <instr>
-                 add
-            </instr>
-            <syntax>
-                ADD reg, reg
-                ADD reg, mem
-                ADD reg, const
-            </syntax>
-        """
+    """
+        <instr>
+             add
+        </instr>
+        <syntax>
+            ADD reg, reg
+            ADD reg, mem
+            ADD reg, const
+        </syntax>
+    """
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.add)
-class FSUB(Instruction):
 
+class FSUB(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.sub)
+
 class FMUL(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.mul)
 
 
 class FDIV(Instruction):
-
     def fhook(self, ops, vm):
         return
         # check_num_args(self.name, ops, 1)

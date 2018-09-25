@@ -97,11 +97,12 @@ class Operand(Token):
 
 
 class IntegerTok(Operand):
-    def __init__(self, val=0):
+    def __init__(self, val=0, con=True):
         if(val > MAX_INT or val < MIN_INT):
             raise IntOutOfRng(str(val))
 
         super().__init__("Integer", val)
+        self.con = con
 
     def __str__(self):
         return str(self.value)
@@ -111,6 +112,7 @@ class IntegerTok(Operand):
 
     def negate_val(self):
         self.value *= -1
+        
 class FloatTok(Operand):
     def __init__(self, val=0.0):
         super().__init__("Float", val)
@@ -233,6 +235,8 @@ class Register(Location):
         return str(self.name)
 
     def get_val(self):
+        if self.name[0] == "F":
+            return float(self.registers[self.name])
         return int(self.registers[self.name])
 
     def set_val(self, val):

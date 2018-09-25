@@ -14,7 +14,8 @@ from .errors import MissingCloseBrack, MissingOps, InvalidPc, MissingPc
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
-from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign, FloatPointTok
+from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign
+from .tokens import FloatTok
 from .Intel.control_flow import Ret
 from .MIPS.interrupts import Syscall
 from .virtual_machine import MEM_SIZE
@@ -106,6 +107,9 @@ def number_token(token_line, pos, flavor, vm):
                                reg.get_multiplier()), pos)
         else:
             return (Address(hex(disp).split('x')[-1].upper(), vm), pos)
+    elif flavor == "att" and token_line[pos].con == False:
+        mem_val = token_line[pos].get_val()
+        return (Address(hex(mem_val).split('x')[-1].upper(), vm), pos + 1)
     else:
         return (token_line[pos], pos + 1)
 
@@ -202,7 +206,7 @@ def get_data_token(token_line, pos):
             raise InvalidDataVal("-")
     elif isinstance(token_line[pos], IntegerTok):
         return token_line[pos].get_val(), pos + 1
-    elif isinstance(token_line[pos], FloatPointTok):
+    elif isinstance(token_line[pos], FloatTok):
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], QuestionTok):
         return DONT_INIT, pos + 1 
@@ -629,6 +633,13 @@ def check_constant(token_line, pos):
         if (not isinstance(token_line[pos + 1], MinusTok) and
             not isinstance(token_line[pos + 1], IntegerTok)):
             return False
+        if isinstance(token_line[pos + 1], IntegerTok):
+            token_line[pos + 1].con = True
+        else:
+            try:
+                token_line[pos + 2].con = True
+            except:
+                raise InvalidArgument("-")
         return True
     except:
         raise InvalidArgument("$")
@@ -654,8 +665,8 @@ def get_op(token_line, pos, flavor, vm):
     elif isinstance(token_line[pos], Register):
         return register_token(token_line, pos, flavor, vm)
 
-    #TODO NIKHIL GIVE ME THE FLOATING POINT TOKEN CLASS NAME FROM TOKEN.PY
-    elif isinstance(token_line[pos], FloatPointTok):
+# Floating Point Token
+    elif isinstance(token_line[pos], FloatTok):
         return token_line[pos], pos+1
 
 # Constant Token

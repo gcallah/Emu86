@@ -11,12 +11,12 @@ from .tokens import Location, Address, Register, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
 from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
-from .tokens import Comma, OpenParen, CloseParen
+from .tokens import Comma, OpenParen, CloseParen, FloatTok
 
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
 
-FP_RE = "\d+\.\d+"
+FP_RE = "([0-9]+\.[0-9]+)"
 fp_match = re.compile(FP_RE)
 
 LABEL_RE = SYM_RE + ":"
@@ -196,21 +196,27 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         elif re.match(fp_match, word) is not None:
             if vm.base == "dec":
                 #TODO: Screen shot to give me the floating point token class from token.py
-                analysis.append(FloatPointTok(float(word)))
+                analysis.append(FloatTok(float(word)))
             else: #hexadecimal
-                analysis.append(FloatPointTok(float.fromhex(word)))
+                analysis.append(FloatTok(float.fromhex(word)))
 # Integers
         else:
             if vm.base == "dec":
                 try:
-                    analysis.append(IntegerTok(int(word)))
+                    if flavor == "att":
+                        analysis.append(IntegerTok(int(word), False))
+                    else:
+                        analysis.append(IntegerTok(int(word)))
                 except IntOutOfRng as err: 
                     raise IntOutOfRng(word)
                 except:
                     raise InvalidArgument(word)
             else:
                 try:
-                    analysis.append(IntegerTok(int(word, 16)))
+                    if flavor == "att":
+                        analysis.append(IntegerTok(int(word, 16), False))
+                    else:
+                        analysis.append(IntegerTok(int(word, 16)))
                 except IntOutOfRng as err: 
                     raise IntOutOfRng(word)
                 except:

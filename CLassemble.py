@@ -1,3 +1,4 @@
+import argparse
 from assembler.virtual_machine import intel_machine, mips_machine
 from assembler.assemble import assemble
 
@@ -40,44 +41,6 @@ def convert_stack_contents(stack):
         else:
             stack[loc] = hex_list[1]
 
-def select_flavor():
-    print("Welcome to Emu's command line assembler.")
-    print("Please select your flavor:")
-    print("\t1: Intel")
-    print("\t2: AT&T")
-    print("\t3: MIPS Assembly")
-    print("\t4: MIPS Mnemonic Machine Language")
-    while True:
-        answer = input("Flavor Choice: ")
-        if answer in flavors:
-            return answer
-        else:
-            print("Invalid flavor choice. Try again!")
-
-def select_numsys():
-    print("Please select your number system:")
-    print("\t1: Decimal")
-    print("\t2: Hexadecimal")
-    while True:
-        answer = input("Number system choice: ")
-        if answer in numsys:
-            return answer
-        else:
-            print("Invalid number system choice. Try again!")
-
-def obtain_file():
-    while True:
-        file_nm = input("Please input an asm file name to run: ")
-        if file_nm[len(file_nm) - 4:] != ".asm":
-            print("Invalid asm file!")
-        else: 
-            try: 
-                asm_file = open(file_nm, "r")
-                asm_file.close()
-                return file_nm
-            except:
-                print("File not found! Try again!")
-
 def display_results(last_instr, error, vm):
     if vm.base == "hex":
         convert_stack_contents(vm.stack)
@@ -92,6 +55,8 @@ def display_results(last_instr, error, vm):
     else:
         count = 0
         for reg in vm.registers :
+            if reg[0] == "F":
+                continue
             print("\t" + reg + ":" + str(vm.registers[reg]) + "\t", end = "")
             if reg == "R20":
                 print()
@@ -109,19 +74,44 @@ def display_results(last_instr, error, vm):
 def main():
     global intel_machine
     global mips_machine
-    loop = True
     flavor = None
     base = None
     last_instr = None
     error = None
-    flavor = flavors[select_flavor()]
-    base = numsys[select_numsys()] 
-    file_nm = obtain_file()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-I", help = "flavor: Intel", action="store_true")
+    parser.add_argument("-A", help = "flavor: AT&T", action="store_true")
+    parser.add_argument("-MASM", help = "flavor: MIPS_ASM", action="store_true")
+    parser.add_argument("-MMML", help = "flavor: MIPS_MML", action="store_true")
+
+    parser.add_argument("-x", help = "base: hex", action="store_true")
+    parser.add_argument("-d", help = "base: decimal", action="store_true")
+
+    parser.add_argument("file", help = "file path of asm file")
+
+    args = parser.parse_args()
+    if args.I:
+         flavor = "intel"
+    elif args.A:
+         flavor = "att"
+    elif args.MASM:
+         flavor = "mips_asm"
+    elif args.MMML:
+         flavor = "mips_mml"
+
+    if args.x:
+         base = "hex"
+    elif args.d:
+         base = "dec"
+
+    if flavor == None or base == None:
+         return
+
+    file_nm = args.file
     asm_file = open(file_nm, "r")
     code = ""
     for line in asm_file:
         code += line
-    print (code)
     if flavor == "intel" or flavor == "att":
         intel_machine.flavor = flavor
         intel_machine.base = base
@@ -131,6 +121,7 @@ def main():
     else:
         mips_machine.flavor = flavor
         mips_machine.base = base
+        print (mips_machine.base)
         (last_instr, error, bit_code) = assemble(code, mips_machine.flavor,
                                                  mips_machine)
         display_results(last_instr, error, mips_machine)
