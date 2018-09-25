@@ -141,7 +141,12 @@ class AssembleTestCase(TestCase):
             self.assertEqual(mips_machine.registers["F10"], correct)
 
     def test_adds(self):
+        print("Testing ADDS floating")
         self.two_op_test_float(opfunc.add, "ADD.S")
+
+    def test_subs(self):
+        print("Testing SUBS floating - Luv")
+        self.two_op_test_float(opfunc.sub, "SUB.S")
 
 if __name__ == '__main__':
     main()

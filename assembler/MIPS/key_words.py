@@ -5,7 +5,7 @@ from .data_mov import Load, Store
 from .control_flow import Slt, Slti, Beq, Bne, Jmp, Jal, Jr
 from .interrupts import Syscall
 from assembler.tokens import DataType
-from .fp_arithmetic import Adds
+from .fp_arithmetic import Adds, Subs
 
 key_words = {
 	# data types
@@ -48,8 +48,8 @@ key_words = {
 	'SYSCALL': Syscall('SYSCALL'),
 
 	# floating point
-	'ADD.S': Adds('ADD.S')
-	#'SUB.S': Subs('SUB.S'),
+	'ADD.S': Adds('ADD.S'),
+	'SUB.S': Subs('SUB.S'),
 	#'MULT.S': Mults('MULT.S'),
 	#'DIV.S': Divs('DIV.S'),
 
@@ -88,5 +88,6 @@ op_func_codes = {
 
 	# FR
 	'ADD.S': ('000000', '100000'),
+	'SUB.S': ('000000', '100010'),
 
 }

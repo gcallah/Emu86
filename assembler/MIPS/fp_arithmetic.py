@@ -43,5 +43,16 @@ class Adds(Instruction):
         three_op_arith_reg(ops, vm, self.name, opfunc.add)
 
 #'SUB.S': Subs('SUB.S'),
+class Subs(Instruction):
+	"""
+        <instr>
+             SUB
+        </instr>
+        <syntax>
+            SUB reg, reg, reg
+        </syntax>
+    """
+	def fhook(self, ops, vm):
+	    three_op_arith_reg(ops, vm, self.name, opfunc.sub)
 #'MULT.S': Mults('MULT.S'),
 #'DIV.S': Divs('DIV.S'),
