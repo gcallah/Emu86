@@ -104,7 +104,7 @@ def main():
     elif args.d:
          base = "dec"
 
-    if flavor == None or base == None:
+    if flavor == None:
          return
 
     file_nm = args.file
@@ -114,12 +114,16 @@ def main():
         code += line
     if flavor == "intel" or flavor == "att":
         intel_machine.flavor = flavor
+        if base == None:
+            base = "dec"
         intel_machine.base = base
         (last_instr, error, bit_code) = assemble(code, intel_machine.flavor,
                                                  intel_machine)
         display_results(last_instr, error, intel_machine)
     else:
         mips_machine.flavor = flavor
+        if base == None:
+            base = "hex"
         mips_machine.base = base
         print (mips_machine.base)
         (last_instr, error, bit_code) = assemble(code, mips_machine.flavor,
