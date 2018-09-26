@@ -44,7 +44,7 @@ class Adds(Instruction):
 
 #'SUB.S': Subs('SUB.S'),
 class Subs(Instruction):
-	"""
+    """
         <instr>
              SUB
         </instr>
@@ -52,12 +52,12 @@ class Subs(Instruction):
             SUB reg, reg, reg
         </syntax>
     """
-	def fhook(self, ops, vm):
-	    three_op_arith_reg(ops, vm, self.name, opfunc.sub)
+    def fhook(self, ops, vm):
+        three_op_arith_reg(ops, vm, self.name, opfunc.sub)
 
 #'MULT.S': Mults('MULT.S'),
 class Mults(Instruction):
-	"""
+    """
         <instr>
              MULT
         </instr>
@@ -66,7 +66,7 @@ class Mults(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-    	check_num_args(self.name, ops, 2)
+        check_num_args(self.name, ops, 2)
         check_reg_only(self.name, ops)
         result = ops[0].get_val() * ops[1].get_val()
         #deal with the high and low registers
