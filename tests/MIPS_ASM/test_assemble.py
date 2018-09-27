@@ -16,6 +16,11 @@ from assembler.tokens import MAX_INT, MIN_INT, BITS
 from assembler.virtual_machine import mips_machine
 from assembler.assemble import assemble
 
+# for floating point to binary and back
+import struct
+import codecs
+import binascii
+
 NUM_TESTS = 100
 MAX_SHIFT = BITS // 2
 MIN_TEST = MIN_INT // 100   # right now we don't want to overflow!
@@ -150,23 +155,30 @@ class AssembleTestCase(TestCase):
             mips_machine.registers["F8"] = a
             mips_machine.registers["F9"] = b
             mips_machine.base = "hex"
-            assemble("40000 " + instr + " F10, F8, F9", 'mips_asm', mips_machine)
-            print("value in hi", mips_machine.registers["HI"])
-            print("value in lo", mips_machine.registers["LO"])
-            print("value in f10", mips_machine.registers["F10"])
-            print("a", a)
-            print("b", b)
-            print("correct", correct)
+            r = assemble("40000 " + instr + " F8, F9", 'mips_asm', mips_machine)
+
+            h_reg = str(mips_machine.registers["HI"])
+            for i in range(0, 32-len(h_reg)):
+                h_reg = "0" + h_reg
+            l_reg = str(mips_machine.registers["LO"])
+            for i in range(0, 32-len(l_reg)):
+                l_reg = "0" + l_reg
+
+            binary_result = h_reg + l_reg
+            hex_result = hex(int(binary_result, 2))[2:]
+            for i in range(0, 16-len(hex_result)):
+                hex_result = "0"+hex_result
+            bin_data = codecs.decode(hex_result, "hex")
+            result = struct.unpack("d", bin_data)[0]
+            self.assertEqual(result, correct)
+
     def test_adds(self):
-        print("Testing ADDS floating")
         self.two_op_test_float(opfunc.add, "ADD.S")
 
     def test_subs(self):
-        print("Testing SUBS floating - Luv")
         self.two_op_test_float(opfunc.sub, "SUB.S")
 
     def test_mults(self):
-        print("Testing MULTS floating - Luv")
-        self.two_op_test_hilo_float(opfunc.mul, "MULT.S", 2, 4, 2, 4)
+        self.two_op_test_hilo_float(opfunc.mul, "MULT.S")
 if __name__ == '__main__':
     main()
