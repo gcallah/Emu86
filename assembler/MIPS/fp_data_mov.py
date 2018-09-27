@@ -5,7 +5,7 @@ from assembler.errors import check_num_args, InvalidArgument
 from assembler.tokens import Instruction, Register, RegAddress, Symbol
 
 class Loadc(Instruction):
-	"""
+    """
         <instr>
              LWC
         </instr>
@@ -29,7 +29,7 @@ class Loadc(Instruction):
             raise InvalidArgument(ops[0].get_nm())
 
 class Storec(Instruction):
-	"""
+    """
         <instr>
              SWC
         </instr>

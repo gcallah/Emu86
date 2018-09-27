@@ -46,10 +46,10 @@ class Adds(Instruction):
 class Subs(Instruction):
     """
         <instr>
-             SUB
+             SUB.S
         </instr>
         <syntax>
-            SUB reg, reg, reg
+            SUB.S reg, reg, reg
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -59,10 +59,10 @@ class Subs(Instruction):
 class Mults(Instruction):
     """
         <instr>
-             MULT
+             MULT.S
         </instr>
         <syntax>
-            MULT reg, reg
+            MULT.S reg, reg
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -70,5 +70,16 @@ class Mults(Instruction):
         check_reg_only(self.name, ops)
         result = ops[0].get_val() * ops[1].get_val()
         #deal with the high and low registers
-        
+        if result > 2 ** 32 - 1:
+            vm.registers['LO'] = opfunc.lshift(result, 32)
+            vm.registers['HI'] = opfunc.rshift(result, 32)
+        else:
+            vm.registers['LO'] = result
+            vm.registers['HI'] = 0
+        print("IN MULS")
+        print(vm.registers['LO'])
+        print(vm.registers['HI'])
+        vm.changes.add('LO')
+        vm.changes.add('HI')
+        return ''
 #'DIV.S': Divs('DIV.S'),

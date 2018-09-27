@@ -140,6 +140,23 @@ class AssembleTestCase(TestCase):
             assemble("40000 " + instr + " F10, F8, F9", 'mips_asm', mips_machine)
             self.assertEqual(mips_machine.registers["F10"], correct)
 
+    def two_op_test_hilo_float(self, operator, instr, 
+                    low1=MIN_TEST, high1=MAX_TEST,
+                    low2=MIN_TEST, high2=MAX_TEST):
+        for i in range(0, 1):
+            a = random.uniform(low1, high1)
+            b = random.uniform(low2, high2)
+            correct = operator(a,b)
+            mips_machine.registers["F8"] = a
+            mips_machine.registers["F9"] = b
+            mips_machine.base = "hex"
+            assemble("40000 " + instr + " F10, F8, F9", 'mips_asm', mips_machine)
+            print("value in hi", mips_machine.registers["HI"])
+            print("value in lo", mips_machine.registers["LO"])
+            print("value in f10", mips_machine.registers["F10"])
+            print("a", a)
+            print("b", b)
+            print("correct", correct)
     def test_adds(self):
         print("Testing ADDS floating")
         self.two_op_test_float(opfunc.add, "ADD.S")
@@ -148,5 +165,8 @@ class AssembleTestCase(TestCase):
         print("Testing SUBS floating - Luv")
         self.two_op_test_float(opfunc.sub, "SUB.S")
 
+    def test_mults(self):
+        print("Testing MULTS floating - Luv")
+        self.two_op_test_hilo_float(opfunc.mul, "MULT.S", 2, 4, 2, 4)
 if __name__ == '__main__':
     main()
