@@ -8,7 +8,7 @@ def check_reg_only(instr, ops):
 
 def check_immediate_three(instr, ops):
     if not isinstance(ops[0], Register):
-        raise InvalidArgument(ops[i].get_nm())
+        raise InvalidArgument(ops[0].get_nm())
     else:
         if isinstance(ops[1], Register):
             if (not isinstance(ops[2], IntegerTok) and 
