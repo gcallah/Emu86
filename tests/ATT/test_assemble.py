@@ -56,8 +56,7 @@ class AssembleTestCase(TestCase):
 
     def test_and(self):
         self.two_op_test(opfunc.and_, "and")
-    def test_and(self):
-        self.two_op_test(opfunc.and_, "FXor")
+
     def test_or(self):
         self.two_op_test(opfunc.or_, "or")
 
