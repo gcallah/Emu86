@@ -43,7 +43,7 @@ class AssembleTestCase(TestCase):
             intel_machine.base = "dec"
             assemble(instr + " eax, ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
-    
+
     def two_op_test_float(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
@@ -56,7 +56,7 @@ class AssembleTestCase(TestCase):
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
-            assemble(instr + " eax, ebx", 'intel', intel_machine)
+            print(assemble(instr + " eax, ebx", 'intel', intel_machine))
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_fadd(self):
@@ -68,7 +68,7 @@ class AssembleTestCase(TestCase):
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
     def test_FAndf(self):
-        self.two_op_test(opfunc.and_, "FAndf")
+        self.two_op_test_float(opfunc.and_, "FAndf")
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
@@ -91,7 +91,7 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.xor, "xor")
 
     def test_FOrf(self):
-        self.two_op_test(opfunc.or_, "FOrf")
+        self.two_op_test_float(opfunc.or_, "FOrf")
 
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
