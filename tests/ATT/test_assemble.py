@@ -56,7 +56,8 @@ class AssembleTestCase(TestCase):
 
     def test_and(self):
         self.two_op_test(opfunc.and_, "and")
-
+    def test_and(self):
+        self.two_op_test(opfunc.and_, "FXor")
     def test_or(self):
         self.two_op_test(opfunc.or_, "or")
 
@@ -166,6 +167,6 @@ class AssembleTestCase(TestCase):
         assemble("cmp %ebx, %eax", 'att', intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
-        
+
 if __name__ == '__main__':
     main()
