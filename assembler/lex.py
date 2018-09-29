@@ -185,7 +185,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                 if data_sec:
                     analysis.append(NewSymbol(word[:-1], vm))
                 else:
-                    if flavor == "mips_asm":
+                    if flavor == "mips_asm" or flavor == "riscv":
                         vm.labels[word[:-1]] = i * 4
                     else:
                         vm.labels[word[:-1]] = i
