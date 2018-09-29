@@ -58,6 +58,7 @@ class Add(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
+        print('ehey')
         three_op_arith_reg(ops, vm, self.name, opfunc.add)
 
 class Addi(Instruction):
