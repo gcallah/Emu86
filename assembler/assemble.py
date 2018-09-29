@@ -239,7 +239,7 @@ def exec(tok_lines, flavor, vm, last_instr):
         curr_instr = None
         source = None
         last_instr = None
-        if flavor == "mips_asm" or flavor == "mips_mml":
+        if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
             if ip // 4 >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
             (curr_instr, source) = tok_lines[ip // 4]
@@ -311,7 +311,7 @@ def assemble(code, flavor, vm, step=False):
             add_debug("Setting ip to 0", vm)
             vm.set_ip(vm.start_ip)   # instruction pointer reset for 'run'
             count = 0
-            if flavor == "mips_asm" or flavor == "mips_mml":
+            if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
                 while ((vm.get_ip() - vm.start_ip) // 4 < len(tok_lines) and 
                        count < MAX_INSTRUCTIONS):
                     (success, last_instr, error) = exec(tok_lines, flavor, vm, 
@@ -332,7 +332,7 @@ def assemble(code, flavor, vm, step=False):
             if vm.get_ip() == 0:
                 vm.set_ip(vm.start_ip)
             ip = vm.get_ip() - vm.start_ip
-            if flavor == "mips_asm" or flavor == "mips_mml":
+            if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
                 ip = ip // 4
             if ip < len(tok_lines):
                 (success, last_instr, error) = exec(tok_lines, flavor, vm,

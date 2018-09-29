@@ -42,11 +42,11 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             correct = operator(a, b)
-            riscv_machine.registers["x8"] = a
-            riscv_machine.registers["x9"] = b
+            riscv_machine.registers["X8"] = a
+            riscv_machine.registers["X9"] = b
             riscv_machine.base = "hex"
-            print(assemble("40000 " + instr + " x10, x8, x9", 'riscv', riscv_machine))
-            self.assertEqual(riscv_machine.registers["x10"], correct)
+            assemble("40000 " + instr + " X10, X8, X9", 'riscv', riscv_machine)
+            self.assertEqual(riscv_machine.registers["X10"], correct)
 
     def two_op_test_imm(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,

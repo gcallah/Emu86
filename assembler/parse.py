@@ -819,7 +819,7 @@ def parse(tok_lines, flavor, vm):
             vm.set_data_init("off")
             parsed_unit = parse_exec_unit(tokens[0], flavor, vm)
             token_instrs.append((parsed_unit, tokens[1]))
-            if (flavor == "mips_asm" or flavor == "mips_mml") and ip_init == None:
+            if (flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv") and ip_init == None:
                 ip_init = token_instrs[0][TOKENS][0].get_val()
                 vm.start_ip = ip_init
     return token_instrs

@@ -9,6 +9,7 @@ import operator as opfunc
 from assembler.errors import *
 from assembler.tokens import Instruction, MAX_INT, Register, IntegerTok
 from assembler.ops_check import one_op_arith
+from .argument_check import * 
 
 
 def three_op_arith_reg(ops, vm, instr, operator):
@@ -60,7 +61,6 @@ class Add(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        print('ehey')
         three_op_arith_reg(ops, vm, self.name, opfunc.add)
 
 class Addi(Instruction):
