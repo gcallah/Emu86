@@ -38,14 +38,16 @@ def three_op_arith_immediate(ops, vm, instr, operator):
     vm.changes.add(ops[0].get_nm()) 
 
 def check_overflow(val, vm):
-	'''
-	To emulate the wraparound that occurs when a number 
-	has too many bits to represent in machine code. 
+    '''
+    To emulate the wraparound that occurs when a number 
+    has too many bits to represent in machine code. 
 
-	'''
-    if(val > MAX_INT):
+    '''
+    if (val > MAX_INT): 
         val = val - MAX_INT+1
     return val
+	
+   
 
 
 class Add(Instruction):

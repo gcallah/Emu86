@@ -83,6 +83,9 @@ def make_language_keys(vm, flavor):
         from .MIPS.key_words import key_words
         language_keys.update(key_words)
         return language_keys
+    if flavor == "riscv": 
+        from .RISCV.key_words import key_words
+        language_keys.update(key_words)
     else:
         from .Intel.key_words import instructions
         language_keys.update(instructions)
