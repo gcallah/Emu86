@@ -16,9 +16,11 @@ STACK_BOTTOM = MEM_SIZE
 EMPTY_CELL = 0
 INSTR_PTR_INTEL = "EIP"
 INSTR_PTR_MIPS = "PC"
+INSTR_PTR_RISCV = "PC"
 STACK_PTR_INTEL = "ESP"
 STACK_PTR_MIPS = "R29"
-INSTR_PTR_RISCV = "x2"
+STACK_PTR_RISCV = "x2"
+
 
 class VirtualMachine:
     """
@@ -282,15 +284,13 @@ class MIPSMachine(VirtualMachine):
     def get_sp(self):
         return int(self.registers[STACK_PTR_MIPS])
 
-intel_machine = IntelMachine()
-mips_machine = MIPSMachine()
-
-class RISCV(VirtualMachine): 
+class RISCVMachine(VirtualMachine): 
     # make sure to account for the lack of HI and LO in display
     
     def __init__(self): 
         super().__init__()
-        self.unwritable =[INSTR_PTR_RISCV, 'x0']
+        self.unwritable =[INSTR_PTR_RISCV, 'x0', 
+                          STACK_PTR_RISCV, 'x2']
         self.registers = OrderedDict(
                         [
                             ('x0', 0),
@@ -326,3 +326,52 @@ class RISCV(VirtualMachine):
                             ('x11', 0),
                             ('x23', 0)
                         ])
+        self.flags = OrderedDict(
+                    [
+                        ('COND', 0),
+                    ])
+
+    def re_init(self):
+        super().re_init()
+        self.registers[STACK_PTR_RISCV] = STACK_TOP
+        self.changes.clear()
+
+    def stack_init(self):
+        for i in range(STACK_TOP - 3, STACK_BOTTOM - 1, -4):
+            self.stack[hex(i).split('x')[-1].upper()] = 0
+
+    def inc_ip(self):
+        ip = self.get_ip()
+        ip += 4
+        self.set_ip(ip)
+    
+    def set_ip(self, val):
+        self.registers[INSTR_PTR_RISCV] = val
+    
+    def get_ip(self):
+        return int(self.registers[INSTR_PTR_RISCV])
+
+    def inc_sp(self):
+        sp = self.get_sp()
+        sp += 1
+        self.set_sp(sp)
+        
+    def dec_sp(self):
+        sp = self.get_sp()
+        sp -= 1
+        self.set_sp(sp)
+    
+    def set_sp(self, val):
+        if val < STACK_BOTTOM - 1:
+            raise StackOverflow()
+        if val > STACK_TOP:
+            raise StackUnderflow()
+
+        self.registers[STACK_PTR_RISCV] = val
+    
+    def get_sp(self):
+        return int(self.registers[STACK_PTR_RISCV])
+
+intel_machine = IntelMachine()
+mips_machine = MIPSMachine()
+riscv_machine = RISCVMachine()

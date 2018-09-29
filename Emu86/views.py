@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404, render
 from .models import AdminEmail
 from .models import Site
 from .forms import MainForm
-from assembler.virtual_machine import intel_machine, mips_machine
+from assembler.virtual_machine import intel_machine, mips_machine, riscv_machine
 from assembler.assemble import assemble, add_debug
 
 CODE = 'code'
@@ -44,12 +44,16 @@ def dump_dict(d, intel_machine):
 def welcome(request):
     global intel_machine
     global mips_machine
+    global riscv_machine
     intel_machine.re_init()
     mips_machine.re_init()
+    riscv_machine.re_init()
     intel_machine.flavor = None
     mips_machine.flavor = None
+    riscv_machine.flavor = None
     intel_machine.base = None
     mips_machine.base = None
+    riscv_machine.base = None
     site_hdr = get_hdr()
     return render(request, 'welcome.html', {HEADER: site_hdr})
 

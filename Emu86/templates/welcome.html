@@ -13,6 +13,7 @@
                     <option value="att"> AT&amp;T </option>
                     <option value="mips_asm"> MIPS Assembly </option>
                     <option value="mips_mml"> MIPS Mnemonic Machine Language </option>
+                    <option value="riscv"> RISC-V </option>
                 </select>
                 <br>
                 Please select your number system: 
@@ -26,7 +27,7 @@
                 function SetBase(){
                     langBar = document.getElementsByName("language")[0];
                     var language = langBar.options[langBar.selectedIndex].value
-                    if (language == "mips_asm" || language == "mips_mml"){
+                    if (language == "mips_asm" || language == "mips_mml" || language == "riscv"){
                         document.getElementsByName("base")[0].removeAttribute("checked");
                         document.getElementsByName("base")[1].checked = true;
                     }
