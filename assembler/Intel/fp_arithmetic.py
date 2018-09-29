@@ -43,7 +43,41 @@ class FSUB(Instruction):
 class FMUL(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.mul)
+class FOrf(Instruction):
+    """
+        <instr>
+             or
+        </instr>
+        <syntax>
+            OR reg, reg
+            OR reg, mem
+            OR reg, con
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.or_)
+        return ''
 
+class FXor(Instruction):
+    """
+        <instr>
+             xor
+        </instr>
+        <syntax>
+            XOR reg, reg
+            XOR reg, mem
+            XOR reg, con
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.xor)
+        return ''
+
+class FAndf(Instruction):
+
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.and_)
+        return ''
 
 class FDIV(Instruction):
     def fhook(self, ops, vm):
