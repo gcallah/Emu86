@@ -726,7 +726,7 @@ def get_op_list(token_line, pos, flavor, vm, op_lst):
         else:
             raise MissingComma()
 
-def get_mips_pc(token_line, pos):
+def get_pc(token_line, pos):
     """
     Returns the PC counter of the instruction
 
@@ -762,8 +762,8 @@ def parse_exec_unit(token_line, flavor, vm):
     op_lst = []
 
     # retrieve PC counter 
-    if flavor == "mips_asm" or flavor == "mips_mml":
-        token_instruction.append(get_mips_pc(token_line, pos))
+    if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
+        token_instruction.append(get_pc(token_line, pos))
         pos += 1
 
     # retrieve instruction
