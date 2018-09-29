@@ -5,7 +5,7 @@ tokens.py: contains classes we tokenize into.
 from abc import abstractmethod
 
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName, InvalidArgument
-from .errors import NotSettable
+from .errors import NotSettable, UnknownLabel, LabelNotSettable
 
 BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1
@@ -231,9 +231,6 @@ class Register(Location):
     def __str__(self):
         return str(self.name)
 
-    def __str__(self):
-        return str(self.name)
-
     def get_val(self):
         if self.name[0] == "F":
             return float(self.registers[self.name])
@@ -273,7 +270,7 @@ class Label(Location):
             return self.labels[self.name]
 
     def set_val(self, val):
-        raise LabelNotSettable
+        raise LabelNotSettable(self.name)
 
 class NewSymbol(Token):
     def __init__(self, name, index = None):
