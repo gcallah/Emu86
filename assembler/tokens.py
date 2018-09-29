@@ -210,7 +210,7 @@ class RegAddress(Address):
     def get_val(self):
         mem_addr = self.get_mem_addr()
         if mem_addr in self.mem:
-            return int(self.mem[str(mem_addr)])
+            return self.mem[str(mem_addr)]
         else:
             return 0
 
