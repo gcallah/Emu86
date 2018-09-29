@@ -56,13 +56,16 @@ class AssembleTestCase(TestCase):
             b = random.randint(low2, high2)
             hex_string = hex(b)
             correct = operator(a, int(hex(b), 16))
-            riscv_machine.registers["x9"] = a
+            riscv_machine.registers["X9"] = a
             riscv_machine.base = "hex"
-            assemble("40000 " + instr + " x10, x9, " + hex_string, 'riscv', riscv_machine)
-            self.assertEqual(riscv_machine.registers["x10"], correct)
+            assemble("40000 " + instr + " X10, X9, " + hex_string, 'riscv', riscv_machine)
+            self.assertEqual(riscv_machine.registers["X10"], correct)
 
     def test_add(self):
         self.two_op_test(opfunc.add, "ADD")
+
+    def test_add_imm(self):
+        self.two_op_test_imm(opfunc.add, "ADDI")
 '''
     def test_sub(self):
         self.two_op_test(opfunc.sub, "SUB")
@@ -72,9 +75,6 @@ class AssembleTestCase(TestCase):
 
     def test_or(self):
         self.two_op_test(opfunc.or_, "OR")
-
-    def test_add_imm(self):
-        self.two_op_test_imm(opfunc.add, "ADDI")
         
     def test_and_imm(self):
         self.two_op_test_imm(opfunc.and_, "ANDI")
