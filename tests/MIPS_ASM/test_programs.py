@@ -80,6 +80,12 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R9"], 16)
         self.assertEqual(mips_machine.registers["R10"], 32)
 
+    def test_fp_data(self):
+        self.run_mips_test_code("fp_data.asm")
+        self.assertEqual(mips_machine.registers["F8"],  8.0)
+        self.assertEqual(mips_machine.registers["F9"], 16.5)
+        self.assertEqual(mips_machine.registers["F10"], 32.555)
+
     def test_array(self):
         self.run_mips_test_code("array.asm")
         self.assertEqual(mips_machine.registers["R8"],  3)
