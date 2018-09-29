@@ -87,7 +87,8 @@ class AssembleTestCase(TestCase):
 
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
-
+    def test_FOrf(self):
+        self.two_op_test(opfunc.FOrf, "FOrf")
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
                          low1=MIN_MUL, high1=MAX_MUL,
