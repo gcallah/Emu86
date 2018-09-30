@@ -166,6 +166,6 @@ class AssembleTestCase(TestCase):
         assemble("cmp %ebx, %eax", 'att', intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
-        
+
 if __name__ == '__main__':
     main()
