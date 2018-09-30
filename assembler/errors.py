@@ -126,10 +126,6 @@ class InvalidRegister(Error):
     def __init__(self, offender):
         self.msg = INVALID_REG + offender
 
-class RegUnwritable(Error):
-    def __init__(self, offender):
-        self.msg = REG_UNWRITABLE + offender
-
 class IntOutOfRng(Error):
     def __init__(self, offender):
         self.msg = INT_OUT_OF_RNG + offender
