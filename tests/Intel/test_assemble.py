@@ -67,8 +67,8 @@ class AssembleTestCase(TestCase):
 
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
-    def test_FAndf(self):
-        self.two_op_test_float(opfunc.and_, "FAndf")
+    # def test_FAndf(self):
+    #     self.two_op_test_float(opfunc.and_, "FAndf")
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
@@ -90,8 +90,8 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
 
-    def test_FOrf(self):
-        self.two_op_test_float(opfunc.or_, "FOrf")
+    # def test_FOrf(self):
+    #     self.two_op_test_float(opfunc.or_, "FOrf")
 
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
