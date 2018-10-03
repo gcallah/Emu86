@@ -13,6 +13,11 @@ from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
 from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen, FloatTok
 
+# for floating point to binary and back
+import struct
+import codecs
+import binascii
+
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
 
@@ -43,6 +48,12 @@ def convert_hex_float(string):
     int_part = int(lst[0], 16)
     float_part = float("." + lst[1])
     return int_part + float_part
+
+# come back to this when we implement ieee standard
+# def convert_hex_float_iee(string):
+#     val = float(string)
+#     val = binascii.hexlify(struct.pack('d', val))
+#     return val
 
 def generate_reg_dict(vm, flavor):
     """

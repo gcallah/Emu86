@@ -80,6 +80,7 @@ class Mults(Instruction):
         check_num_args(self.name, ops, 2)
         check_reg_only(self.name, ops)
         result = ops[0].get_val() * ops[1].get_val()
+        print ("IN MULTS", result)
         #convert to bit format
         hex_result = float_to_hex(result)
         binary_result = bin(int(hex_result, 16))[2:]
