@@ -42,85 +42,85 @@ class TestPrograms(TestCase):
         float_part = float("." + lst[1])
         return int_part + float_part
 
-    # def test_loop(self):
-    #     self.run_mips_test_code("loop.asm")
-    #     self.assertEqual(mips_machine.registers["R11"], 16)
+    def test_loop(self):
+        self.run_mips_test_code("loop.asm")
+        self.assertEqual(mips_machine.registers["R11"], 16)
 
-    # def test_power(self):
-    #     self.run_mips_test_code("power.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], 65536)
+    def test_power(self):
+        self.run_mips_test_code("power.asm")
+        self.assertEqual(mips_machine.registers["R8"], 65536)
 
-    # def test_gt(self):
-    #     self.run_mips_test_code("gt.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], 17)
-    #     self.assertEqual(mips_machine.registers["R9"], 16)
-    #     self.assertEqual(mips_machine.registers["R13"], 16)
-    #     self.assertEqual(mips_machine.registers["R14"], 19)
+    def test_gt(self):
+        self.run_mips_test_code("gt.asm")
+        self.assertEqual(mips_machine.registers["R8"], 17)
+        self.assertEqual(mips_machine.registers["R9"], 16)
+        self.assertEqual(mips_machine.registers["R13"], 16)
+        self.assertEqual(mips_machine.registers["R14"], 19)
 
-    # # def test_interrupt(self):
-    # #     self.run_intel_test_code("tests/Intel/test_interrupt.asm")
-    # #     self.assertEqual(intel_machine.registers["EAX"], 71)
-    # #     self.assertEqual(intel_machine.registers["EBX"], 6)
-    # #     self.assertEqual(intel_machine.registers["ECX"], 1)
-    # #     self.assertEqual(intel_machine.registers["ESP"], 511)
-    # #     self.assertEqual(intel_machine.memory["6"], 71)
+    # def test_interrupt(self):
+    #     self.run_intel_test_code("tests/Intel/test_interrupt.asm")
+    #     self.assertEqual(intel_machine.registers["EAX"], 71)
+    #     self.assertEqual(intel_machine.registers["EBX"], 6)
+    #     self.assertEqual(intel_machine.registers["ECX"], 1)
+    #     self.assertEqual(intel_machine.registers["ESP"], 511)
+    #     self.assertEqual(intel_machine.memory["6"], 71)
 
-    # # def test_key(self):
-    # #     self.run_intel_test_code("tests/Intel/key_test.asm")
-    # #     self.assertEqual(intel_machine.registers["EAX"], 71)
-    # #     self.assertEqual(intel_machine.registers["EBX"], 71)
-    # #     self.assertEqual(intel_machine.registers["ECX"], 1)
-    # #     self.assertEqual(intel_machine.registers["ESP"], 511)
-    # #     self.assertEqual(intel_machine.memory["9"], 83)
+    # def test_key(self):
+    #     self.run_intel_test_code("tests/Intel/key_test.asm")
+    #     self.assertEqual(intel_machine.registers["EAX"], 71)
+    #     self.assertEqual(intel_machine.registers["EBX"], 71)
+    #     self.assertEqual(intel_machine.registers["ECX"], 1)
+    #     self.assertEqual(intel_machine.registers["ESP"], 511)
+    #     self.assertEqual(intel_machine.memory["9"], 83)
 
-    # def test_arithmetic_shift(self):
-    #     self.run_mips_test_code("arithmetic_shift.asm")
-    #     self.assertEqual(mips_machine.registers["R10"], 4)
-    #     self.assertEqual(mips_machine.registers["R11"], 10)
-    #     self.assertEqual(mips_machine.registers["R12"], 8)
-    #     self.assertEqual(mips_machine.registers["R13"], 8)
-    #     self.assertEqual(mips_machine.memory["4"], 4)
+    def test_arithmetic_shift(self):
+        self.run_mips_test_code("arithmetic_shift.asm")
+        self.assertEqual(mips_machine.registers["R10"], 4)
+        self.assertEqual(mips_machine.registers["R11"], 10)
+        self.assertEqual(mips_machine.registers["R12"], 8)
+        self.assertEqual(mips_machine.registers["R13"], 8)
+        self.assertEqual(mips_machine.memory["4"], 4)
 
-    # def test_jump(self):
-    #     self.run_mips_test_code("test_jump.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], 3)
+    def test_jump(self):
+        self.run_mips_test_code("test_jump.asm")
+        self.assertEqual(mips_machine.registers["R8"], 3)
 
-    # def test_data(self):
-    #     self.run_mips_test_code("data.asm")
-    #     self.assertEqual(mips_machine.registers["R8"],  8)
-    #     self.assertEqual(mips_machine.registers["R9"], 16)
-    #     self.assertEqual(mips_machine.registers["R10"], 32)
+    def test_data(self):
+        self.run_mips_test_code("data.asm")
+        self.assertEqual(mips_machine.registers["R8"],  8)
+        self.assertEqual(mips_machine.registers["R9"], 16)
+        self.assertEqual(mips_machine.registers["R10"], 32)
 
-    # def test_fp_data(self):
-    #     self.run_mips_test_code("fp_data.asm")
-    #     self.assertEqual(mips_machine.registers["F8"],  8.0)
-    #     self.assertEqual(mips_machine.registers["F9"], 16.5)
-    #     self.assertEqual(mips_machine.registers["F10"], 32.555)
+    def test_fp_data(self):
+        self.run_mips_test_code("fp_data.asm")
+        self.assertEqual(mips_machine.registers["F8"],  8.0)
+        self.assertEqual(mips_machine.registers["F9"], 16.5)
+        self.assertEqual(mips_machine.registers["F10"], 32.555)
 
-    # def test_array(self):
-    #     self.run_mips_test_code("array.asm")
-    #     self.assertEqual(mips_machine.registers["R8"],  3)
-    #     self.assertEqual(mips_machine.registers["R9"], 50)
-    #     self.assertEqual(mips_machine.registers["R10"], ord ('l'))
-    #     self.assertEqual(mips_machine.registers["R11"], 5)
+    def test_array(self):
+        self.run_mips_test_code("array.asm")
+        self.assertEqual(mips_machine.registers["R8"],  3)
+        self.assertEqual(mips_machine.registers["R9"], 50)
+        self.assertEqual(mips_machine.registers["R10"], ord ('l'))
+        self.assertEqual(mips_machine.registers["R11"], 5)
 
-    # def test_sum_calculation(self):
-    #     self.run_mips_test_code("sum_test.asm")
-    #     self.assertEqual(mips_machine.registers["R8"],  53)
-    #     self.assertEqual(mips_machine.memory["4"], 53)
+    def test_sum_calculation(self):
+        self.run_mips_test_code("sum_test.asm")
+        self.assertEqual(mips_machine.registers["R8"],  53)
+        self.assertEqual(mips_machine.memory["4"], 53)
 
-    # def test_arithmetic_expression(self):
-    #     self.run_mips_test_code("arithmetic_expression.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], -31)
-    #     self.assertEqual(mips_machine.registers["R10"], 52)
+    def test_arithmetic_expression(self):
+        self.run_mips_test_code("arithmetic_expression.asm")
+        self.assertEqual(mips_machine.registers["R8"], -31)
+        self.assertEqual(mips_machine.registers["R10"], 52)
 
-    # def test_area(self):
-    #     self.run_mips_test_code("area.asm")
-    #     self.assertEqual(mips_machine.registers["R8"], 35)
-    #     self.assertEqual(mips_machine.registers["R9"], 27)
-    #     self.assertEqual(mips_machine.registers["R10"], 35 * 27)
-    #     self.assertEqual(mips_machine.registers["LO"], 35 * 27)
-    #     self.assertEqual(mips_machine.registers["HI"], 0)
+    def test_area(self):
+        self.run_mips_test_code("area.asm")
+        self.assertEqual(mips_machine.registers["R8"], 35)
+        self.assertEqual(mips_machine.registers["R9"], 27)
+        self.assertEqual(mips_machine.registers["R10"], 35 * 27)
+        self.assertEqual(mips_machine.registers["LO"], 35 * 27)
+        self.assertEqual(mips_machine.registers["HI"], 0)
 
     def convertHiLoForFP(self):
         h_reg = str(mips_machine.registers["HI"])
