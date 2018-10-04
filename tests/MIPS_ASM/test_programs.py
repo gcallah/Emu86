@@ -50,6 +50,10 @@ class TestPrograms(TestCase):
         self.run_mips_test_code("power.asm")
         self.assertEqual(mips_machine.registers["R8"], 65536)
 
+    # def test_fp_power(self):
+    #     self.run_mips_test_code("fp_power.asm")
+    #     self.assertEqual(mips_machine.registers["F8"], 166.375)
+
     def test_gt(self):
         self.run_mips_test_code("gt.asm")
         self.assertEqual(mips_machine.registers["R8"], 17)
