@@ -494,7 +494,7 @@ function displayHelp(button_type){
     else if (button_type == "save"){
         string = "Save code as a file.";
     } else if (button_type == "pause"){
-        string = "Pauses code where demo leaves off from.";
+        string = "Pauses and resets code where demo leaves off from.";
     }
 
     var spanNode = document.getElementById("help-desc");

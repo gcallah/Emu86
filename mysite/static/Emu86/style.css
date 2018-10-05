@@ -789,11 +789,24 @@ a.deletelink:focus, a.deletelink:hover {
     text-align: center;
 }
 
+#clear-button, #run-button, #pause-button, #step-button, #demo-button, #save-button {
+    padding: 10px 3px;
+}
+
 #run-button {
     text-align: center;
     font-size: 13px;
     margin: 10px 5px 20px 5px;
     background: #075;
+    border-radius: 10px;
+    border: 1px solid #003366;
+}
+
+#pause-button {
+    text-align: center;
+    font-size: 13px;
+    margin: 10px 5px 20px 5px;
+    background: #285d91;
     border-radius: 10px;
     border: 1px solid #003366;
 }
