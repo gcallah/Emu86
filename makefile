@@ -19,6 +19,7 @@ OBJS = $(ODIR)/help.html
 EXTR = $(UDIR)/extract_doc.awk
 D2HTML = $(UDIR)/doc2html.awk
 INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
+DOCKER_DIR = docker
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
@@ -54,7 +55,7 @@ website: $(INCS) $(HTML_FILES) help
 	git pull origin master
 	git push origin master
 
-container:
+container: $(DOCKER_DIR)/Dockerfile  $(DOCKER_DIR)/requirements.txt
 	docker build -t emu86 docker
 
 help_mips: $(MIPS_SRCS)
