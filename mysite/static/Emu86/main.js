@@ -285,10 +285,13 @@ function Savecode()
     }
 }
 
-async function SubmitForm(demo_on = false){
-    if (demo_on){
-        await slowCall()
+async function SubmitForm(demo_on = false, pause = false){
+    if ((demo_on) && (pause==false)) {
+        await slowCall();
+    } else if (demo_on==true && pause==true) {
+        debugger;
     }
+
     document.getElementById("codeForm").submit();
     document.getElementById("clear-button").disabled="true";
     document.getElementById("run-button").disabled="true";
@@ -466,7 +469,7 @@ function resolveAfter1HalfSeconds() {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('resolved');
-    }, 1500);
+    }, 3000);
   });
 }
 
@@ -490,6 +493,8 @@ function displayHelp(button_type){
     }
     else if (button_type == "save"){
         string = "Save code as a file.";
+    } else if (button_type == "pause"){
+        string = "Pauses code where demo leaves off from.";
     }
 
     var spanNode = document.getElementById("help-desc");

@@ -162,10 +162,7 @@
                                 id="pause-button"
                                 onclick="pauseButton()"
                                 onmouseover="displayHelp(this.name)" 
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "pause" %}
-                                    disabled
-                                {% endif %}>
+                                onmouseleave="hideHelp()">
                             <input type="button" name="step"
                                 value="Step Code"
                                 title="Execute one instruction at a time."
@@ -441,6 +438,9 @@
     <script>
         if (document.getElementsByName("button_type")[0].value == "demo"){
             SubmitForm(true);
+        }
+        if (document.getElementsByName("button_type")[0].value == "pause") {
+            SubmitForm(true, true);
         }
     </script>
 
