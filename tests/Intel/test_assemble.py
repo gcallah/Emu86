@@ -96,7 +96,7 @@ class AssembleTestCase(TestCase):
 
     def test_FOrf(self):
         self.two_op_test_float(opfunc.neg, "FNeg")
-    
+
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
 

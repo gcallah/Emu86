@@ -72,7 +72,18 @@ class FXor(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.xor)
         return ''
-
+class FNeg(Instruction):
+    """
+        <instr>
+             neg
+        </instr>
+        <syntax>
+            NEG reg
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        one_op_arith(ops, vm, self.name, opfunc.neg)
+        return ''
 class FAndf(Instruction):
 
     def fhook(self, ops, vm):
