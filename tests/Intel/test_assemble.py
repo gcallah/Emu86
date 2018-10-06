@@ -43,6 +43,7 @@ class AssembleTestCase(TestCase):
             intel_machine.base = "dec"
             assemble(instr + " eax, ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
+            
     def two_op_test_float(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
