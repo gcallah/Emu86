@@ -43,7 +43,7 @@ class AssembleTestCase(TestCase):
             intel_machine.base = "dec"
             assemble(instr + " eax, ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
-            
+
     def two_op_test_float(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
@@ -92,8 +92,11 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.xor, "xor")
 
     def test_FOrf(self):
-        self.two_op_test(opfunc.or_, "FOrf")
+        self.two_op_test_float(opfunc.or_, "FOrf")
 
+    def test_FOrf(self):
+        self.two_op_test_float(opfunc.neg, "FNeg")
+    
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
 
