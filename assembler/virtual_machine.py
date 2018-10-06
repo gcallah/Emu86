@@ -40,7 +40,7 @@ class VirtualMachine:
         self.stack_init()
 
         self.labels = {}
-        self.symbols = {}
+        self.symbols = OrderedDict()
         self.flavor = None
         self.data_init = "on"
         self.start_ip = 0
