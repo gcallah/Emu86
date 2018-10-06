@@ -66,12 +66,16 @@ class VirtualMachine:
         self.stack_init()
         self.data_init = "on"
         self.changes_init()
+        self.symbols_init()
 
     def mem_init(self):
         self.memory.clear()
 
     def changes_init(self):
         self.changes.clear()
+
+    def symbols_init(self):
+        self.symbols.clear()
 
     def order_mem(self):
         lst = []
