@@ -88,7 +88,7 @@ def main_page(request):
                 riscv_machine.flavor = None
                 mips_machine.flavor = lang
                 mips_machine.base = base
-                site_hdr += ": " + MIPS[lang]
+                site_hdr += ": " + MIPS[lang] + " " + mips_machine.base.upper()
                 hex_conversion(mips_machine)
                 return render(request, 'main.html',
                             {'form': form,
@@ -101,6 +101,7 @@ def main_page(request):
                              'registers': mips_machine.registers,
                              'memory': mips_machine.memory, 
                              'stack': mips_machine.stack, 
+                             'symbols': mips_machine.symbols,
                              'flags': mips_machine.flags,
                              'flavor': mips_machine.flavor,
                              'data_init': mips_machine.data_init,
@@ -117,7 +118,7 @@ def main_page(request):
                 intel_machine.base = base
                 intel_machine.flavor = lang
                 header_line = site_hdr
-                site_hdr += ": " + INTEL[lang]
+                site_hdr += ": " + INTEL[lang] + " " + intel_machine.base.upper()
                 hex_conversion(intel_machine)
                 return render(request, 'main.html',
                               {'form': form,
@@ -130,6 +131,7 @@ def main_page(request):
                                'registers': intel_machine.registers,
                                'memory': intel_machine.memory, 
                                'stack': intel_machine.stack, 
+                               'symbols': intel_machine.symbols,
                                'flags': intel_machine.flags,
                                'flavor': intel_machine.flavor,
                                DATA_INIT: intel_machine.data_init,
@@ -145,7 +147,7 @@ def main_page(request):
                 intel_machine.flavor = None
                 riscv_machine.flavor = lang 
                 riscv_machine.base = base 
-                site_hdr += ": " + RISCV[lang]
+                site_hdr += ": " + RISCV[lang] + " " + riscv_machine.base.upper()
                 hex_conversion(riscv_machine)
                 return render(request, 'main.html',
                             {'form': form,
@@ -158,6 +160,7 @@ def main_page(request):
                              'registers': riscv_machine.registers,
                              'memory': riscv_machine.memory, 
                              'stack': riscv_machine.stack, 
+                             'symbols': riscv_machine.symbols,
                              'flags': riscv_machine.flags,
                              'flavor': riscv_machine.flavor,
                              'data_init': riscv_machine.data_init,
@@ -264,7 +267,7 @@ def main_page(request):
 
     if mips_machine.flavor in MIPS:
         mips_machine.order_mem()
-        site_hdr += ": " + MIPS[mips_machine.flavor]
+        site_hdr += ": " + MIPS[mips_machine.flavor] + " " + mips_machine.base.upper()
         hex_conversion(mips_machine)
         return render(request, 'main.html',
                     {'form': form,
@@ -277,6 +280,7 @@ def main_page(request):
                      'registers': mips_machine.registers,
                      'memory': mips_machine.memory, 
                      'stack': mips_machine.stack, 
+                     'symbols': mips_machine.symbols,
                      'flags': mips_machine.flags,
                      'flavor': mips_machine.flavor,
                      DATA_INIT: mips_machine.data_init,
@@ -289,7 +293,7 @@ def main_page(request):
                     })
     if intel_machine.flavor in INTEL:    
         intel_machine.order_mem()
-        site_hdr += ": " + INTEL[intel_machine.flavor]
+        site_hdr += ": " + INTEL[intel_machine.flavor] + " " + intel_machine.base.upper()
         hex_conversion(intel_machine)
         return render(request, 'main.html',
                       {'form': form,
@@ -302,6 +306,7 @@ def main_page(request):
                        'registers': intel_machine.registers,
                        'memory': intel_machine.memory, 
                        'stack': intel_machine.stack, 
+                       'symbols': intel_machine.symbols,
                        'flags': intel_machine.flags,
                        'flavor': intel_machine.flavor,
                        DATA_INIT: intel_machine.data_init,
@@ -314,7 +319,7 @@ def main_page(request):
                       })
     if riscv_machine.flavor in RISCV: 
         riscv_machine.order_mem()
-        site_hdr += ": " + RISCV[riscv_machine.flavor]
+        site_hdr += ": " + RISCV[riscv_machine.flavor] + " " + riscv_machine.base.upper()
         hex_conversion(riscv_machine)
         return render(request, 'main.html',
                       {'form': form,
@@ -327,6 +332,7 @@ def main_page(request):
                        'registers': riscv_machine.registers,
                        'memory': riscv_machine.memory, 
                        'stack': riscv_machine.stack, 
+                       'symbols': riscv_machine.symbols,
                        'flags': riscv_machine.flags,
                        'flavor': riscv_machine.flavor,
                        DATA_INIT: riscv_machine.data_init,
