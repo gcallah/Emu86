@@ -348,7 +348,7 @@ function pauseButton(){
 
 function convert(name,value)
 {
-    var message= "Binary value of " + " " + name + ": ";
+    var message= `Binary value of ${name}: `;
     var hex_or_dec = null;
     var radios = document.getElementsByName("base");
     for (var index = 0; index < radios.length; index++) {
@@ -359,13 +359,12 @@ function convert(name,value)
     }
     var value1 = null;
     if (hex_or_dec == "hex"){
-        value1=parseInt(value, 16);
+        value1=(parseInt(hex, 16).toString(2));
     }
     else{
-        value1=parseInt(value);
+        value1=parseInt(value.toString(), 10).toString(2);
     }
     if(value1>=0) {
-
         message=message+((value1).toString(2));
         alert(message);
     }
