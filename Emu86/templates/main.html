@@ -425,7 +425,7 @@
                      <td>
                         <div style="height:300px;overflow:auto;">
                         <table id="stack-table">
-                             {% for sym, cont in symbols.items %}
+                             {% for sym, cont in symbols.items reversed %}
                                 <tr>
                                     <td id="mem-loc" style="height:5px">
                                         {{ sym }}
