@@ -56,7 +56,7 @@ class AssembleTestCase(TestCase):
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
-            print(assemble(instr + " eax, ebx", 'intel', intel_machine))
+            assemble(instr + " eax, ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_fadd(self):
@@ -67,8 +67,9 @@ class AssembleTestCase(TestCase):
 
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
-    # def test_FAndf(self):
-    #     self.two_op_test_float(opfunc.and_, "FAndf")
+
+    def test_FAndf(self):
+        self.two_op_test(opfunc.and_, "FAndf")
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
@@ -90,6 +91,15 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
 
+    def test_FOrf(self):
+        self.two_op_test_float(opfunc.or_, "FOrf")
+
+    def test_FNeg(self):
+        self.two_op_test_float(opfunc.neg, "FNeg")
+    def test_FDec(self):
+        fdec = functools.partial(opfunc.add, -1)
+        self.one_op_test_float(Fdec, "FDec")
+
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
 
@@ -105,6 +115,14 @@ class AssembleTestCase(TestCase):
 ###################
 # Single Op Tests #
 ###################
+    def one_op_test_float(self, operator, instr):
+        for i in range(NUM_TESTS):
+            a = float(random.randint(MIN_TEST, MAX_TEST))
+            correct = operator(a)
+            intel_machine.registers["EAX"] = a
+            intel_machine.base = "dec"
+            assemble(instr + " eax", 'intel', intel_machine)
+            self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def one_op_test(self, operator, instr):
         for i in range(NUM_TESTS):

@@ -40,7 +40,7 @@ class VirtualMachine:
         self.stack_init()
 
         self.labels = {}
-        self.symbols = {}
+        self.symbols = OrderedDict()
         self.flavor = None
         self.data_init = "on"
         self.start_ip = 0
@@ -66,12 +66,16 @@ class VirtualMachine:
         self.stack_init()
         self.data_init = "on"
         self.changes_init()
+        self.symbols_init()
 
     def mem_init(self):
         self.memory.clear()
 
     def changes_init(self):
         self.changes.clear()
+
+    def symbols_init(self):
+        self.symbols.clear()
 
     def order_mem(self):
         lst = []
@@ -289,42 +293,42 @@ class RISCVMachine(VirtualMachine):
     
     def __init__(self): 
         super().__init__()
-        self.unwritable =[INSTR_PTR_RISCV, 'x0', 
-                          STACK_PTR_RISCV, 'x2']
+        self.unwritable =[INSTR_PTR_RISCV, 'X0', 
+                          STACK_PTR_RISCV, 'X2']
         self.registers = OrderedDict(
                         [
                             ('X0', 0),
-                            ('X12', 0),
-                            ('X24', 0),
-                            ('X1', 0),
-                            ('X13', 0),
-                            ('X25', 0),
-                            ('X2', 0),
-                            ('X14', 0),
-                            ('X26', 0),
-                            ('X3', 0),
-                            ('X15', 0),
-                            ('X27', 0),
-                            ('X4', 0),
-                            ('X16', 0),
-                            ('X28', 0),
-                            ('X5', 0),
-                            ('X17', 0),
-                            ('X29', 0),
-                            ('X6', 0),
-                            ('X18', 0),
-                            ('X30', 0),
-                            ('X7', 0),
-                            ('X19', 0),
-                            ('X31', 0),
-                            ('X8', 0),
-                            ('X20', 0),
-                            ('X9', 0),
-                            ('X21', 0),
-                            ('X10', 0),
-                            ('X22', 0),
                             ('X11', 0),
-                            ('X23', 0)
+                            ('X22', 0),
+                            ('X1', 0),
+                            ('X12', 0),
+                            ('X23', 0),
+                            ('X2', 0),
+                            ('X13', 0),
+                            ('X24', 0),
+                            ('X3', 0),
+                            ('X14', 0),
+                            ('X25', 0),
+                            ('X4', 0),
+                            ('X15', 0),
+                            ('X26', 0),
+                            ('X5', 0),
+                            ('X16', 0),
+                            ('X27', 0),
+                            ('X6', 0),
+                            ('X17', 0),
+                            ('X28', 0),
+                            ('X7', 0),
+                            ('X18', 0),
+                            ('X29', 0),
+                            ('X8', 0),
+                            ('X19', 0),
+                            ('X30', 0),
+                            ('X9', 0),
+                            ('X20', 0),
+                            ('X31', 0),
+                            ('X10', 0),
+                            ('X21', 0)
                         ])
         self.flags = OrderedDict(
                     [
