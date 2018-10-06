@@ -56,9 +56,9 @@ instructions = {
         'FADD': FADD('FADD'),
         'FDIV': FDIV('FDIV'),
         'FMUL': FMUL('FMUL'),
-        'FSUB': FSUB('FSUB')
-        'FNeg': FNeg('FNeg')
-        'FDec': FDec('FDec')
+        'FSUB': FSUB('FSUB'),
+        'FNeg': FNeg('FNeg'),
+        'FDec': FDec('FDec'),
 
         }
 
