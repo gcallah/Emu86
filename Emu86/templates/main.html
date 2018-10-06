@@ -156,31 +156,11 @@
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
-                            <input type="button" name="pause"
-                                value="Pause Code"
-                                title="Pauses code."
-                                id="pause-button"
-                                onclick="pauseButton()"
-                                onmouseover="displayHelp(this.name)" 
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "pause" %}
-                                    disabled
-                                {% endif %}>
                             <input type="button" name="step"
                                 value="Step Code"
                                 title="Execute one instruction at a time."
                                 id="step-button"
                                 onclick="stepButton()"
-                                onmouseover="displayHelp(this.name)" 
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "demo" %}
-                                    disabled
-                                {% endif %}>
-                            <input type="button" name="demo"
-                                value="Demo Code"
-                                title="Demo code line by line."
-                                id="demo-button"
-                                onclick="demoButton()"
                                 onmouseover="displayHelp(this.name)" 
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
@@ -196,6 +176,23 @@
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
+                            <input type="button" name="demo"
+                                value="Demo Code"
+                                title="Demo code line by line."
+                                id="demo-button"
+                                onclick="demoButton()"
+                                onmouseover="displayHelp(this.name)" 
+                                onmouseleave="hideHelp()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
+                            <input type="button" name="pause"
+                                value="Pause Code"
+                                title="Pauses code."
+                                id="pause-button"
+                                onclick="pauseButton()"
+                                onmouseover="displayHelp(this.name)" 
+                                onmouseleave="hideHelp()">
                             <br>
                             <div class="help-pop">
                                 <span class="help-text" id="help-desc">
@@ -441,6 +438,9 @@
     <script>
         if (document.getElementsByName("button_type")[0].value == "demo"){
             SubmitForm(true);
+        }
+        if (document.getElementsByName("button_type")[0].value == "pause") {
+            SubmitForm(true, true);
         }
     </script>
 

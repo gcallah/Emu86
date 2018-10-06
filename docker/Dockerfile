@@ -1,11 +1,9 @@
 FROM python:3.6.0
 
+COPY requirements.txt /requirements.txt
+
 RUN pip install --upgrade pip
 
-ENV DJANGO_VERSION 2.1
-
-RUN pip install django=="$DJANGO_VERSION"
-
-RUN pip install django-extensions
+RUN pip install -r requirements.txt
 
 WORKDIR /home/Emu86/

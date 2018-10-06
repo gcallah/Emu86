@@ -180,5 +180,8 @@ class AssembleTestCase(TestCase):
 
     def test_mults(self):
         self.two_op_test_hilo_float(opfunc.mul, "MULT.S")
+
+    def test_divs(self):
+        self.two_op_test_hilo_float(opfunc.truediv, "DIV.S")
 if __name__ == '__main__':
     main()
