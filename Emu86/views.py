@@ -28,6 +28,8 @@ INTEL = {'intel': 'Intel',
          'att': 'AT&T'
         }
 
+RISCV = {'riscv': 'RISC-V'
+        }
 
 def get_hdr():
     site_hdr = "Emu: a multi-language assembly emulator"
@@ -40,6 +42,7 @@ def get_hdr():
 def dump_dict(d, intel_machine):
     for key, val in d.items():
         add_debug(str(key) + ": " + str(val), intel_machine)
+
 
 def welcome(request):
     global intel_machine
@@ -66,20 +69,23 @@ def main_page(request):
 
     site_hdr = get_hdr()
     if request.method == 'GET':
-        if intel_machine.flavor == None and mips_machine.flavor == None:
+        if intel_machine.flavor == None and mips_machine.flavor == None and riscv_machine.flavor == None:
             return render(request, 'main_error.html', {HEADER: site_hdr})
         intel_machine.re_init()
         mips_machine.re_init()
+        riscv_machine.re_init()
         form = MainForm()
     else:
         base = request.POST['base']
         if 'language' in request.POST:
             intel_machine.re_init()
             mips_machine.re_init()
+            riscv_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
             if lang in MIPS:
                 intel_machine.flavor = None
+                riscv_machine.flavor = None
                 mips_machine.flavor = lang
                 mips_machine.base = base
                 site_hdr += ": " + MIPS[lang]
@@ -105,8 +111,9 @@ def main_page(request):
                              'button_type': "",
                              'changes': []
                             })
-            else:
+            if lang in INTEL:
                 mips_machine.flavor = None
+                riscv_machine.flavor = None
                 intel_machine.base = base
                 intel_machine.flavor = lang
                 header_line = site_hdr
@@ -133,6 +140,36 @@ def main_page(request):
                                'button_type': "",
                                'changes': []
                               })
+            if lang in RISCV: 
+                mips_machine.flavor = None
+                intel_machine.flavor = None
+                riscv_machine.flavor = lang 
+                riscv_machine.base = base 
+                site_hdr += ": " + RISCV[lang]
+                hex_conversion(riscv_machine)
+                return render(request, 'main.html',
+                            {'form': form,
+                             HEADER: site_hdr,
+                             'last_instr': "",
+                             'error': "",
+                             'unwritable': riscv_machine.unwritable,
+                             'debug': riscv_machine.debug,
+                             NXT_KEY: riscv_machine.nxt_key,
+                             'registers': riscv_machine.registers,
+                             'memory': riscv_machine.memory, 
+                             'stack': riscv_machine.stack, 
+                             'flags': riscv_machine.flags,
+                             'flavor': riscv_machine.flavor,
+                             'data_init': riscv_machine.data_init,
+                             'base': riscv_machine.base,
+                             'sample': 'none',
+                             'start_ip': riscv_machine.start_ip,
+                             'bit_code': "",
+                             'button_type': "",
+                             'changes': []
+                            })
+
+
         form = MainForm(request.POST)
         if 'flavor' in request.POST:
             language = request.POST['flavor']
@@ -140,21 +177,31 @@ def main_page(request):
                 intel_machine.flavor = language
                 intel_machine.base = base
                 mips_machine.flavor = None
-            else:
+                riscv_machine.flavor = None
+            if language in MIPS:
                 intel_machine.flavor = None
                 mips_machine.flavor = language
                 mips_machine.base = base
+                riscv_machine.flavor = None
+            if language in RISCV: 
+                intel_machine.flavor = None
+                mips_machine.flavor = None 
+                riscv_machine.flavor = language
+                riscv_machine.base = base
         sample = request.POST['sample']
         button = request.POST['button_type']
         if button == CLEAR:
             intel_machine.re_init()
             mips_machine.re_init()
+            riscv_machine.re_init()
         else:
             intel_machine.changes_init()
             mips_machine.changes_init()
+            riscv_machine.changes_init()
             step = (button == STEP) or (button == DEMO)
             intel_machine.nxt_key = 0
             mips_machine.nxt_key = 0
+            riscv_machine.nxt_key = 0 
             if step:
                 if intel_machine.flavor != None:
                     add_debug("Getting next key", intel_machine)
@@ -162,12 +209,19 @@ def main_page(request):
                         intel_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
                     except Exception:
                         intel_machine.nxt_key = 0
-                else:
+                if mips_machine.flavor != None:
                     add_debug("Getting next key", mips_machine)
                     try:
                         mips_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
                     except Exception:
-                        mips_machine.nxt_key = 0     
+                        mips_machine.nxt_key = 0  
+                if riscv_machine.flavor != None: 
+                    add_debug("Getting next key", riscv_machine)
+                    try:
+                        riscv_machine.nxt_key = int(request.POST.get(NXT_KEY, 0))
+                    except Exception:
+                        riscv_machine.nxt_key = 0  
+
             if intel_machine.flavor != None:
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
@@ -175,19 +229,30 @@ def main_page(request):
                 get_flag_contents(intel_machine.flags, request)
                 intel_machine.data_init = request.POST[DATA_INIT]
                 intel_machine.start_ip = int(request.POST['start_ip'])
-            else:
+            if mips_machine.flavor != None:
                 get_reg_contents(mips_machine.registers, request)
                 get_mem_contents(mips_machine.memory, request)
                 get_stack_contents(mips_machine.stack, request)
                 get_flag_contents(mips_machine.flags, request)
                 mips_machine.data_init = request.POST[DATA_INIT]
                 mips_machine.start_ip = int(request.POST['start_ip'])
+            if riscv_machine.flavor != None: 
+                get_reg_contents(riscv_machine.registers, request)
+                get_mem_contents(riscv_machine.memory, request)
+                get_stack_contents(riscv_machine.stack, request)
+                get_flag_contents(riscv_machine.flags, request)
+                riscv_machine.data_init = request.POST[DATA_INIT]
+                riscv_machine.start_ip = int(request.POST['start_ip'])
+
             if intel_machine.flavor in INTEL:
                 (last_instr, error, bit_code) = assemble(request.POST[CODE], intel_machine.flavor,
                                                intel_machine, step)
-            else:
+            if mips_machine.flavor in MIPS:
                 (last_instr, error, bit_code) = assemble(request.POST[CODE], mips_machine.flavor, 
                                                mips_machine, step)
+            if riscv_machine.flavor in RISCV: 
+                (last_instr, error, bit_code) = assemble(request.POST[CODE], riscv_machine.flavor, 
+                                               riscv_machine, step)
     if button == DEMO:
         if (last_instr == "Reached end of executable code." or 
             last_instr.find("Exiting program") != -1):
@@ -196,6 +261,7 @@ def main_page(request):
             button = ""
     else:
         button = ""
+
     if mips_machine.flavor in MIPS:
         mips_machine.order_mem()
         site_hdr += ": " + MIPS[mips_machine.flavor]
@@ -221,31 +287,57 @@ def main_page(request):
                      'button_type': button,
                      'changes': mips_machine.changes
                     })
-        
-    site_hdr += ": " + INTEL[intel_machine.flavor]
-    intel_machine.order_mem()
-    hex_conversion(intel_machine)
-    return render(request, 'main.html',
-                  {'form': form,
-                   HEADER: site_hdr,
-                   'last_instr': last_instr,
-                   'error': error,
-                   'unwritable': intel_machine.unwritable,
-                   'debug': intel_machine.debug,
-                   NXT_KEY: intel_machine.nxt_key,
-                   'registers': intel_machine.registers,
-                   'memory': intel_machine.memory, 
-                   'stack': intel_machine.stack, 
-                   'flags': intel_machine.flags,
-                   'flavor': intel_machine.flavor,
-                   DATA_INIT: intel_machine.data_init,
-                   'base': intel_machine.base, 
-                   'sample': sample,
-                   'start_ip': intel_machine.start_ip,
-                   'bit_code': bit_code,
-                   'button_type': button,
-                   'changes': intel_machine.changes
-                  })
+    if intel_machine.flavor in INTEL:    
+        intel_machine.order_mem()
+        site_hdr += ": " + INTEL[intel_machine.flavor]
+        hex_conversion(intel_machine)
+        return render(request, 'main.html',
+                      {'form': form,
+                       HEADER: site_hdr,
+                       'last_instr': last_instr,
+                       'error': error,
+                       'unwritable': intel_machine.unwritable,
+                       'debug': intel_machine.debug,
+                       NXT_KEY: intel_machine.nxt_key,
+                       'registers': intel_machine.registers,
+                       'memory': intel_machine.memory, 
+                       'stack': intel_machine.stack, 
+                       'flags': intel_machine.flags,
+                       'flavor': intel_machine.flavor,
+                       DATA_INIT: intel_machine.data_init,
+                       'base': intel_machine.base, 
+                       'sample': sample,
+                       'start_ip': intel_machine.start_ip,
+                       'bit_code': bit_code,
+                       'button_type': button,
+                       'changes': intel_machine.changes
+                      })
+    if riscv_machine.flavor in RISCV: 
+        riscv_machine.order_mem()
+        site_hdr += ": " + RISCV[riscv_machine.flavor]
+        hex_conversion(riscv_machine)
+        return render(request, 'main.html',
+                      {'form': form,
+                       HEADER: site_hdr,
+                       'last_instr': last_instr,
+                       'error': error,
+                       'unwritable': riscv_machine.unwritable,
+                       'debug': riscv_machine.debug,
+                       NXT_KEY: riscv_machine.nxt_key,
+                       'registers': riscv_machine.registers,
+                       'memory': riscv_machine.memory, 
+                       'stack': riscv_machine.stack, 
+                       'flags': riscv_machine.flags,
+                       'flavor': riscv_machine.flavor,
+                       DATA_INIT: riscv_machine.data_init,
+                       'base': riscv_machine.base, 
+                       'sample': sample,
+                       'start_ip': riscv_machine.start_ip,
+                       'bit_code': bit_code,
+                       'button_type': button,
+                       'changes': riscv_machine.changes
+                      })
+
 
 def is_hex_form(request):
     if request.POST['base'] == "hex":
@@ -322,16 +414,20 @@ def hex_conversion(vm):
 def help(request):
     intel_machine.re_init()
     mips_machine.re_init()
+    riscv_machine.re_init()
     intel_machine.flavor = None
     mips_machine.flavor = None
+    riscv_machine.flavor = None
     site_hdr = get_hdr()
     return render(request, 'help.html', {HEADER: site_hdr})
 
 def feedback(request):
     intel_machine.re_init()
     mips_machine.re_init()
+    riscv_machine.re_init()
     intel_machine.flavor = None
     mips_machine.flavor = None
+    riscv_machine.flavor = None
     site_hdr = get_hdr()
     email_list = AdminEmail.objects.all()
     comma_del_emails = ""
