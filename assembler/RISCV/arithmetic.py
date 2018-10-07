@@ -62,7 +62,7 @@ class Add(Instruction):
     """
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.add)
-'''
+
 class Addi(Instruction):
     """
         <instr>
@@ -74,6 +74,34 @@ class Addi(Instruction):
     """
     def fhook(self, ops, vm):
         three_op_arith_immediate(ops, vm, self.name, opfunc.add)
+
+'''
+class Mul(Instruction):
+    """
+        <instr>
+            MUL
+        </instr>
+        <syntax>
+            MUL reg, reg, reg
+        </syntax>
+    """
+    def fhook(self, ops, vm): 
+        three_op_arith_reg(ops, vm, self.name, opfunc.mul)
+
+class And(Instruction):
+    """
+        <instr>
+            AND
+        </instr>
+        <syntax>
+            AND reg, reg, reg
+        </syntax>
+    """
+    def fhook(self, ops, vm): 
+        three_op_arith_reg(ops , vm, self.name, opfunc.and_)
+
+
+
 class Sub(Instruction): 
     """
         <instr> 
