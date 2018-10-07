@@ -1,6 +1,6 @@
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .fp_arithmetic import FADD, FDIV, FSUB, FMUL
+from .fp_arithmetic import FADD, FDIV, FSUB, FMUL, FNeg, FDec
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
@@ -56,7 +56,10 @@ instructions = {
         'FADD': FADD('FADD'),
         'FDIV': FDIV('FDIV'),
         'FMUL': FMUL('FMUL'),
-        'FSUB': FSUB('FSUB')
+        'FSUB': FSUB('FSUB'),
+        'FNeg': FNeg('FNeg'),
+        'FDec': FDec('FDec'),
+
         }
 
 intel_key_words = {

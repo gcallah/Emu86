@@ -357,6 +357,11 @@
                             Stack:
                         <br>
                     </th>
+                    <th id="MemStack">
+                        <br>
+                            C-Stack:
+                        <br>
+                    </th>
                 </tr>
                 <tr>
                     <td>
@@ -388,7 +393,7 @@
                     <td>
                         <div style="height:300px;overflow:auto;">
                         <table id="stack-table">
-                             {% for addr, cont in stack.items %}
+                            {% for addr, cont in stack.items %}
                                 <tr>
                                     <td id="mem-loc" style="height:5px">
                                         {{ addr }}
@@ -411,6 +416,26 @@
                                                 style="background-color:#eff;"
                                             >
                                         {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    </td>
+                     <td>
+                        <div style="height:300px;overflow:auto;">
+                        <table id="stack-table">
+                            {% for label, cont in labels.items reversed %}
+                                <tr>
+                                    <td id="mem-loc" style="height:5px">
+                                        {{ label }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% for sym, cont in symbols.items reversed %}
+                                <tr>
+                                    <td id="mem-loc" style="height:5px">
+                                        {{ sym }}
                                     </td>
                                 </tr>
                             {% endfor %}

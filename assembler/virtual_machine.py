@@ -39,8 +39,12 @@ class VirtualMachine:
         self.stack = OrderedDict()
         self.stack_init()
 
-        self.labels = {}
+        self.labels = OrderedDict()
+        self.labels_init()
+
         self.symbols = OrderedDict()
+        self.symbols_init()
+        
         self.flavor = None
         self.data_init = "on"
         self.start_ip = 0
@@ -66,12 +70,20 @@ class VirtualMachine:
         self.stack_init()
         self.data_init = "on"
         self.changes_init()
+        self.symbols_init()
+        self.labels_init()
 
     def mem_init(self):
         self.memory.clear()
 
     def changes_init(self):
         self.changes.clear()
+
+    def symbols_init(self):
+        self.symbols.clear()
+
+    def labels_init(self):
+        self.labels.clear()
 
     def order_mem(self):
         lst = []

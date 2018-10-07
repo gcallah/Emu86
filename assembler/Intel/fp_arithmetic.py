@@ -73,6 +73,31 @@ class FXor(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.xor)
         return ''
 
+class FDec(Instruction):
+    """
+        <instr>
+             dec
+        </instr>
+        <syntax>
+            DEC reg
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 1)
+        ops[0].set_val(ops[0].get_val() - 1)
+        vm.changes.add(ops[0].get_nm())
+class FNeg(Instruction):
+    """
+        <instr>
+             neg
+        </instr>
+        <syntax>
+            NEG reg
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        one_op_arith(ops, vm, self.name, opfunc.neg)
+        return ''
 class FAndf(Instruction):
 
     def fhook(self, ops, vm):

@@ -61,11 +61,11 @@ class AssembleTestCase(TestCase):
             assemble("40000 " + instr + " X10, X9, " + hex_string, 'riscv', riscv_machine)
             self.assertEqual(riscv_machine.registers["X10"], correct)
 
-    # def test_add(self):
-    #     self.two_op_test(opfunc.add, "ADD")
+    def test_add(self):
+        self.two_op_test(opfunc.add, "ADD")
 
-    # def test_add_imm(self):
-    #     self.two_op_test_imm(opfunc.add, "ADDI")
+    def test_add_imm(self):
+        self.two_op_test_imm(opfunc.add, "ADDI")
 '''
     def test_sub(self):
         self.two_op_test(opfunc.sub, "SUB")

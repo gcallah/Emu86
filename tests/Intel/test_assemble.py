@@ -43,6 +43,7 @@ class AssembleTestCase(TestCase):
             intel_machine.base = "dec"
             assemble(instr + " eax, ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
+
     def two_op_test_float(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
@@ -66,14 +67,10 @@ class AssembleTestCase(TestCase):
 
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
-<<<<<<< HEAD
+
     def test_FAndf(self):
         self.two_op_test(opfunc.and_, "FAndf")
-=======
-    # def test_FAndf(self):
-    #     self.two_op_test_float(opfunc.and_, "FAndf")
 
->>>>>>> 82f2752e0bf9e60ab9df6aee76af571cc6450112
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
 
@@ -93,15 +90,19 @@ class AssembleTestCase(TestCase):
 
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
-<<<<<<< HEAD
+
     def test_FOrf(self):
-        self.two_op_test(opfunc.or_, "FOrf")
-=======
+        self.two_op_test_float(opfunc.or_, "FOrf")
+
+    def test_FNeg(self):
+        self.two_op_test_float(opfunc.neg, "FNeg")
+    def test_FDec(self):
+        fdec = functools.partial(opfunc.add, -1)
+        self.one_op_test_float(Fdec, "FDec")
 
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
 
->>>>>>> 82f2752e0bf9e60ab9df6aee76af571cc6450112
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
                          low1=MIN_MUL, high1=MAX_MUL,
@@ -114,6 +115,14 @@ class AssembleTestCase(TestCase):
 ###################
 # Single Op Tests #
 ###################
+    def one_op_test_float(self, operator, instr):
+        for i in range(NUM_TESTS):
+            a = float(random.randint(MIN_TEST, MAX_TEST))
+            correct = operator(a)
+            intel_machine.registers["EAX"] = a
+            intel_machine.base = "dec"
+            assemble(instr + " eax", 'intel', intel_machine)
+            self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def one_op_test(self, operator, instr):
         for i in range(NUM_TESTS):
