@@ -36,11 +36,14 @@ class TestPrograms(TestCase):
         test_code = self.read_test_code("tests/MIPS_ASM/" + filnm)
         assemble(test_code, 'mips_asm', mips_machine)
 
-    def convert_hex_float(self, string):
-        lst = string.split(".")
-        int_part = int(lst[0], 16)
-        float_part = float("." + lst[1])
-        return int_part + float_part
+    # def convert_hex_float(self, string):
+    #     lst = string.split(".")
+    #     int_part = int(lst[0], 16)
+    #     float_part = float("." + lst[1])
+    #     return int_part + float_part
+
+    def float_to_hex(f):
+        return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 
     def test_loop(self):
         self.run_mips_test_code("loop.asm")
@@ -147,8 +150,8 @@ class TestPrograms(TestCase):
         print("fp area")
         a = 12.2
         b = 12.5
-        ah = self.convert_hex_float(str(a))
-        bh = self.convert_hex_float(str(b))
+        ah = self.hex_to_float(a)
+        bh = self.hex_to_float(b)
 
         self.assertEqual(mips_machine.registers["F8"], ah)
         self.assertEqual(mips_machine.registers["F9"], bh)

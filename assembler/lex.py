@@ -43,17 +43,14 @@ keywords_to_tokens = {
     "?": QuestionTok()
 }
 
-def convert_hex_float(string):
-    lst = string.split(".")
-    int_part = int(lst[0], 16)
-    float_part = float("." + lst[1])
-    return int_part + float_part
+# def convert_hex_float(string):
+#     lst = string.split(".")
+#     int_part = int(lst[0], 16)
+#     float_part = float("." + lst[1])
+#     return int_part + float_part
 
-# come back to this when we implement ieee standard
-# def convert_hex_float_iee(string):
-#     val = float(string)
-#     val = binascii.hexlify(struct.pack('d', val))
-#     return val
+def float_to_hex(f):
+    return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 
 def generate_reg_dict(vm, flavor):
     """
@@ -218,7 +215,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                 #TODO: Screen shot to give me the floating point token class from token.py
                 analysis.append(FloatTok(float(word)))
             else: #hexadecimal
-                analysis.append(FloatTok(convert_hex_float(word)))
+                analysis.append(FloatTok(hex_to_float(float(word))))
 # Integers
         else:
             if vm.base == "dec":

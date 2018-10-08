@@ -36,8 +36,7 @@ def three_op_arith_reg(ops, vm, instr, operator):
 #using double for a significant amount of precisions
 # (i think its up to 48 bits of precision)
 def float_to_hex(f):
-    return binascii.hexlify(struct.pack('d', f))
-
+    return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 
 #'ADD.S': Adds('ADD.S'),
 class Adds(Instruction):

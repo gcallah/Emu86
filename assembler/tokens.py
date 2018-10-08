@@ -17,7 +17,6 @@ MEM_LOC = 1
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
-
 class Token:
     def __init__(self, name, val=0):
         self.name = name
@@ -118,9 +117,14 @@ class FloatTok(Operand):
         super().__init__("Float", val)
 
     def __str__(self):
-        return str(self.value)
+        return str(self.get_val())
 
+    # self.value is either going to be a float (12.2) or a hexadecimal string ('0x41433333')
+    # we need to be able to reconcile the actual value of it if it's a hex string (IEEE 754)
     def get_val(self):
+        if type(self.value) is float:
+            return self.value
+
         return self.value
 
     def negate_val(self):
