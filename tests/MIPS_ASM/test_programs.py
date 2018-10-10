@@ -169,7 +169,6 @@ class TestPrograms(TestCase):
             l_reg = "0" + l_reg
 
         binary_result = h_reg + l_reg
-        print(binary_result)
         hex_result = hex(int(binary_result, 2))[2:]
         for i in range(0, 16-len(hex_result)):
             hex_result = "0"+hex_result
@@ -186,8 +185,8 @@ class TestPrograms(TestCase):
     def test_fp_data(self):
         self.run_mips_test_code("fp_data.asm")
         self.assertEqual(mips_machine.registers["F8"],  8.0)
-        self.assertEqual(mips_machine.registers["F9"], 16.5)
-        self.assertEqual(mips_machine.registers["F10"], 32.555)
+        self.assertEqual(mips_machine.registers["F9"], 10.5)
+        self.assertEqual(mips_machine.registers["F10"], 20.555)
 
     #power function
     # def test_fp_power(self):

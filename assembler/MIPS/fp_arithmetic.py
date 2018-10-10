@@ -87,7 +87,6 @@ class Mults(Instruction):
         #convert to bit format
         hex_result = float_to_hex(result)
         binary_result = bin(int(hex_result, 16))[2:]
-        print("IN MULT FUNCTION\n" + binary_result)
         #deal with the high and low registers
         if len(binary_result) > 32:
         # if result > 2 ** 32 - 1:
