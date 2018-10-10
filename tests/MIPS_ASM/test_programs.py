@@ -179,7 +179,6 @@ class TestPrograms(TestCase):
     # def float_to_hex(f):
     #     return hex(struct.unpack('<I', struct.pack('<f', f))[0])
     def float_to_hex(self, f):
-        print (struct.pack('d', f))
         return binascii.hexlify(struct.pack('d', f))
 
     #loading data
