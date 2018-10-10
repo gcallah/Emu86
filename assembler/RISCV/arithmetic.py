@@ -11,7 +11,6 @@ from assembler.tokens import Instruction, MAX_INT, Register, IntegerTok
 from assembler.ops_check import one_op_arith
 from .argument_check import * 
 
-
 def three_op_arith_reg(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
@@ -47,9 +46,6 @@ def check_overflow(val, vm):
     if (val > MAX_INT): 
         val = val - MAX_INT+1
     return val
-	
-   
-
 
 class Add(Instruction):
     """
@@ -74,7 +70,7 @@ class Addi(Instruction):
     """
     def fhook(self, ops, vm):
         three_op_arith_immediate(ops, vm, self.name, opfunc.add)
-'''
+
 class Mul(Instruction):
     """
         <instr>
