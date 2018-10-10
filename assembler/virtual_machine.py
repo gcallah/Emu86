@@ -50,6 +50,7 @@ class VirtualMachine:
         self.start_ip = 0
         self.changes = set()
         self.base = None
+        self.stack_change = set()
 
     def __str__(self):
         return ("Registers: " + str(self.registers) + "\n"
