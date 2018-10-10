@@ -49,8 +49,11 @@ keywords_to_tokens = {
 #     float_part = float("." + lst[1])
 #     return int_part + float_part
 
+# def float_to_hex(f):
+#     return hex(struct.unpack('<I', struct.pack('<f', f))[0])
+
 def float_to_hex(f):
-    return hex(struct.unpack('<I', struct.pack('<f', f))[0])
+    return binascii.hexlify(struct.pack('d', f))
 
 def generate_reg_dict(vm, flavor):
     """
@@ -215,7 +218,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                 #TODO: Screen shot to give me the floating point token class from token.py
                 analysis.append(FloatTok(float(word)))
             else: #hexadecimal
-                analysis.append(FloatTok(hex_to_float(float(word))))
+                analysis.append(FloatTok(float_to_hex(float(word))))
 # Integers
         else:
             if vm.base == "dec":

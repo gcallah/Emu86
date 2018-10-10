@@ -42,9 +42,6 @@ class TestPrograms(TestCase):
     #     float_part = float("." + lst[1])
     #     return int_part + float_part
 
-    def float_to_hex(f):
-        return hex(struct.unpack('<I', struct.pack('<f', f))[0])
-
     def test_loop(self):
         self.run_mips_test_code("loop.asm")
         self.assertEqual(mips_machine.registers["R11"], 16)
@@ -52,10 +49,6 @@ class TestPrograms(TestCase):
     def test_power(self):
         self.run_mips_test_code("power.asm")
         self.assertEqual(mips_machine.registers["R8"], 65536)
-
-    # def test_fp_power(self):
-    #     self.run_mips_test_code("fp_power.asm")
-    #     self.assertEqual(mips_machine.registers["F8"], 166.375)
 
     def test_gt(self):
         self.run_mips_test_code("gt.asm")
@@ -98,12 +91,6 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R9"], 16)
         self.assertEqual(mips_machine.registers["R10"], 32)
 
-    def test_fp_data(self):
-        self.run_mips_test_code("fp_data.asm")
-        self.assertEqual(mips_machine.registers["F8"],  8.0)
-        self.assertEqual(mips_machine.registers["F9"], 16.5)
-        self.assertEqual(mips_machine.registers["F10"], 32.555)
-
     def test_array(self):
         self.run_mips_test_code("array.asm")
         self.assertEqual(mips_machine.registers["R8"],  3)
@@ -128,38 +115,6 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R10"], 35 * 27)
         self.assertEqual(mips_machine.registers["LO"], 35 * 27)
         self.assertEqual(mips_machine.registers["HI"], 0)
-
-    def convertHiLoForFP(self):
-        h_reg = str(mips_machine.registers["HI"])
-        for i in range(0, 32-len(h_reg)):
-            h_reg = "0" + h_reg
-        l_reg = str(mips_machine.registers["LO"])
-        for i in range(0, 32-len(l_reg)):
-            l_reg = "0" + l_reg
-
-        binary_result = h_reg + l_reg
-        hex_result = hex(int(binary_result, 2))[2:]
-        for i in range(0, 16-len(hex_result)):
-            hex_result = "0"+hex_result
-        bin_data = codecs.decode(hex_result, "hex")
-        result = struct.unpack("d", bin_data)[0]
-        return result
-
-    def test_fp_area(self):
-        self.run_mips_test_code("fp_area.asm")
-        print("fp area")
-        a = 12.2
-        b = 12.5
-        ah = self.hex_to_float(a)
-        bh = self.hex_to_float(b)
-
-        self.assertEqual(mips_machine.registers["F8"], ah)
-        self.assertEqual(mips_machine.registers["F9"], bh)
-
-        result = self.convertHiLoForFP()
-
-        correct = ah*bh
-        self.assertEqual(result, correct)
 
     def test_celsius_conversion(self):
         self.run_mips_test_code("cel_to_fah.asm")
@@ -201,6 +156,63 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R17"], 10)
         self.assertEqual(mips_machine.registers["R9"], 40)
         self.assertEqual(mips_machine.registers["R10"], 10)
+
+    ########################
+    ##### FP TEST BELOW ####
+    ########################
+    def convertHiLoForFP(self):
+        h_reg = str(mips_machine.registers["HI"])
+        for i in range(0, 32-len(h_reg)):
+            h_reg = "0" + h_reg
+        l_reg = str(mips_machine.registers["LO"])
+        for i in range(0, 32-len(l_reg)):
+            l_reg = "0" + l_reg
+
+        binary_result = h_reg + l_reg
+        hex_result = hex(int(binary_result, 2))[2:]
+        for i in range(0, 16-len(hex_result)):
+            hex_result = "0"+hex_result
+        bin_data = codecs.decode(hex_result, "hex")
+        result = struct.unpack("d", bin_data)[0]
+        return result
+
+    # def float_to_hex(f):
+    #     return hex(struct.unpack('<I', struct.pack('<f', f))[0])
+    def float_to_hex(self, f):
+        print (struct.pack('d', f))
+        return binascii.hexlify(struct.pack('d', f))
+
+    #loading data
+    def test_fp_data(self):
+        self.run_mips_test_code("fp_data.asm")
+        self.assertEqual(mips_machine.registers["F8"],  8.0)
+        self.assertEqual(mips_machine.registers["F9"], 16.5)
+        self.assertEqual(mips_machine.registers["F10"], 32.555)
+
+    #power function
+    # def test_fp_power(self):
+    #     self.run_mips_test_code("fp_power.asm")
+    #     self.assertEqual(mips_machine.registers["F8"], 166.375)
+
+    #area function
+    def test_fp_area(self):
+        self.run_mips_test_code("fp_area.asm")
+        print("fp area")
+        a = 12.2
+        b = 12.5
+        ah = self.float_to_hex(a)
+        print("AH IS", ah)
+        bh = self.float_to_hex(b)
+
+        self.assertEqual(mips_machine.registers["F8"], ah)
+        self.assertEqual(mips_machine.registers["F9"], bh)
+
+        result = self.convertHiLoForFP()
+
+        correct = ah*bh
+        self.assertEqual(result, correct)
+
+
 
 if __name__ == '__main__':
     main()

@@ -2,6 +2,11 @@
 tokens.py: contains classes we tokenize into.
 """
 
+# for floating point to binary and back
+import struct
+import codecs
+import binascii
+
 from abc import abstractmethod
 
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName, InvalidArgument
@@ -125,7 +130,17 @@ class FloatTok(Operand):
         if type(self.value) is float:
             return self.value
 
-        return self.value
+        # it is a hexadecimal
+        # convert the hexadecimal to be a float
+        h2 = self.value
+        for i in range(0, 16-len(h2)):
+          h2 = "0"+h2
+        print ("h2", h2)
+        bi = codecs.decode(h2, "hex")
+        print(bi)
+        f = struct.unpack("d", bi)
+        return f[0]
+        # return self.value
 
     def negate_val(self):
         self.value *= -1.0
