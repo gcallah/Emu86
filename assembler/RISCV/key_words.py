@@ -1,5 +1,5 @@
 from .data_mov import Load, Store
-from .arithmetic import Add, Addi, Mul, And
+from .arithmetic import Add, Addi, Sub, Mul, And
 from assembler.tokens import DataType
 
 key_words = {
@@ -14,6 +14,7 @@ key_words = {
 	# arithmetic and logic
     'ADD': Add('ADD'),
 	'ADDI': Addi('ADDI'),
+	'SUB': Sub('SUB'),
 	'AND': And('AND'),
 	'MUL': Mul('MUL')
 	# control 
@@ -25,6 +26,7 @@ key_words = {
 op_func_codes = {
 	# R-format
 	'ADD': '0110011',
+	'SUB': '0110011',
 	'MUL': '0110011',
 	'AND': '0110011',
     # I-format
