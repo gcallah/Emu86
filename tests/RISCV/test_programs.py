@@ -35,6 +35,11 @@ class TestPrograms(TestCase):
         self.run_riscv_test_code("sum_test.asm")
         self.assertEqual(riscv_machine.registers["X8"],  53)
         self.assertEqual(riscv_machine.memory["4"], 53)
+    
+    def test_arithmetic_expression(self):
+        self.run_riscv_test_code("arithmetic_expression.asm")
+        self.assertEqual(riscv_machine.registers["X8"], -31)
+        self.assertEqual(riscv_machine.registers["X10"], 52)
 
 if __name__ == '__main__':
     main()
