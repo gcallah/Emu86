@@ -135,9 +135,7 @@ class FloatTok(Operand):
         h2 = self.value
         for i in range(0, 16-len(h2)):
           h2 = "0"+h2
-        print ("h2", h2)
         bi = codecs.decode(h2, "hex")
-        print(bi)
         f = struct.unpack("d", bi)
         return f[0]
         # return self.value

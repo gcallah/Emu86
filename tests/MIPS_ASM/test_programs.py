@@ -169,6 +169,7 @@ class TestPrograms(TestCase):
             l_reg = "0" + l_reg
 
         binary_result = h_reg + l_reg
+        print(binary_result)
         hex_result = hex(int(binary_result, 2))[2:]
         for i in range(0, 16-len(hex_result)):
             hex_result = "0"+hex_result
@@ -199,16 +200,14 @@ class TestPrograms(TestCase):
         print("fp area")
         a = 12.2
         b = 12.5
-        ah = self.float_to_hex(a)
-        print("AH IS", ah)
-        bh = self.float_to_hex(b)
-
-        self.assertEqual(mips_machine.registers["F8"], ah)
-        self.assertEqual(mips_machine.registers["F9"], bh)
+        # ah = self.float_to_hex(a)
+        # bh = self.float_to_hex(b)
+        self.assertEqual(mips_machine.registers["F8"], a)
+        self.assertEqual(mips_machine.registers["F9"], b)
 
         result = self.convertHiLoForFP()
 
-        correct = ah*bh
+        correct = a*b
         self.assertEqual(result, correct)
 
 

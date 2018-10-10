@@ -149,13 +149,12 @@ class AssembleTestCase(TestCase):
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
         for i in range(0, 1):
-            print ("i is", i)
             a = random.uniform(low1, high1)
             b = random.uniform(low2, high2)
             correct = operator(a,b)
-            print(a)
-            print(b)
-            print(correct)
+            # print("a", a)
+            # print("b", b)
+            # print("correct", correct)
             mips_machine.registers["F8"] = a
             mips_machine.registers["F9"] = b
             mips_machine.base = "hex"
@@ -174,7 +173,7 @@ class AssembleTestCase(TestCase):
                 hex_result = "0"+hex_result
             bin_data = codecs.decode(hex_result, "hex")
             result = struct.unpack("d", bin_data)[0]
-            print (result)
+            # print ("result", result)
             self.assertEqual(result, correct)
 
     def test_adds(self):
@@ -184,7 +183,7 @@ class AssembleTestCase(TestCase):
         self.two_op_test_float(opfunc.sub, "SUB.S")
 
     def test_mults(self):
-        print ("IN MULT")
+        # print ("IN MULT")
         self.two_op_test_hilo_float(opfunc.mul, "MULT.S", 4, 10, 4, 10)
 
     # def test_divs(self):
