@@ -82,7 +82,7 @@ class AssembleTestCase(TestCase):
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=MIN_MUL, high2=MAX_MUL)
 
-    def test_and(self):
+    def test_and(self):s
         self.two_op_test(opfunc.and_, "and")
 
     def test_or(self):
@@ -102,7 +102,9 @@ class AssembleTestCase(TestCase):
 
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
-
+    def test_FInc(self):
+        fdec = functools.partial(opfunc.add, 1)
+        self.one_op_test_float(FInc, "FInc")
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
                          low1=MIN_MUL, high1=MAX_MUL,
