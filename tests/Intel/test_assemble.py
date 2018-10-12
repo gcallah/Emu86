@@ -105,6 +105,9 @@ class AssembleTestCase(TestCase):
     def test_FInc(self):
         fdec = functools.partial(opfunc.add, 1)
         self.one_op_test_float(FInc, "FInc")
+
+    def test_FNotf(self):
+        self.one_op_test(opfunc.inv, "FNotf")
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
                          low1=MIN_MUL, high1=MAX_MUL,
@@ -134,6 +137,7 @@ class AssembleTestCase(TestCase):
             intel_machine.base = "dec"
             assemble(instr + " eax", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
+
 
     def test_not(self):
         self.one_op_test(opfunc.inv, "not")
