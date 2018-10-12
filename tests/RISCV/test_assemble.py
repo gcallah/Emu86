@@ -45,7 +45,7 @@ class AssembleTestCase(TestCase):
             riscv_machine.registers["X8"] = a
             riscv_machine.registers["X9"] = b
             riscv_machine.base = "hex"
-            assemble("40000 " + instr + " X10, X8, X9", 'riscv', riscv_machine)
+            print(assemble("40000 " + instr + " X10, X8, X9", 'riscv', riscv_machine))
             self.assertEqual(riscv_machine.registers["X10"], correct)
 
     def two_op_test_imm(self, operator, instr,
@@ -66,13 +66,16 @@ class AssembleTestCase(TestCase):
 
     def test_add_imm(self):
         self.two_op_test_imm(opfunc.add, "ADDI")
-'''
+
     def test_sub(self):
         self.two_op_test(opfunc.sub, "SUB")
 
     def test_and(self):
         self.two_op_test(opfunc.and_, "AND")
 
+    def test_mul(self):
+        self.two_op_test(opfunc.mul, "MUL")
+'''
     def test_or(self):
         self.two_op_test(opfunc.or_, "OR")
         

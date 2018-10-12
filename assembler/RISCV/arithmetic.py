@@ -22,6 +22,8 @@ def three_op_arith_reg(ops, vm, instr, operator):
     check_overflow(operator(ops[1].get_val(),
                        ops[2].get_val()), 
                        vm)) 
+    if operator == opfunc.sub:
+        print(ops[1].get_val(), ops[2].get_val())
     vm.changes.add(ops[0].get_nm())
 
 def three_op_arith_immediate(ops, vm, instr, operator):

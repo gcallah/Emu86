@@ -102,12 +102,16 @@ class AssembleTestCase(TestCase):
 
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
+
+    '''
     def test_FInc(self):
         FInc = functools.partial(opfunc.add, 1)
         self.one_op_test_float(FInc, "FInc")
 
     def test_FNotf(self):
         self.one_op_test(opfunc.inv, "FNotf")
+
+    '''
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
                          low1=MIN_MUL, high1=MAX_MUL,
