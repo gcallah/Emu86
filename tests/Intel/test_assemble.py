@@ -82,7 +82,7 @@ class AssembleTestCase(TestCase):
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=MIN_MUL, high2=MAX_MUL)
 
-    def test_and(self):s
+    def test_and(self):
         self.two_op_test(opfunc.and_, "and")
 
     def test_or(self):
