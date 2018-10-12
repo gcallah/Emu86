@@ -103,7 +103,7 @@ class AssembleTestCase(TestCase):
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
     def test_FInc(self):
-        fdec = functools.partial(opfunc.add, 1)
+        fInc = functools.partial(opfunc.add, 1)
         self.one_op_test_float(FInc, "FInc")
 
     def test_FNotf(self):
