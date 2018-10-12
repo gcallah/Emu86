@@ -43,6 +43,7 @@ class FSUB(Instruction):
 class FMUL(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.mul)
+
 class FOrf(Instruction):
     """
         <instr>
@@ -86,6 +87,7 @@ class FDec(Instruction):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() - 1)
         vm.changes.add(ops[0].get_nm())
+
 class FNeg(Instruction):
     """
         <instr>
@@ -98,6 +100,7 @@ class FNeg(Instruction):
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.neg)
         return ''
+
 class FInc(Instruction):
     """
         <instr>
@@ -111,6 +114,7 @@ class FInc(Instruction):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() + 1)
         vm.changes.add(ops[0].get_nm())
+        
 class FNotf(Instruction):
     """
         <instr>
