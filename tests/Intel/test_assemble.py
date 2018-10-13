@@ -94,9 +94,6 @@ class AssembleTestCase(TestCase):
     def test_FOrf(self):
         self.two_op_test_float(opfunc.or_, "FOrf")
 
-    def test_FNeg(self):
-        self.two_op_test_float(opfunc.neg, "FNeg")
-        
     # def test_FDec(self):
     #     fdec = functools.partial(opfunc.add, -1)
     #     self.one_op_test_float(Fdec, "FDec")
@@ -158,6 +155,9 @@ class AssembleTestCase(TestCase):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
 
+    # def test_FNeg(self):
+    #     self.one_op_test_float(opfunc.neg, "FNeg")
+        
 ##################
 # Push / Pop     #
 ##################
