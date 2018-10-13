@@ -255,6 +255,9 @@ def exec(tok_lines, flavor, vm, last_instr):
             (curr_instr, source) = tok_lines[ip]
             vm.inc_ip()
             last_instr = curr_instr[INSTR_INTEL].f(curr_instr[OPS_INTEL:], vm)
+        for label in vm.labels:
+            if vm.get_ip() == vm.labels[label]:
+                vm.next_stack_change = label
         return (True, source, "")
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
@@ -359,4 +362,5 @@ def assemble(code, flavor, vm, step=False):
                  + str(MAX_INSTRUCTIONS))
     else:
         error = ''
+
     return (last_instr, error, bit_code)
