@@ -65,11 +65,11 @@ class AssembleTestCase(TestCase):
     def test_fsub(self):
         self.two_op_test_float(opfunc.sub, "FSUB")
 
-    def test_fmul(self):
-        self.two_op_test_float(opfunc.mul, "FMUL")
+    # def test_fmul(self):
+    #     self.two_op_test_float(opfunc.mul, "FMUL")
 
-    def test_FAndf(self):
-        self.two_op_test(opfunc.and_, "FAndf")
+    # def test_FAndf(self):
+    #     self.two_op_test(opfunc.and_, "FAndf")
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
@@ -91,18 +91,18 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
 
-    def test_FOrf(self):
-        self.two_op_test_float(opfunc.or_, "FOrf")
+    # def test_FOrf(self):
+    #     self.two_op_test_float(opfunc.or_, "FOrf")
 
-    def test_FNeg(self):
-        self.two_op_test_float(opfunc.neg, "FNeg")
+    # def test_FNeg(self):
+    #     self.two_op_test_float(opfunc.neg, "FNeg")
         
     # def test_FDec(self):
     #     fdec = functools.partial(opfunc.add, -1)
     #     self.one_op_test_float(Fdec, "FDec")
 
-    def test_FOrf(self):
-        self.two_op_test_float(opfunc.or_, "FOrf")
+    # def test_FOrf(self):
+    #     self.two_op_test_float(opfunc.or_, "FOrf")
 
     '''
     def test_FInc(self):
