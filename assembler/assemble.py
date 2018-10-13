@@ -32,6 +32,7 @@ def jump_to_label(label, source, vm, jal = False):
     if label in vm.labels:
         ip = vm.labels[label]  # set i to line num of label
         vm.set_ip(ip + vm.start_ip)
+        vm.next_stack_change = label
         return (True, source, "")
     else:
         try:
@@ -288,6 +289,9 @@ def assemble(code, flavor, vm, step=False):
     last_instr = ''
     error = ''
     bit_code = ''
+
+    vm.stack_change = vm.next_stack_change
+    vm.next_stack_change = ""
 
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", "")
