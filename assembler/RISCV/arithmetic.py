@@ -198,7 +198,7 @@ class Srl(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 3)
-        check_immediate_three(self.name, ops)
+        check_reg_only(self.name, ops)
         fixed_op2 = ops[2].get_val() % 32
         ops[0].set_val(
         check_overflow(opfunc.rshift(ops[1].get_val(),
@@ -230,7 +230,7 @@ class Sll(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 3)
-        check_immediate_three(self.name, ops)
+        check_reg_only(self.name, ops)
         fixed_op2 = ops[2].get_val() % 32
         ops[0].set_val(
         check_overflow(opfunc.lshift(ops[1].get_val(),
