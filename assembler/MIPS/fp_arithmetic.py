@@ -42,6 +42,11 @@ def float_to_hex(f):
     # print (struct.pack('d', f))
     return binascii.hexlify(struct.pack('d', f))
 
+#to convert the ieee 754 hex back to the actual float value
+def hex_to_float(h):
+    h2 = h[2:]
+    h2 = binascii.unhexlify(h2)
+    return struct.unpack('>f', h2)[0]
 
 #'ADD.S': Adds('ADD.S'),
 class Adds(Instruction):
@@ -83,14 +88,21 @@ class Mults(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 2)
         check_reg_only(self.name, ops)
-        result = ops[0].get_val() * ops[1].get_val()
+        a = ops[0].get_val()
+        b = ops[1].get_val()
+        print("a", a)
+        print("b", b)
+        result = a * b
         #convert to bit format
         hex_result = float_to_hex(result)
         binary_result = bin(int(hex_result, 16))[2:]
+        print("result in fp_arithmetic.py mults", result)
+        print("binary result before appending is", binary_result)
+        print("Hex result before appending is", hex_result)
         #deal with the high and low registers
         if len(binary_result) > 32:
         # if result > 2 ** 32 - 1:
-            
+            print("over 32")
             #first 32 bits go into hi
             #last 32 bits go inot low
             for i in range(0, 64-len(binary_result)):
@@ -99,6 +111,7 @@ class Mults(Instruction):
             vm.registers['HI'] = int(binary_result[0:32]) #first 32
             vm.registers['LO'] = int(binary_result[32:]) #last 32
         else:
+            print("under 32")
             vm.registers['HI'] = 0 #first 32 bits -> all 0
             vm.registers['LO'] = int(binary_result) #last 32 bits
         vm.changes.add('LO')
