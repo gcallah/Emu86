@@ -1,5 +1,6 @@
 from .data_mov import Load, Store
-from .arithmetic import Add, Addi, Sub, Mul, And, Andi, Xor, Xori, Or, Ori, Srl, Sll
+from .arithmetic import Add, Addi, Sub, Mul, And, Andi 
+from .arithmetic import Xor, Xori, Or, Ori, Srl, Sll
 from assembler.tokens import DataType
 
 key_words = {
