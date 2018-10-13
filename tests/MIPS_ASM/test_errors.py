@@ -18,7 +18,7 @@ from assembler.errors import INVALID_NUM_ARGS, INVALID_MEM_LOC, INVALID_REG
 from assembler.errors import MISSING_COMMA, MISSING_DATA, INVALID_TOKEN
 from assembler.errors import REG_UNWRITABLE, STACK_OVERFLOW, STACK_UNDERFLOW
 from assembler.errors import UNKNOWN_NM, MISSING_PC, INT_OUT_OF_RNG
-
+from assembler.errors import TOO_BIG_FOR_SINGLE
 
 class ErrorTestCase(TestCase):
 
@@ -76,6 +76,12 @@ class ErrorTestCase(TestCase):
         mips_machine.base = "hex"
         (output, error, bit_code) = assemble("40000 ADDI R8, R8, 100000000", 'mips_asm', mips_machine)
         self.assertTrue(error.startswith(INT_OUT_OF_RNG))
+
+    def test_too_big_for_single(self):
+        print("we're trying to test single error")
+        mips_machine.base = "dec"
+        (output, error, bit_code) = assemble("400000 LWC F8, 741813297932.12354(F28)", "mips.asm", mips_machine)
+        self.assertTrue(error.startswith(TOO_BIG_FOR_SINGLE))
 
 
 if __name__ == '__main__':

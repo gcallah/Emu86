@@ -11,6 +11,7 @@ from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
 from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack
 from .errors import MissingCloseBrack, MissingOps, InvalidPc, MissingPc
+from .errors import TooBigForSingle
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
@@ -207,6 +208,9 @@ def get_data_token(token_line, pos):
     elif isinstance(token_line[pos], IntegerTok):
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], FloatTok):
+        # print("token_line[pos].get_val() = ", token_line[pos].get_val())
+        if token_line[pos].get_val() > float(2 ** 22):
+            raise TooBigForSingle(str(token_line[pos].get_val()))
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], QuestionTok):
         return DONT_INIT, pos + 1 

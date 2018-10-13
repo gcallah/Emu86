@@ -11,6 +11,7 @@ from abc import abstractmethod
 
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName, InvalidArgument
 from .errors import NotSettable, UnknownLabel, LabelNotSettable
+from .errors import TooBigForSingle
 
 BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1
@@ -125,6 +126,10 @@ class IntegerTok(Operand):
         
 class FloatTok(Operand):
     def __init__(self, val=0.0):
+        if type(val) is float and val > float(2 ** 22):
+            raise TooBigForSingle(str(val))
+        elif type(val) is str and hex_to_float(val) > float(2 ** 22):
+            raise TooBigForSingle(str(val))
         super().__init__("Float", val)
 
     def __str__(self):
