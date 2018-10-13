@@ -22,6 +22,12 @@ MEM_LOC = 1
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
+# to convert hex strings back into floats
+def hex_to_float(h):
+    h2 = h[2:]
+    h2 = binascii.unhexlify(h2)
+    return struct.unpack('>f', h2)[0]
+
 class Token:
     def __init__(self, name, val=0):
         self.name = name
@@ -132,12 +138,14 @@ class FloatTok(Operand):
 
         # it is a hexadecimal
         # convert the hexadecimal to be a float
-        h2 = self.value
-        for i in range(0, 16-len(h2)):
-          h2 = "0"+h2
-        bi = codecs.decode(h2, "hex")
-        f = struct.unpack("d", bi)
-        return f[0]
+        return float('%.3f' % (hex_to_float(self.value)))
+
+        # h2 = self.value
+        # for i in range(0, 16-len(h2)):
+        #   h2 = "0"+h2
+        # bi = codecs.decode(h2, "hex")
+        # f = struct.unpack("d", bi)
+        # return f[0]
         # return self.value
 
     def negate_val(self):

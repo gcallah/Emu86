@@ -49,11 +49,14 @@ keywords_to_tokens = {
 #     float_part = float("." + lst[1])
 #     return int_part + float_part
 
-# def float_to_hex(f):
-#     return hex(struct.unpack('<I', struct.pack('<f', f))[0])
-
 def float_to_hex(f):
-    return binascii.hexlify(struct.pack('d', f))
+    return hex(struct.unpack('<I', struct.pack('<f', f))[0])
+
+#to convert the ieee 754 hex back to the actual float value
+def hex_to_float(h):
+    h2 = h[2:]
+    h2 = binascii.unhexlify(h2)
+    return struct.unpack('>f', h2)[0]
 
 def generate_reg_dict(vm, flavor):
     """
