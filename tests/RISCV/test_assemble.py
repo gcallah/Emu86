@@ -94,12 +94,12 @@ class AssembleTestCase(TestCase):
         self.two_op_test_imm(opfunc.xor, "XORI")
 
     def test_srl(self):
-        self.two_op_test_imm(opfunc.rshift, "SRL",
+        self.two_op_test(opfunc.rshift, "SRL",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
     
     def test_sll(self):
-        self.two_op_test_imm(opfunc.lshift, "SLL",
+        self.two_op_test(opfunc.lshift, "SLL",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
 
