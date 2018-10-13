@@ -74,7 +74,7 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.and_, "AND")
 
     def test_mul(self):
-        self.two_op_test(opfunc.mul, "MUL")
+        self.two_op_test(opfunc.mul, "MUL", low1 = MIN_MUL, high1 = MAX_MUL, low2 = MIN_MUL, high2 = MAX_MUL)
 '''
     def test_or(self):
         self.two_op_test(opfunc.or_, "OR")
