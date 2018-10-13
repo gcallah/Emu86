@@ -1,5 +1,7 @@
+from .arithmetic import Add, Addi, Sub, Mul, And, Andi 
+from .arithmetic import Xor, Xori, Or, Ori, Srl, Sll
+from .arithmetic import Srli, Slli 
 from .data_mov import Load, Store
-from .arithmetic import Add, Addi, Sub, Mul, And, Andi, Xor, Xori, Or, Ori, Srl, Sll
 from assembler.tokens import DataType
 
 key_words = {
@@ -24,6 +26,8 @@ key_words = {
 	'XORI': Xori('XORI'), 
 	'SRL': Srl('SRL'),
 	'SLL': Sll('SLL'),
+	'SLLI': Slli('SLLI'),
+	'SRLI': Srli('SRLI'),
 
 	# control 
 
@@ -48,6 +52,8 @@ op_func_codes = {
 	'ANDI': '0010011',
 	'ORI': '0010011',
 	'XORI': '0010011',
+	'SRLI': '0010011',
+	'SLLI': '0010011',
 
 	# S-Format
 	'SW': '0100011'
