@@ -44,6 +44,18 @@ def hex_to_float(h):
     h2 = binascii.unhexlify(h2)
     return struct.unpack('>f', h2)[0]
 
+
+#for double precision (64 bits) fps
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
+ 
+def f_to_b64(value):
+    val = struct.unpack('q', struct.pack('d', value))[0]
+    return getBin(val)
+
+def b_to_f(value):
+    hx = hex(int(value, 2))   
+    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+
 #'ADD.S': Adds('ADD.S'),
 class Adds(Instruction):
     """
