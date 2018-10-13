@@ -20,8 +20,6 @@ def three_op_arith_reg(ops, vm, instr, operator):
     check_overflow(operator(ops[1].get_val(),
                        ops[2].get_val()), 
                        vm)) 
-    if operator == opfunc.sub:
-        ops[1].get_val(), ops[2].get_val()
     vm.changes.add(ops[0].get_nm())
 
 def three_op_arith_immediate(ops, vm, instr, operator):
@@ -199,6 +197,26 @@ class Srl(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 3)
+        check_immediate_three(self.name, ops)
+        fixed_op2 = ops[2].get_val() % 32
+        ops[0].set_val(
+        check_overflow(opfunc.rshift(ops[1].get_val(),
+                       fixed_op2), 
+                       vm))
+
+        vm.changes.add(ops[0].get_nm()) 
+
+class Srli(Instruction): 
+    """
+        <instr> 
+            SRLI 
+        </instr> 
+        <syntax> 
+            SRLI reg, reg, con
+        </syntax>
+    """
+    def fhook(self, ops, vm): 
         three_op_arith_immediate(ops, vm, self.name, opfunc.rshift)
 
 class Sll(Instruction):
@@ -211,6 +229,26 @@ class Sll(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 3)
+        check_immediate_three(self.name, ops)
+        fixed_op2 = ops[2].get_val() % 32
+        ops[0].set_val(
+        check_overflow(opfunc.lshift(ops[1].get_val(),
+                       fixed_op2), 
+                       vm))
+
+        vm.changes.add(ops[0].get_nm()) 
+
+class Slli(Instruction): 
+    """
+        <instr> 
+            SLLI 
+        </instr> 
+        <syntax> 
+            SLLI reg, reg, con
+        </syntax>
+    """
+    def fhook(self, ops, vm): 
         three_op_arith_immediate(ops, vm, self.name, opfunc.lshift)
 
 class Slt(Instruction):
@@ -292,15 +330,15 @@ class Sltiu(Instruction):
     R-type
     0110011
 
->>>>>>>>>>>SLTU: same as above, but unsigned.
+>>>>>>>>>>>>>>SLTU: same as above, but unsigned.
 
-SLTI : Set gpr if source gpr < constant
+>>>>>>>>>>>>>SLTI : Set gpr if source gpr < constant
 signed comparison 
     reg reg con
     I-type 
     0010011
 
-SLTIU: same as above
+>>>>>>>>>>>>>SLTIU: same as above
 unsigned comparison
     reg reg con
     I-type
@@ -316,12 +354,12 @@ SRAI: shift right arithmetic by constant
     I-type
     0010011
 
-SRLI: Shift right logical by constant
+>>>>>>>>>SRLI: Shift right logical by constant
     reg reg con
     I-type
     0010011
 
-SLLI: Shift left logical constant 
+>>>>>>>>SLLI: Shift left logical constant 
     reg reg con
     I-type
     0010011

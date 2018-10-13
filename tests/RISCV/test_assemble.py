@@ -103,6 +103,17 @@ class AssembleTestCase(TestCase):
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
 
+    def test_srl_imm(self):
+        self.two_op_test_imm(opfunc.rshift, "SRLI",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=0, high2=MAX_SHIFT)
+    
+    def test_sll_imm(self):
+        self.two_op_test_imm(opfunc.lshift, "SLLI",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=0, high2=MAX_SHIFT)
+    
+
 '''
     def test_nor(self):
         for i in range(0, NUM_TESTS):
