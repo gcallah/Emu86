@@ -432,7 +432,15 @@
                         <table id="stack-table">
                             {% for label, cont in labels.items reversed %}
                                 <tr>
+                                {% if stack_change == label %}
                                     <td id="mem-loc" style="height:5px">
+                                        SP
+                                    </td>
+                                {% else %}
+                                    <td id="mem-loc" style="height:5px">
+                                    </td>
+                                {% endif %}
+                                    <td id="mem-cont" style="height:5px">
                                         {{ label }}
                                     </td>
                                 </tr>
@@ -440,6 +448,8 @@
                             {% for sym, cont in symbols.items reversed %}
                                 <tr>
                                     <td id="mem-loc" style="height:5px">
+                                    </td>
+                                    <td id="mem-cont" style="height:5px">
                                         {{ sym }}
                                     </td>
                                 </tr>

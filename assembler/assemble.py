@@ -290,8 +290,9 @@ def assemble(code, flavor, vm, step=False):
     error = ''
     bit_code = ''
 
-    vm.stack_change = vm.next_stack_change
-    vm.next_stack_change = ""
+    if vm.next_stack_change != "":
+        vm.stack_change = vm.next_stack_change
+        vm.next_stack_change = ""
 
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", "")
