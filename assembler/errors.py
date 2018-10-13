@@ -36,6 +36,7 @@ MISSING_CLOSEBRACK = "Missing closing bracket"
 MISSING_CLOSEPAREN = "Missing closing parenthesis"
 ZERO_DIVISION = "Division by zero"
 OUT_OF_BOUNDS = "Displacement out of bounds"
+TOO_BIG_FOR_SINGLE = "Value too big to store in a single: "
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -181,6 +182,10 @@ class DivisionZero(Error):
 class OutofBounds(Error):
     def __init__(self):
         self.msg = OUT_OF_BOUNDS
+
+class TooBigForSingle(Error):
+    def __init__(self, offender):
+        self.msg = TOO_BIG_FOR_SINGLE + offender
 
 def check_num_args(instr, ops, correct_num):
     """
