@@ -46,6 +46,10 @@ def hex_to_float(h):
 
 
 #for double precision (64 bits) fps
+# references:
+    # https://docs.python.org/2/library/struct.html
+    # https://stackoverflow.com/questions/52600983/converting-float-to-ieee754
+    # https://stackoverflow.com/questions/19414847/how-to-convert-floating-point-number-in-python
 getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
  
 def f_to_b64(value):
@@ -98,8 +102,6 @@ class Mults(Instruction):
         check_reg_only(self.name, ops)
         a = ops[0].get_val()
         b = ops[1].get_val()
-        print("a", a)
-        print("b", b)
         result = a * b
         #convert to bit format
         # hex_result = float_to_hex(result)

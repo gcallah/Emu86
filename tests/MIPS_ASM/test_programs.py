@@ -198,30 +198,31 @@ class TestPrograms(TestCase):
 
     #loading data
     def test_fp_data(self):
+        print("Testing fp data")
         self.run_mips_test_code("fp_data.asm")
         self.assertEqual(mips_machine.registers["F8"],  8.0)
         self.assertEqual(mips_machine.registers["F9"], 10.5)
         self.assertEqual(mips_machine.registers["F10"], 20.555)
 
     # power function
-    def test_fp_power(self):
-        self.run_mips_test_code("fp_power.asm")
-        self.assertEqual(mips_machine.registers["F8"], 166.375)
+    # def test_fp_power(self):
+    #     self.run_mips_test_code("fp_power.asm")
+    #     self.assertEqual(mips_machine.registers["F8"], 166.375)
 
     #area function
-    def test_fp_area(self):
-        self.run_mips_test_code("fp_area.asm")
-        # a = 12.2
-        # b = 12.5
-        # ah = self.float_to_hex(a)
-        # bh = self.float_to_hex(b)
-        # self.assertEqual(mips_machine.registers["F8"], a)
-        # self.assertEqual(mips_machine.registers["F9"], b)
+    # def test_fp_area(self):
+    #     self.run_mips_test_code("fp_area.asm")
+    #     # a = 12.2
+    #     # b = 12.5
+    #     # ah = self.float_to_hex(a)
+    #     # bh = self.float_to_hex(b)
+    #     # self.assertEqual(mips_machine.registers["F8"], a)
+    #     # self.assertEqual(mips_machine.registers["F9"], b)
 
-        # result = self.convertHiLoForFP()
+    #     # result = self.convertHiLoForFP()
 
-        # correct = a*b
-        self.assertEqual(mips_machine.registers["F10"], 12.2 * 12.5)
+    #     # correct = a*b
+    #     self.assertEqual(mips_machine.registers["F10"], 12.2 * 12.5)
 
 
 

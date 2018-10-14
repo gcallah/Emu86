@@ -1,6 +1,6 @@
 ; First comes the data section, where we declare some names.
 .data
-    x: .float 8.0
+    x: .float 741813297932.12354
     y: .float 10.5
     z: .float 20.555
 
