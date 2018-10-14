@@ -19,7 +19,7 @@ INSTR_PTR_MIPS = "PC"
 INSTR_PTR_RISCV = "PC"
 STACK_PTR_INTEL = "ESP"
 STACK_PTR_MIPS = "R29"
-STACK_PTR_RISCV = "x2"
+STACK_PTR_RISCV = "X2"
 
 
 class VirtualMachine:
@@ -304,7 +304,7 @@ class RISCVMachine(VirtualMachine):
     def __init__(self): 
         super().__init__()
         self.unwritable =[INSTR_PTR_RISCV, 'X0', 
-                          STACK_PTR_RISCV, 'X2']
+                          STACK_PTR_RISCV]
         self.registers = OrderedDict(
                         [
                             ('X0', 0),
@@ -338,7 +338,8 @@ class RISCVMachine(VirtualMachine):
                             ('X20', 0),
                             ('X31', 0),
                             ('X10', 0),
-                            ('X21', 0)
+                            ('X21', 0),
+                            (INSTR_PTR_RISCV, 0)
                         ])
         self.flags = OrderedDict(
                     [
