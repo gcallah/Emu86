@@ -6,4 +6,4 @@ set -e
 
 export TDIR="tests"
 
-for test_file in $TDIR/*/test_*.py; do python3 "$test_file"; done
+for test_file in $TDIR/*/test_*.py; do echo "$test_file"; python3 "$test_file"; done
