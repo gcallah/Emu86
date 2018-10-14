@@ -209,10 +209,10 @@ function array(flavor) {
 function keyInterrupt(flavor) {
 	code_string = '';
 	if (flavor == 'intel'){
-		code_string += 'INT 22\nMOV EBX, EAX\nMOV ECX, 0\nMOV ESI, 0\n\nL1: MOV [ESI], EAX\nMOV EAX, 0\nINT 22\nINC ECX\nCMP EBX,EAX\nINC ESI\nJNE L1\n\nL2: MOV EAX, 0\nINT 22\nDEC ECX\nCMP ECX, 1\nJNE L2\n\nMOV EAX, 0\nINT 22\nMOV EBX, EAX\n\nL3: MOV [ESI], EAX\nINC ESI\nMOV EAX, 0\nINT 22\nCMP EBX, EAX\nJNE L3\n';
+		code_string += '; Asking for key input\nINT 22\nMOV EBX, EAX\nMOV ECX, 0\nMOV ESI, 0\n\n; Move input to memory location esi\n; Ask for key input again\nL1: MOV [ESI], EAX\nMOV EAX, 0\nINT 22\nINC ECX\nCMP EBX,EAX\nINC ESI\nJNE L1\n\n; Ask for key input \nL2: MOV EAX, 0\nINT 22\nDEC ECX\nCMP ECX, 1\nJNE L2\n\nMOV EAX, 0\nINT 22\nMOV EBX, EAX\n\n; Move input to memory location esi\n; Ask for key input again\nL3: MOV [ESI], EAX\nINC ESI\nMOV EAX, 0\nINT 22\nCMP EBX, EAX\nJNE L3\n';
 	}
 	else if (flavor == 'att'){
-		code_string += 'INT $22\nMOV %EAX, %EBX\nMOV $0, %ECX\nMOV $0, %ESI\n\nL1: MOV %EAX, (%ESI)\nMOV $0, %EAX\nINT $22\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L1\n\nL2: MOV $0, %EAX\nINT $22\nDEC %ECX\nCMP $1, %ECX\nJNE L2\n\nMOV $0, %EAX\nINT $22\nMOV %EAX, %EBX\n\nL3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0, %EAX\nINT $22\nCMP %EAX, %EBX\nJNE L3\n';
+		code_string += '; Asking for key input\nINT $22\nMOV %EAX, %EBX\nMOV $0, %ECX\nMOV $0, %ESI\n\n; Move input to memory location esi\n; Ask for key input again\nL1: MOV %EAX, (%ESI)\nMOV $0, %EAX\nINT $22\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L1\n\n; Asking for key input\nL2: MOV $0, %EAX\nINT $22\nDEC %ECX\nCMP $1, %ECX\nJNE L2\n\nMOV $0, %EAX\nINT $22\nMOV %EAX, %EBX\n\n; Move input to memory location esi\n; Ask for key input again\nL3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0, %EAX\nINT $22\nCMP %EAX, %EBX\nJNE L3\n';
 	}
 	document.getElementById('id_code').value = code_string;
 }
