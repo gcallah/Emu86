@@ -59,11 +59,11 @@ class AssembleTestCase(TestCase):
             assemble(instr + " eax, ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
-    # def test_fadd(self):
-    #     self.two_op_test_float(opfunc.add, "FADD")
+    def test_fadd(self):
+        self.two_op_test_float(opfunc.add, "FADD")
 
-    # def test_fsub(self):
-    #     self.two_op_test_float(opfunc.sub, "FSUB")
+    def test_fsub(self):
+        self.two_op_test_float(opfunc.sub, "FSUB")
 
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
@@ -96,6 +96,7 @@ class AssembleTestCase(TestCase):
 
     # def test_FNeg(self):
     #     self.two_op_test_float(opfunc.neg, "FNeg")
+        
     # def test_FDec(self):
     #     fdec = functools.partial(opfunc.add, -1)
     #     self.one_op_test_float(Fdec, "FDec")
@@ -157,6 +158,9 @@ class AssembleTestCase(TestCase):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
 
+    # def test_FNeg(self):
+    #     self.one_op_test_float(opfunc.neg, "FNeg")
+        
 ##################
 # Push / Pop     #
 ##################

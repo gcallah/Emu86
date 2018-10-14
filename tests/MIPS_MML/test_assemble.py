@@ -80,6 +80,25 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "XOR")
 
+    def test_mult(self):
+        for i in range(0, NUM_TESTS):
+            a = random.randint(MIN_MUL, MAX_MUL)
+            b = random.randint(MIN_MUL, MAX_MUL)
+            correct = opfunc.mul(a, b)
+            mips_machine.registers["R8"] = a
+            mips_machine.registers["R9"] = b
+            mips_machine.base = "hex"
+            low_correct, high_correct = 0, 0
+            assemble("40000 MULT R8, R9", 'mips_mml', mips_machine)
+            if correct > 2 ** 32 - 1:
+                low_correct = opfunc.lshift(correct, 32)
+                high_correct = opfunc.rshift(correct, 32)
+            else:
+                low_correct = correct
+                high_correct = 0
+            self.assertEqual(mips_machine.registers["HI"], high_correct)
+            self.assertEqual(mips_machine.registers["LO"], low_correct)
+
     def test_nor(self):
         for i in range(0, NUM_TESTS):
             a = random.randint(MIN_TEST, MAX_TEST)

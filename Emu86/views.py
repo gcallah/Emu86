@@ -111,7 +111,8 @@ def main_page(request):
                              'start_ip': mips_machine.start_ip,
                              'bit_code': "",
                              'button_type': "",
-                             'changes': []
+                             'changes': [],
+                             'stack_change': ""
                             })
             if lang in INTEL:
                 mips_machine.flavor = None
@@ -142,7 +143,8 @@ def main_page(request):
                                'start_ip': intel_machine.start_ip,
                                'bit_code': "",
                                'button_type': "",
-                               'changes': []
+                               'changes': [],
+                               'stack_change': ""
                               })
             if lang in RISCV: 
                 mips_machine.flavor = None
@@ -172,7 +174,8 @@ def main_page(request):
                              'start_ip': riscv_machine.start_ip,
                              'bit_code': "",
                              'button_type': "",
-                             'changes': []
+                             'changes': [],
+                             'stack_change': ""
                             })
 
 
@@ -293,7 +296,8 @@ def main_page(request):
                      'start_ip': mips_machine.start_ip,
                      'bit_code': bit_code,
                      'button_type': button,
-                     'changes': mips_machine.changes
+                     'changes': mips_machine.changes,
+                     'stack_change': mips_machine.stack_change
                     })
     if intel_machine.flavor in INTEL:    
         intel_machine.order_mem()
@@ -320,7 +324,8 @@ def main_page(request):
                        'start_ip': intel_machine.start_ip,
                        'bit_code': bit_code,
                        'button_type': button,
-                       'changes': intel_machine.changes
+                       'changes': intel_machine.changes,
+                       'stack_change': intel_machine.stack_change
                       })
     if riscv_machine.flavor in RISCV: 
         riscv_machine.order_mem()
@@ -347,7 +352,8 @@ def main_page(request):
                        'start_ip': riscv_machine.start_ip,
                        'bit_code': bit_code,
                        'button_type': button,
-                       'changes': riscv_machine.changes
+                       'changes': riscv_machine.changes,
+                       'stack_change': riscv_machine.stack_change
                       })
 
 
