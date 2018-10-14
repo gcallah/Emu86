@@ -235,9 +235,7 @@
                                     {% elif reg == "R10" or reg == "R11" %}
                                         </tr> <tr class ={{reg.0}}>
                                     {% elif reg == "PC" %}
-                                        <td id="register"></td><td id="contents"></td></tr><tr class={{reg.0}}">
-                                        <td id="register" style="visibility: hidden;"></td><td id="contents" style="visibility: hidden;">
-                                        <td id="register" style="visibility: hidden;"></td><td id="contents" style="visibility: hidden;">
+                                        <td id="register"></td><td id="contents"></td></tr><tr class={{reg.0}}>
                                     {% else %}
                                         {% if forloop.counter0|divisibleby:3 %}
                                             {% if reg != "R21" and reg != "R22" and reg != "R23" %}
@@ -481,6 +479,9 @@
                 document.querySelectorAll('.R').forEach(function(button) {
                     button.style.display = "table-row";
                 });
+                document.querySelectorAll('.P').forEach(function(button) {
+                    button.style.display = "table-row";
+                });
             } else {
                 document.querySelectorAll('.R').forEach(function(button) {
                     button.style.display = "none";
@@ -488,15 +489,10 @@
                 document.querySelectorAll('.F').forEach(function(button) {
                     button.style.display = "table-row";
                 });
+                document.querySelectorAll('.P').forEach(function(button) {
+                    button.style.display = "table-row";
+                })
             }
-            
-            /*
-            document.getElementsByClassName('R');
-            console.log(classes);
-            classes.forEach(function(clss) {
-                clss.style.display = "none";
-            });
-            */
         }
     </script>
 
