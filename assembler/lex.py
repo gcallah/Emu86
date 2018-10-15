@@ -201,10 +201,13 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
     analysis = []
     words = split_code(code,flavor)
 
+    data_type = None 
+
     for word in words:
 # keyword:
         if word.upper() in language_keys:
             analysis.append(language_keys[word.upper()])
+            data_type = word
 # section declaration:
         elif word[0] == ".":
             analysis.append(Section(word[1:]))
@@ -228,11 +231,14 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
             analysis.append(NewSymbol(word, vm))
 #Floating Points
         elif re.match(fp_match, word) is not None:
+            #default is float (single precision) if user doesnt say
+            if data_type != ".float" and data_type != ".double":
+                data_type = ".float"
             if vm.base == "dec":
                 #TODO: Screen shot to give me the floating point token class from token.py
-                analysis.append(FloatTok(float(word)))
+                analysis.append(FloatTok(data_type=data_type, val=float(word)))
             else: #hexadecimal
-                analysis.append(FloatTok(float_to_hex(float(word))))
+                analysis.append(FloatTok(data_type=data_type, val=float_to_hex(float(word))))
 # Integers
         else:
             if vm.base == "dec":

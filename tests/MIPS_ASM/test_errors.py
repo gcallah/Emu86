@@ -81,6 +81,7 @@ class ErrorTestCase(TestCase):
         print("we're trying to test single error")
         mips_machine.base = "dec"
         (output, error, bit_code) = assemble("400000 LWC F8, 741813297932.12354(F28)", "mips.asm", mips_machine)
+        print(output, error, bit_code)
         self.assertTrue(error.startswith(TOO_BIG_FOR_SINGLE))
 
 

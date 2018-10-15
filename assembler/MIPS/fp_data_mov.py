@@ -21,8 +21,7 @@ class Loadc(Instruction):
         check_num_args(self.get_nm(), ops, 2)
         if isinstance(ops[0], Register):
             if isinstance(ops[1], RegAddress):
-                print("val",ops[1].get_val())
-                print("fv", float(ops[1].get_val()))
+                
                 if (float(ops[1].get_val()) > float(2 ** 22)):
                     raise TooBigForSingle(str(float(ops[1].get_val())))
                 ops[0].set_val(float(ops[1].get_val()))
