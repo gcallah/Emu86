@@ -233,7 +233,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         elif re.match(fp_match, word) is not None:
             #default is float (single precision) if user doesnt say
             if data_type != ".float" and data_type != ".double":
-                data_type = ".double"
+                data_type = ".float"
             if vm.base == "dec":
                 #TODO: Screen shot to give me the floating point token class from token.py
                 analysis.append(FloatTok(data_type=data_type, val=float(word)))
