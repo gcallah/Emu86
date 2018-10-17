@@ -118,38 +118,19 @@ class Divs(Instruction):
              DIVS
         </instr>
         <syntax>
-            DIVS reg, reg
+            DIVS reg, reg, reg
         </syntax>
-        <descr>
-            Divide the numbers. Resultant is the converted
-            to hex then binary. first 32 bits go into the 
-            HI and the last 32 bits go into LO
-        </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
+        check_num_args(self.name, ops, 3)
         check_reg_only(self.name, ops)
-        if ops[1].get_val() == 0:
+        if ops[2].get_val() == 0:
             raise DivisionZero()
 
-        result = ops[0].get_val() / ops[1].get_val()
-        #convert to bit format
-        hex_result = float_to_hex(result)
-        binary_result = bin(int(hex_result, 16))[2:]
-        #deal with the high and low registers
-        if len(binary_result) > 32:
-        # if result > 2 ** 32 - 1:
-            
-            #first 32 bits go into hi
-            #last 32 bits go inot low
-            for i in range(0, 64-len(binary_result)):
-                binary_result = "0"+binary_result
-
-            vm.registers['HI'] = int(binary_result[0:32]) #first 32
-            vm.registers['LO'] = int(binary_result[32:]) #last 32
-        else:
-            vm.registers['HI'] = int(binary_result)
-            vm.registers['LO'] = 0
-        vm.changes.add('LO')
-        vm.changes.add('HI')
+        result = ops[1].get_val() / ops[2].get_val()
+        # this is the single version of div for floats, so we don't want to be bigger than max single
+        if (result > 2 ** 22):
+            raise TooBigForSingle(str(result))
+        ops[0].set_val(result)
+        vm.changes.add(ops[0].get_nm())
         return ''
