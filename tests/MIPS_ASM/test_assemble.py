@@ -203,7 +203,7 @@ class AssembleTestCase(TestCase):
 
     def test_mults(self):
         print ("IN MULT")
-        # self.two_op_test_hilo_float(opfunc.mul, "MULT.S")
+        self.two_op_test_float(opfunc.mul, "MULT.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
 
     # def test_divs(self):
     #     self.two_op_test_hilo_float(opfunc.truediv, "DIV.S")

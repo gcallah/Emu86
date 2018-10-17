@@ -198,7 +198,6 @@ class TestPrograms(TestCase):
 
     #loading data
     def test_fp_data(self):
-        print("Testing fp data")
         self.run_mips_test_code("fp_data.asm")
         self.assertEqual(mips_machine.registers["F8"],  8.0)
         self.assertEqual(mips_machine.registers["F9"], 10.5)
@@ -212,19 +211,7 @@ class TestPrograms(TestCase):
     # area function
     def test_fp_area(self):
         self.run_mips_test_code("fp_area.asm")
-        # a = 12.2
-        # b = 12.5
-        # ah = self.float_to_hex(a)
-        # bh = self.float_to_hex(b)
-        # self.assertEqual(mips_machine.registers["F8"], a)
-        # self.assertEqual(mips_machine.registers["F9"], b)
-
-        # result = self.convertHiLoForFP()
-
-        # correct = a*b
         self.assertEqual(mips_machine.registers["F10"], 12.2 * 12.5)
-
-
 
 if __name__ == '__main__':
     main()
