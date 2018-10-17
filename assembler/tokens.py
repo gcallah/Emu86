@@ -11,7 +11,7 @@ from abc import abstractmethod
 
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName, InvalidArgument
 from .errors import NotSettable, UnknownLabel, LabelNotSettable
-from .errors import TooBigForSingle
+from .errors import TooBigForSingle, TooBigForDouble
 
 BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1
@@ -138,7 +138,7 @@ class IntegerTok(Operand):
         self.value *= -1
         
 class FloatTok(Operand):
-    def __init__(self, data_type=".float", val=0.0):
+    def __init__(self, data_type=".double", val=0.0):
         self.data_type = data_type
         # do a bit of error checking for precision for the hex value
         if data_type == ".float":
@@ -157,19 +157,22 @@ class FloatTok(Operand):
                 temp_bin = f_to_b64(val)
                 temp_float = b_to_f64(temp_bin)
                 if (temp_float != val):
-                    raise TooBigForSingle(str(val))
+                    raise TooBigForDouble(str(val))
             elif type(val) is str:
                 temp_bin = h_to_b64(val)
                 temp_float = f_to_b64(temp_bin)
                 temp_bin2 = f_to_b64(temp_float)
                 temp_float2 = b_to_f64(temp_bin2)
                 if temp_float != temp_float2:
-                    raise TooBigForSingle(str(val))
+                    raise TooBigForDouble(str(val))
 
         super().__init__("Float", val)
 
     def __str__(self):
         return str(self.get_val())
+
+    def get_type(self):
+        return self.data_type
 
     # self.value is either going to be a float (12.2) or a hexadecimal string ('0x41433333')
     # we need to be able to reconcile the actual value of it if it's a hex string (IEEE 754)

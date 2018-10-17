@@ -37,6 +37,7 @@ MISSING_CLOSEPAREN = "Missing closing parenthesis"
 ZERO_DIVISION = "Division by zero"
 OUT_OF_BOUNDS = "Displacement out of bounds"
 TOO_BIG_FOR_SINGLE = "Value too big to store in a single: "
+TOO_BIG_FOR_DOUBLE = "Value too big to store in a double: "
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -186,6 +187,10 @@ class OutofBounds(Error):
 class TooBigForSingle(Error):
     def __init__(self, offender):
         self.msg = TOO_BIG_FOR_SINGLE + offender
+
+class TooBigForDouble(Error):
+    def __init__(self, offender):
+        self.msg = TOO_BIG_FOR_DOUBLE + offender
 
 def check_num_args(instr, ops, correct_num):
     """

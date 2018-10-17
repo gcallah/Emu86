@@ -21,9 +21,8 @@ class Loadc(Instruction):
         check_num_args(self.get_nm(), ops, 2)
         if isinstance(ops[0], Register):
             if isinstance(ops[1], RegAddress):
-                
-                if (float(ops[1].get_val()) > float(2 ** 22)):
-                    raise TooBigForSingle(str(float(ops[1].get_val())))
+                # if (float(ops[1].get_val()) > float(2 ** 22)):
+                #     raise TooBigForSingle(str(float(ops[1].get_val())))
                 ops[0].set_val(float(ops[1].get_val()))
                 vm.changes.add(ops[0].get_nm())
             else:
@@ -48,8 +47,8 @@ class Storec(Instruction):
         check_num_args(self.get_nm(), ops, 2)
         if isinstance(ops[0], Register):
             if isinstance(ops[1], RegAddress):
-                if (float(ops[0].get_val()) > float(2 ** 22)):
-                    raise TooBigForSingle(str(float(ops[0].get_val())))
+                # if (float(ops[0].get_val()) > float(2 ** 22)):
+                #     raise TooBigForSingle(str(float(ops[0].get_val())))
                 ops[1].set_val(float(ops[0].get_val()))
             else:
                 InvalidArgument(ops[1].get_nm())
