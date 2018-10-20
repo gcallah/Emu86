@@ -112,7 +112,21 @@ class AssembleTestCase(TestCase):
         self.two_op_test_imm(opfunc.lshift, "SLLI",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
-    
+
+    def test_slt(self): 
+        riscv_machine.registers["X8"] = 1
+        riscv_machine.registers["X9"] = 0
+        riscv_machine.base = "hex"
+        assemble("40000 SLT X10, X9, X8", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 1)
+
+    def test_sltu(self): 
+        riscv_machine.registers["X8"] = 1
+        riscv_machine.registers["X9"] = 0
+        riscv_machine.base = "hex"
+        assemble("40000 SLTU X10, X9, X8", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 1)
+
 
 '''
     def test_nor(self):
