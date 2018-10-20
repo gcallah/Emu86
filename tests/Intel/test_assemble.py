@@ -91,12 +91,21 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
 
+    def test_FShr(self):
+        self.two_op_test_float(opfunc.rshift, "FShr",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=0, high2=MAX_SHIFT)
+    def test_FShl(self):
+        self.two_op_test_float(opfunc.lshift, "FShl",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=0, high2=MAX_SHIFT)
+
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
 
     # def test_FNeg(self):
     #     self.two_op_test_float(opfunc.neg, "FNeg")
-        
+
     # def test_FDec(self):
     #     fdec = functools.partial(opfunc.add, -1)
     #     self.one_op_test_float(Fdec, "FDec")
@@ -113,6 +122,9 @@ class AssembleTestCase(TestCase):
         self.one_op_test(opfunc.inv, "FNotf")
 
     '''
+
+
+
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
                          low1=MIN_MUL, high1=MAX_MUL,
@@ -160,7 +172,7 @@ class AssembleTestCase(TestCase):
 
     # def test_FNeg(self):
     #     self.one_op_test_float(opfunc.neg, "FNeg")
-        
+
 ##################
 # Push / Pop     #
 ##################
