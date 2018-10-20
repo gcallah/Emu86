@@ -279,8 +279,8 @@ class Sltu(Instruction):
     """
     def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops) 
-        abs_op2 = abs(ops2.get_val())
-        abs_op3 = abs(ops3.get_val())
+        abs_op2 = abs(op2.get_val())
+        abs_op3 = abs(op3.get_val())
         if (abs_op2 - abs_op3) < 0: 
             op1.set_val(1)
         else: 
@@ -316,13 +316,54 @@ class Sltiu(Instruction):
     """
     def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops) 
-        abs_op2 = abs(ops2.get_val())
-        abs_op3 = abs(ops3.get_val())
+        abs_op2 = abs(op2.get_val())
+        abs_op3 = abs(op3.get_val())
         if (abs_op2 - abs_op3) < 0: 
             op1.set_val(1)
         else: 
             op1.set_val(0)
         vm.changes.add(op1.get_nm())
+
+
+class Sra(Instruction):
+    """
+        <instr> 
+            SRA
+        </instr> 
+        <syntax> 
+            SRA reg, reg, reg
+        </syntax> 
+    """
+    def fhook(self, ops, vm): 
+        (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
+        bin_str_op2 = bin(abs(op2.get_val()))[2:]
+        signed_str = bin_str_op2[0] * op3.get_val()
+        shifted_str = signed_str + bin_str_op2[: - op3.get_val()]
+        op1.set_val(int(shifted_str))
+        vm.changes.add(op1.get_nm())
+
+
+class Srai(Instruction):
+    """
+        <instr> 
+            SRAI
+        </instr> 
+        <syntax> 
+            SRAI reg, reg, reg
+        </syntax> 
+    """
+    def fhook(self, ops, vm): 
+        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops)
+        bin_str_op2 = bin(abs(op2.get_val()))[2:]
+        signed_str = bin_str_op2[0] * op3.get_val()
+        shifted_str = signed_str + bin_str_op2[: - op3.get_val()]
+        op1.set_val(int(shifted_str))
+        vm.changes.add(op1.get_nm())
+        
+
+
+
+
 
 '''
 >>>>>>>>>>>>>>>SLT: Set less than  

@@ -1,6 +1,6 @@
 from .arithmetic import Add, Addi, Sub, Mul, And, Andi 
 from .arithmetic import Xor, Xori, Or, Ori, Srl, Sll
-from .arithmetic import Srli, Slli 
+from .arithmetic import Srli, Slli, Slt, Sltu, Slti, Sltiu
 from .data_mov import Load, Store
 from assembler.tokens import DataType
 
@@ -28,6 +28,15 @@ key_words = {
 	'SLL': Sll('SLL'),
 	'SLLI': Slli('SLLI'),
 	'SRLI': Srli('SRLI'),
+	'SLT': Slt('SLT'),
+	'SLTU': Sltu('SLTU'),
+	'SLTI': Slti('SLTI'),
+	'SLTIU': Sltiu('SLTIU'),
+	
+
+
+
+
 
 	# control 
 
