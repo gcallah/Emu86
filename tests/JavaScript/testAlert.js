@@ -8,11 +8,6 @@ var browser = new webdriver.Builder().usingServer().withCapabilities({ 'browserN
 
 
 var validInputBool = true;
-var validOrInvalid = Math.random() * 100;
-if (validOrInvalid > 50) {
-    validInputBool = false;
-}
-console.log(validOrInvalid, validInputBool);
 
 function closeBrowser() {
     browser.quit();
@@ -71,6 +66,7 @@ getById('subButton').click().then(function () {
     enterInputs(inputBox, '104');
     var inputVal = getById('valueText');
     enterInputs(inputVal, 'BC');
+    validInputBool = false;
     return getById('setMem').click();
 }).then(function () {
     try {
