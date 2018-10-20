@@ -39,7 +39,7 @@ class VirtualMachine:
         self.stack = OrderedDict()
         self.stack_init()
 
-        self.labels = OrderedDict()
+        self.labels = {}
         self.labels_init()
 
         self.symbols = OrderedDict()

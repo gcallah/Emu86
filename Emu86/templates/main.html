@@ -428,20 +428,18 @@
                      <td>
                         <div style="height:300px;overflow:auto;">
                         <table id="stack-table">
-                            {% for x in cstack %}
+                            {% for label in cstack reversed %}
                                 <tr>
-                                    {% if stack_change == x %}
-                                    <td id="mem-loc" style="height:5px">
-                                        SP
-                                    </td>
+                                    {% if stack_change == label %}
+                                        <td id="mem-loc" style="height:5px">
+                                            SP
+                                        </td>
                                     {% else %}
                                         <td id="mem-loc" style="height:5px">
                                         </td>
                                     {% endif %}
-                                    <td id="mem-loc" style="height:5px">
-                                    </td>
                                     <td id="mem-cont" style="height:5px">
-                                        {{ x }}
+                                        {{ label }}
                                     </td>
                                 </tr>
                             {% endfor %}
