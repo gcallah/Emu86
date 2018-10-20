@@ -58,6 +58,19 @@ class FOrf(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.or_)
         return ''
+class FShr(Instruction):
+    """
+        <instr>
+             shr
+        </instr>
+        <syntax>
+            SHR reg, reg
+            SHR reg, mem
+            SHR reg, con
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.rshift)
 
 class FXor(Instruction):
     """

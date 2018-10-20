@@ -91,6 +91,10 @@ class AssembleTestCase(TestCase):
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
 
+    def test_FShr(self):
+        self.two_op_test_float(opfunc.rshift, "FShr",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=0, high2=MAX_SHIFT)
     def test_FShl(self):
         self.two_op_test_float(opfunc.lshift, "FShl",
                          low1=MIN_MUL, high1=MAX_MUL,
