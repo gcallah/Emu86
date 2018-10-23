@@ -159,10 +159,10 @@ class AssembleTestCase(TestCase):
             b = random.uniform(low2, high2)
             correct = operator(a, b)
             mips_machine.registers["F8"] = a
-            mips_machine.registers["F9"] = b
+            mips_machine.registers["F10"] = b
             mips_machine.base = "hex"
-            assemble("40000 " + instr + " F10, F8, F9", 'mips_asm', mips_machine)
-            self.assertEqual(mips_machine.registers["F10"], correct)
+            assemble("40000 " + instr + " F12, F8, F10", 'mips_asm', mips_machine)
+            self.assertEqual(mips_machine.registers["F12"], correct)
 
     def two_op_test_hilo_float(self, operator, instr, 
                     low1=MIN_TEST, high1=MAX_TEST,

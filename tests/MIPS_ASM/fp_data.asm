@@ -7,5 +7,5 @@
 ; Next is the .text section, where we use them:
 .text
     0x400000 LWC F8, 0(F28)
-    0x400004 LWC F9, 4(F28)
-    0x400008 LWC F10, 8(F28)
+    0x400004 LWC F10, 4(F28)
+    0x400008 LWC F12, 8(F28)
