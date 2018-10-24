@@ -21,4 +21,5 @@ getByXPath('//*[@id="content-main"]/div/details[2]/summary').click()
 getByXPath('//*[@id="content-main"]/div/details[2]/details[1]/summary').click()
 getByXPath('//*[@id="content-main"]/div/details[2]/details[1]/ul/li[14]/a').click()
 assert mydriver.current_url == 'https://github.com/gcallah/Emu86/blob/master/tests/Intel/power.asm'
+mydriver.close()
 
