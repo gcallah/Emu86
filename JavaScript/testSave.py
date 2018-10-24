@@ -4,13 +4,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 
+mydriver = webdriver.Chrome()
+
 def getById(id):
     return mydriver.find_element_by_id(id)
 
 def getByXPath(value):
     return mydriver.find_element_by_xpath(value)
 
-mydriver = webdriver.Chrome()
 mydriver.get('http://www.emu86.org/')
 getById('subButton').click();
 getById('sample').click()
