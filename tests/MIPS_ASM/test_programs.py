@@ -197,11 +197,11 @@ class TestPrograms(TestCase):
         return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
     #loading data
-    def test_fp_data(self):
-        self.run_mips_test_code("fp_data.asm")
-        self.assertEqual(mips_machine.registers["F8"],  8.0)
-        self.assertEqual(mips_machine.registers["F10"], 10.5)
-        self.assertEqual(mips_machine.registers["F12"], 20.555)
+    # def test_fp_data(self):
+    #     self.run_mips_test_code("fp_data.asm")
+    #     self.assertEqual(mips_machine.registers["F8"],  8.0)
+    #     self.assertEqual(mips_machine.registers["F10"], 10.5)
+    #     self.assertEqual(mips_machine.registers["F12"], 20.555)
 
     # power function
     def test_fp_power(self):
