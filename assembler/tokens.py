@@ -35,10 +35,10 @@ def hex_to_float(h):
 getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
 def h_to_b64(value):
     print("in h to b, value =", value)
-    return hex(int(value, 2))
+    return "0" + hex(int(value, 2))
 def f_to_b64(value):
     val = struct.unpack('q', struct.pack('d', value))[0]
-    return getBin(val)
+    return "0" + getBin(val)
 def b_to_f64(value):
     hx = hex(int(value, 2))   
     return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
