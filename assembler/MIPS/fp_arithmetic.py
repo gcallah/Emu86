@@ -26,6 +26,10 @@ def three_op_arith_reg(ops, vm, instr, operator):
     """
     check_num_args(instr, ops, 3)
     check_reg_only(instr, ops)
+
+    # go through the register ops and make sure that they're even numbered
+
+    
     ops[0].set_val(
     check_overflow(operator(ops[1].get_val(),
                        ops[2].get_val()), 

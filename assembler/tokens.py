@@ -34,7 +34,8 @@ def hex_to_float(h):
 #64 bits
 getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
 def h_to_b64(value):
-    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+    print("value =", value)
+    return struct.unpack("d", struct.pack("q", int(value, 16)))[0]
 def f_to_b64(value):
     val = struct.unpack('q', struct.pack('d', value))[0]
     return getBin(val)
@@ -159,6 +160,7 @@ class FloatTok(Operand):
                 if (temp_float != val):
                     raise TooBigForDouble(str(val))
             elif type(val) is str:
+                print("val =", val)
                 temp_bin = h_to_b64(val)
                 temp_float = f_to_b64(temp_bin)
                 temp_bin2 = f_to_b64(temp_float)
