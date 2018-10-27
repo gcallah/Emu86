@@ -361,61 +361,70 @@ class Srai(Instruction):
         vm.changes.add(op1.get_nm())
         
 
+class Div(Instruction): 
+    """
+    <instr> 
+        DIV
+    </instr> 
+    <syntax> 
+        DIV reg, reg, reg
+    </syntax> 
+    """
+    def fhook(self, ops, vm): 
+        three_op_arith_reg(ops, vm, self.name, opfunc.floordiv)
 
 
+class Divu(Instruction):
+    """
+    <instr> 
+        DIVU
+    </instr> 
+    <syntax> 
+        DIVU reg, reg, reg
+    </syntax> 
+    """
+    def fhook(self, ops, vm): 
+        check_num_args(instr, ops, 3)
+        check_reg_only(instr, ops)
+        ops[0].set_val(
+        check_overflow(opfunc.floordiv(
+            abs(ops[1].get_val()),
+            abs(ops[2].get_val()) ),
+            vm)
+        )
+        vm.changes.add(ops[0].get_nm())
 
 
-'''
->>>>>>>>>>>>>>>SLT: Set less than  
-    reg reg reg 
-    R-type
-    0110011
-
->>>>>>>>>>>>>>SLTU: same as above, but unsigned.
-
->>>>>>>>>>>>>SLTI : Set gpr if source gpr < constant
-signed comparison 
-    reg reg con
-    I-type 
-    0010011
-
->>>>>>>>>>>>>SLTIU: same as above
-unsigned comparison
-    reg reg con
-    I-type
-    0010011
-
-SRA: shift right arithmetic 
-    reg reg reg 
-    R-type
-    0110011
-
-SRAI: shift right arithmetic by constant 
-    reg reg con
-    I-type
-    0010011
-
->>>>>>>>>SRLI: Shift right logical by constant
-    reg reg con
-    I-type
-    0010011
-
->>>>>>>>SLLI: Shift left logical constant 
-    reg reg con
-    I-type
-    0010011
-
-LUI: Load constant into upper bits of word
-    reg con
-    I-type
-    0110111
-
-AUIPC: Load PC + constant into upper bits of word
-    reg imm 
-    I assume we load the contents of the stack pointer? not sure
-    I-type 
-    0010111
+class Rem(Instruction):
+    """
+    <instr> 
+        REM 
+    </instr> 
+    <syntax> 
+        REM reg, reg, reg
+    </syntax> 
+    """
+    def fhook(self, ops, vm):
+        three_op_arith_reg(ops, vm, self.name, opfunc.mod)
 
 
+class Remu(Instruction):
+    """
+    <instr> 
+        REMU
+    </instr> 
+    <syntax> 
+        REMU reg, reg, reg
+    </syntax> 
+    """
+    def fhook(self, ops, vm): 
+        check_num_args(instr, ops, 3)
+        check_reg_only(instr, ops)
+        ops[0].set_val(
+        check_overflow(opfunc.mod(
+            abs(ops[1].get_val()),
+            abs(ops[2].get_val()) ),
+            vm)
+        )
+        vm.changes.add(ops[0].get_nm())
 
-'''

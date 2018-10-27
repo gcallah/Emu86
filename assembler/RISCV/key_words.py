@@ -34,7 +34,7 @@ key_words = {
 	'SLTI': Slti('SLTI'),
 	'SLTIU': Sltiu('SLTIU'),
 	'SRA': Sra('SRA'),
-	'SRAI': Srai('SRAI')
+	'SRAI': Srai('SRAI'), 
 
 
 
@@ -59,6 +59,7 @@ op_func_codes = {
 	'SLL': '0110111',
 	'SLT': '0110011',
 	'SLTU': '0110011',
+	'SRA': '0110011',
 
     # I-format
 	'LW': '0000011',
@@ -70,9 +71,10 @@ op_func_codes = {
 	'SLLI': '0010011',
 	'SLTI': '0010011',
 	'SLTIU': '0010011',
+	'SRAI': '0010011',	
 
 	# S-Format
-	'SW': '0100011'
+	'SW': '0100011',
 
 	#J-format
 
