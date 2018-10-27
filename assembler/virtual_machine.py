@@ -19,7 +19,7 @@ INSTR_PTR_MIPS = "PC"
 INSTR_PTR_RISCV = "PC"
 STACK_PTR_INTEL = "ESP"
 STACK_PTR_MIPS = "R29"
-STACK_PTR_RISCV = "x2"
+STACK_PTR_RISCV = "X2"
 
 
 class VirtualMachine:
@@ -39,12 +39,15 @@ class VirtualMachine:
         self.stack = OrderedDict()
         self.stack_init()
 
-        self.labels = OrderedDict()
+        self.labels = {}
         self.labels_init()
 
         self.symbols = OrderedDict()
         self.symbols_init()
         
+        self.c_stack = []
+        self.cstack_init()
+
         self.flavor = None
         self.data_init = "on"
         self.start_ip = 0
@@ -74,6 +77,9 @@ class VirtualMachine:
         self.changes_init()
         self.symbols_init()
         self.labels_init()
+        self.cstack_init()
+        self.stack_change = ""
+        self.next_stack_change = ""
 
     def mem_init(self):
         self.memory.clear()
@@ -86,6 +92,9 @@ class VirtualMachine:
 
     def labels_init(self):
         self.labels.clear()
+
+    def cstack_init(self):
+        del self.c_stack[:]
 
     def order_mem(self):
         lst = []
@@ -304,7 +313,7 @@ class RISCVMachine(VirtualMachine):
     def __init__(self): 
         super().__init__()
         self.unwritable =[INSTR_PTR_RISCV, 'X0', 
-                          STACK_PTR_RISCV, 'X2']
+                          STACK_PTR_RISCV]
         self.registers = OrderedDict(
                         [
                             ('X0', 0),
@@ -338,7 +347,8 @@ class RISCVMachine(VirtualMachine):
                             ('X20', 0),
                             ('X31', 0),
                             ('X10', 0),
-                            ('X21', 0)
+                            ('X21', 0),
+                            (INSTR_PTR_RISCV, 0)
                         ])
         self.flags = OrderedDict(
                     [

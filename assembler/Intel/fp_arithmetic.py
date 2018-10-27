@@ -58,6 +58,19 @@ class FOrf(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.or_)
         return ''
+class FShr(Instruction):
+    """
+        <instr>
+             shr
+        </instr>
+        <syntax>
+            SHR reg, reg
+            SHR reg, mem
+            SHR reg, con
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.rshift)
 
 class FXor(Instruction):
     """
@@ -72,6 +85,20 @@ class FXor(Instruction):
     """
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.xor)
+        return ''
+class FShl(Instruction):
+    """
+        <instr>
+             fshl
+        </instr>
+        <syntax>
+            SHL reg, reg
+            SHL reg, mem
+            SHL reg, con
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.lshift)
         return ''
 
 class FDec(Instruction):
@@ -114,7 +141,7 @@ class FInc(Instruction):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() + 1)
         vm.changes.add(ops[0].get_nm())
-        
+
 class FNotf(Instruction):
     """
         <instr>

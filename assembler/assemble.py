@@ -296,6 +296,9 @@ def assemble(code, flavor, vm, step=False):
     if vm.next_stack_change != "":
         vm.stack_change = vm.next_stack_change
         vm.next_stack_change = ""
+        if len(vm.c_stack) != 0 and not isinstance(vm.c_stack[-1], int):
+            vm.c_stack.pop()
+        vm.c_stack.append(vm.stack_change)
 
     if code is None or len(code) == 0:
         return ("", "Must submit code to run.", "")

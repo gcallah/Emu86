@@ -182,6 +182,7 @@ class Call(Instruction):
         vm.dec_sp()
         vm.stack[hex(vm.get_sp() + 1).split('x')[-1].upper()] = vm.get_ip()
         target = get_one_op(self.get_nm(), ops)
+        vm.c_stack.append(vm.get_ip())
         raise Jump(target.name)
 
 class Ret(Instruction):
@@ -202,3 +203,7 @@ class Ret(Instruction):
         vm.inc_sp()
         vm.set_ip(int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]))
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
+        while not isinstance(vm.c_stack[-1], int):
+            vm.c_stack.pop()
+        if isinstance(vm.c_stack[-1], int):
+            vm.c_stack.pop()

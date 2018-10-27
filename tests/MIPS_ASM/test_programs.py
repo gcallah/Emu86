@@ -176,11 +176,11 @@ class TestPrograms(TestCase):
         result = struct.unpack("d", bin_data)[0]
         return result
 
-    def float_to_hex(f):
+    def float_to_hex(self, f):
         return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 
     #to convert the ieee 754 hex back to the actual float value
-    def hex_to_float(h):
+    def hex_to_float(self, h):
         h2 = h[2:]
         h2 = binascii.unhexlify(h2)
         return struct.unpack('>f', h2)[0]
@@ -188,11 +188,11 @@ class TestPrograms(TestCase):
     #for double precision (64 bits) fps
     getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
      
-    def f_to_b64(value):
+    def f_to_b64(self, value):
         val = struct.unpack('q', struct.pack('d', value))[0]
         return getBin(val)
 
-    def b_to_f(value):
+    def b_to_f(self, value):
         hx = hex(int(value, 2))   
         return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
@@ -200,30 +200,26 @@ class TestPrograms(TestCase):
     def test_fp_data(self):
         self.run_mips_test_code("fp_data.asm")
         self.assertEqual(mips_machine.registers["F8"],  8.0)
-        self.assertEqual(mips_machine.registers["F9"], 10.5)
-        self.assertEqual(mips_machine.registers["F10"], 20.555)
+        self.assertEqual(mips_machine.registers["F10"], 10.5)
+
+        # since F12's value is a double, we need to reconstruct the binary string from 12+13
+        # and turn it back into a float from there
+        twelve_string = mips_machine.registers["F12"]
+        thirteen_string = mips_machine.registers["F13"]
+        bin_string = twelve_string + thirteen_string
+        float_value = self.b_to_f(bin_string)
+
+        self.assertEqual(float_value, 20.555)
 
     # power function
     def test_fp_power(self):
         self.run_mips_test_code("fp_power.asm")
         self.assertEqual(mips_machine.registers["F8"], 166.375)
 
-    #area function
+    # area function
     def test_fp_area(self):
         self.run_mips_test_code("fp_area.asm")
-        # a = 12.2
-        # b = 12.5
-        # ah = self.float_to_hex(a)
-        # bh = self.float_to_hex(b)
-        # self.assertEqual(mips_machine.registers["F8"], a)
-        # self.assertEqual(mips_machine.registers["F9"], b)
-
-        # result = self.convertHiLoForFP()
-
-        # correct = a*b
-        self.assertEqual(mips_machine.registers["F10"], 12.2 * 12.5)
-
-
+        self.assertEqual(mips_machine.registers["F12"], 12.2 * 12.5)
 
 if __name__ == '__main__':
     main()

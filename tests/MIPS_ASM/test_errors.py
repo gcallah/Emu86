@@ -18,7 +18,7 @@ from assembler.errors import INVALID_NUM_ARGS, INVALID_MEM_LOC, INVALID_REG
 from assembler.errors import MISSING_COMMA, MISSING_DATA, INVALID_TOKEN
 from assembler.errors import REG_UNWRITABLE, STACK_OVERFLOW, STACK_UNDERFLOW
 from assembler.errors import UNKNOWN_NM, MISSING_PC, INT_OUT_OF_RNG
-from assembler.errors import TOO_BIG_FOR_SINGLE
+from assembler.errors import TOO_BIG_FOR_SINGLE, TOO_BIG_FOR_DOUBLE, NOT_EVEN_REGISTER
 
 class ErrorTestCase(TestCase):
 
@@ -78,11 +78,20 @@ class ErrorTestCase(TestCase):
         self.assertTrue(error.startswith(INT_OUT_OF_RNG))
 
     def test_too_big_for_single(self):
-        print("we're trying to test single error")
         mips_machine.base = "dec"
-        (output, error, bit_code) = assemble("400000 LWC F8, 741813297932.12354(F28)", "mips.asm", mips_machine)
+        (output, error, bit_code) = assemble(".data \n x: .float 2342323423.2", "mips_asm", mips_machine)
         self.assertTrue(error.startswith(TOO_BIG_FOR_SINGLE))
 
+    def test_too_big_for_double(self):
+        mips_machine.base = "dec"
+        test = (2.0 * (10.0 ** 14.0) + 1.111111)
+        (output, error, bit_code) = assemble(".data \n x: .double " + str(test), "mips_asm", mips_machine)
+        self.assertTrue(error.startswith(TOO_BIG_FOR_DOUBLE))
+
+    def test_not_even_register(self):
+        mips_machine.base = "dec"
+        (output, error, bit_code) = assemble("40000 LWC F7, 0(F28)", "mips_asm", mips_machine)
+        self.assertTrue(error.startswith(NOT_EVEN_REGISTER))
 
 if __name__ == '__main__':
     main()

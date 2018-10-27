@@ -11,7 +11,7 @@ from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
 from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack
 from .errors import MissingCloseBrack, MissingOps, InvalidPc, MissingPc
-from .errors import TooBigForSingle
+from .errors import TooBigForSingle, TooBigForDouble
 from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DataType
 from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
@@ -208,9 +208,10 @@ def get_data_token(token_line, pos):
     elif isinstance(token_line[pos], IntegerTok):
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], FloatTok):
-        # print("token_line[pos].get_val() = ", token_line[pos].get_val())
-        if token_line[pos].get_val() > float(2 ** 22):
+        if token_line[pos].get_type() == ".float" and token_line[pos].get_val() > float(2 ** 22):
             raise TooBigForSingle(str(token_line[pos].get_val()))
+        if token_line[pos].get_type() == ".double" and token_line[pos].get_val() > float(2 * 10 ** 14):
+            raise TooBigForDouble(str(token_line[pos].get_val()))
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], QuestionTok):
         return DONT_INIT, pos + 1 
@@ -371,7 +372,7 @@ def parse_data_token(token_line, vm, flavor, mem_loc):
     for value in data_vals:
         if vm.get_data_init() == "on":
             vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
-        if flavor == "mips_asm":
+        if flavor == "mips_asm" or flavor == "riscv":
             mem_loc += 4
         else:
             mem_loc += 1

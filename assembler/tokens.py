@@ -11,7 +11,7 @@ from abc import abstractmethod
 
 from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName, InvalidArgument
 from .errors import NotSettable, UnknownLabel, LabelNotSettable
-from .errors import TooBigForSingle
+from .errors import TooBigForSingle, TooBigForDouble
 
 BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1
@@ -23,11 +23,25 @@ MEM_LOC = 1
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
-# to convert hex strings back into floats
+
+#32 bits
+def float_to_hex(f):
+    return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 def hex_to_float(h):
     h2 = h[2:]
     h2 = binascii.unhexlify(h2)
     return struct.unpack('>f', h2)[0]
+#64 bits
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
+def h_to_b64(value):
+    print("in h to b, value =", value)
+    return "0" + hex(int(value, 2))
+def f_to_b64(value):
+    val = struct.unpack('q', struct.pack('d', value))[0]
+    return "0" + getBin(val)
+def b_to_f64(value):
+    hx = hex(int(value, 2))   
+    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
 class Token:
     def __init__(self, name, val=0):
@@ -125,15 +139,41 @@ class IntegerTok(Operand):
         self.value *= -1
         
 class FloatTok(Operand):
-    def __init__(self, val=0.0):
-        if type(val) is float and val > float(2 ** 22):
-            raise TooBigForSingle(str(val))
-        elif type(val) is str and hex_to_float(val) > float(2 ** 22):
-            raise TooBigForSingle(str(val))
+    def __init__(self, data_type=".float", val=0.0):
+        self.data_type = data_type
+        # do a bit of error checking for precision for the hex value
+        if data_type == ".float":
+            if type(val) is float:
+                temp_hex = float_to_hex(val)
+                temp_val = hex_to_float(temp_hex)
+                if (temp_val != val):
+                    raise TooBigForSingle(str(val))
+            elif type(val) is str:
+                temp_float = hex_to_float(val)
+                temp_hex = float_to_hex(temp_float)
+                if (temp_hex != val):
+                    raise TooBigForSingle(str(val))
+        elif data_type == ".double":
+            if type(val) is float:
+                temp_bin = f_to_b64(val)
+                temp_float = b_to_f64(temp_bin)
+                if (temp_float != val):
+                    raise TooBigForDouble(str(val))
+            elif type(val) is str:
+                print("val =", val) 
+                temp_float = b_to_f64(val)
+                temp_bin2 = f_to_b64(temp_float)
+                temp_float2 = b_to_f64(temp_bin2)
+                if temp_float != temp_float2:
+                    raise TooBigForDouble(str(val))
+
         super().__init__("Float", val)
 
     def __str__(self):
         return str(self.get_val())
+
+    def get_type(self):
+        return self.data_type
 
     # self.value is either going to be a float (12.2) or a hexadecimal string ('0x41433333')
     # we need to be able to reconcile the actual value of it if it's a hex string (IEEE 754)
@@ -141,10 +181,12 @@ class FloatTok(Operand):
         if type(self.value) is float:
             return self.value
 
-        # it is a hexadecimal
+        # it is single precision as hexadecimal
         # convert the hexadecimal to be a float
-        return float('%.3f' % (hex_to_float(self.value)))
-
+        if self.data_type == ".float":
+            return float('%.3f' % (hex_to_float(self.value)))
+        else:
+            return float('%.4f' % (b_to_f64(self.value)))
         # h2 = self.value
         # for i in range(0, 16-len(h2)):
         #   h2 = "0"+h2

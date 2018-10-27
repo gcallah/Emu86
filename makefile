@@ -27,8 +27,8 @@ ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
 ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel\//html_src\//')
 
 # update our submodules:
-util: 
-	git pull --recurse-submodules
+util: $(submods)
+	git submodule update
 
 # this rule builds the menu for the static server:
 navbar: util

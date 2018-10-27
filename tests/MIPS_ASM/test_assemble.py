@@ -159,10 +159,10 @@ class AssembleTestCase(TestCase):
             b = random.uniform(low2, high2)
             correct = operator(a, b)
             mips_machine.registers["F8"] = a
-            mips_machine.registers["F9"] = b
+            mips_machine.registers["F10"] = b
             mips_machine.base = "hex"
-            assemble("40000 " + instr + " F10, F8, F9", 'mips_asm', mips_machine)
-            self.assertEqual(mips_machine.registers["F10"], correct)
+            assemble("40000 " + instr + " F12, F8, F10", 'mips_asm', mips_machine)
+            self.assertEqual(mips_machine.registers["F12"], correct)
 
     def two_op_test_hilo_float(self, operator, instr, 
                     low1=MIN_TEST, high1=MAX_TEST,
@@ -202,10 +202,9 @@ class AssembleTestCase(TestCase):
         self.two_op_test_float(opfunc.sub, "SUB.S")
 
     def test_mults(self):
-        print ("IN MULT")
-        # self.two_op_test_hilo_float(opfunc.mul, "MULT.S")
+        self.two_op_test_float(opfunc.mul, "MULT.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
 
-    # def test_divs(self):
-    #     self.two_op_test_hilo_float(opfunc.truediv, "DIV.S")
+    def test_divs(self):
+        self.two_op_test_float(opfunc.truediv, "DIV.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
 if __name__ == '__main__':
     main()

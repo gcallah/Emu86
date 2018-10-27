@@ -209,10 +209,10 @@ function array_hex(flavor) {
 function keyInterrupt_hex(flavor) {
 	code_string = '';
 	if (flavor == 'intel'){
-		code_string += 'INT 0x16\nMOV EBX, EAX\nMOV ECX, 0x0\nMOV ESI, 0x0\n\nL0x1: MOV [ESI], EAX\nMOV EAX, 0x0\nINT 0x16\nINC ECX\nCMP EBX,EAX\nINC ESI\nJNE L0x1\n\nL0x0x2: MOV EAX, 0\nINT 0x16\nDEC ECX\nCMP ECX, 0x1\nJNE L0x2\n\nMOV EAX, 0x0\nINT 0x16\nMOV EBX, EAX\n\nL0x3: MOV [ESI], EAX\nINC ESI\nMOV EAX, 0x0\nINT 0x16\nCMP EBX, EAX\nJNE L0x3\n';
+		code_string += '; Asking for key input\nINT 0x16\nMOV EBX, EAX\nMOV ECX, 0x0\nMOV ESI, 0x0\n\n; Move input to memory location esi\n; Ask for key input again\nL0x1: MOV [ESI], EAX\nMOV EAX, 0x0\nINT 0x16\nINC ECX\nCMP EBX,EAX\nINC ESI\nJNE L0x1\n\n; Ask for key input \nL0x0x2: MOV EAX, 0\nINT 0x16\nDEC ECX\nCMP ECX, 0x1\nJNE L0x2\n\nMOV EAX, 0x0\nINT 0x16\nMOV EBX, EAX\n\n; Move input to memory location esi\n; Ask for key input again\nL0x3: MOV [ESI], EAX\nINC ESI\nMOV EAX, 0x0\nINT 0x16\nCMP EBX, EAX\nJNE L0x3\n';
 	}
 	else if (flavor == 'att'){
-		code_string += 'INT $0x16\nMOV %EAX, %EBX\nMOV $0x0, %ECX\nMOV $0x0, %ESI\n\nL0x1: MOV %EAX, (%ESI)\nMOV $0x0, %EAX\nINT $0x16\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L0x1\n\nL0x0x2: MOV $0, %EAX\nINT $0x16\nDEC %ECX\nCMP $0x1, %ECX\nJNE L0x2\n\nMOV $0x0, %EAX\nINT $0x16\nMOV %EAX, %EBX\n\nL0x3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0x0, %EAX\nINT $0x16\nCMP %EAX, %EBX\nJNE L0x3\n';
+		code_string += '; Asking for key input\nINT $0x16\nMOV %EAX, %EBX\nMOV $0x0, %ECX\nMOV $0x0, %ESI\n\n; Move input to memory location esi\n; Ask for key input again\nL0x1: MOV %EAX, (%ESI)\nMOV $0x0, %EAX\nINT $0x16\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L0x1\n\n; Asking for key input\nL0x0x2: MOV $0, %EAX\nINT $0x16\nDEC %ECX\nCMP $0x1, %ECX\nJNE L0x2\n\nMOV $0x0, %EAX\nINT $0x16\nMOV %EAX, %EBX\n\n; Move input to memory location esi\n; Ask for key input again\nL0x3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0x0, %EAX\nINT $0x16\nCMP %EAX, %EBX\nJNE L0x3\n';
 	}
 	document.getElementById('id_code').value = code_string;
 }

@@ -47,7 +47,7 @@
             {% endif %}
             Sample Programs: 
             
-            <select name="sample" onchange="selectSample()">
+            <select id="sample" name="sample" onchange="selectSample()">
                 {% if sample == "none" %}
                     <option value="none" selected></option>
                 {% else %}
@@ -624,16 +624,16 @@
                      <td>
                         <div style="height:300px;overflow:auto;">
                         <table id="stack-table">
-                            {% for label, cont in labels.items reversed %}
+                            {% for label in cstack reversed %}
                                 <tr>
-                                {% if stack_change == label %}
-                                    <td id="mem-loc" style="height:5px">
-                                        SP
-                                    </td>
-                                {% else %}
-                                    <td id="mem-loc" style="height:5px">
-                                    </td>
-                                {% endif %}
+                                    {% if stack_change == label %}
+                                        <td id="mem-loc" style="height:5px">
+                                            SP
+                                        </td>
+                                    {% else %}
+                                        <td id="mem-loc" style="height:5px">
+                                        </td>
+                                    {% endif %}
                                     <td id="mem-cont" style="height:5px">
                                         {{ label }}
                                     </td>
