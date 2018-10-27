@@ -3,7 +3,7 @@
 {% block content %}
 
     
-        <button onclick="myFunction()">Display R Registers</button>
+    <button onclick="myFunction()">Display R Registers</button>
 
     <div class="module">
         <form id="codeForm" action="{% url 'Emu86:main_page' %}" method="post">
@@ -203,7 +203,8 @@
                             <br>
                     </td>
                     <td id="registers-cell">
-                        <table id="registers-table">
+                        {% if registers.items|length < 67 %}
+                            <table id="registers-table">
                             <tr>
                                 <th>
                                     Registers
@@ -228,7 +229,6 @@
                             </tr>
                             <tr>
                             {% for reg, cont in registers.items %}
-                                
                                 {% if registers|length > 10 %}
                                     {% if reg == "R9" %}
                                         <td id="register"></td><td id="contents"></td></tr><tr class ={{reg.0}}>
@@ -327,7 +327,203 @@
                                     </tr>
                                 </table>
                             </tr>
-                        </table>
+                            </table>
+                        {% else %}
+                            <!-- else there are F registers as well -->
+                            <table id="registers-table">
+                            <tr>
+                                <th>
+                                    Registers
+                                </th>
+                                <th>
+                                    Contents
+                                </th>
+                                {% if registers|length > 10 %}
+                                    <th>
+                                    Registers
+                                    </th>
+                                    <th>
+                                    Contents
+                                    </th>
+                                    <th>
+                                    Registers
+                                    </th>
+                                    <th>
+                                    Contents
+                                    </th>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                            {% for reg, cont in r_registers %}
+                                {% if registers|length > 10 %}
+                                    {% if reg == "R9" %}
+                                        <td id="register"></td><td id="contents"></td></tr><tr class="R">
+                                    {% elif reg == "R10" or reg == "R11" %}
+                                        </tr> <tr class ="R">
+                                    {% elif reg == "PC" %}
+                                        <td id="register"></td><td id="contents"></td></tr><tr class="R">
+                                    {% else %}
+                                        {% if forloop.counter0|divisibleby:3 %}
+                                            {% if reg != "R21" and reg != "R22" and reg != "R23" %}
+                                                </tr> <tr class="R">
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% else %}
+                                    </tr> <tr class="R">
+                                {% endif %}
+                              
+                                {% if reg in unwritable %}
+                                    <td id="unwritable">
+                                {% else %}
+                                    <td id="register">
+                                {% endif %}
+                                    {{ reg }}
+                                </td>
+
+                                {% if reg in changes %}
+                                    <td id="contents" style="background-color:#FFFF00;">
+                                {% else %}
+                                    <td id="contents">
+                                {% endif %}
+                                
+                                {% if data_init == "on" %}
+                                    <input
+                                        {% if reg in unwritable %}
+                                            id="unwr-cont"
+                                            readonly = "readonly"
+                                        {% else %}
+                                            id="reg-cont"
+                                        {% endif %}
+                                        value="{{ cont }}"
+                                        name="{{ reg }}"
+                                        size="10"
+                                    onclick=convert(name,value)>
+                                {% else %}
+                                    <input
+                                        {% if reg in unwritable %}
+                                            id="unwr-cont"
+                                        {% else %}
+                                            id="reg-cont"
+                                        {% endif %}
+                                        value="{{ cont }}"
+                                        name="{{ reg }}"
+                                        size="10"
+                                        readonly="readonly"
+                                        {% if reg in changes %}
+                                            style="background-color:#FFFF00;"
+                                        {% else %}
+                                            style="background-color:#eff;"
+                                        {% endif %}
+                                    onclick=convert(name,value)>
+                                {% endif %}
+                                </td>
+                            {% endfor %}
+                            </tr>
+                            <tr>
+                            {% for reg, cont in f_registers %}
+                                {% if registers|length > 10 %}
+                                    {% if reg == "R9" %}
+                                        <td id="register"></td><td id="contents"></td></tr><tr class ="F">
+                                    {% elif reg == "R10" or reg == "R11" %}
+                                        </tr> <tr class ="F">
+                                    {% elif reg == "PC" %}
+                                        <td id="register"></td><td id="contents"></td></tr><tr class="F">
+                                    {% else %}
+                                        {% if forloop.counter0|divisibleby:3 %}
+                                            {% if reg != "R21" and reg != "R22" and reg != "R23" %}
+                                                </tr> <tr class="F">
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% else %}
+                                    </tr> <tr class="F">
+                                {% endif %}
+                              
+                                {% if reg in unwritable %}
+                                    <td id="unwritable">
+                                {% else %}
+                                    <td id="register">
+                                {% endif %}
+                                    {{ reg }}
+                                </td>
+
+                                {% if reg in changes %}
+                                    <td id="contents" style="background-color:#FFFF00;">
+                                {% else %}
+                                    <td id="contents">
+                                {% endif %}
+                                
+                                {% if data_init == "on" %}
+                                    <input
+                                        {% if reg in unwritable %}
+                                            id="unwr-cont"
+                                            readonly = "readonly"
+                                        {% else %}
+                                            id="reg-cont"
+                                        {% endif %}
+                                        value="{{ cont }}"
+                                        name="{{ reg }}"
+                                        size="10"
+                                    onclick=convert(name,value)>
+                                {% else %}
+                                    <input
+                                        {% if reg in unwritable %}
+                                            id="unwr-cont"
+                                        {% else %}
+                                            id="reg-cont"
+                                        {% endif %}
+                                        value="{{ cont }}"
+                                        name="{{ reg }}"
+                                        size="10"
+                                        readonly="readonly"
+                                        {% if reg in changes %}
+                                            style="background-color:#FFFF00;"
+                                        {% else %}
+                                            style="background-color:#eff;"
+                                        {% endif %}
+                                    onclick=convert(name,value)>
+                                {% endif %}
+                                </td>
+                            {% endfor %}
+                            </tr>
+                            <tr>
+                                <table id="flags-table">
+                                    <tr>
+                                        <th colspan="4"
+                                            style="text-align:center">
+                                            Flags
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        {% for flag in flags %}
+                                            <td id="flag"
+                                                style="text-align:center">
+                                                {{ flag }}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        {% for flag, val in flags.items %}
+                                            <td id="contents"
+                                                style="text-align:center"
+                                            >
+                                                <input
+                                                    id="flag-cont"
+                                                    value="{{ val }}"
+                                                    name="{{ flag }}"
+                                                    size="1"
+                                                    readonly="readonly"
+                                                >
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                </table>
+                            </tr>
+                            </table>
+
+                            
+                        {% endif %}
                     </td>
                 </tr>
             </table>
@@ -480,6 +676,10 @@
         if (document.getElementsByName("button_type")[0].value == "pause") {
             SubmitForm(true, true);
         }
+
+        document.querySelectorAll('.F').forEach(function(button) {
+            button.style.display = "none";
+        });
 
         function myFunction() {
             if (document.querySelectorAll('.R')[0].style.display == "none") {
