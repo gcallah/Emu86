@@ -6,7 +6,7 @@ from .control_flow import Slt, Slti, Beq, Bne, Jmp, Jal, Jr
 from .interrupts import Syscall
 from assembler.tokens import DataType
 from .fp_arithmetic import Adds, Subs, Mults, Divs
-from .fp_data_mov import Loadc, Storec, LoadDouble
+from .fp_data_mov import Loadc, Storec, LoadDouble, StoreDouble
 
 key_words = {
 	# data types
@@ -57,7 +57,8 @@ key_words = {
 	# floating point data mov
 	'LWC': Loadc('LWC'),
 	'SWC': Storec('SWC'),
-	'LDC': LoadDouble('LDC')
+	'LDC': LoadDouble('LDC'),
+	'SDC': StoreDouble('SDC')
 }
 
 op_func_codes = {
@@ -98,5 +99,6 @@ op_func_codes = {
 	'DIV.S': ('010001', '000010'),
 	'LWC': ('110001'),
 	'SWC': ('111001'),
-	'LDC': ('110101')
+	'LDC': ('110101'),
+	'SDC': ('111101')
 }

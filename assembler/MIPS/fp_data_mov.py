@@ -112,3 +112,27 @@ class LoadDouble(Instruction):
                 raise InvalidArgument(ops[1].get_nm())
         else: 
             raise InvalidArgument(ops[0].get_nm())
+
+class StoreDouble(Instruction):
+    """
+        <instr>
+             SDC
+        </instr>
+        <syntax>
+            SDC reg, reg
+            SDC reg, disp(reg)
+        </syntax>
+        <descr>
+            Copies the value of op2 to the location mentioned in op1. 
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.get_nm(), ops, 2)
+        if isinstance(ops[0], Register):
+            checkEven(ops[0])
+            if isinstance(ops[1], RegAddress):
+                ops[1].set_val(float(ops[0].get_val()))
+            else:
+                InvalidArgument(ops[1].get_nm())
+        else: 
+            raise InvalidArgument(ops[0].get_nm())
