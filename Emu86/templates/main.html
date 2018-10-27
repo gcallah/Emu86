@@ -424,15 +424,15 @@
                             <tr>
                             {% for reg, cont in f_registers %}
                                 {% if registers|length > 10 %}
-                                    {% if reg == "R9" %}
+                                    {% if reg == "F9" %}
                                         <td id="register"></td><td id="contents"></td></tr><tr class ="F">
-                                    {% elif reg == "R10" or reg == "R11" %}
+                                    {% elif reg == "F10" or reg == "F11" %}
                                         </tr> <tr class ="F">
                                     {% elif reg == "PC" %}
                                         <td id="register"></td><td id="contents"></td></tr><tr class="F">
                                     {% else %}
                                         {% if forloop.counter0|divisibleby:3 %}
-                                            {% if reg != "R21" and reg != "R22" and reg != "R23" %}
+                                            {% if reg != "F21" and reg != "F22" and reg != "F23" %}
                                                 </tr> <tr class="F">
                                             {% endif %}
                                         {% endif %}
