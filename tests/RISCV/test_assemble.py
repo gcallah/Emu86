@@ -48,6 +48,19 @@ class AssembleTestCase(TestCase):
             assemble("40000 " + instr + " X10, X8, X9", 'riscv', riscv_machine)
             self.assertEqual(riscv_machine.registers["X10"], correct)
 
+    def two_op_test_unsigned(self, operator, instr,
+                    low1=MIN_TEST, high1=MAX_TEST,
+                    low2=MIN_TEST, high2=MAX_TEST):
+        for i in range(0, NUM_TESTS):
+            a = abs(random.randint(low1, high1))
+            b = abs(random.randint(low2, high2))
+            correct = operator(a, b)
+            riscv_machine.registers["X8"] = a
+            riscv_machine.registers["X9"] = b
+            riscv_machine.base = "hex"
+            assemble("40000 " + instr + " X10, X8, X9", 'riscv', riscv_machine)
+            self.assertEqual(riscv_machine.registers["X10"], correct)
+
     def two_op_test_imm(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
@@ -126,6 +139,20 @@ class AssembleTestCase(TestCase):
         riscv_machine.base = "hex"
         assemble("40000 SLTU X10, X9, X8", 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["X10"], 1)
+
+    def test_div(self): 
+        self.two_op_test(opfunc.floordiv, "DIV")
+
+    def test_divu(self):
+        self.two_op_test_unsigned(opfunc.floordiv, "DIVU")
+
+    def test_rem(self): 
+        self.two_op_test(opfunc.mod, "REM")
+
+    def test_remu(self): 
+        self.two_op_test_unsigned(opfunc.mod, "REMU")
+
+
 
 
 '''

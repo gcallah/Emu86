@@ -1,7 +1,7 @@
 from .arithmetic import Add, Addi, Sub, Mul, And, Andi 
 from .arithmetic import Xor, Xori, Or, Ori, Srl, Sll
 from .arithmetic import Srli, Slli, Slt, Sltu, Slti, Sltiu
-from .arithmetic import Sra, Srai
+from .arithmetic import Sra, Srai, Div, Divu, Rem, Remu
 from .data_mov import Load, Store
 from assembler.tokens import DataType
 
@@ -35,10 +35,10 @@ key_words = {
 	'SLTIU': Sltiu('SLTIU'),
 	'SRA': Sra('SRA'),
 	'SRAI': Srai('SRAI'), 
-
-
-
-
+	'DIV': Div('DIV'),
+	'DIVU': Divu('DIVU'),
+	'REM': Rem('REM'),
+	'REMU': Remu('REMU'),
 
 
 	# control 
@@ -60,6 +60,11 @@ op_func_codes = {
 	'SLT': '0110011',
 	'SLTU': '0110011',
 	'SRA': '0110011',
+	'DIV': '0110011',
+	'DIVU': '0110011',
+	'REM': '0110011',
+	'REMU': '0110011',
+
 
     # I-format
 	'LW': '0000011',

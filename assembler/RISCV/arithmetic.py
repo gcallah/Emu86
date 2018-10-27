@@ -384,8 +384,8 @@ class Divu(Instruction):
     </syntax> 
     """
     def fhook(self, ops, vm): 
-        check_num_args(instr, ops, 3)
-        check_reg_only(instr, ops)
+        check_num_args(self.name, ops, 3)
+        check_reg_only(self.name, ops)
         ops[0].set_val(
         check_overflow(opfunc.floordiv(
             abs(ops[1].get_val()),
@@ -418,8 +418,8 @@ class Remu(Instruction):
     </syntax> 
     """
     def fhook(self, ops, vm): 
-        check_num_args(instr, ops, 3)
-        check_reg_only(instr, ops)
+        check_num_args(self.name, ops, 3)
+        check_reg_only(self.name, ops)
         ops[0].set_val(
         check_overflow(opfunc.mod(
             abs(ops[1].get_val()),
