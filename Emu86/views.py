@@ -65,7 +65,6 @@ def getRegisters(registers, keys, type):
   retArray = []
   for key in keys:
     retArray.append((key, registers[key]))
-  
   if type == 'F':
     retArray.insert(28, ('HI', registers['HI']))
     retArray.insert(31, ('LO', registers['LO']))

@@ -2,8 +2,6 @@
 
 {% block content %}
 
-    
-    <button onclick="myFunction()">Display R Registers</button>
 
     <div class="module">
         <form id="codeForm" action="{% url 'Emu86:main_page' %}" method="post">
@@ -130,8 +128,11 @@
                         <option value="dataAccess">Accessing data in memory</option>
                     {% endif %}
                 {% endif %}
-                </select>
-                <br>
+            </select>
+            {% if registers.items|length >= 67%}
+                <button type="button" onclick="switchReg()" id="viewReg">Display F Registers</button>
+            {% endif %}
+            <br>
             <table>
                 <tr>
                     <td id="form-cell">
@@ -681,7 +682,8 @@
             button.style.display = "none";
         });
 
-        function myFunction() {
+        function switchReg() {
+            var elem = document.getElementById("viewReg");
             if (document.querySelectorAll('.R')[0].style.display == "none") {
                 document.querySelectorAll('.F').forEach(function(button) {
                     button.style.display = "none";
@@ -692,6 +694,7 @@
                 document.querySelectorAll('.P').forEach(function(button) {
                     button.style.display = "table-row";
                 });
+                elem.innerHTML = "View F Registers";
             } else {
                 document.querySelectorAll('.R').forEach(function(button) {
                     button.style.display = "none";
@@ -701,7 +704,8 @@
                 });
                 document.querySelectorAll('.P').forEach(function(button) {
                     button.style.display = "table-row";
-                })
+                });
+                elem.innerHTML = "View R Registers";
             }
         }
     </script>
