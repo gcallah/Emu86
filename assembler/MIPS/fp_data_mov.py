@@ -131,7 +131,11 @@ class StoreDouble(Instruction):
         if isinstance(ops[0], Register):
             checkEven(ops[0])
             if isinstance(ops[1], RegAddress):
-                ops[1].set_val(float(ops[0].get_val()))
+                first_half = ops[0].get_val()
+                second_half =  vm.registers[("F"+str(int(ops[0].get_nm()[1:])))].get_val()
+                full_b = first_half + second_half
+                v = b_to_f64(full_b)
+                ops[1].set_val(v)
             else:
                 InvalidArgument(ops[1].get_nm())
         else: 

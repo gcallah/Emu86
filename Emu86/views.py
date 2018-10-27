@@ -71,6 +71,13 @@ def getRegisters(registers, keys, type):
     retArray.insert(34, ('PC', registers['PC']))
   return(retArray)
 
+def processRegisters(machineRegisters):
+  r, f = [], []
+  if (len(machineRegisters) > 35):
+    r = getRegisters(machineRegisters, list(machineRegisters.keys())[:35], 'R')
+    f = getRegisters(machineRegisters, list(machineRegisters.keys())[35:], 'F')
+  return(r, f)
+
 def main_page(request):
     last_instr = ""
     error = ""
@@ -102,11 +109,7 @@ def main_page(request):
                 site_hdr += ": " + MIPS[lang] + " " + mips_machine.base.upper()
                 hex_conversion(mips_machine)
 
-                r_registers, f_registers = [], []
-                
-                if (len(mips_machine.registers) > 35):
-                  r_registers = getRegisters(mips_machine.registers, list(mips_machine.registers.keys())[:35], 'R')
-                  f_registers = getRegisters(mips_machine.registers, list(mips_machine.registers.keys())[35:], 'F')
+                r_registers, f_registers = processRegisters(mips_machine.registers)
                 
                 return render(request, 'main.html',
                             {'form': form,
@@ -295,6 +298,7 @@ def main_page(request):
         mips_machine.order_mem()
         site_hdr += ": " + MIPS[mips_machine.flavor] + " " + mips_machine.base.upper()
         hex_conversion(mips_machine)
+        r_registers, f_registers = processRegisters(mips_machine.registers)
         return render(request, 'main.html',
                     {'form': form,
                      HEADER: site_hdr,
@@ -304,6 +308,8 @@ def main_page(request):
                      'debug': mips_machine.debug,
                      NXT_KEY: mips_machine.nxt_key,
                      'registers': mips_machine.registers,
+                     'r_registers': r_registers,
+                     'f_registers': f_registers,
                      'memory': mips_machine.memory, 
                      'stack': mips_machine.stack, 
                      'symbols': mips_machine.symbols,
