@@ -4,10 +4,10 @@ RISC-V
 '''
 import operator as opfunc
 
-from assembler.errors import *
+from assembler.errors import check_num_args, InvalidArgument
 from assembler.tokens import Instruction, MAX_INT, Register, IntegerTok
 from assembler.ops_check import one_op_arith
-from .argument_check import * 
+from .argument_check import check_reg_only, check_immediate_three
 
 def three_op_arith_reg(ops, vm, instr, operator):
     """
