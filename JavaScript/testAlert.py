@@ -39,23 +39,22 @@ class TestMemory(TestCase):
             b = random.randint(low1, high1)
             validInput = True
             try:
-                int_form = int(hex(b))
+                int_form = int(hex(b).upper().split('X')[-1])
             except:
                 validInput = False
             self.set_Mem(a, b)
             try:
                 driver.switch_to.alert.accept();
-                test_string = "Alert raised!"
                 if validInput:
-                    print("Valid Input: " + test_string)
+                    print("Valid Input: " + "Alert raised!")
                 else:
-                    print("Invalid Input: " + test_string)
+                    print("Invalid Input: " + "OK!")
             except:
                 test_string = "Alert not raised!"
                 if validInput:
-                    print("Valid Input: " + test_string)
+                    print("Valid Input: " + "OK!")
                 else:
-                    print("Invalid Input: " + test_string)
+                    print("Invalid Input: " + "Alert raised!")
 
         self.close_page()
 
