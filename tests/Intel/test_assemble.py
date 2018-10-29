@@ -24,6 +24,10 @@ MAX_MUL = 10000  # right now we don't want to overflow!
 MIN_MUL = -10000  # right now we don't want to overflow!
 REGISTER_SIZE = BITS
 
+INT = 0
+FLOAT = 1
+
+
 class AssembleTestCase(TestCase):
 
 #####################
@@ -32,26 +36,14 @@ class AssembleTestCase(TestCase):
 
     def two_op_test(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST):
+                    low2=MIN_TEST, high2=MAX_TEST,
+                    op_type=INT):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
-            correct = operator(a, b)
-            #comment
-            intel_machine.registers["EAX"] = a
-            intel_machine.registers["EBX"] = b
-            intel_machine.base = "dec"
-            assemble(instr + " eax, ebx", 'intel', intel_machine)
-            self.assertEqual(intel_machine.registers["EAX"], correct)
-
-    def two_op_test_float(self, operator, instr,
-                    low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST):
-        for i in range(0, NUM_TESTS):
-            a = random.randint(low1, high1)
-            a= float(a)
-            b = random.randint(low2, high2)
-            b = float(b)
+            if op_type == FLOAT:
+                a = float(a)
+                b = float(b)
             correct = operator(a, b)
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
@@ -60,10 +52,10 @@ class AssembleTestCase(TestCase):
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_fadd(self):
-        self.two_op_test_float(opfunc.add, "FADD")
+        self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
 
     def test_fsub(self):
-        self.two_op_test_float(opfunc.sub, "FSUB")
+        self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
 
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
