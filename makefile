@@ -26,6 +26,8 @@ HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's
 ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
 ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel\//html_src\//')
 
+FORCE:
+
 # update our submodules:
 util: $(submods)
 	git submodule update
@@ -103,13 +105,14 @@ db:
 	-git commit $(EMUDIR)/migrations/*.py
 	git push origin master
 
-dev: $(SRCS) $(MIPS_SRCS) $(OBJS) 
+tests: FORCE
 	./all_tests.sh
+
+dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	-git commit -a
 	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
-prod: $(SRCS) $(OBJ) navbar
-	./all_tests.sh
+prod: $(SRCS) $(OBJ) navbar tests
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'
