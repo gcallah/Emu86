@@ -39,7 +39,7 @@ class TestMemory(TestCase):
     def getById(self, id):
         return driver.find_element_by_id(id)
 
-    def test_link(self, low1 = 0, high1=16):
+    def test_link(self):
         for sample in range(1, 16):
             self.load_page()
             self.getById('subButton').click()
