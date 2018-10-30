@@ -146,47 +146,51 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 3)
-    check_reg_only(instr, ops)
+    # check_num_args(instr, ops, 3)
+    # check_reg_only(instr, ops)
+    
 
     # go through the register ops and make sure that they're even numbered
     
     #they are even good
     #first number from the pair of registers
-    a_first_32 = ops[1].get_val()
     reg_number = int(ops[1].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
     next_reg = "F" + str(reg_number + 1)
-    a_last_32 = vm.registers[next_reg].get_val()
+    a_first_32 = vm.registers[curr_reg]
+    a_last_32 = vm.registers[next_reg]
     a = a_first_32 + a_last_32
-    #second number from the pair of registers
-    b_first_32 = ops[2].get_val()
-    reg_number = int(ops[2].get_nm()[1:])
-    next_reg = "F" + str(reg_number + 1)
-    b_last_32 = vm.registers[next_reg].get_val()
-    b = b_first_32 + b_last_32
 
+    #second number from the pair of registers
+    reg_number = int(ops[2].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
+    next_reg = "F" + str(reg_number + 1)
+    b_first_32 = vm.registers[curr_reg]
+    b_last_32 = vm.registers[next_reg]
+    b = b_first_32 + b_last_32
+   
     a = b_to_f64(a)
     b = b_to_f64(b)
 
-    print("val 1", a)
-    print("val 2", b)
-    
-
     res = operator(a,b)
-    check_overflow(res)
+    # check_overflow(res)
 
     res_binary = f_to_b64(res)
 
     res_first_32 = res_binary[:32]
     res_last_32 = res_binary[32:]
 
-    ops[0].set_val(res_first_32)
+    #save the result
     reg_number = int(ops[0].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
     next_reg = "F" + str(reg_number + 1)
-    vm.registers[next_reg].set_val(res_last_32)
-
+    vm.registers[curr_reg] = res_first_32
+    vm.registers[next_reg] = res_last_32
+    
+    # ops[0].set_val(res_first_32)
     vm.changes.add(ops[0].get_nm())
-    vm.changes.add(vm.registers[next_reg].get_nm())
+    vm.changes.add(vm.registers[curr_reg])
+    vm.changes.add(vm.registers[next_reg])
 class Addd(Instruction):
     """
         <instr>

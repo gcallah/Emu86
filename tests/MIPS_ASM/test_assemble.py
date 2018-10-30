@@ -174,8 +174,8 @@ class AssembleTestCase(TestCase):
             self.assertEqual(mips_machine.registers["F12"], correct)
 
     def two_op_test_double_float(self, operator, instr, 
-                    low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST):
+                    low1=0, high1=MAX_TEST,
+                    low2=0, high2=MAX_TEST):
         for i in range(0, 1):
             a = random.uniform(low1, high1)
             b = random.uniform(low2, high2)
@@ -197,7 +197,6 @@ class AssembleTestCase(TestCase):
 
             binary_result = first_32 + last_32
             result = b_to_f64(binary_result)
-            print("result", result)
             self.assertEqual(result, correct)
 
 
@@ -230,8 +229,7 @@ class AssembleTestCase(TestCase):
     #     self.two_op_test_float(opfunc.truediv, "DIV.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
 
     def test_addd(self):
-        print("In add.d")
-        # self.two_op_test_double_float(opfunc.add, 'ADD.D')
+        self.two_op_test_double_float(opfunc.add, 'ADD.D')
 
 
 if __name__ == '__main__':
