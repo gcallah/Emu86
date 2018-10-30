@@ -216,17 +216,17 @@ class AssembleTestCase(TestCase):
             # # print ("result", result)
             # self.assertEqual(result, correct)
 
-    # def test_adds(self):
-    #     self.two_op_test_float(opfunc.add, "ADD.S")
+    def test_adds(self):
+        self.two_op_test_float(opfunc.add, "ADD.S")
 
-    # def test_subs(self):
-    #     self.two_op_test_float(opfunc.sub, "SUB.S")
+    def test_subs(self):
+        self.two_op_test_float(opfunc.sub, "SUB.S")
 
-    # def test_mults(self):
-    #     self.two_op_test_float(opfunc.mul, "MULT.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
+    def test_mults(self):
+        self.two_op_test_float(opfunc.mul, "MULT.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
 
-    # def test_divs(self):
-    #     self.two_op_test_float(opfunc.truediv, "DIV.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
+    def test_divs(self):
+        self.two_op_test_float(opfunc.truediv, "DIV.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
 
     def test_addd(self):
         self.two_op_test_double_float(opfunc.add, 'ADD.D')

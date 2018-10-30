@@ -163,5 +163,5 @@ class TestPrograms(TestCase):
 
 
 if __name__ == '__main__':
-    # main()
+    main()
     pass
