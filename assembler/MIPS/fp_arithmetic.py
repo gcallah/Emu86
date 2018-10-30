@@ -48,22 +48,6 @@ def hex_to_float(h):
     h2 = binascii.unhexlify(h2)
     return struct.unpack('>f', h2)[0]
 
-
-#for double precision (64 bits) fps
-# references:
-    # https://docs.python.org/2/library/struct.html
-    # https://stackoverflow.com/questions/52600983/converting-float-to-ieee754
-    # https://stackoverflow.com/questions/19414847/how-to-convert-floating-point-number-in-python
-getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
- 
-def f_to_b64(value):
-    val = struct.unpack('q', struct.pack('d', value))[0]
-    return getBin(val)
-
-def b_to_f64(value):
-    hx = hex(int(value, 2))   
-    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
-
 #'ADD.S': Adds('ADD.S'),
 class Adds(Instruction):
     """
@@ -138,3 +122,51 @@ class Divs(Instruction):
         ops[0].set_val(result)
         vm.changes.add(ops[0].get_nm())
         return ''
+
+########################
+# DOUBLE PRECISION BELOW
+########################
+#for double precision (64 bits) fps
+# references:
+    # https://docs.python.org/2/library/struct.html
+    # https://stackoverflow.com/questions/52600983/converting-float-to-ieee754
+    # https://stackoverflow.com/questions/19414847/how-to-convert-floating-point-number-in-python
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
+ 
+def f_to_b64(value):
+    val = struct.unpack('q', struct.pack('d', value))[0]
+    return getBin(val)
+
+def b_to_f64(value):
+    hx = hex(int(value, 2))   
+    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+
+def three_op_double_arith_reg(ops, vm, instr, operator):
+    """
+        operator: this is the functional version of Python's
+            +, -, *, etc.
+    """
+    check_num_args(instr, ops, 3)
+    check_reg_only(instr, ops)
+
+    # go through the register ops and make sure that they're even numbered
+
+    
+    ops[0].set_val(
+    check_overflow(operator(ops[1].get_val(),
+                       ops[2].get_val()), 
+                       vm)) 
+    vm.changes.add(ops[0].get_nm())
+
+class Addd(Instruction):
+    """
+        <instr>
+             ADD.S
+        </instr>
+        <syntax>
+            ADD.S reg, reg, reg
+        </syntax>
+    """
+    # ops is a list of operands (reg, reg, reg)
+    def fhook(self, ops, vm):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.add)
