@@ -176,7 +176,7 @@ class AssembleTestCase(TestCase):
     def two_op_test_double_float(self, operator, instr, 
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
-        for i in range(0, NUM_TESTS):
+        for i in range(0, 1):
             a = random.uniform(low1, high1)
             b = random.uniform(low2, high2)
             correct = operator(a,b)
@@ -197,7 +197,7 @@ class AssembleTestCase(TestCase):
 
             binary_result = first_32 + last_32
             result = b_to_f64(binary_result)
-
+            print("result", result)
             self.assertEqual(result, correct)
 
 
