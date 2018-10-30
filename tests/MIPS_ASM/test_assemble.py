@@ -20,6 +20,15 @@ from assembler.assemble import assemble
 import struct
 import codecs
 import binascii
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
+ 
+def f_to_b64(value):
+    val = struct.unpack('q', struct.pack('d', value))[0]
+    return "0" + getBin(val)
+
+def b_to_f64(value):
+    hx = hex(int(value, 2))   
+    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
 NUM_TESTS = 100
 MAX_SHIFT = BITS // 2
@@ -164,47 +173,66 @@ class AssembleTestCase(TestCase):
             assemble("40000 " + instr + " F12, F8, F10", 'mips_asm', mips_machine)
             self.assertEqual(mips_machine.registers["F12"], correct)
 
-    def two_op_test_hilo_float(self, operator, instr, 
+    def two_op_test_double_float(self, operator, instr, 
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
         for i in range(0, NUM_TESTS):
             a = random.uniform(low1, high1)
             b = random.uniform(low2, high2)
             correct = operator(a,b)
-            # print("a", a)
-            # print("b", b)
-            # print("correct", correct)
-            mips_machine.registers["F8"] = a
-            mips_machine.registers["F9"] = b
+
+            a_binary = f_to_b64(a)
+            mips_machine.registers["F8"] = a_binary[:32]
+            mips_machine.registers["F9"] = a_binary[32:]
+            
+            b_binary = f_to_b64(b)
+            mips_machine.registers["F10"] = b_binary[:32]
+            mips_machine.registers["F11"] = b_binary[32:]
             mips_machine.base = "hex"
-            r = assemble("40000 " + instr + " F8, F9", 'mips_asm', mips_machine)
+            r = assemble("40000 " + instr + " F12, F8, F10", 'mips_asm', mips_machine)
 
-            h_reg = str(mips_machine.registers["HI"])
-            for i in range(0, 32-len(h_reg)):
-                h_reg = "0" + h_reg
-            l_reg = str(mips_machine.registers["LO"])
-            for i in range(0, 32-len(l_reg)):
-                l_reg = "0" + l_reg
+            # the answer from the assembly call will be in the F12, F13 registers
+            first_32 = str(mips_machine.registers["F12"])
+            last_32 = str(mips_machine.registers["F13"])
 
-            binary_result = h_reg + l_reg
-            hex_result = hex(int(binary_result, 2))[2:]
-            for i in range(0, 16-len(hex_result)):
-                hex_result = "0"+hex_result
-            bin_data = codecs.decode(hex_result, "hex")
-            result = struct.unpack("d", bin_data)[0]
-            # print ("result", result)
+            binary_result = first_32 + last_32
+            result = b_to_f64(binary_result)
+
             self.assertEqual(result, correct)
 
-    def test_adds(self):
-        self.two_op_test_float(opfunc.add, "ADD.S")
 
-    def test_subs(self):
-        self.two_op_test_float(opfunc.sub, "SUB.S")
+            # h_reg = str(mips_machine.registers["HI"])
+            # for i in range(0, 32-len(h_reg)):
+            #     h_reg = "0" + h_reg
+            # l_reg = str(mips_machine.registers["LO"])
+            # for i in range(0, 32-len(l_reg)):
+            #     l_reg = "0" + l_reg
 
-    def test_mults(self):
-        self.two_op_test_float(opfunc.mul, "MULT.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
+            # binary_result = h_reg + l_reg
+            # hex_result = hex(int(binary_result, 2))[2:]
+            # for i in range(0, 16-len(hex_result)):
+            #     hex_result = "0"+hex_result
+            # bin_data = codecs.decode(hex_result, "hex")
+            # result = struct.unpack("d", bin_data)[0]
+            # # print ("result", result)
+            # self.assertEqual(result, correct)
 
-    def test_divs(self):
-        self.two_op_test_float(opfunc.truediv, "DIV.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
+    # def test_adds(self):
+    #     self.two_op_test_float(opfunc.add, "ADD.S")
+
+    # def test_subs(self):
+    #     self.two_op_test_float(opfunc.sub, "SUB.S")
+
+    # def test_mults(self):
+    #     self.two_op_test_float(opfunc.mul, "MULT.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
+
+    # def test_divs(self):
+    #     self.two_op_test_float(opfunc.truediv, "DIV.S", low1 = 0, high1 = 2 ** 11, low2 = 0, high2 = 2 ** 11)
+
+    def test_addd(self):
+        print("In add.d")
+        # self.two_op_test_double_float(opfunc.add, 'ADD.D')
+
+
 if __name__ == '__main__':
     main()

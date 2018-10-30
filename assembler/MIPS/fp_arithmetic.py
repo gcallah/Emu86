@@ -135,7 +135,7 @@ getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
  
 def f_to_b64(value):
     val = struct.unpack('q', struct.pack('d', value))[0]
-    return getBin(val)
+    return "0" + getBin(val)
 
 def b_to_f64(value):
     hx = hex(int(value, 2))   
@@ -150,7 +150,8 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     check_reg_only(instr, ops)
 
     # go through the register ops and make sure that they're even numbered
-
+    print("ops 1", ops[1].get_val())
+    print("ops 2", ops[2].get_val())
     
     ops[0].set_val(
     check_overflow(operator(ops[1].get_val(),

@@ -168,4 +168,5 @@ class AssembleTestCase(TestCase):
         self.assertEqual(intel_machine.flags["SF"], 1)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    pass
