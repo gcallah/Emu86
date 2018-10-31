@@ -3,7 +3,9 @@ registers.py
 Keeps track of x86 registers.
 """
 
+
 class Registers():
+
     """
     Eight 32-bit registers, like any good, modern x86.
     """
