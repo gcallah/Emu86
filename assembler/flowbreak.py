@@ -7,6 +7,7 @@ class FlowBreak(Exception):
         self.label = label
         self.msg = "Unknown control flow exception."
 
+
 class Jump(FlowBreak):
     def __init__(self, label):
         super().__init__(label)
