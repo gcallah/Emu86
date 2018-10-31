@@ -10,6 +10,7 @@ MIPS_DIR = $(SDIR)/MIPS
 EMUDIR = Emu86
 ODIR = $(EMUDIR)/templates
 MUDIR = myutils
+MODELS_DIR = models
 UDIR = utils
 TDIR = tests
 SRCS = $(INTEL_DIR)/arithmetic.py $(INTEL_DIR)/control_flow.py $(INTEL_DIR)/data_mov.py $(INTEL_DIR)/interrupts.py 
@@ -20,6 +21,10 @@ EXTR = $(UDIR)/extract_doc.awk
 D2HTML = $(UDIR)/doc2html.awk
 INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 DOCKER_DIR = docker
+PYLINT = flake8
+PYLINTFLAGS = 
+PYTHONFILES = $(shell ls $(EMUDIR)/*.py)
+PYTHONFILES += $(shell ls $(MODELS_DIR)/*.py)
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
@@ -59,6 +64,11 @@ website: $(INCS) $(HTML_FILES) help
 
 container: $(DOCKER_DIR)/Dockerfile  $(DOCKER_DIR)/requirements.txt
 	docker build -t emu86 docker
+
+lint: $(patsubst %.py,%.pylint,$(PYTHONFILES))
+
+%.pylint:
+	$(PYLINT) $(PYLINTFLAGS) $*.py
 
 help_mips: $(MIPS_SRCS)
 	$(EXTR) <$(MIPS_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_arithmetic.txt
