@@ -212,8 +212,6 @@ def create_bit_instr(instr_lst):
     op_func = None 
     func_code = None
     instr_nm = instr_lst[INSTR_MIPS].get_nm()
-    rs = 0
-    rt = 0
     try:
         op_func, func_code = op_func_codes[instr_nm]
     except:
@@ -268,7 +266,7 @@ def exec(tok_lines, flavor, vm, last_instr):
         if isinstance(curr_instr[INSTR_MIPS], Jr):
             return jump_to_label(brk.label, source, vm)
         return jump_to_label(brk.label, source, vm, True)
-    except ExitProg as ep:
+    except ExitProg:
         raise ExitProg(source)
     except Error as err:
         return (False, last_instr, err.msg)

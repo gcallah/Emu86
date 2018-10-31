@@ -250,7 +250,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                         analysis.append(IntegerTok(int(word), False))
                     else:
                         analysis.append(IntegerTok(int(word)))
-                except IntOutOfRng as err: 
+                except IntOutOfRng: 
                     raise IntOutOfRng(word)
                 except:
                     raise InvalidArgument(word)
@@ -260,7 +260,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                         analysis.append(IntegerTok(int(word, 16), False))
                     else:
                         analysis.append(IntegerTok(int(word, 16)))
-                except IntOutOfRng as err: 
+                except IntOutOfRng: 
                     raise IntOutOfRng(word)
                 except:
                     raise InvalidArgument(word)
@@ -296,7 +296,7 @@ def sep_line_mml(code, i, vm, language_keys):
         else:
             try:
                 analysis.append(IntegerTok(int(word, 16)))
-            except IntOutOfRng as err: 
+            except IntOutOfRng: 
                 raise IntOutOfRng(word)
             except:
                 raise InvalidArgument(word)
