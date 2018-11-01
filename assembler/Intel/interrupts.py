@@ -2,25 +2,28 @@
 interrupts.py: data movement instructions.
 """
 
-from assembler.errors import check_num_args, InvalidOperand, ExitProg, UnknownInt
+from assembler.errors import check_num_args, InvalidOperand
+from assembler.errors import ExitProg, UnknownInt
 from assembler.tokens import Instruction, IntegerTok
 
 EAX = 'EAX'
 
-def read_key(vm, msg = None):
+
+def read_key(vm, msg=None):
     # we are faking 'reading' from the keyboard
     c = vm.ret_str[vm.nxt_key]
     vm.nxt_key = (vm.nxt_key + 1) % len(vm.ret_str)
     vm.registers[EAX] = ord(c)
     return ""
 
+
 def exit_prog(vm, msg):
     raise ExitProg(msg)
 
 
 int_vectors = {
-    22: {0: read_key },
-    32: {0: exit_prog },
+    22: {0: read_key},
+    32: {0: exit_prog},
 }
 
 
@@ -55,6 +58,6 @@ class Interrupt(Instruction):
             interrupt_handler = interrupt_class[int(vm.registers[EAX])]
         except KeyError:
             raise UnknownInt(str(ops[0].get_val()) + ": "
-                            + vm.registers[EAX]) 
+                             + vm.registers[EAX])
         c = interrupt_handler(vm, self.get_nm())
         return str(c)

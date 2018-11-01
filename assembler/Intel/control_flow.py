@@ -9,6 +9,7 @@ from assembler.tokens import Instruction
 from assembler.flowbreak import Jump
 from assembler.ops_check import get_one_op, get_two_ops
 
+
 class Cmpf(Instruction):
     """
         <instr>
@@ -21,7 +22,7 @@ class Cmpf(Instruction):
         </syntax>
         <descr>
             Compares op1 and op2, and sets (right now) the SF and ZF flags.
-            It is not clear at this moment how to 
+            It is not clear at this moment how to
             treat the OF and CF flags in Python,
             since Python integer arithmetic never carries or overflows!
         </descr>
@@ -41,6 +42,7 @@ class Cmpf(Instruction):
         else:
             vm.flags['SF'] = 0
 
+
 class Jmp(Instruction):
     """
         <instr>
@@ -53,6 +55,7 @@ class Jmp(Instruction):
     def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(target.name)
+
 
 class Je(Instruction):
     """
@@ -72,6 +75,7 @@ class Je(Instruction):
         if int(vm.flags['ZF']) == 1:
             raise Jump(target.name)
 
+
 class Jne(Instruction):
     """
         <instr>
@@ -90,6 +94,7 @@ class Jne(Instruction):
         if int(vm.flags['ZF']) == 0:
             raise Jump(target.name)
 
+
 class Jg(Instruction):
     """
         <instr>
@@ -105,9 +110,10 @@ class Jg(Instruction):
     """
     def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        if (int(vm.flags['SF']) == 0 
-            and int(vm.flags['ZF']) == 0):
+        if (int(vm.flags['SF']) == 0 and
+                int(vm.flags['ZF']) == 0):
             raise Jump(target.name)
+
 
 class Jge(Instruction):
     """
@@ -126,6 +132,7 @@ class Jge(Instruction):
         if int(vm.flags['SF']) == 0:
             raise Jump(target.name)
         return ''
+
 
 class Jl(Instruction):
     """
@@ -146,6 +153,7 @@ class Jl(Instruction):
             raise Jump(target.name)
         return ''
 
+
 class Jle(Instruction):
     """
         <instr>
@@ -160,10 +168,11 @@ class Jle(Instruction):
     """
     def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
-        if (int(vm.flags['SF']) == 1
-            or int(vm.flags['ZF']) == 1):
+        if (int(vm.flags['SF']) == 1 or
+                int(vm.flags['ZF']) == 1):
             raise Jump(target.name)
         return ''
+
 
 class Call(Instruction):
     """
@@ -185,6 +194,7 @@ class Call(Instruction):
         vm.c_stack.append(vm.get_ip())
         raise Jump(target.name)
 
+
 class Ret(Instruction):
     """
         <instr>
@@ -194,7 +204,7 @@ class Ret(Instruction):
             RET
         </syntax>
         <descr>
-            Pops value from stack to EIP and returns control to the 
+            Pops value from stack to EIP and returns control to the
             the line after the subroutine call.
         </descr>
     """

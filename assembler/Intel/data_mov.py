@@ -3,6 +3,8 @@ data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args
 from assembler.tokens import Instruction, Register
+
+
 class Mov(Instruction):
     """
         <instr>
@@ -16,7 +18,7 @@ class Mov(Instruction):
             MOV mem, mem
         </syntax>
         <descr>
-            Copies the value of op2 to the location mentioned in op1. 
+            Copies the value of op2 to the location mentioned in op1.
         </descr>
     """
     def fhook(self, ops, vm):
@@ -24,6 +26,7 @@ class Mov(Instruction):
         ops[0].set_val(ops[1].get_val())
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
+
 
 class Pop(Instruction):
     """
@@ -47,6 +50,7 @@ class Pop(Instruction):
         ops[0].set_val(val)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
 
+
 class Push(Instruction):
     """
         <instr>
@@ -58,7 +62,7 @@ class Push(Instruction):
             PUSH mem
         </syntax>
         <descr>
-            PUSHES the value into the stack with reference to the stack 
+            PUSHES the value into the stack with reference to the stack
             pointer position (ESP). Increments the stack pointer automatically,
             everytime a PUSH is called. Callable to store a memory value,
             register value, and constant value to the stack.
@@ -67,7 +71,7 @@ class Push(Instruction):
     def fhook(self, ops, vm):
         vm.dec_sp()
         check_num_args("PUSH", ops, 1)
-        vm.stack[hex(vm.get_sp() + 
+        vm.stack[hex(vm.get_sp() +
                      1).split('x')[-1].upper()] = ops[0].get_val()
 
 
