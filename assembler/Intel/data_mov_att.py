@@ -2,14 +2,15 @@
 data_mov_att.py: other data movement instructions for AT&T
 """
 
-from assembler.errors import check_num_args, InvalidConVal, InvalidArgument
-from assembler.tokens import Instruction, RegAddress, Address, IntegerTok
+from assembler.errors import check_num_args, InvalidConVal
+from assembler.tokens import Instruction, IntegerTok
+
 
 def check_constant_val(instr, ops, data_type):
     """
     Checks if the constant value matches the transfer size
 
-    Args: 
+    Args:
         instr: Instruction name
         ops: Operand list
         data_type: Transfer size
@@ -32,6 +33,7 @@ def check_constant_val(instr, ops, data_type):
             if ops[1].get_val() >= 2 ** 32 or ops[1].get_val() <= -(2 ** 32):
                 raise InvalidConVal(str(ops[1].get_val()))
 
+
 class Movb(Instruction):
     """
         <instr>
@@ -41,13 +43,14 @@ class Movb(Instruction):
             MOVB con, mem
         </syntax>
         <descr>
-            Copies the value of op1 to the location mentioned in op2. 
+            Copies the value of op1 to the location mentioned in op2.
         </descr>
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 2)
         check_constant_val(self.get_nm(), ops, 'b')
         ops[0].set_val(ops[1].get_val())
+
 
 class Movw(Instruction):
     """
@@ -58,13 +61,14 @@ class Movw(Instruction):
             MOVW con, mem
         </syntax>
         <descr>
-            Copies the value of op1 to the location mentioned in op2. 
+            Copies the value of op1 to the location mentioned in op2.
         </descr>
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 2)
         check_constant_val(self.get_nm(), ops, 'w')
         ops[0].set_val(ops[1].get_val())
+
 
 class Movl(Instruction):
     """
@@ -75,7 +79,7 @@ class Movl(Instruction):
             MOVL con, mem
         </syntax>
         <descr>
-            Copies the value of op1 to the location mentioned in op2. 
+            Copies the value of op1 to the location mentioned in op2.
         </descr>
     """
     def fhook(self, ops, vm):
