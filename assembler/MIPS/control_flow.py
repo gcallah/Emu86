@@ -4,21 +4,24 @@ control_flow.py: control flow instructions,
 
 """
 
-from assembler.errors import check_num_args, OutofBounds
+from assembler.errors import check_num_args, InvalidArgument, OutofBounds
 from assembler.tokens import Instruction, Register, IntegerTok
 from assembler.flowbreak import Jump
-from assembler.ops_check import get_one_op, get_two_ops
-from .argument_check import *
+from assembler.ops_check import get_one_op
+from .argument_check import check_reg_only, check_immediate_three
+
 
 def get_three_ops(instr, ops):
     check_num_args(instr, ops, 3)
     check_reg_only(instr, ops)
     return (ops[0], ops[1], ops[2])
 
+
 def get_three_ops_imm(instr, ops):
     check_num_args(instr, ops, 3)
     check_immediate_three(instr, ops)
     return (ops[0], ops[1], ops[2])
+
 
 class Slt(Instruction):
     """
@@ -30,13 +33,13 @@ class Slt(Instruction):
         </syntax>
         <descr>
             Compares op2 and op3, and sets (right now) the SF and ZF flags.
-            It is not clear at this moment how to 
+            It is not clear at this moment how to
             treat the OF and CF flags in Python,
             since Python integer arithmetic never carries or overflows!
             Store the result of SF flag into op1
         </descr>
     """
-    def fhook(self, ops, vm):      
+    def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
         res = op2.get_val() - op3.get_val()
         if res < 0:
@@ -44,6 +47,7 @@ class Slt(Instruction):
         else:
             op1.set_val(0)
         vm.changes.add(op1.get_nm())
+
 
 class Slti(Instruction):
     """
@@ -56,7 +60,7 @@ class Slti(Instruction):
         </syntax>
         <descr>
             Compares op2 and op3, and sets (right now) the SF and ZF flags.
-            It is not clear at this moment how to 
+            It is not clear at this moment how to
             treat the OF and CF flags in Python,
             since Python integer arithmetic never carries or overflows!
             Store the result of SF flag into op1
@@ -70,7 +74,7 @@ class Slti(Instruction):
         else:
             op1.set_val(0)
         vm.changes.add(op1.get_nm())
-    
+
 
 class Jmp(Instruction):
     """
@@ -89,6 +93,7 @@ class Jmp(Instruction):
         else:
             raise Jump(target.name)
 
+
 class Jal(Instruction):
     """
         <instr>
@@ -102,6 +107,7 @@ class Jal(Instruction):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(str(target.get_val()))
 
+
 class Jr(Instruction):
     """
         <instr>
@@ -114,6 +120,7 @@ class Jr(Instruction):
     def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(str(target.get_val()))
+
 
 class Beq(Instruction):
     """
@@ -144,11 +151,12 @@ class Beq(Instruction):
         else:
             InvalidArgument(ops[0].get_nm())
         if val_one == val_two:
-            current_ip = vm.get_ip() 
+            current_ip = vm.get_ip()
             if current_ip + disp * 4 >= 0:
                 vm.set_ip(current_ip + disp * 4)
             else:
                 raise OutofBounds()
+
 
 class Bne(Instruction):
     """

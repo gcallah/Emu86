@@ -5,6 +5,7 @@ interrupts.py: interrupts in program
 from assembler.errors import ExitProg, check_num_args
 from assembler.tokens import Instruction
 
+
 class Syscall(Instruction):
     """
         <instr>
