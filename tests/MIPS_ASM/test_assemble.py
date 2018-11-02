@@ -170,7 +170,7 @@ class AssembleTestCase(TestCase):
             mips_machine.registers["F8"] = a
             mips_machine.registers["F10"] = b
             mips_machine.base = "hex"
-            assemble("40000 " + instr + " F12, F8, F10", 'mips_asm', mips_machine)
+            r = assemble("40000 " + instr + " F12, F8, F10", 'mips_asm', mips_machine)
             self.assertEqual(mips_machine.registers["F12"], correct)
 
     def two_op_test_double_float(self, operator, instr, 
@@ -189,14 +189,16 @@ class AssembleTestCase(TestCase):
             mips_machine.registers["F10"] = b_binary[:32]
             mips_machine.registers["F11"] = b_binary[32:]
             mips_machine.base = "hex"
+
             r = assemble("40000 " + instr + " F12, F8, F10", 'mips_asm', mips_machine)
 
             # the answer from the assembly call will be in the F12, F13 registers
+
             first_32 = str(mips_machine.registers["F12"])
             last_32 = str(mips_machine.registers["F13"])
-
             binary_result = first_32 + last_32
             result = b_to_f64(binary_result)
+            print(type(mips_machine.registers["F12"]))
             self.assertEqual(result, correct)
 
 

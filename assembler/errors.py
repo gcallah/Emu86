@@ -234,7 +234,7 @@ class NotEvenRegister(Error):
         self.msg = NOT_EVEN_REGISTER + offender
 
 
-def check_num_args(instr, ops, correct_num):
+def check_num_args(instr, ops, correct_num, type_ins = 0):
     """
     See if we have the proper number of arguments.
     """
@@ -246,5 +246,5 @@ def check_num_args(instr, ops, correct_num):
         raise InvalidNumArgs(instr, correct_num, len(ops),
                              extra_arg)
     for i in range(0, length):
-        if(ops[i].get_val() > INT_MAX or ops[i].get_val() < INT_MIN):
+        if type_ins == 0 and (ops[i].get_val() > INT_MAX or ops[i].get_val() < INT_MIN):
             raise IntOutOfRng(instr)
