@@ -16,7 +16,7 @@ import binascii
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
 
-FP_RE = "([0-9]+\.[0-9]+)"
+FP_RE = "([0-9]+\.[0-9]+)"  # noqa
 fp_match = re.compile(FP_RE)
 
 LABEL_RE = SYM_RE + ":"
@@ -57,7 +57,7 @@ def hex_to_float(h):
 
 
 # for double precision (64 bits) fps
-getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]   # noqa
 
 
 def f_to_b64(value):
