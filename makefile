@@ -24,7 +24,7 @@ DOCKER_DIR = docker
 PYLINT = flake8
 PYLINTFLAGS = 
 PYTHONFILES = $(shell ls $(EMUDIR)/*.py)
-# PYTHONFILES += $(shell ls $(SDIR)/*.py)
+PYTHONFILES += $(shell ls $(SDIR)/*.py)
 PYTHONFILES += $(INTEL_DIR)/*.py
 PYTHONFILES += $(MIPS_DIR)/*.py
 
