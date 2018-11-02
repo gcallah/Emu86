@@ -4,10 +4,11 @@ fp_arithmetic.py: arithmetic floating point instructions.
 
 import operator as opfunc
 
-from assembler.errors import *
-from assembler.tokens import Instruction, MAX_INT
-from assembler.ops_check import one_op_arith,checkFloat
+from assembler.errors import check_num_args
+from assembler.tokens import Instruction
+from assembler.ops_check import one_op_arith, checkFloat
 from .arithmetic import checkflag
+
 
 def two_op_arith(ops, vm, instr, operator):
     """
@@ -18,9 +19,9 @@ def two_op_arith(ops, vm, instr, operator):
     if checkFloat:
         ops[0].set_val(
             checkflag(operator(ops[0].get_val(),
-                               ops[1].get_val()),
-                               vm))
+                               ops[1].get_val()), vm))
         vm.changes.add(ops[0].get_nm())
+
 
 class FADD(Instruction):
     """
@@ -36,13 +37,16 @@ class FADD(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.add)
 
+
 class FSUB(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.sub)
 
+
 class FMUL(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.mul)
+
 
 class FOrf(Instruction):
     """
@@ -58,6 +62,8 @@ class FOrf(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.or_)
         return ''
+
+
 class FShr(Instruction):
     """
         <instr>
@@ -71,6 +77,7 @@ class FShr(Instruction):
     """
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.rshift)
+
 
 class FXor(Instruction):
     """
@@ -86,6 +93,8 @@ class FXor(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.xor)
         return ''
+
+
 class FShl(Instruction):
     """
         <instr>
@@ -101,6 +110,7 @@ class FShl(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.lshift)
         return ''
 
+
 class FDec(Instruction):
     """
         <instr>
@@ -115,6 +125,7 @@ class FDec(Instruction):
         ops[0].set_val(ops[0].get_val() - 1)
         vm.changes.add(ops[0].get_nm())
 
+
 class FNeg(Instruction):
     """
         <instr>
@@ -127,6 +138,7 @@ class FNeg(Instruction):
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.neg)
         return ''
+
 
 class FInc(Instruction):
     """
@@ -142,6 +154,7 @@ class FInc(Instruction):
         ops[0].set_val(ops[0].get_val() + 1)
         vm.changes.add(ops[0].get_nm())
 
+
 class FNotf(Instruction):
     """
         <instr>
@@ -154,11 +167,13 @@ class FNotf(Instruction):
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.inv)
 
+
 class FAndf(Instruction):
 
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.and_)
         return ''
+
 
 class FDIV(Instruction):
     def fhook(self, ops, vm):

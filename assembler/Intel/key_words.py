@@ -1,6 +1,7 @@
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .fp_arithmetic import FADD, FDIV, FSUB, FMUL, FNeg, FDec, FInc, FNotf, FShl, FShr
+from .fp_arithmetic import FADD, FDIV, FSUB, FMUL, FNeg
+from .fp_arithmetic import FDec, FInc, FNotf, FShl, FShr
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
@@ -10,8 +11,8 @@ from assembler.tokens import DataType, ConstantSign, DupTok
 
 je = Je('JE')
 jne = Jne('JNE')
-jg = Jg ('JG')
-jl = Jl ('JL')
+jg = Jg('JG')
+jl = Jl('JL')
 instructions = {
         # interrupts:
         'INT': Interrupt('INT'),
@@ -31,7 +32,7 @@ instructions = {
         'JGE': Jge('JGE'),
         'JLE': Jle('JLE'),
         'CALL': Call('CALL'),
-        'RET' : Ret('RET'),
+        'RET': Ret('RET'),
         # data movement:
         'MOV': Mov('MOV'),
         'PUSH': Push('PUSH'),
@@ -52,7 +53,7 @@ instructions = {
         'DEC': Dec('DEC'),
         'NEG': Neg('NEG'),
 
-        #floating point
+        # floating point
         'FADD': FADD('FADD'),
         'FDIV': FDIV('FDIV'),
         'FMUL': FMUL('FMUL'),
@@ -66,11 +67,11 @@ instructions = {
         }
 
 intel_key_words = {
-        #data-types
+        # data-types
         'DB': DataType('DB'),
         'DW': DataType('DW'),
         'DD': DataType('DD'),
-        #floating point
+        # floating point
         "REAL4": DataType('REAL4'),
         "REAL8": DataType('REAL8'),
         "REAL16": DataType('REAL16'),
@@ -84,7 +85,7 @@ att_key_words = {
         'MOVW': Movw('MOVW'),
         'MOVL': Movl('MOVL'),
 
-        #data-types
+        # data-types
         '.BYTE': DataType('DB'),
         '.SHORT': DataType('DW'),
         '.LONG': DataType('DD'),
