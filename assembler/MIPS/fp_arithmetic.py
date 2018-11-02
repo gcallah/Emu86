@@ -24,16 +24,16 @@ def three_op_arith_reg(ops, vm, instr, operator):
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 3)
+    check_num_args(instr, ops, 3, type_ins = 1)
     check_reg_only(instr, ops)
 
     # go through the register ops and make sure that they're even numbered
 
     
-    ops[0].set_val(
-    check_overflow(operator(ops[1].get_val(),
-                       ops[2].get_val()), 
-                       vm)) 
+    ops[0].set_val(operator(ops[1].get_val(), ops[2].get_val()))
+    # check_overflow(operator(ops[1].get_val(),
+    #                    ops[2].get_val()), 
+    #                    vm)) 
     vm.changes.add(ops[0].get_nm())
 
 #to convert a float to a hex
@@ -146,7 +146,7 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    # check_num_args(instr, ops, 3)
+    check_num_args(instr, ops, 3, type_ins = 1)
     # check_reg_only(instr, ops)
     
 
@@ -181,16 +181,18 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     res_last_32 = res_binary[32:]
 
     #save the result
+
     reg_number = int(ops[0].get_nm()[1:])
     curr_reg = "F" + str(reg_number + 0)
     next_reg = "F" + str(reg_number + 1)
-    vm.registers[curr_reg] = res_first_32
+    ops[0].set_val(res_first_32)
     vm.registers[next_reg] = res_last_32
-    
+
     # ops[0].set_val(res_first_32)
     vm.changes.add(ops[0].get_nm())
-    vm.changes.add(vm.registers[curr_reg])
+    # vm.changes.add(vm.registers[curr_reg])
     vm.changes.add(vm.registers[next_reg])
+
 class Addd(Instruction):
     """
         <instr>
