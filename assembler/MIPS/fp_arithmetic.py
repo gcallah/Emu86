@@ -4,7 +4,7 @@ fp_arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfunc
 
-from assembler.errors import DivisionZero, TooBigForSingle, check_num_args
+from assembler.errors import check_num_args, TooBigForSingle, DivisionZero
 from assembler.tokens import Instruction, MAX_INT
 from .argument_check import check_reg_only
 
@@ -95,7 +95,7 @@ class Mults(Instruction):
         a = ops[1].get_val()
         b = ops[2].get_val()
         result = a * b
-        # this is the single version of mult for floats,
+        # this is the single version of mult for floats
         # so we don't want to be bigger than max single
         if (result > 2 ** 22):
             raise TooBigForSingle(str(result))
@@ -122,7 +122,7 @@ class Divs(Instruction):
             raise DivisionZero()
 
         result = ops[1].get_val() / ops[2].get_val()
-        # this is the single version of div for floats,
+        # this is the single version of div for floats
         # so we don't want to be bigger than max single
         if (result > 2 ** 22):
             raise TooBigForSingle(str(result))
@@ -157,15 +157,50 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 3, type_ins=1)
-    check_reg_only(instr, ops)
+    # check_reg_only(instr, ops)
 
     # go through the register ops and make sure that they're even numbered
 
-    ops[0].set_val(operator(ops[1].get_val(), ops[2].get_val()))
-    # check_overflow(operator(ops[1].get_val(),
-    #                    ops[2].get_val()),
-    #                    vm))
+    # they are even good
+    # first number from the pair of registers
+    reg_number = int(ops[1].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
+    next_reg = "F" + str(reg_number + 1)
+    a_first_32 = vm.registers[curr_reg]
+    a_last_32 = vm.registers[next_reg]
+    a = a_first_32 + a_last_32
+
+    # second number from the pair of registers
+    reg_number = int(ops[2].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
+    next_reg = "F" + str(reg_number + 1)
+    b_first_32 = vm.registers[curr_reg]
+    b_last_32 = vm.registers[next_reg]
+    b = b_first_32 + b_last_32
+
+    a = b_to_f64(a)
+    b = b_to_f64(b)
+
+    res = operator(a, b)
+    # check_overflow(res)
+
+    res_binary = f_to_b64(res)
+
+    res_first_32 = res_binary[:32]
+    res_last_32 = res_binary[32:]
+
+    # save the result
+
+    reg_number = int(ops[0].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
+    next_reg = "F" + str(reg_number + 1)
+    ops[0].set_val(res_first_32)
+    vm.registers[next_reg] = res_last_32
+
+    # ops[0].set_val(res_first_32)
     vm.changes.add(ops[0].get_nm())
+    # vm.changes.add(vm.registers[curr_reg])
+    vm.changes.add(vm.registers[next_reg])
 
 
 class Addd(Instruction):
