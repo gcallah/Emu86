@@ -39,6 +39,7 @@ class ErrorTestCase(TestCase):
         self.assertTrue(error.startswith(INVALID_NUM_ARGS))
 
     def test_unknown_name(self):
+        intel_machine.base = "dec"
         (output, error, bit_code) = assemble("add fred, wilma",
                                              'att', intel_machine)
         self.assertTrue(error.startswith(UNKNOWN_NM))
