@@ -3,7 +3,7 @@ fp_arithmetic.py: arithmetic floating point instructions.
 """
 
 import operator as opfunc
-
+from test_assemble import convert_float_binary
 from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from assembler.ops_check import one_op_arith, checkFloat
@@ -38,6 +38,27 @@ class FADD(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.add)
 
 
+class FAndf(Instruction):
+
+    # def fhook(self, ops, vm):
+    #     two_op_arith(ops, vm, self.name, opfunc.and_)
+    #     return ''
+    def andFunc(intVal,intVal2):
+        floatOne = convert_float_binary(intVal)
+        floatTwo = convert_float_binary(intVal2)
+        while len(floatOne)<len(floatTwo):
+            floatOne="0"+floatOne
+        while len(floatTwo)<len(floatOne):
+            floatTwo="0"+floatTwo
+        newFloat = ""
+        for i in range(len(floatOne)):
+            if floatOne[i]=='1' and floatTwo[i]=='1':
+                newFloat+='1'
+            elif floatOne[i]=='.':
+                newFloat+='.'
+            else:
+                newFloat+='0'
+        return newFloat
 class FSUB(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.sub)
@@ -167,12 +188,6 @@ class FNotf(Instruction):
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.inv)
 
-
-class FAndf(Instruction):
-
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.and_)
-        return ''
 
 
 class FDIV(Instruction):

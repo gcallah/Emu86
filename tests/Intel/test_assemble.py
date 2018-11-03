@@ -52,13 +52,15 @@ class AssembleTestCase(TestCase):
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST,
                     op_type=INT):
+        print(operator)
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             if op_type == FLOAT:
                 a = float(a)
                 b = float(b)
-            correct = operator(a, b)
+            if operator:
+                correct = operator(a, b)
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
@@ -66,10 +68,16 @@ class AssembleTestCase(TestCase):
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_fadd(self):
+        print("fadd")
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
 
     def test_fsub(self):
+        print("fsub")
         self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
+
+    # def test_FAndf(self):
+    #     print("fand")
+    #     self.two_op_test(None, "FAndf",op_type=FLOAT)
 
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
