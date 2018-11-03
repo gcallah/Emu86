@@ -46,7 +46,8 @@ key_words = {
 	'JAL': Jal('JAL'),
 	'JALR': Jalr('JALR'),
 	'BEQ': Beq('BEQ'),
-	'BNE': Bne('BNE')
+	'BNE': Bne('BNE'),
+	'BLT': Blt('BLT')
 
 	# interrupts
 
