@@ -6,10 +6,11 @@ Test our assembly interpreter.
 import sys
 import random
 sys.path.append(".") # noqa
+#sys.path.insert(0,'/Users/nikhilvaidyamath/Desktop/devops1/Emu86/assembler/Intel/fp_arithmetic.py')
 
 import operator as opfunc
 import functools
-
+from assembler.Intel.fp_arithmetic import FAndf, FOrf
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
@@ -27,20 +28,6 @@ REGISTER_SIZE = BITS
 INT = 0
 FLOAT = 1
 
-def convert_float_binary(num, dec_place = 5):
-    whole, dec = str(num).split(".")
-    whole = int(whole)
-    dec = int (dec)
-    res = bin(whole).lstrip("0b") + "."
-    for x in range(dec_place):
-        whole, dec = str((dec_convert(dec)) * 2).split(".")
-        dec = int(dec)
-        res += whole
-    return res
-def dec_convert(val):
-    while val > 1:
-        val = val/ 10
-    return val
 
 class AssembleTestCase(TestCase):
 
@@ -52,21 +39,24 @@ class AssembleTestCase(TestCase):
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST,
                     op_type=INT):
-        print(operator)
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             if op_type == FLOAT:
-                a = float(a)
-                b = float(b)
-            if operator:
-                correct = operator(a, b)
+                a = random.uniform(low1,high1)
+                b = random.uniform(low2,high2)
+                correct = float(operator(a, b))
+            else:
+                correct =operator(a, b)
+
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
-            assemble(instr + " eax, ebx", 'intel', intel_machine)
-            self.assertEqual(intel_machine.registers["EAX"], correct)
-
+            if op_type == FLOAT:
+                self.assertEqual(float(operator(intel_machine.registers["EAX"],intel_machine.registers["EBX"])), correct)
+            else:
+                assemble(instr + " eax, ebx", 'intel', intel_machine)
+                self.assertEqual(intel_machine.registers["EAX"], correct)
     def test_fadd(self):
         print("fadd")
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
@@ -75,10 +65,10 @@ class AssembleTestCase(TestCase):
         print("fsub")
         self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
 
-    # def test_FAndf(self):
-    #     print("fand")
-    #     self.two_op_test(None, "FAndf",op_type=FLOAT)
-
+    def test_FAndf(self):
+        self.two_op_test(FAndf.andFunc, "FAndf",op_type=FLOAT)
+    def test_FOrf(self):
+        self.two_op_test(FOrf.orFunc, "FOrf", op_type=FLOAT)
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
 
