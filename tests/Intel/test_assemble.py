@@ -27,6 +27,20 @@ REGISTER_SIZE = BITS
 INT = 0
 FLOAT = 1
 
+def convert_float_binary(num, dec_place = 5):
+    whole, dec = str(num).split(".")
+    whole = int(whole)
+    dec = int (dec)
+    res = bin(whole).lstrip("0b") + "."
+    for x in range(dec_place):
+        whole, dec = str((dec_convert(dec)) * 2).split(".")
+        dec = int(dec)
+        res += whole
+    return res
+def dec_convert(val):
+    while val > 1:
+        val = val/ 10
+    return val
 
 class AssembleTestCase(TestCase):
 
