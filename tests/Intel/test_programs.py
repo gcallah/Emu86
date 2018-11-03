@@ -1,31 +1,45 @@
 #!/usr/bin/env python3
 import sys
-sys.path.append(".")
-import random
-import string
+sys.path.append(".") # noqa
 
-import operator as opfunc
-import functools
 from assembler.virtual_machine import intel_machine
 
 from unittest import TestCase, main
 
 from assembler.assemble import assemble
-NUM_TESTS=1000
 
 """
 Test entire programs.
 
-tests/arithmetic_shift.asm  tests/data.asm  tests/gt.asm  tests/key_test.asm  tests/loop.asm  tests/power.asm  tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
+tests/ATT/area.asm
+tests/ATT/arithmetic_expression.asm
+tests/ATT/array.asm
+tests/ATT/array_average_test.asm
+tests/ATT/cel_to_fah.asm
+tests/ATT/change_array_elem.asm
+tests/ATT/int_square_root.asm
+tests/ATT/log.asm
+tests/ATT/mem_register_test.asm
+tests/ATT/sum_test
+tests/ATT/arithmetic_shift.asm
+tests/ATT/data.asm
+tests/ATT/gt.asm
+tests/ATT/key_test.asm
+tests/ATT/loop.asm
+tests/ATT/power.asm
+tests/ATT/test.asm
+tests/ATT/test_interrupt.asm
+
 """
+
 
 class TestPrograms(TestCase):
 
     def read_test_code(self, filenm):
-        with open (filenm, "r") as prog:
+        with open(filenm, "r") as prog:
             return prog.read()
 
-    def run_intel_test_code (self, filnm):
+    def run_intel_test_code(self, filnm):
         intel_machine.re_init()
         intel_machine.base = "dec"
         test_code = self.read_test_code(filnm)
@@ -84,18 +98,19 @@ class TestPrograms(TestCase):
         self.run_intel_test_code("tests/Intel/array.asm")
         self.assertEqual(intel_machine.registers["EAX"],  3)
         self.assertEqual(intel_machine.registers["EBX"], -50)
-        self.assertEqual(intel_machine.registers["ECX"], ord ('l'))
+        self.assertEqual(intel_machine.registers["ECX"], ord('l'))
         self.assertEqual(intel_machine.registers["EDX"], 5)
         list_x = [3, 8, 5, 2]
         string_z = "hello"
         for position in range(0, 4):
-            self.assertEqual(intel_machine.memory[str(position)], list_x[position])
+            self.assertEqual(intel_machine.memory[str(position)],
+                             list_x[position])
         for position in range(4, 17):
-            self.assertEqual(intel_machine.memory[(hex(position).split('x')
-                                             [-1]).upper()], -50)
+            mem_loc = (hex(position).split('x')[-1]).upper()
+            self.assertEqual(intel_machine.memory[mem_loc], -50)
         for position in range(17, 22):
-            self.assertEqual(intel_machine.memory[(hex(position).split('x')
-                                             [-1]).upper()], 
+            mem_loc = (hex(position).split('x')[-1]).upper()
+            self.assertEqual(intel_machine.memory[mem_loc],
                              ord(string_z[position - 17]))
         self.assertEqual(intel_machine.memory[hex(22).split('x')[-1]], 0)
 
@@ -149,6 +164,7 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.registers["EDX"], 3331)
         self.assertEqual(intel_machine.registers["ECX"], 100)
         self.assertEqual(intel_machine.registers["EBX"], 100)
+
 
 if __name__ == '__main__':
     main()
