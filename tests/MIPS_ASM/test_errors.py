@@ -47,7 +47,7 @@ class ErrorTestCase(TestCase):
 
     def test_comma_error(self):
         mips_machine.base = "hex"
-        (output, error, bit_code) = assemble("40000 SUBI R8 R8 1",
+        (output, error, bit_code) = assemble("40000 SUB R8 R8 1",
                                              'mips_asm', mips_machine)
         self.assertTrue(error.startswith(MISSING_COMMA))
 
