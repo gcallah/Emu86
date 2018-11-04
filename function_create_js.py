@@ -15,6 +15,9 @@ function_names = {
 	"int_square_root.asm": "sqrt",
 	"arithmetic_shift.asm": "arithShift",
 	"array.asm": "array",
+	"fp_area.asm": "fp_area",
+	"fp_data.asm": "fp_data",
+	"fp_power.asm": "fp_power"
 }
 
 intel_function_names = {
