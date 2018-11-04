@@ -2,14 +2,10 @@
 assemble.py
 Executes assembly code typed in.
 """
-
-import re
-
 from .flowbreak import FlowBreak
 from .errors import Error, InvalidInstruction, InvalidArgument, ExitProg
 from .parse import add_debug, parse
 from .lex import lex
-from .tokens import Instruction
 from .MIPS.control_flow import Jal, Jr
 from .MIPS.key_words import op_func_codes
 
@@ -24,11 +20,13 @@ PC_MIPS = 0
 INSTR_MIPS = 1
 OPS_MIPS = 2
 
+
 def dump_flags(vm):
     for flag, val in vm.flags.items():
         add_debug("Flag = " + flag + "; val = " + str(val), vm)
 
-def jump_to_label(label, source, vm, jal = False):
+
+def jump_to_label(label, source, vm, jal=False):
     if label in vm.labels:
         ip = vm.labels[label]  # set i to line num of label
         vm.set_ip(ip + vm.start_ip)
@@ -41,8 +39,9 @@ def jump_to_label(label, source, vm, jal = False):
                 ip = ip >> 2
             vm.set_ip(ip)
             return (True, source, "")
-        except:
+        except Exception:
             return (False, source, "Invalid label: " + label)
+
 
 def create_bit_negative(value, bits):
     """
@@ -53,7 +52,7 @@ def create_bit_negative(value, bits):
         bits: Number of bits needed
 
     Returns:
-        Formatted binary value of immediate 
+        Formatted binary value of immediate
         in the number of bits inputted
     """
     imm_code = bin(value).split('b')[1]
@@ -65,9 +64,9 @@ def create_bit_negative(value, bits):
         flip_bit = False
         place = bits - 1
         while place >= 0:
-            if flip_bit == False and imm_lst[place] == "1":
+            if not flip_bit and imm_lst[place] == "1":
                 flip_bit = True
-            elif flip_bit: 
+            elif flip_bit:
                 if imm_lst[place] == "0":
                     imm_lst[place] = "1"
                 else:
@@ -76,6 +75,7 @@ def create_bit_negative(value, bits):
         imm_code = "".join(imm_lst)
     return imm_code
 
+
 def create_bit_r_format(instr_lst, op_func, func_code):
     """
     Converts an R-format instruction into a string of bits
@@ -83,8 +83,8 @@ def create_bit_r_format(instr_lst, op_func, func_code):
     Args:
         instr_lst: Line of code
 
-    Returns: 
-        Formatted version of instruction 
+    Returns:
+        Formatted version of instruction
     """
     rs = 0
     rt = 0
@@ -97,46 +97,47 @@ def create_bit_r_format(instr_lst, op_func, func_code):
             rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
             rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
             shamt = instr_lst[OPS_MIPS + 2].get_val()
-        except: 
-            pass 
+        except Exception:
+            pass
 
-    # if function does not use rd 
+    # if function does not use rd
     elif func_code == "011000" or func_code == "011010":
         try:
             rs = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
             rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
-        except:
+        except Exception:
             pass
 
-    # if function only uses rd 
+    # if function only uses rd
     elif func_code == "010010" or func_code == "010000":
         try:
             rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-        except:
+        except Exception:
             pass
 
-    # if function only uses rs 
+    # if function only uses rs
     elif func_code == "001000":
         try:
             rs = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-        except:
+        except Exception:
             pass
 
-    # other arithmetic, logic functions 
+    # other arithmetic, logic functions
     else:
         try:
             rs = int(instr_lst[OPS_MIPS + 2].get_nm().split('R')[1])
             rt = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
             rd = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
-        except: 
+        except Exception:
             pass
-    # format the rs, rt, rd, shamt values into 5 bits 
+    # format the rs, rt, rd, shamt values into 5 bits
     rs = format(rs, '#07b').split('b')[1]
     rt = format(rt, '#07b').split('b')[1]
     rd = format(rd, '#07b').split('b')[1]
     shamt = format(shamt, '#07b').split('b')[1]
     code_lst = [op_func, rs, rt, rd, shamt, func_code, "\n"]
     return " ".join(code_lst)
+
 
 def create_bit_i_format(instr_lst, op_func):
     """
@@ -145,8 +146,8 @@ def create_bit_i_format(instr_lst, op_func):
     Args:
         instr_lst: Line of code
 
-    Returns: 
-        Formatted version of instruction 
+    Returns:
+        Formatted version of instruction
     """
     imm = 0
     rs = 0
@@ -157,16 +158,16 @@ def create_bit_i_format(instr_lst, op_func):
             rs = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
             rt = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
             imm = int(instr_lst[OPS_MIPS + 2].get_val())
-        except:
+        except Exception:
             pass
 
-    # if LW or SW 
+    # if LW or SW
     else:
         try:
             rs = int(instr_lst[OPS_MIPS + 1].get_nm().split('R')[1])
             rt = int(instr_lst[OPS_MIPS].get_nm().split('R')[1])
             imm = int(instr_lst[OPS_MIPS + 1].displacement)
-        except:
+        except Exception:
             pass
 
     # format rs, rt into 5 bits
@@ -178,6 +179,7 @@ def create_bit_i_format(instr_lst, op_func):
     code_lst = [op_func, rs, rt, imm_code, "\n"]
     return " ".join(code_lst)
 
+
 def create_bit_j_format(instr_lst, op_func):
     """
     Converts an J-format instruction into a string of bits
@@ -185,13 +187,13 @@ def create_bit_j_format(instr_lst, op_func):
     Args:
         instr_lst: Line of code
 
-    Returns: 
-        Formatted version of instruction 
+    Returns:
+        Formatted version of instruction
     """
-    imm = 0 
+    imm = 0
     try:
         imm = int(instr_lst[OPS_MIPS].get_val())
-    except:
+    except Exception:
         pass
 
     # format imm into 26 bits signed
@@ -199,9 +201,10 @@ def create_bit_j_format(instr_lst, op_func):
     code_lst = [op_func, imm_code, "\n"]
     return " ".join(code_lst)
 
+
 def create_bit_instr(instr_lst):
     """
-    Converts the instruction into code of bits 
+    Converts the instruction into code of bits
 
     Args:
         instr_lst: Line of code
@@ -209,16 +212,14 @@ def create_bit_instr(instr_lst):
     Returns:
         Formatted version of the instruction in bits
     """
-    op_func = None 
+    op_func = None
     func_code = None
     instr_nm = instr_lst[INSTR_MIPS].get_nm()
-    rs = 0
-    rt = 0
     try:
         op_func, func_code = op_func_codes[instr_nm]
-    except:
+    except Exception:
         op_func = op_func_codes[instr_lst[INSTR_MIPS].get_nm()]
-    if func_code != None:
+    if func_code is not None:
         return create_bit_r_format(instr_lst, op_func, func_code)
     else:
         if instr_nm != "JAL" and instr_nm != "J":
@@ -268,10 +269,11 @@ def exec(tok_lines, flavor, vm, last_instr):
         if isinstance(curr_instr[INSTR_MIPS], Jr):
             return jump_to_label(brk.label, source, vm)
         return jump_to_label(brk.label, source, vm, True)
-    except ExitProg as ep:
+    except ExitProg:
         raise ExitProg(source)
     except Error as err:
         return (False, last_instr, err.msg)
+
 
 def assemble(code, flavor, vm, step=False):
     """
@@ -286,7 +288,7 @@ def assemble(code, flavor, vm, step=False):
             flavor: Intel, AT&T, MIPS?
             step: are we stepping through code or running continuously?
         Returns:
-            next 
+            next
             Error, if any.
     """
     last_instr = ''
@@ -307,7 +309,7 @@ def assemble(code, flavor, vm, step=False):
 
     # break the code into tokens:
     try:
-        #tok_lines = lex(code, vm)
+        # tok_lines = lex(code, vm)
 
         tok_lines = lex(code, flavor, vm)
         tok_lines = parse(tok_lines, flavor, vm)
@@ -322,18 +324,19 @@ def assemble(code, flavor, vm, step=False):
             add_debug("Setting ip to 0", vm)
             vm.set_ip(vm.start_ip)   # instruction pointer reset for 'run'
             count = 0
-            if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
-                while ((vm.get_ip() - vm.start_ip) // 4 < len(tok_lines) and 
+            if (flavor == "mips_asm" or flavor == "mips_mml" or
+                    flavor == "riscv"):
+                while ((vm.get_ip() - vm.start_ip) // 4 < len(tok_lines) and
                        count < MAX_INSTRUCTIONS):
-                    (success, last_instr, error) = exec(tok_lines, flavor, vm, 
+                    (success, last_instr, error) = exec(tok_lines, flavor, vm,
                                                         last_instr)
                     if not success:
                         return (last_instr, error, bit_code)
                     count += 1
             else:
-                while (vm.get_ip() < len(tok_lines) and 
+                while (vm.get_ip() < len(tok_lines) and
                        count < MAX_INSTRUCTIONS):
-                    (success, last_instr, error) = exec(tok_lines, flavor, vm, 
+                    (success, last_instr, error) = exec(tok_lines, flavor, vm,
                                                         last_instr)
                     if not success:
                         return (last_instr, error, bit_code)
@@ -343,7 +346,8 @@ def assemble(code, flavor, vm, step=False):
             if vm.get_ip() == 0:
                 vm.set_ip(vm.start_ip)
             ip = vm.get_ip() - vm.start_ip
-            if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
+            if (flavor == "mips_asm" or flavor == "mips_mml" or
+                    flavor == "riscv"):
                 ip = ip // 4
             if ip < len(tok_lines):
                 (success, last_instr, error) = exec(tok_lines, flavor, vm,

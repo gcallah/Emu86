@@ -4,67 +4,59 @@ fp_arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfunc
 
-from assembler.errors import *
-from assembler.tokens import Instruction, MAX_INT, Register, IntegerTok
-from assembler.ops_check import one_op_arith
-from .argument_check import * 
+from assembler.errors import check_num_args, TooBigForSingle, DivisionZero
+from assembler.tokens import Instruction, MAX_INT
+from .argument_check import check_reg_only
 
 # for floating point to binary and back
 import struct
-import codecs
 import binascii
+
 
 def check_overflow(val, vm):
     if(val > MAX_INT):
         val = val - MAX_INT+1
     return val
 
+# check for even register
+def checkEven(register):
+    if int(register.get_nm()[1:]) % 2 != 0:
+        raise NotEvenRegister(register.__str__()[1:])
+
 def three_op_arith_reg(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 3)
+    check_num_args(instr, ops, 3, type_ins=1)
     check_reg_only(instr, ops)
 
     # go through the register ops and make sure that they're even numbered
+    for op in ops:
+        checkEven(op)
 
-    
-    ops[0].set_val(
-    check_overflow(operator(ops[1].get_val(),
-                       ops[2].get_val()), 
-                       vm)) 
+    ops[0].set_val(operator(ops[1].get_val(), ops[2].get_val()))
+    # check_overflow(operator(ops[1].get_val(),
+    #                    ops[2].get_val()),
+    #                    vm))
     vm.changes.add(ops[0].get_nm())
 
-#to convert a float to a hex
-#using double for a significant amount of precisions
+
+# to convert a float to a hex
+# using double for a significant amount of precisions
 # (i think its up to 48 bits of precision)
 def float_to_hex(f):
     return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 
-#to convert the ieee 754 hex back to the actual float value
+
+# to convert the ieee 754 hex back to the actual float value
 def hex_to_float(h):
     h2 = h[2:]
     h2 = binascii.unhexlify(h2)
     return struct.unpack('>f', h2)[0]
 
 
-#for double precision (64 bits) fps
-# references:
-    # https://docs.python.org/2/library/struct.html
-    # https://stackoverflow.com/questions/52600983/converting-float-to-ieee754
-    # https://stackoverflow.com/questions/19414847/how-to-convert-floating-point-number-in-python
-getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
- 
-def f_to_b64(value):
-    val = struct.unpack('q', struct.pack('d', value))[0]
-    return getBin(val)
-
-def b_to_f64(value):
-    hx = hex(int(value, 2))   
-    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
-
-#'ADD.S': Adds('ADD.S'),
+# 'ADD.S': Adds('ADD.S'),
 class Adds(Instruction):
     """
         <instr>
@@ -78,7 +70,8 @@ class Adds(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.add)
 
-#'SUB.S': Subs('SUB.S'),
+
+# 'SUB.S': Subs('SUB.S'),
 class Subs(Instruction):
     """
         <instr>
@@ -91,7 +84,8 @@ class Subs(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.sub)
 
-#'MULT.S': Mults('MULT.S'),
+
+# 'MULT.S': Mults('MULT.S'),
 class Mults(Instruction):
     """
         <instr>
@@ -107,7 +101,8 @@ class Mults(Instruction):
         a = ops[1].get_val()
         b = ops[2].get_val()
         result = a * b
-        # this is the single version of mult for floats, so we don't want to be bigger than max single
+        # this is the single version of mult for floats
+        # so we don't want to be bigger than max single
         if (result > 2 ** 22):
             raise TooBigForSingle(str(result))
 
@@ -115,7 +110,8 @@ class Mults(Instruction):
         vm.changes.add(ops[0].get_nm())
         return ''
 
-#'DIV.S': Divs('DIV.S'),
+
+# 'DIV.S': Divs('DIV.S'),
 class Divs(Instruction):
     """
         <instr>
@@ -132,9 +128,110 @@ class Divs(Instruction):
             raise DivisionZero()
 
         result = ops[1].get_val() / ops[2].get_val()
-        # this is the single version of div for floats, so we don't want to be bigger than max single
+        # this is the single version of div for floats
+        # so we don't want to be bigger than max single
         if (result > 2 ** 22):
             raise TooBigForSingle(str(result))
         ops[0].set_val(result)
         vm.changes.add(ops[0].get_nm())
         return ''
+
+########################
+# DOUBLE PRECISION BELOW
+########################
+# for double precision (64 bits) fps
+# references:
+# https://docs.python.org/2/library/struct.html
+# https://stackoverflow.com/questions/52600983/converting-float-to-ieee754
+# https://stackoverflow.com/questions/19414847/how-to-convert-floating-point-number-in-python # noqa
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:] # noqa
+
+
+def f_to_b64(value):
+    val = struct.unpack('q', struct.pack('d', value))[0]
+    return "0" + getBin(val)
+
+
+def b_to_f64(value):
+    hx = hex(int(value, 2))
+    return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+
+
+def three_op_double_arith_reg(ops, vm, instr, operator):
+    """
+        operator: this is the functional version of Python's
+            +, -, *, etc.
+    """
+    check_num_args(instr, ops, 3, type_ins=1)
+    check_reg_only(instr, ops)
+
+    # go through the register ops and make sure that they're even numbered
+
+    # they are even good
+    # first number from the pair of registers
+    reg_number = int(ops[1].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
+    next_reg = "F" + str(reg_number + 1)
+    a_first_32 = vm.registers[curr_reg]
+    a_last_32 = vm.registers[next_reg]
+    a = a_first_32 + a_last_32
+
+    # second number from the pair of registers
+    reg_number = int(ops[2].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
+    next_reg = "F" + str(reg_number + 1)
+    b_first_32 = vm.registers[curr_reg]
+    b_last_32 = vm.registers[next_reg]
+    b = b_first_32 + b_last_32
+
+    a = b_to_f64(a)
+    b = b_to_f64(b)
+
+    res = operator(a, b)
+    # check_overflow(res)
+
+    res_binary = f_to_b64(res)
+
+    res_first_32 = res_binary[:32]
+    res_last_32 = res_binary[32:]
+
+    # save the result
+
+    reg_number = int(ops[0].get_nm()[1:])
+    curr_reg = "F" + str(reg_number + 0)
+    next_reg = "F" + str(reg_number + 1)
+    ops[0].set_val(res_first_32)
+    vm.registers[next_reg] = res_last_32
+
+    # ops[0].set_val(res_first_32)
+    vm.changes.add(ops[0].get_nm())
+    # vm.changes.add(vm.registers[curr_reg])
+    vm.changes.add(vm.registers[next_reg])
+
+
+class Addd(Instruction):
+    """
+        <instr>
+             ADD.D
+        </instr>
+        <syntax>
+            ADD.D reg, reg, reg
+        </syntax>
+    """
+    # ops is a list of operands (reg, reg, reg)
+    def fhook(self, ops, vm):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.add)
+
+
+class Subd(Instruction):
+    """
+        <instr>
+            SUB.D
+        </instr>
+        <syntax>
+            SUB.D reg, reg, reg
+        </syntax>
+    """
+    # ops is a list of operands (reg, reg, reg)
+    def fhook(self, ops, vm):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.sub)

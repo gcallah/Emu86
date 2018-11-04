@@ -3,11 +3,10 @@ arithmetic.py: arithmetic and logic instructions.
 """
 
 import operator as opfunc
+from .argument_check import check_reg_only, check_immediate_three
+from assembler.errors import check_num_args, DivisionZero, InvalidArgument
+from assembler.tokens import Instruction, MAX_INT, Register
 
-from assembler.errors import *
-from assembler.tokens import Instruction, MAX_INT, Register, IntegerTok
-from assembler.ops_check import one_op_arith
-from .argument_check import * 
 
 def three_op_arith_reg(ops, vm, instr, operator):
     """
@@ -16,11 +15,10 @@ def three_op_arith_reg(ops, vm, instr, operator):
     """
     check_num_args(instr, ops, 3)
     check_reg_only(instr, ops)
-    ops[0].set_val(
-    check_overflow(operator(ops[1].get_val(),
-                       ops[2].get_val()), 
-                       vm)) 
+    ops[0].set_val(check_overflow(operator(ops[1].get_val(),
+                                           ops[2].get_val()), vm))
     vm.changes.add(ops[0].get_nm())
+
 
 def three_op_arith_immediate(ops, vm, instr, operator):
     """
@@ -29,11 +27,10 @@ def three_op_arith_immediate(ops, vm, instr, operator):
     """
     check_num_args(instr, ops, 3)
     check_immediate_three(instr, ops)
-    ops[0].set_val(
-    check_overflow(operator(ops[1].get_val(),
-                       ops[2].get_val()), 
-                       vm))
-    vm.changes.add(ops[0].get_nm()) 
+    ops[0].set_val(check_overflow(operator(ops[1].get_val(),
+                                           ops[2].get_val()), vm))
+    vm.changes.add(ops[0].get_nm())
+
 
 def check_overflow(val, vm):
     if(val > MAX_INT):
@@ -53,6 +50,7 @@ class Add(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.add)
 
+
 class Addi(Instruction):
     """
         <instr>
@@ -65,6 +63,7 @@ class Addi(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_immediate(ops, vm, self.name, opfunc.add)
 
+
 class Sub(Instruction):
     """
         <instr>
@@ -76,6 +75,7 @@ class Sub(Instruction):
     """
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.sub)
+
 
 class Mult(Instruction):
     """
@@ -100,6 +100,7 @@ class Mult(Instruction):
         vm.changes.add('HI')
         return ''
 
+
 class Andf(Instruction):
     """
         <instr>
@@ -112,6 +113,7 @@ class Andf(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.and_)
         return ''
+
 
 class Andi(Instruction):
     """
@@ -126,6 +128,7 @@ class Andi(Instruction):
         three_op_arith_immediate(ops, vm, self.name, opfunc.and_)
         return ''
 
+
 class Orf(Instruction):
     """
         <instr>
@@ -139,6 +142,7 @@ class Orf(Instruction):
         three_op_arith_reg(ops, vm, self.name, opfunc.or_)
         return ''
 
+
 class Ori(Instruction):
     """
         <instr>
@@ -151,6 +155,7 @@ class Ori(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_immediate(ops, vm, self.name, opfunc.or_)
         return ''
+
 
 class Nor(Instruction):
     """
@@ -166,6 +171,7 @@ class Nor(Instruction):
         ops[0].set_val(opfunc.inv(ops[0].get_val()))
         return ''
 
+
 class Xor(Instruction):
     """
         <instr>
@@ -178,6 +184,7 @@ class Xor(Instruction):
     def fhook(self, ops, vm):
         three_op_arith_reg(ops, vm, self.name, opfunc.xor)
         return ''
+
 
 class Sll(Instruction):
     """
@@ -192,6 +199,7 @@ class Sll(Instruction):
         three_op_arith_immediate(ops, vm, self.name, opfunc.lshift)
         return ''
 
+
 class Srl(Instruction):
     """
         <instr>
@@ -203,6 +211,7 @@ class Srl(Instruction):
     """
     def fhook(self, ops, vm):
         three_op_arith_immediate(ops, vm, self.name, opfunc.rshift)
+
 
 class Div(Instruction):
     """
@@ -233,6 +242,7 @@ class Div(Instruction):
         vm.changes.add('HI')
         return ''
 
+
 class Mfhi(Instruction):
     """
         <instr>
@@ -242,7 +252,7 @@ class Mfhi(Instruction):
             MFHI reg
         </syntax>
         <descr>
-            Moves the value from the HI register into the 
+            Moves the value from the HI register into the
             destination register given.
         </descr>
     """
@@ -255,6 +265,7 @@ class Mfhi(Instruction):
         vm.changes.add(ops[0].get_nm())
         return ''
 
+
 class Mflo(Instruction):
     """
         <instr>
@@ -264,7 +275,7 @@ class Mflo(Instruction):
             MFLO reg
         </syntax>
         <descr>
-            Moves the value from the LO register into the 
+            Moves the value from the LO register into the
             destination register given.
         </descr>
     """
@@ -276,4 +287,3 @@ class Mflo(Instruction):
         ops[0].set_val(vm.registers['LO'])
         vm.changes.add(ops[0].get_nm())
         return ''
-        

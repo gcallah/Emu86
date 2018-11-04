@@ -3,25 +3,20 @@ lex.py: performs lexical analysis
 """
 
 import re
-import pdb
-from random import randrange
-from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction, IntOutOfRng
-from .errors import UnknownName, InvalidDataType, InvalidArgument, InvalidConVal
-from .tokens import Location, Address, Register, Symbol, Instruction
-from .tokens import RegAddress, Label, NewSymbol, Section, DupTok
-from .tokens import QuestionTok, PlusTok, MinusTok, ConstantSign
-from .tokens import DataType, StringTok, IntegerTok, OpenBracket, CloseBracket
+from .errors import IntOutOfRng, InvalidArgument
+from .tokens import Register, NewSymbol, Section
+from .tokens import QuestionTok, PlusTok, MinusTok
+from .tokens import StringTok, IntegerTok, OpenBracket, CloseBracket
 from .tokens import Comma, OpenParen, CloseParen, FloatTok
 
 # for floating point to binary and back
 import struct
-import codecs
 import binascii
 
 SYM_RE = "([A-Za-z_][A-Za-z0-9_]*)"
 sym_match = re.compile(SYM_RE)
 
-FP_RE = "([0-9]+\.[0-9]+)"
+FP_RE = "([0-9]+\.[0-9]+)"  # noqa
 fp_match = re.compile(FP_RE)
 
 LABEL_RE = SYM_RE + ":"
@@ -33,7 +28,7 @@ TEXT_SECT = ".text"
 SEPARATORS = set([',', '(', ')', '[', ']', '+', '-'])
 
 keywords_to_tokens = {
-    "[": OpenBracket(), 
+    "[": OpenBracket(),
     "]": CloseBracket(),
     "(": OpenParen(),
     ")": CloseParen(),
@@ -49,37 +44,43 @@ keywords_to_tokens = {
 #     float_part = float("." + lst[1])
 #     return int_part + float_part
 
+
 def float_to_hex(f):
     return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 
-#to convert the ieee 754 hex back to the actual float value
+
+# to convert the ieee 754 hex back to the actual float value
 def hex_to_float(h):
     h2 = h[2:]
     h2 = binascii.unhexlify(h2)
     return struct.unpack('>f', h2)[0]
 
-#for double precision (64 bits) fps
-getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
- 
+
+# for double precision (64 bits) fps
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]   # noqa
+
+
 def f_to_b64(value):
     val = struct.unpack('q', struct.pack('d', value))[0]
     return getBin(val)
 
+
 def b_to_f(value):
-    hx = hex(int(value, 2))   
+    hx = hex(int(value, 2))
     return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+
 
 def generate_reg_dict(vm, flavor):
     """
     Generates a dictionary
-    Keys: register name 
+    Keys: register name
     Values: Register token
 
     Args:
         vm: Virtual machine
         flavor: Flavor
 
-    Returns: 
+    Returns:
         A dictionary of (registers, register tokens)
     """
     registers = {}
@@ -90,11 +91,12 @@ def generate_reg_dict(vm, flavor):
             registers[reg] = Register(reg, vm)
     return registers
 
+
 def make_language_keys(vm, flavor):
     """
     Creates a dictionary of key terms
 
-    Args: 
+    Args:
         vm: Virtual machine
         flavor: Assembly language
 
@@ -108,7 +110,7 @@ def make_language_keys(vm, flavor):
         from .MIPS.key_words import key_words
         language_keys.update(key_words)
         return language_keys
-    elif flavor == "riscv": 
+    elif flavor == "riscv":
         from .RISCV.key_words import key_words
         language_keys.update(key_words)
     else:
@@ -121,6 +123,7 @@ def make_language_keys(vm, flavor):
             from .Intel.key_words import att_key_words
             language_keys.update(att_key_words)
     return language_keys
+
 
 def clean_list(lst):
     """
@@ -135,12 +138,13 @@ def clean_list(lst):
     while "" in lst:
         lst.remove("")
 
+
 def split_code(code, flavor):
     """
     Splits code on regular expressions and on separators
 
-    Args: 
-        code: Line of code 
+    Args:
+        code: Line of code
 
     Returns:
         A list of words
@@ -159,9 +163,9 @@ def split_code(code, flavor):
                 splitter = character
                 break
             # splitter specifically for AT&T
-            elif (flavor == "att" and 
-                     words[index] != "$" and 
-                     character == "$"):
+            elif (flavor == "att" and
+                  words[index] != "$" and
+                  character == "$"):
                 splitter = "$"
                 break
         # split if splitter is found
@@ -174,17 +178,18 @@ def split_code(code, flavor):
         else:
             index += 1
 
-    # remove all empty strings from list that were made from splitting 
+    # remove all empty strings from list that were made from splitting
     # if splitter was first or last character
     clean_list(words)
     return words
 
+
 def sep_line(code, i, flavor, data_sec, vm, language_keys):
     """
-    Returns a list of tokens created 
+    Returns a list of tokens created
 
     Args:
-        code: Line of code 
+        code: Line of code
         i: Line number of code
            Needed for determining label location
         flavor: AT&T or MIPS
@@ -199,22 +204,22 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         text of the code.
     """
     analysis = []
-    words = split_code(code,flavor)
+    words = split_code(code, flavor)
 
-    data_type = None 
+    data_type = None
 
     for word in words:
-# keyword:
+        # keyword:
         if word.upper() in language_keys:
             analysis.append(language_keys[word.upper()])
             data_type = word
-# section declaration:
+        # section declaration:
         elif word[0] == ".":
             analysis.append(Section(word[1:]))
-# string:
+        # string:
         elif word.find("'") != -1:
             analysis.append(StringTok(word))
-# label / symbol:
+        # label / symbol:
         elif re.match(label_match, word) is not None:
             if flavor == "intel":
                 vm.labels[word[:-1]] = i
@@ -229,20 +234,23 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         elif re.match(sym_match, word) is not None:
 
             analysis.append(NewSymbol(word, vm))
-#Floating Points
+        # Floating Points
         elif re.match(fp_match, word) is not None:
-            #default is float (single precision) if user doesnt say
+            # default is float (single precision) if user doesnt say
             if data_type != ".float" and data_type != ".double":
                 data_type = ".float"
             if vm.base == "dec":
-                #TODO: Screen shot to give me the floating point token class from token.py
+                # TODO: Screen shot to give me the
+                # floating point token class from token.py
                 analysis.append(FloatTok(data_type=data_type, val=float(word)))
-            else: #hexadecimal
+            else:   # hexadecimal
                 if data_type == ".float":
-                    analysis.append(FloatTok(data_type=data_type, val=float_to_hex(float(word))))
+                    analysis.append(FloatTok(data_type=data_type,
+                                             val=float_to_hex(float(word))))
                 elif data_type == ".double":
-                    analysis.append(FloatTok(data_type=data_type, val=f_to_b64(float(word))))
-# Integers
+                    analysis.append(FloatTok(data_type=data_type,
+                                             val=f_to_b64(float(word))))
+        # Integers
         else:
             if vm.base == "dec":
                 try:
@@ -250,9 +258,9 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                         analysis.append(IntegerTok(int(word), False))
                     else:
                         analysis.append(IntegerTok(int(word)))
-                except IntOutOfRng as err: 
+                except IntOutOfRng:
                     raise IntOutOfRng(word)
-                except:
+                except Exception:
                     raise InvalidArgument(word)
             else:
                 try:
@@ -260,18 +268,19 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                         analysis.append(IntegerTok(int(word, 16), False))
                     else:
                         analysis.append(IntegerTok(int(word, 16)))
-                except IntOutOfRng as err: 
+                except IntOutOfRng:
                     raise IntOutOfRng(word)
-                except:
+                except Exception:
                     raise InvalidArgument(word)
     return (analysis, code)
 
+
 def sep_line_mml(code, i, vm, language_keys):
     """
-    Returns a list of tokens created 
+    Returns a list of tokens created
 
     Args:
-        code: Line of code 
+        code: Line of code
         i: Line number of code
            Needed for determining label location
         flavor: AT&T or MIPS
@@ -289,18 +298,19 @@ def sep_line_mml(code, i, vm, language_keys):
     words = split_code(code, vm.flavor)
 
     for word in words:
-# keyword:
+        # keyword
         if word.upper() in language_keys:
             analysis.append(language_keys[word.upper()])
-# Integers
+    # Integers
         else:
             try:
                 analysis.append(IntegerTok(int(word, 16)))
-            except IntOutOfRng as err: 
+            except IntOutOfRng:
                 raise IntOutOfRng(word)
-            except:
+            except Exception:
                 raise InvalidArgument(word)
     return (analysis, code)
+
 
 def lex(code, flavor, vm):
     """
@@ -319,7 +329,7 @@ def lex(code, flavor, vm):
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
     add_to_ip = True
-    data_sec = False    #used for AT&T version
+    data_sec = False    # used for AT&T version
     for line in lines:
         # comments:
         comm_start = line.find(";")
@@ -332,18 +342,18 @@ def lex(code, flavor, vm):
         line = line.strip()
         if len(line) == 0:  # blank lines ok; just skip 'em
             continue
-            
+
         pre_processed_lines.append(line)
-    
-    # we've stripped extra whitespace, comments, and labels: 
+
+    # we've stripped extra whitespace, comments, and labels:
     # now perform lexical analysis
     for line in pre_processed_lines:
-# create language-specific dictionary:
+        # create language-specific dictionary:
         language_keys = make_language_keys(vm, flavor)
         if flavor == "mips_mml":
             tok_lines.append(sep_line_mml(line, i, vm, language_keys))
         else:
-            tok_lines.append(sep_line(line, i, flavor, data_sec, 
+            tok_lines.append(sep_line(line, i, flavor, data_sec,
                                       vm, language_keys))
         if line == ".data":
             add_to_ip = False
@@ -357,5 +367,5 @@ def lex(code, flavor, vm):
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
-    
+
     return tok_lines

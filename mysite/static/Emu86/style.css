@@ -354,13 +354,17 @@ select[multiple] {
 
 /* FORM BUTTONS */
 
-.button, input[type=submit], input[type=button], .submit-row input, a.button {
+.button, input[type=submit], input[type=button], .submit-row input, a.button, #viewReg {
     background: #285d91;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     color: #ffcc33;
     cursor: pointer;
+}
+
+button#viewReg {
+    margin-bottom: 10px;
 }
 
 a.button {

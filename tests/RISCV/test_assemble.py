@@ -38,7 +38,7 @@ class AssembleTestCase(TestCase):
     def two_op_test(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
-        for i in range(0, NUM_TESTS):
+        for _ in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             correct = operator(a, b)
@@ -51,7 +51,7 @@ class AssembleTestCase(TestCase):
     def two_op_test_unsigned(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
-        for i in range(0, NUM_TESTS):
+        for _ in range(0, NUM_TESTS):
             a = abs(random.randint(low1, high1))
             b = abs(random.randint(low2, high2))
             correct = operator(a, b)
@@ -64,7 +64,7 @@ class AssembleTestCase(TestCase):
     def two_op_test_imm(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
-        for i in range(0, NUM_TESTS):
+        for _ in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             hex_string = hex(b)

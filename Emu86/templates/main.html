@@ -2,8 +2,6 @@
 
 {% block content %}
 
-    
-    <button onclick="myFunction()">Display R Registers</button>
 
     <div class="module">
         <form id="codeForm" action="{% url 'Emu86:main_page' %}" method="post">
@@ -130,8 +128,11 @@
                         <option value="dataAccess">Accessing data in memory</option>
                     {% endif %}
                 {% endif %}
-                </select>
-                <br>
+            </select>
+            {% if registers.items|length >= 67%}
+                <button type="button" onclick="switchReg()" id="viewReg">Display F Registers</button>
+            {% endif %}
+            <br>
             <table>
                 <tr>
                     <td id="form-cell">
@@ -271,8 +272,7 @@
                                         {% endif %}
                                         value="{{ cont }}"
                                         name="{{ reg }}"
-                                        size="10"
-                                    onclick=convert(name,value)>
+                                        size="10">
                                 {% else %}
                                     <input
                                         {% if reg in unwritable %}
@@ -397,8 +397,7 @@
                                         {% endif %}
                                         value="{{ cont }}"
                                         name="{{ reg }}"
-                                        size="10"
-                                    onclick=convert(name,value)>
+                                        size="10">
                                 {% else %}
                                     <input
                                         {% if reg in unwritable %}
@@ -423,15 +422,15 @@
                             <tr>
                             {% for reg, cont in f_registers %}
                                 {% if registers|length > 10 %}
-                                    {% if reg == "R9" %}
+                                    {% if reg == "F9" %}
                                         <td id="register"></td><td id="contents"></td></tr><tr class ="F">
-                                    {% elif reg == "R10" or reg == "R11" %}
+                                    {% elif reg == "F10" or reg == "F11" %}
                                         </tr> <tr class ="F">
                                     {% elif reg == "PC" %}
                                         <td id="register"></td><td id="contents"></td></tr><tr class="F">
                                     {% else %}
                                         {% if forloop.counter0|divisibleby:3 %}
-                                            {% if reg != "R21" and reg != "R22" and reg != "R23" %}
+                                            {% if reg != "F21" and reg != "F22" and reg != "F23" %}
                                                 </tr> <tr class="F">
                                             {% endif %}
                                         {% endif %}
@@ -464,8 +463,7 @@
                                         {% endif %}
                                         value="{{ cont }}"
                                         name="{{ reg }}"
-                                        size="10"
-                                    onclick=convert(name,value)>
+                                        size="10">
                                 {% else %}
                                     <input
                                         {% if reg in unwritable %}
@@ -681,7 +679,8 @@
             button.style.display = "none";
         });
 
-        function myFunction() {
+        function switchReg() {
+            var elem = document.getElementById("viewReg");
             if (document.querySelectorAll('.R')[0].style.display == "none") {
                 document.querySelectorAll('.F').forEach(function(button) {
                     button.style.display = "none";
@@ -692,6 +691,7 @@
                 document.querySelectorAll('.P').forEach(function(button) {
                     button.style.display = "table-row";
                 });
+                elem.innerHTML = "View F Registers";
             } else {
                 document.querySelectorAll('.R').forEach(function(button) {
                     button.style.display = "none";
@@ -701,7 +701,8 @@
                 });
                 document.querySelectorAll('.P').forEach(function(button) {
                     button.style.display = "table-row";
-                })
+                });
+                elem.innerHTML = "View R Registers";
             }
         }
     </script>

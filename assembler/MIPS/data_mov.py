@@ -2,7 +2,8 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args, InvalidArgument
-from assembler.tokens import Instruction, Register, RegAddress, Symbol
+from assembler.tokens import Instruction, Register, RegAddress
+
 
 class Load(Instruction):
     """
@@ -14,7 +15,7 @@ class Load(Instruction):
             LW reg, disp(reg)
         </syntax>
         <descr>
-            Copies the value of op2 to the location mentioned in op1. 
+            Copies the value of op2 to the location mentioned in op1.
         </descr>
     """
     def fhook(self, ops, vm):
@@ -25,8 +26,9 @@ class Load(Instruction):
                 vm.changes.add(ops[0].get_nm())
             else:
                 raise InvalidArgument(ops[1].get_nm())
-        else: 
+        else:
             raise InvalidArgument(ops[0].get_nm())
+
 
 class Store(Instruction):
     """
@@ -38,7 +40,7 @@ class Store(Instruction):
             SW reg, disp(reg)
         </syntax>
         <descr>
-            Copies the value of op2 to the location mentioned in op1. 
+            Copies the value of op2 to the location mentioned in op1.
         </descr>
     """
     def fhook(self, ops, vm):
@@ -48,5 +50,5 @@ class Store(Instruction):
                 ops[1].set_val(ops[0].get_val())
             else:
                 InvalidArgument(ops[1].get_nm())
-        else: 
+        else:
             raise InvalidArgument(ops[0].get_nm())

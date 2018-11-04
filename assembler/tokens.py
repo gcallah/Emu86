@@ -4,12 +4,12 @@ tokens.py: contains classes we tokenize into.
 
 # for floating point to binary and back
 import struct
-import codecs
 import binascii
 
 from abc import abstractmethod
 
-from .errors import InvalidMemLoc, RegUnwritable,IntOutOfRng, UnknownName, InvalidArgument
+from .errors import InvalidMemLoc, RegUnwritable, IntOutOfRng
+from .errors import UnknownName, InvalidArgument
 from .errors import NotSettable, UnknownLabel, LabelNotSettable
 from .errors import TooBigForSingle, TooBigForDouble
 
@@ -20,28 +20,40 @@ MIN_INT = -(2**(BITS-1))
 VALS = 0
 MEM_LOC = 1
 
+
 def add_debug(s, vm):
     vm.debug += (s + "\n")
 
 
-#32 bits
+# 32 bits
 def float_to_hex(f):
     return hex(struct.unpack('<I', struct.pack('<f', f))[0])
+
+
 def hex_to_float(h):
     h2 = h[2:]
     h2 = binascii.unhexlify(h2)
     return struct.unpack('>f', h2)[0]
-#64 bits
-getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
+
+
+# 64 bits
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:] # noqa
+
+
 def h_to_b64(value):
     print("in h to b, value =", value)
     return "0" + hex(int(value, 2))
+
+
 def f_to_b64(value):
     val = struct.unpack('q', struct.pack('d', value))[0]
     return "0" + getBin(val)
+
+
 def b_to_f64(value):
-    hx = hex(int(value, 2))   
+    hx = hex(int(value, 2))
     return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+
 
 class Token:
     def __init__(self, name, val=0):
@@ -60,33 +72,41 @@ class Token:
     def get_nm(self):
         return self.name
 
+
 class Section(Token):
     def __init__(self, name):
         super().__init__(name)
+
 
 class OpenBracket(Token):
     def __init__(self):
         super().__init__("[")
 
+
 class CloseBracket(Token):
     def __init__(self):
         super().__init__("]")
+
 
 class OpenParen(Token):
     def __init__(self):
         super().__init__("(")
 
+
 class CloseParen(Token):
     def __init__(self):
         super().__init__(")")
+
 
 class DataType(Token):
     def __init__(self, name):
         super().__init__(name)
 
+
 class Comma(Token):
     def __init__(self):
         super().__init__(",")
+
 
 class ConstantSign(Token):
     """
@@ -95,6 +115,7 @@ class ConstantSign(Token):
     """
     def __init__(self):
         super().__init__("$")
+
 
 class Instruction(Token):
     """
@@ -112,6 +133,7 @@ class Instruction(Token):
     @abstractmethod
     def fhook(self, ops, vmachine):
         pass
+
 
 class Operand(Token):
     """
@@ -137,7 +159,8 @@ class IntegerTok(Operand):
 
     def negate_val(self):
         self.value *= -1
-        
+
+
 class FloatTok(Operand):
     def __init__(self, data_type=".float", val=0.0):
         self.data_type = data_type
@@ -160,7 +183,7 @@ class FloatTok(Operand):
                 if (temp_float != val):
                     raise TooBigForDouble(str(val))
             elif type(val) is str:
-                print("val =", val) 
+                print("val =", val)
                 temp_float = b_to_f64(val)
                 temp_bin2 = f_to_b64(temp_float)
                 temp_float2 = b_to_f64(temp_bin2)
@@ -175,8 +198,10 @@ class FloatTok(Operand):
     def get_type(self):
         return self.data_type
 
-    # self.value is either going to be a float (12.2) or a hexadecimal string ('0x41433333')
-    # we need to be able to reconcile the actual value of it if it's a hex string (IEEE 754)
+    # self.value is either going to be a float (12.2)
+    # or a hexadecimal string ('0x41433333')
+    # we need to be able to reconcile the actual value of it
+    # if it's a hex string (IEEE 754)
     def get_val(self):
         if type(self.value) is float:
             return self.value
@@ -198,21 +223,26 @@ class FloatTok(Operand):
     def negate_val(self):
         self.value *= -1.0
 
+
 class StringTok(Token):
     def __init__(self, name):
         super().__init__(name)
+
 
 class DupTok(Token):
     def __init__(self):
         super().__init__("DUP")
 
+
 class QuestionTok(Token):
     def __init__(self):
         super().__init__("?")
 
+
 class PlusTok(Token):
     def __init__(self):
         super().__init__("+")
+
 
 class MinusTok(Token):
     def __init__(self):
@@ -252,7 +282,7 @@ class Address(Location):
 
 
 class RegAddress(Address):
-    def __init__(self, name, vm, displacement = 0, multiplier = 1, val=0):
+    def __init__(self, name, vm, displacement=0, multiplier=1, val=0):
         super().__init__(name, vm, val)
         self.regs = vm.registers
         self.displacement = displacement
@@ -261,7 +291,7 @@ class RegAddress(Address):
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
         address = hex(int(self.regs[self.name]) *
-                          self.multiplier).split('x')[-1].upper()
+                      self.multiplier).split('x')[-1].upper()
         disp = 0
         if isinstance(self.displacement, list):
             for disp_item in self.displacement:
@@ -289,6 +319,7 @@ class RegAddress(Address):
     def set_val(self, val):
         mem_addr = self.get_mem_addr()
         self.mem[mem_addr] = val
+
 
 class Register(Location):
     def __init__(self, name, vm, val=0):
@@ -325,6 +356,7 @@ class Register(Location):
     def negate_val(self):
         self.val *= -1
 
+
 class Label(Location):
     """
     Class to hold labels for jumps.
@@ -344,9 +376,11 @@ class Label(Location):
     def set_val(self, val):
         raise LabelNotSettable(self.name)
 
+
 class NewSymbol(Token):
-    def __init__(self, name, index = None):
+    def __init__(self, name, index=None):
         super().__init__(name)
+
 
 class Symbol(Location):
     """

@@ -10,6 +10,7 @@ MIPS_DIR = $(SDIR)/MIPS
 EMUDIR = Emu86
 ODIR = $(EMUDIR)/templates
 MUDIR = myutils
+MODELS_DIR = models
 UDIR = utils
 TDIR = tests
 SRCS = $(INTEL_DIR)/arithmetic.py $(INTEL_DIR)/control_flow.py $(INTEL_DIR)/data_mov.py $(INTEL_DIR)/interrupts.py 
@@ -20,11 +21,20 @@ EXTR = $(UDIR)/extract_doc.awk
 D2HTML = $(UDIR)/doc2html.awk
 INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 DOCKER_DIR = docker
+PYLINT = flake8
+PYLINTFLAGS = 
+PYTHONFILES = $(shell ls $(EMUDIR)/*.py)
+PYTHONFILES += $(shell ls $(SDIR)/*.py)
+PYTHONFILES += $(INTEL_DIR)/*.py
+PYTHONFILES += $(MIPS_DIR)/*.py
+PYTHONFILES += $(TDIR)/*/*.py
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
 ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
 ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel\//html_src\//')
+
+FORCE:
 
 # update our submodules:
 util: $(submods)
@@ -57,6 +67,11 @@ website: $(INCS) $(HTML_FILES) help
 
 container: $(DOCKER_DIR)/Dockerfile  $(DOCKER_DIR)/requirements.txt
 	docker build -t emu86 docker
+
+lint: $(patsubst %.py,%.pylint,$(PYTHONFILES))
+
+%.pylint:
+	$(PYLINT) $(PYLINTFLAGS) $*.py
 
 help_mips: $(MIPS_SRCS)
 	$(EXTR) <$(MIPS_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_arithmetic.txt
@@ -103,13 +118,14 @@ db:
 	-git commit $(EMUDIR)/migrations/*.py
 	git push origin master
 
-dev: $(SRCS) $(MIPS_SRCS) $(OBJS) 
+tests: FORCE
 	./all_tests.sh
+
+dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	-git commit -a
 	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
-prod: $(SRCS) $(OBJ) navbar
-	./all_tests.sh
+prod: $(SRCS) $(OBJ) navbar tests
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'

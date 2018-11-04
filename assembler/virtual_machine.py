@@ -32,7 +32,7 @@ class VirtualMachine:
         self.nxt_key = 0
         self.ret_str = "GIRONAGIRONAGETSGETS"
         self.debug = ""
-        
+
         self.memory = OrderedDict()
         self.mem_init()
 
@@ -44,7 +44,7 @@ class VirtualMachine:
 
         self.symbols = OrderedDict()
         self.symbols_init()
-        
+
         self.c_stack = []
         self.cstack_init()
 
@@ -98,7 +98,7 @@ class VirtualMachine:
 
     def order_mem(self):
         lst = []
-        for key in self.memory: 
+        for key in self.memory:
             lst.append(key)
         for hex_key in range(0, len(lst)):
             lst[hex_key] = int(lst[hex_key], 16)
@@ -117,6 +117,7 @@ class VirtualMachine:
 
     def set_data_init(self, on_or_off):
         self.data_init = on_or_off
+
 
 class IntelMachine(VirtualMachine):
     def __init__(self):
@@ -157,10 +158,10 @@ class IntelMachine(VirtualMachine):
         ip = self.get_ip()
         ip += 1
         self.set_ip(ip)
-    
+
     def set_ip(self, val):
         self.registers[INSTR_PTR_INTEL] = val
-    
+
     def get_ip(self):
         return int(self.registers[INSTR_PTR_INTEL])
 
@@ -168,12 +169,12 @@ class IntelMachine(VirtualMachine):
         sp = self.get_sp()
         sp += 1
         self.set_sp(sp)
-        
+
     def dec_sp(self):
         sp = self.get_sp()
         sp -= 1
         self.set_sp(sp)
-    
+
     def set_sp(self, val):
         if val < STACK_BOTTOM - 1:
             raise StackOverflow()
@@ -181,14 +182,15 @@ class IntelMachine(VirtualMachine):
             raise StackUnderflow()
 
         self.registers[STACK_PTR_INTEL] = val
-    
+
     def get_sp(self):
         return int(self.registers[STACK_PTR_INTEL])
+
 
 class MIPSMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
-        self.unwritable = [INSTR_PTR_MIPS, 'R0', 
+        self.unwritable = [INSTR_PTR_MIPS, 'R0', 'F0', 'F29',
                            STACK_PTR_MIPS, 'HI', 'LO']
         self.registers = OrderedDict(
                     [
@@ -228,37 +230,37 @@ class MIPSMachine(VirtualMachine):
                         ('R23', 0),
                         (INSTR_PTR_MIPS, 0),
                         ('F0', 0),
-                        ('F1', 0),
-                        ('F2', 0),
-                        ('F3', 0),
-                        ('F4', 0),
-                        ('F5', 0),
-                        ('F6', 0),
-                        ('F7', 0),
-                        ('F8', 0),
-                        ('F9', 0),
-                        ('F10', 0),
-                        ('F11', 0),
                         ('F12', 0),
-                        ('F13', 0),
-                        ('F14', 0),
-                        ('F15', 0),
-                        ('F16', 0),
-                        ('F17', 0),
-                        ('F18', 0),
-                        ('F19', 0),
-                        ('F20', 0),
-                        ('F21', 0),
-                        ('F22', 0),
-                        ('F23', 0),
                         ('F24', 0),
+                        ('F1', 0),
+                        ('F13', 0),
                         ('F25', 0),
+                        ('F2', 0),
+                        ('F14', 0),
                         ('F26', 0),
+                        ('F3', 0),
+                        ('F15', 0),
                         ('F27', 0),
+                        ('F4', 0),
+                        ('F16', 0),
                         ('F28', 0),
+                        ('F5', 0),
+                        ('F17', 0),
                         ('F29', 0),
+                        ('F6', 0),
+                        ('F18', 0),
                         ('F30', 0),
-                        ('F31', 0)
+                        ('F7', 0),
+                        ('F19', 0),
+                        ('F31', 0),
+                        ('F8', 0),
+                        ('F20', 0),
+                        ('F9', 0),
+                        ('F21', 0),
+                        ('F10', 0),
+                        ('F22', 0),
+                        ('F11', 0),
+                        ('F23', 0)
                     ])
 
         self.flags = OrderedDict(
@@ -279,10 +281,10 @@ class MIPSMachine(VirtualMachine):
         ip = self.get_ip()
         ip += 4
         self.set_ip(ip)
-    
+
     def set_ip(self, val):
         self.registers[INSTR_PTR_MIPS] = val
-    
+
     def get_ip(self):
         return int(self.registers[INSTR_PTR_MIPS])
 
@@ -290,12 +292,12 @@ class MIPSMachine(VirtualMachine):
         sp = self.get_sp()
         sp += 1
         self.set_sp(sp)
-        
+
     def dec_sp(self):
         sp = self.get_sp()
         sp -= 1
         self.set_sp(sp)
-    
+
     def set_sp(self, val):
         if val < STACK_BOTTOM - 1:
             raise StackOverflow()
@@ -303,17 +305,17 @@ class MIPSMachine(VirtualMachine):
             raise StackUnderflow()
 
         self.registers[STACK_PTR_MIPS] = val
-    
+
     def get_sp(self):
         return int(self.registers[STACK_PTR_MIPS])
 
-class RISCVMachine(VirtualMachine): 
+
+class RISCVMachine(VirtualMachine):
     # make sure to account for the lack of HI and LO in display
-    
-    def __init__(self): 
+
+    def __init__(self):
         super().__init__()
-        self.unwritable =[INSTR_PTR_RISCV, 'X0', 
-                          STACK_PTR_RISCV]
+        self.unwritable = [INSTR_PTR_RISCV, 'X0', STACK_PTR_RISCV]
         self.registers = OrderedDict(
                         [
                             ('X0', 0),
@@ -368,10 +370,10 @@ class RISCVMachine(VirtualMachine):
         ip = self.get_ip()
         ip += 4
         self.set_ip(ip)
-    
+
     def set_ip(self, val):
         self.registers[INSTR_PTR_RISCV] = val
-    
+
     def get_ip(self):
         return int(self.registers[INSTR_PTR_RISCV])
 
@@ -379,12 +381,12 @@ class RISCVMachine(VirtualMachine):
         sp = self.get_sp()
         sp += 1
         self.set_sp(sp)
-        
+
     def dec_sp(self):
         sp = self.get_sp()
         sp -= 1
         self.set_sp(sp)
-    
+
     def set_sp(self, val):
         if val < STACK_BOTTOM - 1:
             raise StackOverflow()
@@ -392,9 +394,10 @@ class RISCVMachine(VirtualMachine):
             raise StackUnderflow()
 
         self.registers[STACK_PTR_RISCV] = val
-    
+
     def get_sp(self):
         return int(self.registers[STACK_PTR_RISCV])
+
 
 intel_machine = IntelMachine()
 mips_machine = MIPSMachine()

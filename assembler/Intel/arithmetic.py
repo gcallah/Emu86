@@ -4,9 +4,10 @@ arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfunc
 
-from assembler.errors import *
+from assembler.errors import DivisionZero, check_num_args
 from assembler.tokens import Instruction, MAX_INT
 from assembler.ops_check import one_op_arith
+
 
 def two_op_arith(ops, vm, instr, operator):
     """
@@ -16,8 +17,7 @@ def two_op_arith(ops, vm, instr, operator):
     check_num_args(instr, ops, 2)
     ops[0].set_val(
         checkflag(operator(ops[0].get_val(),
-                           ops[1].get_val()), 
-                           vm))
+                           ops[1].get_val()), vm))
     vm.changes.add(ops[0].get_nm())
 
 
@@ -44,6 +44,7 @@ class Add(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.add)
 
+
 class Sub(Instruction):
     """
         <instr>
@@ -57,6 +58,7 @@ class Sub(Instruction):
     """
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.sub)
+
 
 class Imul(Instruction):
     """
@@ -73,6 +75,7 @@ class Imul(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.mul)
         return ''
 
+
 class Andf(Instruction):
     """
         <instr>
@@ -87,6 +90,7 @@ class Andf(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.and_)
         return ''
+
 
 class Orf(Instruction):
     """
@@ -103,6 +107,7 @@ class Orf(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.or_)
         return ''
 
+
 class Xor(Instruction):
     """
         <instr>
@@ -117,6 +122,7 @@ class Xor(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.xor)
         return ''
+
 
 class Shl(Instruction):
     """
@@ -133,6 +139,7 @@ class Shl(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.lshift)
         return ''
 
+
 class Shr(Instruction):
     """
         <instr>
@@ -147,6 +154,7 @@ class Shr(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.rshift)
 
+
 class Notf(Instruction):
     """
         <instr>
@@ -158,6 +166,7 @@ class Notf(Instruction):
     """
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.inv)
+
 
 class Inc(Instruction):
     """
@@ -173,6 +182,7 @@ class Inc(Instruction):
         ops[0].set_val(ops[0].get_val() + 1)
         vm.changes.add(ops[0].get_nm())
 
+
 class Dec(Instruction):
     """
         <instr>
@@ -187,6 +197,7 @@ class Dec(Instruction):
         ops[0].set_val(ops[0].get_val() - 1)
         vm.changes.add(ops[0].get_nm())
 
+
 class Neg(Instruction):
     """
         <instr>
@@ -199,6 +210,7 @@ class Neg(Instruction):
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.neg)
         return ''
+
 
 class Idiv(Instruction):
     """
@@ -220,7 +232,7 @@ class Idiv(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
-    
+
         hireg = int(vm.registers['EDX']) << 32
         lowreg = int(vm.registers['EAX'])
         dividend = hireg + lowreg
