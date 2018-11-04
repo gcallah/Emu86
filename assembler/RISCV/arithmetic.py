@@ -349,7 +349,7 @@ class Srai(Instruction):
             SRAI
         </instr> 
         <syntax> 
-            SRAI reg, reg, reg
+            SRAI reg, reg, imm
         </syntax> 
     """
     def fhook(self, ops, vm): 
@@ -463,7 +463,7 @@ class Remu(Instruction):
     """
 
 
-#class Lui(Instruction):
+class Lui(Instruction):
     """
     <instr> 
         LUI
@@ -471,16 +471,21 @@ class Remu(Instruction):
     <syntax> 
         LUI reg, imm
     </syntax> 
+    <desc> 
+        Loads a constant (EXPECTED TO BE 20 BITS MAX) 
+        That's been shifted left by 12 bits (3 zeros)
+    </desc>
     """
-    # Loads a constant (EXPECTED TO BE 20 BITS MAX) 
-    # That's been shifted left by 12 bits (3 zeros)
-    # def fhook(self, ops, vm):
-    #     check_num_args(self.name, ops, 2)
-    #     check_immediate_two(self.name, ops)
-    #     ops[0].set_val(
-    #     check_overflow(opfunc.lshift(ops[1].get_val(), 3))
-    #     )
-    #     vm.changes.add(ops[0].get_nm()) 
+
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 2)
+        check_immediate_two(self.name, ops)
+        if ops[1] > 1048576: 
+            raise IncorrectImmLength()
+        ops[0].set_val(
+        check_overflow(opfunc.lshift(ops[1].get_val(), 3))
+        )
+        vm.changes.add(ops[0].get_nm()) 
 
 
 

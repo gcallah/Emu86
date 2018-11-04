@@ -39,6 +39,7 @@ OUT_OF_BOUNDS = "Displacement out of bounds"
 TOO_BIG_FOR_SINGLE = "Value too big to store in a single: "
 TOO_BIG_FOR_DOUBLE = "Value too big to store in a double: "
 NOT_EVEN_REGISTER = "Invalid odd-numbered register: "
+NOT_CORRECT_BITS = "Instruction expected integer of max length 20 bits"
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -232,6 +233,11 @@ class TooBigForDouble(Error):
 class NotEvenRegister(Error):
     def __init__(self, offender):
         self.msg = NOT_EVEN_REGISTER + offender
+
+
+class IncorrectImmLength(Error):
+    def __init__(self, offender):
+        self.msg = NOT_CORRECT_BITS + offender
 
 
 def check_num_args(instr, ops, correct_num, type_ins=0):
