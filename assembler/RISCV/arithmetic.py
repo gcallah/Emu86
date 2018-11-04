@@ -428,3 +428,71 @@ class Remu(Instruction):
         )
         vm.changes.add(ops[0].get_nm())
 
+
+#class Mulh(Instruction):
+    """
+    <instr> 
+        MULH
+    </instr> 
+    <syntax> 
+        MULH reg, reg, reg
+    </syntax> 
+    """
+
+
+
+#class Mulhu(Instruction):
+    """
+    <instr> 
+        MULHU
+    </instr> 
+    <syntax> 
+        MULHU reg, reg, reg
+    </syntax> 
+    """
+
+
+#class Mulhsu(Instruction): 
+    """
+    <instr> 
+        MULHSU
+    </instr> 
+    <syntax> 
+        MULHSU reg, reg, reg
+    </syntax> 
+    """
+
+
+#class Lui(Instruction):
+    """
+    <instr> 
+        LUI
+    </instr> 
+    <syntax> 
+        LUI reg, imm
+    </syntax> 
+    """
+    # Loads a constant (EXPECTED TO BE 20 BITS MAX) 
+    # That's been shifted left by 12 bits (3 zeros)
+    # def fhook(self, ops, vm):
+    #     check_num_args(self.name, ops, 2)
+    #     check_immediate_two(self.name, ops)
+    #     ops[0].set_val(
+    #     check_overflow(opfunc.lshift(ops[1].get_val(), 3))
+    #     )
+    #     vm.changes.add(ops[0].get_nm()) 
+
+
+
+# class Auipc(Instruction):
+    """
+    <instr> 
+        AUIPC
+    </instr> 
+    <syntax> 
+        AUIPC reg, reg, reg
+    </syntax> 
+    """
+    # Does lui, and then adds that value to the PC 
+    # instead of loading to a register. 
+    

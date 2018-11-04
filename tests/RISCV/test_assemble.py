@@ -126,46 +126,47 @@ class AssembleTestCase(TestCase):
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
 
-    def test_slt(self): 
+    def test_slt(self):
         riscv_machine.registers["X8"] = 1
         riscv_machine.registers["X9"] = 0
         riscv_machine.base = "hex"
         assemble("40000 SLT X10, X9, X8", 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["X10"], 1)
 
-    def test_sltu(self): 
+    def test_sltu(self):
         riscv_machine.registers["X8"] = 1
         riscv_machine.registers["X9"] = 0
         riscv_machine.base = "hex"
         assemble("40000 SLTU X10, X9, X8", 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["X10"], 1)
 
-    def test_div(self): 
+    def test_slti(self):
+        riscv_machine.registers["X9"] = 0
+        assemble("40000 SLTI X10, X9, 1", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 1)
+    
+    def test_sltiu(self):
+        riscv_machine.registers["X9"] = 0
+        assemble("40000 SLTI X10, X9, 1", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 1)
+
+    def test_div(self):
         self.two_op_test(opfunc.floordiv, "DIV")
 
     def test_divu(self):
         self.two_op_test_unsigned(opfunc.floordiv, "DIVU")
 
-    def test_rem(self): 
+    def test_rem(self):
         self.two_op_test(opfunc.mod, "REM")
 
-    def test_remu(self): 
+    def test_remu(self):
         self.two_op_test_unsigned(opfunc.mod, "REMU")
 
 
 
 
 '''
-    def test_nor(self):
-        for i in range(0, NUM_TESTS):
-            a = random.randint(MIN_TEST, MAX_TEST)
-            b = random.randint(MIN_TEST, MAX_TEST)
-            correct = opfunc.inv(opfunc.or_(a, b))
-            riscv_machine.registers["R8"] = a
-            riscv_machine.registers["R9"] = b
-            riscv_machine.base = "hex"
-            assemble("40000 NOR R10, R8, R9", 'riscv', riscv_machine)
-            self.assertEqual(riscv_machine.registers["R10"], correct)
+    
 
     def test_slt_eq(self):
         riscv_machine.registers["R8"] = 1
@@ -192,56 +193,7 @@ class AssembleTestCase(TestCase):
         riscv_machine.base = "hex"
         assemble("40000 SLTI R10, R9, 1", 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["R10"], 1)
-        
-    def two_op_test_float(self, operator, instr,
-                    low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST):
-        for i in range(0, NUM_TESTS):
-            a = random.uniform(low1, high1)
-            b = random.uniform(low2, high2)
-            correct = operator(a, b)
-            riscv_machine.registers["F8"] = a
-            riscv_machine.registers["F9"] = b
-            riscv_machine.base = "hex"
-            assemble("40000 " + instr + " F10, F8, F9", 'riscv', riscv_machine)
-            self.assertEqual(riscv_machine.registers["F10"], correct)
-
-    def two_op_test_hilo_float(self, operator, instr, 
-                    low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST):
-        for i in range(0, 1):
-            a = random.uniform(low1, high1)
-            b = random.uniform(low2, high2)
-            correct = operator(a,b)
-            riscv_machine.registers["F8"] = a
-            riscv_machine.registers["F9"] = b
-            riscv_machine.base = "hex"
-            r = assemble("40000 " + instr + " F8, F9", 'riscv', riscv_machine)
-
-            h_reg = str(riscv_machine.registers["HI"])
-            for i in range(0, 32-len(h_reg)):
-                h_reg = "0" + h_reg
-            l_reg = str(riscv_machine.registers["LO"])
-            for i in range(0, 32-len(l_reg)):
-                l_reg = "0" + l_reg
-
-            binary_result = h_reg + l_reg
-            hex_result = hex(int(binary_result, 2))[2:]
-            for i in range(0, 16-len(hex_result)):
-                hex_result = "0"+hex_result
-            bin_data = codecs.decode(hex_result, "hex")
-            result = struct.unpack("d", bin_data)[0]
-            self.assertEqual(result, correct)
-
-    def test_adds(self):
-        self.two_op_test_float(opfunc.add, "ADD.S")
-
-    def test_subs(self):
-        self.two_op_test_float(opfunc.sub, "SUB.S")
-
-    def test_mults(self):
-        self.two_op_test_hilo_float(opfunc.mul, "MULT.S")
-
+   
 '''
 
 if __name__ == '__main__':
