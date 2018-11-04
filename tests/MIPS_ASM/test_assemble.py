@@ -181,9 +181,10 @@ class AssembleTestCase(TestCase):
     def two_op_test_double_float(self, operator, instr,
                                  low1=0, high1=MAX_TEST,
                                  low2=0, high2=MAX_TEST):
-        for i in range(0, 1):
+        for i in range(0, NUM_TESTS):
             a = random.uniform(low1, high1)
-            b = random.uniform(low2, high2)
+            # silly solution right now - we can't do negative numbers atm
+            b = random.uniform(low2, a)
             correct = operator(a, b)
 
             a_binary = f_to_b64(a)
@@ -205,7 +206,6 @@ class AssembleTestCase(TestCase):
             last_32 = str(mips_machine.registers["F13"])
             binary_result = first_32 + last_32
             result = b_to_f64(binary_result)
-            print(type(mips_machine.registers["F12"]))
             self.assertEqual(result, correct)
 
             # h_reg = str(mips_machine.registers["HI"])
@@ -240,6 +240,9 @@ class AssembleTestCase(TestCase):
 
     def test_addd(self):
         self.two_op_test_double_float(opfunc.add, 'ADD.D')
+
+    def test_subd(self):
+        self.two_op_test_double_float(opfunc.sub, 'SUB.D')
 
 
 if __name__ == '__main__':
