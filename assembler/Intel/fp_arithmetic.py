@@ -3,12 +3,26 @@ fp_arithmetic.py: arithmetic floating point instructions.
 """
 
 import operator as opfunc
-
-from assembler.errors import *
-from assembler.tokens import Instruction, MAX_INT
-from assembler.ops_check import one_op_arith,checkFloat
+from assembler.errors import check_num_args
+from assembler.tokens import Instruction
+from assembler.ops_check import one_op_arith, checkFloat
 from .arithmetic import checkflag
 
+
+def convert_float_binary(num, dec_place = 5):
+    whole, dec = str(num).split(".")
+    whole = int(whole)
+    dec = int (dec)
+    res = bin(whole).lstrip("0b") + "."
+    for x in range(dec_place):
+        whole, dec = str((dec_convert(dec)) * 2).split(".")
+        dec = int(dec)
+        res += whole
+    return res
+def dec_convert(val):
+    while val > 1:
+        val = val/ 10
+    return val
 def two_op_arith(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
@@ -18,9 +32,9 @@ def two_op_arith(ops, vm, instr, operator):
     if checkFloat:
         ops[0].set_val(
             checkflag(operator(ops[0].get_val(),
-                               ops[1].get_val()),
-                               vm))
+                               ops[1].get_val()), vm))
         vm.changes.add(ops[0].get_nm())
+
 
 class FADD(Instruction):
     """
@@ -36,13 +50,38 @@ class FADD(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.add)
 
+
+class FAndf(Instruction):
+
+    # def fhook(self, ops, vm):
+    #     two_op_arith(ops, vm, self.name, opfunc.and_)
+    #     return ''
+    def andFunc(intVal,intVal2):
+        print(intVal,intVal2)
+        floatOne = convert_float_binary(intVal)
+        floatTwo = convert_float_binary(intVal2)
+        while len(floatOne)<len(floatTwo):
+            floatOne="0"+floatOne
+        while len(floatTwo)<len(floatOne):
+            floatTwo="0"+floatTwo
+        newFloat = ""
+        for i in range(len(floatOne)):
+            if floatOne[i]=='1' and floatTwo[i]=='1':
+                newFloat+='1'
+            elif floatOne[i]=='.':
+                newFloat+='.'
+            else:
+                newFloat+='0'
+        return newFloat
 class FSUB(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.sub)
 
+
 class FMUL(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.mul)
+
 
 class FOrf(Instruction):
     """
@@ -55,9 +94,24 @@ class FOrf(Instruction):
             OR reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.or_)
-        return ''
+    def orFunc(intVal,intVal2):
+        floatOne = convert_float_binary(intVal)
+        floatTwo = convert_float_binary(intVal2)
+        while len(floatOne)<len(floatTwo):
+            floatOne="0"+floatOne
+        while len(floatTwo)<len(floatOne):
+            floatTwo="0"+floatTwo
+        newFloat = ""
+        for i in range(len(floatOne)):
+            if floatOne[i]=='1' or floatTwo[i]=='1':
+                newFloat+='1'
+            elif floatOne[i]=='.':
+                newFloat+='.'
+            else:
+                newFloat+='0'
+        return newFloat
+
+
 class FShr(Instruction):
     """
         <instr>
@@ -71,6 +125,7 @@ class FShr(Instruction):
     """
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.rshift)
+
 
 class FXor(Instruction):
     """
@@ -86,6 +141,8 @@ class FXor(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.xor)
         return ''
+
+
 class FShl(Instruction):
     """
         <instr>
@@ -101,6 +158,7 @@ class FShl(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.lshift)
         return ''
 
+
 class FDec(Instruction):
     """
         <instr>
@@ -115,6 +173,7 @@ class FDec(Instruction):
         ops[0].set_val(ops[0].get_val() - 1)
         vm.changes.add(ops[0].get_nm())
 
+
 class FNeg(Instruction):
     """
         <instr>
@@ -127,6 +186,7 @@ class FNeg(Instruction):
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.neg)
         return ''
+
 
 class FInc(Instruction):
     """
@@ -142,6 +202,7 @@ class FInc(Instruction):
         ops[0].set_val(ops[0].get_val() + 1)
         vm.changes.add(ops[0].get_nm())
 
+
 class FNotf(Instruction):
     """
         <instr>
@@ -154,11 +215,7 @@ class FNotf(Instruction):
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.inv)
 
-class FAndf(Instruction):
 
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.and_)
-        return ''
 
 class FDIV(Instruction):
     def fhook(self, ops, vm):

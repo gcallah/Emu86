@@ -24,9 +24,10 @@ DOCKER_DIR = docker
 PYLINT = flake8
 PYLINTFLAGS = 
 PYTHONFILES = $(shell ls $(EMUDIR)/*.py)
-# PYTHONFILES += $(shell ls $(SDIR)/*.py)
+PYTHONFILES += $(shell ls $(SDIR)/*.py)
 PYTHONFILES += $(INTEL_DIR)/*.py
 PYTHONFILES += $(MIPS_DIR)/*.py
+PYTHONFILES += $(TDIR)/*/*.py
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 

@@ -4,8 +4,8 @@ Test our assembly interpreter.
 """
 
 import sys
+sys.path.append(".") # noqa
 import random
-sys.path.append(".")
 
 import operator as opfunc
 import functools
@@ -16,6 +16,7 @@ from assembler.tokens import MAX_INT, MIN_INT, BITS
 from assembler.virtual_machine import intel_machine, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
 
+
 NUM_TESTS = 100
 MAX_SHIFT = BITS // 2
 MIN_TEST = MIN_INT // 10   # right now we don't want to overflow!
@@ -24,11 +25,12 @@ MAX_MUL = 10000  # right now we don't want to overflow!
 MIN_MUL = -10000  # right now we don't want to overflow!
 REGISTER_SIZE = BITS
 
+
 class AssembleTestCase(TestCase):
 
-#####################
-# Two Operand Tests #
-#####################
+    #####################
+    # Two Operand Tests #
+    #####################
 
     def two_op_test(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
@@ -72,9 +74,9 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.rshift, "shr",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
-###################
-# Single Op Tests #
-###################
+    ###################
+    # Single Op Tests #
+    ###################
 
     def one_op_test(self, operator, instr):
         for i in range(NUM_TESTS):
@@ -99,13 +101,16 @@ class AssembleTestCase(TestCase):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
 
-##################
-# Push / Pop     #
-##################
+    ##################
+    # Push / Pop     #
+    ##################
 
     def test_push_and_pop(self):
-        correct_stack = [None]*(STACK_TOP+1) # Note: size(correct_stack) = size(stack + memory)
-        for i in range(STACK_TOP, STACK_BOTTOM-1, -1): # Traverse the stack registers.
+        # Note: size(correct_stack) = size(stack + memory)
+        correct_stack = [None]*(STACK_TOP+1)
+
+        # Traverse the stack registers.
+        for i in range(STACK_TOP, STACK_BOTTOM-1, -1):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct_stack[i] = a
             intel_machine.registers["EAX"] = a
@@ -117,9 +122,9 @@ class AssembleTestCase(TestCase):
             intel_machine.base = "dec"
             self.assertEqual(intel_machine.registers["EBX"], correct_stack[i])
 
-##################
-# Other          #
-##################
+    ##################
+    # Other          #
+    ##################
 
     def test_mov(self):
         for i in range(0, NUM_TESTS):
@@ -135,10 +140,10 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             d = random.randint(MIN_TEST, MAX_TEST)
             b = 0
-            while(b == 0): # Divisor can't be zero.
+            while(b == 0):    # Divisor can't be zero.
                 b = random.randint(MIN_TEST, MAX_TEST)
-            correct_quotient = (opfunc.lshift(d,REGISTER_SIZE) + a) // b
-            correct_remainder = (opfunc.lshift(d,REGISTER_SIZE) + a) % b
+            correct_quotient = (opfunc.lshift(d, REGISTER_SIZE) + a) // b
+            correct_remainder = (opfunc.lshift(d, REGISTER_SIZE) + a) % b
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EDX"] = d
             intel_machine.registers["EBX"] = b
@@ -166,6 +171,7 @@ class AssembleTestCase(TestCase):
         assemble("cmp %ebx, %eax", 'att', intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
+
 
 if __name__ == '__main__':
     main()

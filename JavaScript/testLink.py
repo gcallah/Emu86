@@ -25,7 +25,7 @@ link = {
     '15': 'sum_test.asm'
 }
 
-class TestMemory(TestCase):
+class TestLink(TestCase):
 
     def load_page(self):
         driver.get('http://www.emu86.org/')

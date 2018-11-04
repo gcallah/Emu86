@@ -2,23 +2,20 @@
 parse.py: creates parse tree.
 """
 
-import re
-import pdb
 from random import randrange
 
-from .errors import InvalidMemLoc, InvalidOperand, InvalidInstruction
+from .errors import InvalidMemLoc, InvalidInstruction
 from .errors import UnknownName, InvalidDataType, InvalidSection
 from .errors import InvalidArgument, MissingData, InvalidDataVal, MissingComma
-from .errors import MissingOpenParen, MissingCloseParen, MissingOpenBrack
+from .errors import MissingOpenParen, MissingCloseParen
 from .errors import MissingCloseBrack, MissingOps, InvalidPc, MissingPc
 from .errors import TooBigForSingle, TooBigForDouble
-from .tokens import Location, Address, Register, IntegerTok, Symbol, Instruction
+from .tokens import Address, Register, IntegerTok, Symbol, Instruction
 from .tokens import RegAddress, Label, NewSymbol, Section, DataType
-from .tokens import StringTok, Comma, OpenParen, CloseParen, DupTok, QuestionTok
-from .tokens import OpenBracket, CloseBracket, PlusTok, MinusTok, ConstantSign
+from .tokens import StringTok, Comma, DupTok, QuestionTok
+from .tokens import OpenParen, CloseParen, OpenBracket, CloseBracket
+from .tokens import PlusTok, MinusTok, ConstantSign
 from .tokens import FloatTok
-from .Intel.control_flow import Ret
-from .MIPS.interrupts import Syscall
 from .virtual_machine import MEM_SIZE
 
 TOKENS = 0
@@ -45,8 +42,10 @@ dtype_info = {
 PARAM_TYPE = 1
 PARAM_VAL = 0
 
+
 def add_debug(s, vm):
     vm.debug += (s + "\n")
+
 
 def minus_token(token_line, pos):
     """
@@ -61,25 +60,27 @@ def minus_token(token_line, pos):
             token_line[pos + 1].negate_val()
         else:
             raise InvalidArgument("-")
-    except:
+    except Exception:
         raise InvalidArgument("-")
+
 
 def register_token(token_line, pos, flavor, vm):
     if flavor == "intel" or flavor == "att":
         return (token_line[pos], pos + 1)
-    elif (pos + 1 < len(token_line) and 
+    elif (pos + 1 < len(token_line) and
           isinstance(token_line[pos + 1], OpenParen)):
         reg = None
         disp = None
-        reg, disp, pos = get_address_mips(token_line, pos + 2, vm, 
+        reg, disp, pos = get_address_mips(token_line, pos + 2, vm,
                                           token_line[pos])
         return (RegAddress(reg.get_nm(), vm, disp), pos)
     else:
         return (token_line[pos], pos + 1)
 
+
 def number_token(token_line, pos, flavor, vm):
     """
-    If token seen is an integer, determine by flavor whether 
+    If token seen is an integer, determine by flavor whether
     to return the integer token or return an address token
 
     Args:
@@ -93,30 +94,31 @@ def number_token(token_line, pos, flavor, vm):
     """
     if flavor == "intel":
         return (token_line[pos], pos + 1)
-    elif (pos + 1 < len(token_line) and 
+    elif (pos + 1 < len(token_line) and
           isinstance(token_line[pos + 1], OpenParen)):
         reg = None
         disp = None
         if flavor == "att":
-            reg, disp, pos = get_address_att(token_line, pos + 2, vm, 
+            reg, disp, pos = get_address_att(token_line, pos + 2, vm,
                                              token_line[pos].get_val())
         else:
-            reg, disp, pos = get_address_mips(token_line, pos + 2, vm, 
+            reg, disp, pos = get_address_mips(token_line, pos + 2, vm,
                                               token_line[pos].get_val())
-        if reg: 
-            return (RegAddress(reg.get_nm(), vm, disp, 
+        if reg:
+            return (RegAddress(reg.get_nm(), vm, disp,
                                reg.get_multiplier()), pos)
         else:
             return (Address(hex(disp).split('x')[-1].upper(), vm), pos)
-    elif flavor == "att" and token_line[pos].con == False:
+    elif flavor == "att" and token_line[pos].con is False:
         mem_val = token_line[pos].get_val()
         return (Address(hex(mem_val).split('x')[-1].upper(), vm), pos + 1)
     else:
         return (token_line[pos], pos + 1)
 
+
 def symbol_token(token_line, pos, flavor, vm):
     """
-    If token seen is a symbol, determine by flavor whether 
+    If token seen is a symbol, determine by flavor whether
     to return the symbol token or return an address token
 
     Args:
@@ -130,18 +132,18 @@ def symbol_token(token_line, pos, flavor, vm):
     """
     if flavor != "mips_asm":
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
-    elif (pos + 1 < len (token_line) and 
+    elif (pos + 1 < len(token_line) and
           isinstance(token_line[pos + 1], OpenParen)):
-        reg, disp, pos = get_address_mips(token_line, pos + 2, vm, 
-                                          vm.symbols[token_line[pos].
-                                          get_nm()])
-        return (RegAddress(reg.get_nm(), vm, disp, 
+        reg, disp, pos = get_address_mips(token_line, pos + 2, vm,
+                                          vm.symbols[token_line[pos].get_nm()])
+        return (RegAddress(reg.get_nm(), vm, disp,
                            reg.get_multiplier()), pos)
     else:
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
 
+
 def is_start_address(token_line, pos, flavor):
-    """ 
+    """
     Determines at current location if there is an address
 
     Args:
@@ -154,13 +156,14 @@ def is_start_address(token_line, pos, flavor):
     """
     if isinstance(token_line[pos], OpenParen) and flavor == "att":
         return True
-    elif (isinstance(token_line[pos], OpenParen) and 
-         (flavor == "mips_asm" or flavor == "mips_mml")):
+    elif (isinstance(token_line[pos], OpenParen) and
+          (flavor == "mips_asm" or flavor == "mips_mml")):
         return True
     elif isinstance(token_line[pos], OpenBracket) and flavor == "intel":
         return True
     else:
         return False
+
 
 def get_data_type(token_line, pos):
     """
@@ -170,7 +173,7 @@ def get_data_type(token_line, pos):
         token_line: List of data tokens
         pos: Position of list
 
-    Returns: 
+    Returns:
         Data type of variable
     """
     if pos >= len(token_line):
@@ -182,6 +185,7 @@ def get_data_type(token_line, pos):
             return token_line[pos].get_nm()
     else:
         raise InvalidDataType(token_line[pos].get_nm())
+
 
 def get_data_token(token_line, pos):
     """
@@ -203,20 +207,23 @@ def get_data_token(token_line, pos):
                 return get_data_token(token_line, pos + 1)
             else:
                 raise InvalidDataVal("-")
-        except: 
+        except Exception:
             raise InvalidDataVal("-")
     elif isinstance(token_line[pos], IntegerTok):
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], FloatTok):
-        if token_line[pos].get_type() == ".float" and token_line[pos].get_val() > float(2 ** 22):
+        if (token_line[pos].get_type() == ".float" and
+                token_line[pos].get_val() > float(2 ** 22)):
             raise TooBigForSingle(str(token_line[pos].get_val()))
-        if token_line[pos].get_type() == ".double" and token_line[pos].get_val() > float(2 * 10 ** 14):
+        if (token_line[pos].get_type() == ".double" and
+                token_line[pos].get_val() > float(2 * 10 ** 14)):
             raise TooBigForDouble(str(token_line[pos].get_val()))
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], QuestionTok):
-        return DONT_INIT, pos + 1 
+        return DONT_INIT, pos + 1
     else:
         raise InvalidArgument(token_line[pos].get_nm())
+
 
 def get_DUP_value(token_line, pos):
     """
@@ -236,8 +243,9 @@ def get_DUP_value(token_line, pos):
     dup_value, pos = get_data_token(token_line, pos)
     if isinstance(token_line[pos], CloseParen):
         return dup_value, pos + 1
-    else: 
+    else:
         raise MissingCloseParen()
+
 
 def is_str_termin(token_line, pos):
     if not isinstance(token_line[pos], IntegerTok):
@@ -247,20 +255,22 @@ def is_str_termin(token_line, pos):
         return False
     return True
 
+
 NUM_STR_TOKS = 3
 COMMA_POS = 1
 TERM_POS = 2
+
 
 def parse_string_token(token_line, pos):
     """
     Creates a list of the string token's ASCII values
 
-    Args: 
+    Args:
         token_line: List of data tokens
         pos: Position of string token
 
     Returns:
-        List of ASCII values, followed by a 0 
+        List of ASCII values, followed by a 0
     """
     if len(token_line) < pos + NUM_STR_TOKS:
         raise MissingData()
@@ -278,11 +288,12 @@ def parse_string_token(token_line, pos):
         ascii_list.append(0)
         return (ascii_list, pos + 3)
 
+
 def parse_dup_token(token_line, data_type, pos):
     """
     Parses integer token followed by DUP token
 
-    Args: 
+    Args:
         token_line: List of data tokens
         data_type: Data type of variable
         pos = Position of integer token
@@ -298,6 +309,7 @@ def parse_dup_token(token_line, data_type, pos):
     else:
         dup_list = [value] * duplicate
     return (dup_list, pos)
+
 
 def get_values(token_line, data_type, pos, values_list):
     """
@@ -334,12 +346,13 @@ def get_values(token_line, data_type, pos, values_list):
             values_list.extend(dup_list)
             try:
                 next_term = token_line[pos]
-            except:
+            except Exception:
                 return values_list, pos
         if isinstance(next_term, Comma):
             return get_values(token_line, data_type, pos + 1, values_list)
         else:
             raise InvalidDataVal(token_line[pos].get_nm())
+
 
 def parse_data_token(token_line, vm, flavor, mem_loc):
     """
@@ -364,9 +377,8 @@ def parse_data_token(token_line, vm, flavor, mem_loc):
     data_type = get_data_type(token_line, pos + 1)
     pos += 2
     data_vals, pos = get_values(token_line, data_type, pos, data_vals)
-           
 
-    # store memory location 
+    # store memory location
     vm.symbols[symbol] = mem_loc
     add_debug("Symbol table now holds " + str(mem_loc), vm)
     for value in data_vals:
@@ -377,6 +389,7 @@ def parse_data_token(token_line, vm, flavor, mem_loc):
         else:
             mem_loc += 1
     return mem_loc
+
 
 def get_term(token_line, pos, vm):
     """
@@ -395,10 +408,10 @@ def get_term(token_line, pos, vm):
         try:
             token_line[pos + 1].negate_val()
             return get_term(token_line, pos + 1, vm)
-        except:
+        except Exception:
             raise InvalidArgument(token_line[pos].get_nm())
     # integer or register term
-    elif (isinstance(token_line[pos], IntegerTok) or 
+    elif (isinstance(token_line[pos], IntegerTok) or
           isinstance(token_line[pos], Register)):
         return (token_line[pos], pos)
     # symbol term
@@ -410,13 +423,15 @@ def get_term(token_line, pos, vm):
     else:
         raise InvalidMemLoc(token_line[pos].get_nm())
 
+
 REG = 0
 DISP_VAL = 1
 POSITION = 2
 
+
 def get_expr_intel(token_line, pos, vm, reg):
     """
-    Returns the register and the evaluated expression 
+    Returns the register and the evaluated expression
 
     Args:
         token_line: Line of code
@@ -443,7 +458,10 @@ def get_expr_intel(token_line, pos, vm, reg):
     else:
         return (reg, left.get_val(), pos + 1)
 
-SEC_REG = 0 
+
+SEC_REG = 0
+
+
 def get_expr_att(token_line, pos, vm, reg, disp_list):
     """
     Returns address expression for AT&T
@@ -455,16 +473,16 @@ def get_expr_att(token_line, pos, vm, reg, disp_list):
         disp_list: List of displacements
 
     Returns:
-        Register token, displacement(s), next position 
+        Register token, displacement(s), next position
     """
     if len(token_line) < pos + 2:
         return MissingOps()
     left, pos = get_term(token_line, pos, vm)
 
     # Retrieved Register Term
-    if isinstance(left, Register) and reg == None:
+    if isinstance(left, Register) and reg is None:
         reg = left
-    elif isinstance(left, Register) and disp_list[SEC_REG] == None:
+    elif isinstance(left, Register) and disp_list[SEC_REG] is None:
         disp_list[SEC_REG] = left
 
     # at most two registers allowed
@@ -489,6 +507,7 @@ def get_expr_att(token_line, pos, vm, reg, disp_list):
     else:
         return (reg, disp_list, pos + 1)
 
+
 def get_expr_mips(token_line, pos, vm):
     """
     Returns address expression for MIPS
@@ -510,9 +529,10 @@ def get_expr_mips(token_line, pos, vm):
     else:
         raise InvalidMemLoc(left.get_nm())
 
+
 def get_address_intel(token_line, pos, vm):
     """
-    Converts a sublist of the tokenized instruction into 
+    Converts a sublist of the tokenized instruction into
     corresponding address token
 
     Args:
@@ -520,8 +540,8 @@ def get_address_intel(token_line, pos, vm):
         pos: Beginning position in list
         vm: Virtual machine
 
-    Returns: 
-        Register token, displacement, next position 
+    Returns:
+        Register token, displacement, next position
     """
 
     if pos >= len(token_line):
@@ -536,9 +556,10 @@ def get_address_intel(token_line, pos, vm):
     else:
         raise InvalidMemLoc(token_line[pos].get_nm())
 
-def get_address_att(token_line, pos, vm, disp = 0):
+
+def get_address_att(token_line, pos, vm, disp=0):
     """
-    Converts a sublist of the tokenized instruction into 
+    Converts a sublist of the tokenized instruction into
     corresponding address token for AT&T
 
     Args:
@@ -547,8 +568,8 @@ def get_address_att(token_line, pos, vm, disp = 0):
         vm: Virtual machine
         Disp: Numeric displacement
 
-    Returns: 
-        Register token, displacement(s), next position 
+    Returns:
+        Register token, displacement(s), next position
     """
     if pos >= len(token_line):
         raise InvalidMemLoc("")
@@ -558,17 +579,18 @@ def get_address_att(token_line, pos, vm, disp = 0):
         raise MissingCloseParen()
     elif isinstance(token_line[pos], CloseParen):
         if len(disp_list) > 1:
-            for values in range (1, len(disp_list)):
+            for values in range(1, len(disp_list)):
                 disp += disp_list[values]
-        if disp_list[0] == None:
+        if disp_list[0] is None:
             return (reg, disp, pos + 1)
         return (reg, [disp_list[0], disp], pos + 1)
     else:
         raise InvalidMemLoc(token_line[pos].get_nm())
 
-def get_address_mips(token_line, pos, vm, disp = 0):
+
+def get_address_mips(token_line, pos, vm, disp=0):
     """
-    Converts a sublist of the tokenized instruction into 
+    Converts a sublist of the tokenized instruction into
     corresponding address token for MIPS
 
     Args:
@@ -576,8 +598,8 @@ def get_address_mips(token_line, pos, vm, disp = 0):
         pos: Beginning position in list
         vm: Virtual machine
 
-    Returns: 
-        Register token, displacement, next position 
+    Returns:
+        Register token, displacement, next position
     """
 
     if pos >= len(token_line):
@@ -590,9 +612,10 @@ def get_address_mips(token_line, pos, vm, disp = 0):
     else:
         raise InvalidMemLoc(token_line[pos].get_nm())
 
+
 def get_address_location(token_line, pos, flavor, vm):
     """
-    Retrieves address at current position in code 
+    Retrieves address at current position in code
     Retrieves address by coding language
 
     Args:
@@ -601,8 +624,8 @@ def get_address_location(token_line, pos, flavor, vm):
         flavor: Coding language
         vm: Virtual machine
 
-    Returns: 
-        RegAddress or Address token, 
+    Returns:
+        RegAddress or Address token,
         position of next item in instruction
     """
     reg = None
@@ -611,17 +634,17 @@ def get_address_location(token_line, pos, flavor, vm):
         reg, disp, pos = get_address_intel(token_line, pos, vm)
     elif flavor == "att":
         reg, disp, pos = get_address_att(token_line, pos, vm)
-    else: 
+    else:
         reg, disp, pos = get_address_mips(token_line, pos, vm)
     if reg:
-        return (RegAddress(reg.get_nm(), vm, 
+        return (RegAddress(reg.get_nm(), vm,
                            disp, reg.get_multiplier()), pos)
     else:
         # eliminates negative memory locations
         if disp < 0:
             raise InvalidMemLoc(str(disp))
-        return (Address(hex(disp).split('x')[-1].upper(), vm), 
-                pos)
+        return (Address(hex(disp).split('x')[-1].upper(), vm), pos)
+
 
 def check_constant(token_line, pos):
     """
@@ -636,17 +659,17 @@ def check_constant(token_line, pos):
     """
     try:
         if (not isinstance(token_line[pos + 1], MinusTok) and
-            not isinstance(token_line[pos + 1], IntegerTok)):
+                not isinstance(token_line[pos + 1], IntegerTok)):
             return False
         if isinstance(token_line[pos + 1], IntegerTok):
             token_line[pos + 1].con = True
         else:
             try:
                 token_line[pos + 2].con = True
-            except:
+            except Exception:
                 raise InvalidArgument("-")
         return True
-    except:
+    except Exception:
         raise InvalidArgument("$")
 
 
@@ -660,7 +683,7 @@ def get_op(token_line, pos, flavor, vm):
         flavor: Coding language
         vm: Virtual machine
 
-    Returns: 
+    Returns:
         Operand token, position of next item in instruction
     """
     if pos >= len(token_line):
@@ -701,9 +724,10 @@ def get_op(token_line, pos, flavor, vm):
 
 # Address Token
     elif is_start_address(token_line, pos, flavor):
-        return get_address_location (token_line, pos + 1, flavor, vm)
+        return get_address_location(token_line, pos + 1, flavor, vm)
     else:
         raise InvalidArgument(token_line[pos].get_nm())
+
 
 def get_op_list(token_line, pos, flavor, vm, op_lst):
     """
@@ -731,6 +755,7 @@ def get_op_list(token_line, pos, flavor, vm, op_lst):
         else:
             raise MissingComma()
 
+
 def get_pc(token_line, pos):
     """
     Returns the PC counter of the instruction
@@ -749,6 +774,7 @@ def get_pc(token_line, pos):
     else:
         return token_line[pos]
 
+
 def parse_exec_unit(token_line, flavor, vm):
     """
     Parses instruction
@@ -758,7 +784,7 @@ def parse_exec_unit(token_line, flavor, vm):
         flavor: Coding language
         vm: Virtual machine
 
-    Returns: 
+    Returns:
         List of tokens: instruction, operand(s)
         If MIPS: PC, instruction, operand(s)
     """
@@ -766,7 +792,7 @@ def parse_exec_unit(token_line, flavor, vm):
     token_instruction = []
     op_lst = []
 
-    # retrieve PC counter 
+    # retrieve PC counter
     if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
         token_instruction.append(get_pc(token_line, pos))
         pos += 1
@@ -775,7 +801,7 @@ def parse_exec_unit(token_line, flavor, vm):
     if not isinstance(token_line[pos], Instruction):
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
-    pos += 1 
+    pos += 1
 
     # retrieve ops
     if pos < len(token_line):
@@ -788,6 +814,7 @@ def parse_exec_unit(token_line, flavor, vm):
         token_instruction[1] = switch_vals[1]
         token_instruction[2] = switch_vals[0]
     return token_instruction
+
 
 def parse(tok_lines, flavor, vm):
     """
@@ -804,7 +831,7 @@ def parse(tok_lines, flavor, vm):
     parse_data = False
     parse_text = True
     token_instrs = []
-    mem_loc = 0 
+    mem_loc = 0
     ip_init = None
     for tokens in tok_lines:
         if isinstance(tokens[0][TOKENS], Section):
@@ -816,7 +843,7 @@ def parse(tok_lines, flavor, vm):
                 parse_text = True
                 parse_data = False
                 continue
-            else: 
+            else:
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
             mem_loc = parse_data_token(tokens[0], vm, flavor, mem_loc)
@@ -824,7 +851,9 @@ def parse(tok_lines, flavor, vm):
             vm.set_data_init("off")
             parsed_unit = parse_exec_unit(tokens[0], flavor, vm)
             token_instrs.append((parsed_unit, tokens[1]))
-            if (flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv") and ip_init == None:
+            if (flavor == "mips_asm" or
+                flavor == "mips_mml" or
+                    flavor == "riscv") and ip_init is None:
                 ip_init = token_instrs[0][TOKENS][0].get_val()
                 vm.start_ip = ip_init
     return token_instrs

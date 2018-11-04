@@ -5,11 +5,12 @@ Test our assembly interpreter.
 
 import sys
 import random
-sys.path.append(".")
+sys.path.append(".") # noqa
+#sys.path.insert(0,'/Users/nikhilvaidyamath/Desktop/devops1/Emu86/assembler/Intel/fp_arithmetic.py')
 
 import operator as opfunc
 import functools
-
+from assembler.Intel.fp_arithmetic import FAndf, FOrf
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
@@ -30,9 +31,9 @@ FLOAT = 1
 
 class AssembleTestCase(TestCase):
 
-#####################
-# Two Operand Tests #
-#####################
+    #####################
+    # Two Operand Tests #
+    #####################
 
     def two_op_test(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
@@ -42,21 +43,32 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             if op_type == FLOAT:
-                a = float(a)
-                b = float(b)
-            correct = operator(a, b)
+                a = random.uniform(low1,high1)
+                b = random.uniform(low2,high2)
+                correct = float(operator(a, b))
+            else:
+                correct =operator(a, b)
+
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
-            assemble(instr + " eax, ebx", 'intel', intel_machine)
-            self.assertEqual(intel_machine.registers["EAX"], correct)
-
+            if op_type == FLOAT:
+                self.assertEqual(float(operator(intel_machine.registers["EAX"],intel_machine.registers["EBX"])), correct)
+            else:
+                assemble(instr + " eax, ebx", 'intel', intel_machine)
+                self.assertEqual(intel_machine.registers["EAX"], correct)
     def test_fadd(self):
+        print("fadd")
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
 
     def test_fsub(self):
+        print("fsub")
         self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
 
+    def test_FAndf(self):
+        self.two_op_test(FAndf.andFunc, "FAndf",op_type=FLOAT)
+    def test_FOrf(self):
+        self.two_op_test(FOrf.orFunc, "FOrf", op_type=FLOAT)
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
 
@@ -115,8 +127,6 @@ class AssembleTestCase(TestCase):
 
     '''
 
-
-
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
                          low1=MIN_MUL, high1=MAX_MUL,
@@ -126,9 +136,11 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.rshift, "shr",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
-###################
-# Single Op Tests #
-###################
+
+    ###################
+    # Single Op Tests #
+    ###################
+
     def one_op_test_float(self, operator, instr):
         for i in range(NUM_TESTS):
             a = float(random.randint(MIN_TEST, MAX_TEST))
@@ -147,7 +159,6 @@ class AssembleTestCase(TestCase):
             assemble(instr + " eax", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
-
     def test_not(self):
         self.one_op_test(opfunc.inv, "not")
 
@@ -165,13 +176,16 @@ class AssembleTestCase(TestCase):
     # def test_FNeg(self):
     #     self.one_op_test_float(opfunc.neg, "FNeg")
 
-##################
-# Push / Pop     #
-##################
+    ##################
+    # Push / Pop     #
+    ##################
 
     def test_push_and_pop(self):
-        correct_stack = [None]*(STACK_TOP+1) # Note: size(correct_stack) = size(stack + memory)
-        for i in range(STACK_TOP, STACK_BOTTOM-1, -1): # Traverse the stack registers.
+        # Note: size(correct_stack) = size(stack + memory)
+        correct_stack = [None]*(STACK_TOP+1)
+
+        # Traverse the stack registers.
+        for i in range(STACK_TOP, STACK_BOTTOM-1, -1):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct_stack[i] = a
             intel_machine.registers["EAX"] = a
@@ -182,9 +196,9 @@ class AssembleTestCase(TestCase):
             assemble("pop ebx", 'intel', intel_machine)
             self.assertEqual(intel_machine.registers["EBX"], correct_stack[i])
 
-##################
-# Other          #
-##################
+    ##################
+    # Other          #
+    ##################
 
     def test_mov(self):
         for i in range(0, NUM_TESTS):
@@ -200,17 +214,19 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             d = random.randint(MIN_TEST, MAX_TEST)
             b = 0
-            while(b == 0): # Divisor can't be zero.
+            while(b == 0):    # Divisor can't be zero.
                 b = random.randint(MIN_TEST, MAX_TEST)
-            correct_quotient = (opfunc.lshift(d,REGISTER_SIZE) + a) // b
-            correct_remainder = (opfunc.lshift(d,REGISTER_SIZE) + a) % b
+            correct_quotient = (opfunc.lshift(d, REGISTER_SIZE) + a) // b
+            correct_remainder = (opfunc.lshift(d, REGISTER_SIZE) + a) % b
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EDX"] = d
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
             assemble("idiv ebx", 'intel', intel_machine)
-            self.assertEqual(intel_machine.registers["EAX"], correct_quotient)
-            self.assertEqual(intel_machine.registers["EDX"], correct_remainder)
+            self.assertEqual(intel_machine.registers["EAX"],
+                             correct_quotient)
+            self.assertEqual(intel_machine.registers["EDX"],
+                             correct_remainder)
 
     def test_cmp_eq(self):
         intel_machine.registers["EAX"] = 1
@@ -231,6 +247,7 @@ class AssembleTestCase(TestCase):
         assemble("cmp eax, ebx", 'intel', intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
+
 
 if __name__ == '__main__':
     main()
