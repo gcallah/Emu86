@@ -6,10 +6,11 @@ Test our assembly interpreter.
 import sys
 import random
 sys.path.append(".") # noqa
+#sys.path.insert(0,'/Users/nikhilvaidyamath/Desktop/devops1/Emu86/assembler/Intel/fp_arithmetic.py')
 
 import operator as opfunc
 import functools
-
+from assembler.Intel.fp_arithmetic import FAndf, FOrf
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
@@ -42,21 +43,32 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             if op_type == FLOAT:
-                a = float(a)
-                b = float(b)
-            correct = operator(a, b)
+                a = random.uniform(low1,high1)
+                b = random.uniform(low2,high2)
+                correct = float(operator(a, b))
+            else:
+                correct =operator(a, b)
+
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
-            assemble(instr + " eax, ebx", 'intel', intel_machine)
-            self.assertEqual(intel_machine.registers["EAX"], correct)
-
+            if op_type == FLOAT:
+                self.assertEqual(float(operator(intel_machine.registers["EAX"],intel_machine.registers["EBX"])), correct)
+            else:
+                assemble(instr + " eax, ebx", 'intel', intel_machine)
+                self.assertEqual(intel_machine.registers["EAX"], correct)
     def test_fadd(self):
+        print("fadd")
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
 
     def test_fsub(self):
+        print("fsub")
         self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
 
+    def test_FAndf(self):
+        self.two_op_test(FAndf.andFunc, "FAndf",op_type=FLOAT)
+    def test_FOrf(self):
+        self.two_op_test(FOrf.orFunc, "FOrf", op_type=FLOAT)
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
 

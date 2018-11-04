@@ -18,6 +18,10 @@ def check_overflow(val, vm):
         val = val - MAX_INT+1
     return val
 
+# check for even register
+def checkEven(register):
+    if int(register.get_nm()[1:]) % 2 != 0:
+        raise NotEvenRegister(register.__str__()[1:])
 
 def three_op_arith_reg(ops, vm, instr, operator):
     """
@@ -28,6 +32,8 @@ def three_op_arith_reg(ops, vm, instr, operator):
     check_reg_only(instr, ops)
 
     # go through the register ops and make sure that they're even numbered
+    for op in ops:
+        checkEven(op)
 
     ops[0].set_val(operator(ops[1].get_val(), ops[2].get_val()))
     # check_overflow(operator(ops[1].get_val(),
@@ -157,7 +163,7 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 3, type_ins=1)
-    # check_reg_only(instr, ops)
+    check_reg_only(instr, ops)
 
     # go through the register ops and make sure that they're even numbered
 
@@ -215,3 +221,17 @@ class Addd(Instruction):
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm):
         three_op_double_arith_reg(ops, vm, self.name, opfunc.add)
+
+
+class Subd(Instruction):
+    """
+        <instr>
+            SUB.D
+        </instr>
+        <syntax>
+            SUB.D reg, reg, reg
+        </syntax>
+    """
+    # ops is a list of operands (reg, reg, reg)
+    def fhook(self, ops, vm):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.sub)
