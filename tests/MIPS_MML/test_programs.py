@@ -1,31 +1,28 @@
 #!/usr/bin/env python3
 import sys
-sys.path.append(".")
-import random
-import string
+sys.path.append(".") # noqa
 
-import operator as opfunc
-import functools
 from assembler.virtual_machine import mips_machine
-
 from unittest import TestCase, main
-
 from assembler.assemble import assemble
-NUM_TESTS=1000
+NUM_TESTS = 1000
 
 """
 Test entire programs.
 
-tests/arithmetic_shift.asm  tests/data.asm  tests/gt.asm  tests/key_test.asm  tests/loop.asm  tests/power.asm  tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
+tests/arithmetic_shift.asm  tests/data.asm  tests/gt.asm
+tests/key_test.asm  tests/loop.asm  tests/power.asm
+tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
 """
+
 
 class TestPrograms(TestCase):
 
     def read_test_code(self, filenm):
-        with open (filenm, "r") as prog:
+        with open(filenm, "r") as prog:
             return prog.read()
 
-    def run_mips_test_code (self, filnm):
+    def run_mips_test_code(self, filnm):
         mips_machine.re_init()
         mips_machine.base = "hex"
         test_code = self.read_test_code("tests/MIPS_MML/" + filnm)
@@ -144,6 +141,7 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R17"], 10)
         self.assertEqual(mips_machine.registers["R9"], 40)
         self.assertEqual(mips_machine.registers["R10"], 10)
+
 
 if __name__ == '__main__':
     main()

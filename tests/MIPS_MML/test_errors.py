@@ -59,7 +59,7 @@ class ErrorTestCase(TestCase):
                                              mips_machine)
         self.assertTrue(error.startswith(MISSING_COMMA))
 
-    def test_comma_error(self):
+    def test_token_error(self):
         mips_machine.base = "hex"
         (output, error, bit_code) = assemble("40000 ORI R10,,,, 1", 'mips_mml',
                                              mips_machine)
