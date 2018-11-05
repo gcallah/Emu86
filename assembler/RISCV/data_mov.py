@@ -2,7 +2,8 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args, InvalidArgument
-from assembler.tokens import Instruction, Register, RegAddress, Symbol
+from assembler.tokens import Instruction, Register, RegAddress
+
 
 class Load(Instruction):
     """
@@ -13,7 +14,8 @@ class Load(Instruction):
             LW rd, imm(rs1)
         </syntax>
         <descr>
-            Load value from memory into rd. R[rd] = M_4B[ R[rs1] + sext(imm) ]
+            Load value from memory into rd.
+            R[rd] = M_4B[ R[rs1] + sext(imm) ]
         </descr>
     """
     def fhook(self, ops, vm):
@@ -24,8 +26,9 @@ class Load(Instruction):
                 vm.changes.add(ops[0].get_nm())
             else:
                 raise InvalidArgument(ops[1].get_nm())
-        else: 
+        else:
             raise InvalidArgument(ops[0].get_nm())
+
 
 class Store(Instruction):
     """
@@ -36,7 +39,8 @@ class Store(Instruction):
             SW rs2, imm(rs1)
         </syntax>
         <descr>
-            Store the value in rs2 into memory. M_4B[ R[rs1] + sext(imm) ] = R[rs2]
+            Store the value in rs2 into memory.
+            M_4B[ R[rs1] + sext(imm) ] = R[rs2]
         </descr>
     """
     def fhook(self, ops, vm):
@@ -46,5 +50,5 @@ class Store(Instruction):
                 ops[1].set_val(ops[0].get_val())
             else:
                 InvalidArgument(ops[1].get_nm())
-        else: 
+        else:
             raise InvalidArgument(ops[0].get_nm())

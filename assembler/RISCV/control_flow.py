@@ -6,8 +6,8 @@ control_flow.py: control flow instructions,
 from assembler.errors import check_num_args, OutofBounds, InvalidArgument
 from assembler.tokens import Instruction, Register, IntegerTok
 from assembler.flowbreak import Jump
-from assembler.ops_check import get_one_op, get_two_ops
-from .argument_check import check_reg_only, check_immediate_three
+from assembler.ops_check import get_one_op
+
 
 class Jr(Instruction):
     """
@@ -18,13 +18,14 @@ class Jr(Instruction):
             JR reg
         </syntax>
         <descr>
-            Jump to address. 
+            Jump to address.
             PC = R[rs1]
         </descr>
     """
     def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(str(target.get_val()))
+
 
 class Jal(Instruction):
     """
@@ -43,6 +44,7 @@ class Jal(Instruction):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(str(target.get_val()))
 
+
 class Jalr(Instruction):
     """
         <instr>
@@ -59,6 +61,7 @@ class Jalr(Instruction):
     def fhook(self, ops, vm):
         target = get_one_op(self.get_nm(), ops)
         raise Jump(str(target.get_val()))
+
 
 class Beq(Instruction):
     """
@@ -96,6 +99,7 @@ class Beq(Instruction):
             else:
                 raise OutofBounds()
 
+
 class Bne(Instruction):
     """
         <instr>
@@ -131,6 +135,7 @@ class Bne(Instruction):
                 vm.set_ip(current_ip + disp * 4)
             else:
                 raise OutofBounds()
+
 
 class Blt(Instruction):
     """
