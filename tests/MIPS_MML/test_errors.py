@@ -53,11 +53,11 @@ class ErrorTestCase(TestCase):
                                              'mips_mml', mips_machine)
         self.assertTrue(error.startswith(REG_UNWRITABLE))
 
-    # def test_comma_error(self):
-    #     mips_machine.base = "hex"
-    #     (output, error, bit_code) = assemble("40000 SUBI R8 R8 1", 'mips_mml',
-    #                                          mips_machine)
-    #     self.assertTrue(error.startswith(MISSING_COMMA))
+    def test_comma_error(self):
+        mips_machine.base = "hex"
+        (output, error, bit_code) = assemble("40000 SUB R8 R8 1", 'mips_mml',
+                                             mips_machine)
+        self.assertTrue(error.startswith(MISSING_COMMA))
 
     def test_token_error(self):
         mips_machine.base = "hex"
