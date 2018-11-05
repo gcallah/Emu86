@@ -2,7 +2,6 @@
 """
 Test our assembly interpreter.
 """
-
 import sys
 import random
 sys.path.append(".") # noqa

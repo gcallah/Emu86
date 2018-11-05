@@ -5,6 +5,7 @@ fp_arithmetic.py: arithmetic and logic instructions.
 import operator as opfunc
 
 from assembler.errors import check_num_args, TooBigForSingle, DivisionZero
+from assembler.errors import NotEvenRegister
 from assembler.tokens import Instruction, MAX_INT
 from .argument_check import check_reg_only
 
@@ -18,10 +19,12 @@ def check_overflow(val, vm):
         val = val - MAX_INT+1
     return val
 
+
 # check for even register
 def checkEven(register):
     if int(register.get_nm()[1:]) % 2 != 0:
         raise NotEvenRegister(register.__str__()[1:])
+
 
 def three_op_arith_reg(ops, vm, instr, operator):
     """

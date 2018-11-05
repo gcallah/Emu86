@@ -7,6 +7,7 @@ ADIR = ansible
 SDIR = assembler
 INTEL_DIR = $(SDIR)/Intel
 MIPS_DIR = $(SDIR)/MIPS
+RISCV_DIR = $(SDIR)/RISCV
 EMUDIR = Emu86
 ODIR = $(EMUDIR)/templates
 MUDIR = myutils
@@ -28,6 +29,7 @@ PYTHONFILES += $(shell ls $(SDIR)/*.py)
 PYTHONFILES += $(INTEL_DIR)/*.py
 PYTHONFILES += $(MIPS_DIR)/*.py
 PYTHONFILES += $(TDIR)/*/*.py
+PYTHONFILES += $(RISCV_DIR)/*.py
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 

@@ -57,13 +57,13 @@ instructions = {
         'FADD': FADD('FADD'),
         'FDIV': FDIV('FDIV'),
         'FMUL': FMUL('FMUL'),
-        'FOrf':FOrf('FOrf'),
+        'FOrf': FOrf('FOrf'),
         'FSUB': FSUB('FSUB'),
         'FNeg': FNeg('FNeg'),
         'FDec': FDec('FDec'),
         'FInc': FInc('FInc'),
         'FNotf': FNotf('FNotf'),
-        'FAndf':FAndf('FAndf'),
+        'FAndf': FAndf('FAndf'),
         "FShl": FShl('FShl'),
         'FShr': FShr('FShr')
         }

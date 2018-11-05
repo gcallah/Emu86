@@ -6,7 +6,8 @@ Test our assembly interpreter.
 import sys
 import random
 sys.path.append(".") # noqa
-#sys.path.insert(0,'/Users/nikhilvaidyamath/Desktop/devops1/Emu86/assembler/Intel/fp_arithmetic.py')
+# sys.path.insert(0,'/Users/nikhilvaidyamath/Desktop/
+# devops1/Emu86/assembler/Intel/fp_arithmetic.py')
 
 import operator as opfunc
 import functools
@@ -43,20 +44,22 @@ class AssembleTestCase(TestCase):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             if op_type == FLOAT:
-                a = random.uniform(low1,high1)
-                b = random.uniform(low2,high2)
+                a = random.uniform(low1, high1)
+                b = random.uniform(low2, high2)
                 correct = float(operator(a, b))
             else:
-                correct =operator(a, b)
+                correct = operator(a, b)
 
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
             if op_type == FLOAT:
-                self.assertEqual(float(operator(intel_machine.registers["EAX"],intel_machine.registers["EBX"])), correct)
+                self.assertEqual(float(operator(intel_machine.registers["EAX"],
+                                 intel_machine.registers["EBX"])), correct)
             else:
                 assemble(instr + " eax, ebx", 'intel', intel_machine)
                 self.assertEqual(intel_machine.registers["EAX"], correct)
+
     def test_fadd(self):
         print("fadd")
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
@@ -66,9 +69,11 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
 
     def test_FAndf(self):
-        self.two_op_test(FAndf.andFunc, "FAndf",op_type=FLOAT)
+        self.two_op_test(FAndf.andFunc, "FAndf", op_type=FLOAT)
+
     def test_FOrf(self):
         self.two_op_test(FOrf.orFunc, "FOrf", op_type=FLOAT)
+
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
 
@@ -117,15 +122,12 @@ class AssembleTestCase(TestCase):
     # def test_FOrf(self):
     #     self.two_op_test_float(opfunc.or_, "FOrf")
 
-    '''
-    def test_FInc(self):
-        FInc = functools.partial(opfunc.add, 1)
-        self.one_op_test_float(FInc, "FInc")
+    # def test_FInc(self):
+    #     FInc = functools.partial(opfunc.add, 1)
+    #     self.one_op_test_float(FInc, "FInc")
 
-    def test_FNotf(self):
-        self.one_op_test(opfunc.inv, "FNotf")
-
-    '''
+    # def test_FNotf(self):
+    #     self.one_op_test(opfunc.inv, "FNotf")
 
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
@@ -182,7 +184,7 @@ class AssembleTestCase(TestCase):
 
     def test_push_and_pop(self):
         # Note: size(correct_stack) = size(stack + memory)
-        correct_stack = [None]*(STACK_TOP+1)
+        correct_stack = [None] * (STACK_TOP+1)
 
         # Traverse the stack registers.
         for i in range(STACK_TOP, STACK_BOTTOM-1, -1):

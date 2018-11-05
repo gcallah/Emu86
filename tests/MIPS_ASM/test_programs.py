@@ -1,27 +1,22 @@
-#!/usr/bin/env python3
+from assembler.virtual_machine import mips_machine
+from unittest import TestCase, main
+from assembler.assemble import assemble
+# !/usr/bin/env python3
 import sys
 sys.path.append(".")
-import random
-import string
-
-import operator as opfunc
-import functools
-from assembler.virtual_machine import mips_machine
-
-from unittest import TestCase, main
-
-from assembler.assemble import assemble
-NUM_TESTS=1000
-
 # for floating point to binary and back
 import struct
 import codecs
 import binascii
 
+NUM_TESTS = 1000
+
 """
 Test entire programs.
 
-tests/arithmetic_shift.asm  tests/data.asm  tests/gt.asm  tests/key_test.asm  tests/loop.asm  tests/power.asm  tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
+tests/arithmetic_shift.asm  tests/data.asm  tests/gt.asm  
+tests/key_test.asm  tests/loop.asm  tests/power.asm  
+tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
 """
 
 class TestPrograms(TestCase):
@@ -30,10 +25,10 @@ class TestPrograms(TestCase):
         with open (filenm, "r") as prog:
             return prog.read()
 
-    def run_mips_test_code (self, filnm):
+    def run_mips_test_code (self, filenm):
         mips_machine.re_init()
         mips_machine.base = "hex"
-        test_code = self.read_test_code("tests/MIPS_ASM/" + filnm)
+        test_code = self.read_test_code("tests/MIPS_ASM/" + filenm)
         assemble(test_code, 'mips_asm', mips_machine)
 
     # def convert_hex_float(self, string):
@@ -160,6 +155,7 @@ class TestPrograms(TestCase):
     ########################
     ##### FP TEST BELOW ####
     ########################
+
     def convertHiLoForFP(self):
         h_reg = str(mips_machine.registers["HI"])
         for i in range(0, 32-len(h_reg)):
