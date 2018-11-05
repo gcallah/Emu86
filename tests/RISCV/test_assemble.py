@@ -5,21 +5,15 @@ Test our assembly interpreter.
 
 import sys
 import random
-sys.path.append(".")
+sys.path.append(".") # noqa 
 
 import operator as opfunc
-import functools
 
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
 from assembler.virtual_machine import riscv_machine
 from assembler.assemble import assemble
-
-# for floating point to binary and back
-import struct
-import codecs
-import binascii
 
 NUM_TESTS = 100
 MAX_SHIFT = BITS // 2
@@ -29,11 +23,12 @@ MAX_MUL = 10000  # right now we don't want to overflow!
 MIN_MUL = -10000  # right now we don't want to overflow!
 REGISTER_SIZE = BITS
 
+
 class AssembleTestCase(TestCase):
 
-#####################
-# Two Operand Tests #
-#####################
+    #####################
+    # Two Operand Tests #
+    #####################
 
     def two_op_test(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
@@ -49,8 +44,8 @@ class AssembleTestCase(TestCase):
             self.assertEqual(riscv_machine.registers["X10"], correct)
 
     def two_op_test_unsigned(self, operator, instr,
-                    low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST):
+                             low1=MIN_TEST, high1=MAX_TEST,
+                             low2=MIN_TEST, high2=MAX_TEST):
         for _ in range(0, NUM_TESTS):
             a = abs(random.randint(low1, high1))
             b = abs(random.randint(low2, high2))
@@ -62,8 +57,8 @@ class AssembleTestCase(TestCase):
             self.assertEqual(riscv_machine.registers["X10"], correct)
 
     def two_op_test_imm(self, operator, instr,
-                    low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST):
+                        low1=MIN_TEST, high1=MAX_TEST,
+                        low2=MIN_TEST, high2=MAX_TEST):
         for _ in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
@@ -71,7 +66,8 @@ class AssembleTestCase(TestCase):
             correct = operator(a, int(hex(b), 16))
             riscv_machine.registers["X9"] = a
             riscv_machine.base = "hex"
-            assemble("40000 " + instr + " X10, X9, " + hex_string, 'riscv', riscv_machine)
+            assemble("40000 " + instr + " X10, X9, " + hex_string,
+                     'riscv', riscv_machine)
             self.assertEqual(riscv_machine.registers["X10"], correct)
 
     def test_add(self):
@@ -84,9 +80,9 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.sub, "SUB")
 
     def test_mul(self):
-        self.two_op_test(opfunc.mul, "MUL", 
-                         low1 = MIN_MUL, high1 = MAX_MUL, 
-                         low2 = MIN_MUL, high2 = MAX_MUL)
+        self.two_op_test(opfunc.mul, "MUL",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=MIN_MUL, high2=MAX_MUL)
 
     def test_and(self):
         self.two_op_test(opfunc.and_, "AND")
@@ -96,7 +92,7 @@ class AssembleTestCase(TestCase):
 
     def test_or(self):
         self.two_op_test(opfunc.or_, "OR")
-        
+
     def test_or_imm(self):
         self.two_op_test_imm(opfunc.or_, "ORI")
 
@@ -110,7 +106,7 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.rshift, "SRL",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
-    
+
     def test_sll(self):
         self.two_op_test(opfunc.lshift, "SLL",
                          low1=MIN_MUL, high1=MAX_MUL,
@@ -118,13 +114,13 @@ class AssembleTestCase(TestCase):
 
     def test_srl_imm(self):
         self.two_op_test_imm(opfunc.rshift, "SRLI",
-                         low1=MIN_MUL, high1=MAX_MUL,
-                         low2=0, high2=MAX_SHIFT)
-    
+                             low1=MIN_MUL, high1=MAX_MUL,
+                             low2=0, high2=MAX_SHIFT)
+
     def test_sll_imm(self):
         self.two_op_test_imm(opfunc.lshift, "SLLI",
-                         low1=MIN_MUL, high1=MAX_MUL,
-                         low2=0, high2=MAX_SHIFT)
+                             low1=MIN_MUL, high1=MAX_MUL,
+                             low2=0, high2=MAX_SHIFT)
 
     def test_slt(self):
         riscv_machine.registers["X8"] = 1
@@ -144,7 +140,7 @@ class AssembleTestCase(TestCase):
         riscv_machine.registers["X9"] = 0
         assemble("40000 SLTI X10, X9, 1", 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["X10"], 1)
-    
+
     def test_sltiu(self):
         riscv_machine.registers["X9"] = 0
         assemble("40000 SLTI X10, X9, 1", 'riscv', riscv_machine)
@@ -163,11 +159,7 @@ class AssembleTestCase(TestCase):
         self.two_op_test_unsigned(opfunc.mod, "REMU")
 
 
-
-
 '''
-    
-
     def test_slt_eq(self):
         riscv_machine.registers["R8"] = 1
         riscv_machine.registers["R9"] = 1
@@ -193,8 +185,9 @@ class AssembleTestCase(TestCase):
         riscv_machine.base = "hex"
         assemble("40000 SLTI R10, R9, 1", 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["R10"], 1)
-   
+
 '''
+
 
 if __name__ == '__main__':
     main()
