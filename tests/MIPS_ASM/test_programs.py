@@ -1,31 +1,35 @@
-from assembler.virtual_machine import mips_machine
-from unittest import TestCase, main
-from assembler.assemble import assemble
-# !/usr/bin/env python3
+#!/usr/bin/env python3
 import sys
-sys.path.append(".")
 # for floating point to binary and back
 import struct
 import codecs
 import binascii
 
+sys.path.append(".") # noqa
+
+from assembler.virtual_machine import mips_machine
+from unittest import TestCase, main
+from assembler.assemble import assemble
+
 NUM_TESTS = 1000
+
 
 """
 Test entire programs.
 
-tests/arithmetic_shift.asm  tests/data.asm  tests/gt.asm  
-tests/key_test.asm  tests/loop.asm  tests/power.asm  
+tests/arithmetic_shift.asm  tests/data.asm  tests/gt.asm
+tests/key_test.asm  tests/loop.asm  tests/power.asm
 tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
 """
+
 
 class TestPrograms(TestCase):
 
     def read_test_code(self, filenm):
-        with open (filenm, "r") as prog:
+        with open(filenm, "r") as prog:
             return prog.read()
 
-    def run_mips_test_code (self, filenm):
+    def run_mips_test_code(self, filenm):
         mips_machine.re_init()
         mips_machine.base = "hex"
         test_code = self.read_test_code("tests/MIPS_ASM/" + filenm)
@@ -90,7 +94,7 @@ class TestPrograms(TestCase):
         self.run_mips_test_code("array.asm")
         self.assertEqual(mips_machine.registers["R8"],  3)
         self.assertEqual(mips_machine.registers["R9"], 50)
-        self.assertEqual(mips_machine.registers["R10"], ord ('l'))
+        self.assertEqual(mips_machine.registers["R10"], ord('l'))
         self.assertEqual(mips_machine.registers["R11"], 5)
 
     def test_sum_calculation(self):
@@ -152,9 +156,9 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R9"], 40)
         self.assertEqual(mips_machine.registers["R10"], 10)
 
-    ########################
-    ##### FP TEST BELOW ####
-    ########################
+    # #######################
+    # #### FP TEST BELOW ####
+    # #######################
 
     def convertHiLoForFP(self):
         h_reg = str(mips_machine.registers["HI"])
@@ -175,31 +179,31 @@ class TestPrograms(TestCase):
     def float_to_hex(self, f):
         return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 
-    #to convert the ieee 754 hex back to the actual float value
+    # to convert the ieee 754 hex back to the actual float value
     def hex_to_float(self, h):
         h2 = h[2:]
         h2 = binascii.unhexlify(h2)
         return struct.unpack('>f', h2)[0]
 
-    #for double precision (64 bits) fps
-    getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:]
-     
+    # for double precision (64 bits) fps
+    getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:] # noqa
+
     def f_to_b64(self, value):
         val = struct.unpack('q', struct.pack('d', value))[0]
-        return getBin(val)
+        return getBin(val) # noqa
 
     def b_to_f(self, value):
-        hx = hex(int(value, 2))   
+        hx = hex(int(value, 2))
         return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
-    #loading data
+    # loading data
     def test_fp_data(self):
         self.run_mips_test_code("fp_data.asm")
         self.assertEqual(mips_machine.registers["F8"],  8.0)
         self.assertEqual(mips_machine.registers["F10"], 10.5)
 
-        # since F12's value is a double, we need to reconstruct the binary string from 12+13
-        # and turn it back into a float from there
+        # since F12's value is a double, we need to reconstruct the binary
+        # string from 12+13 and turn it back into a float from there
         twelve_string = mips_machine.registers["F12"]
         thirteen_string = mips_machine.registers["F13"]
         bin_string = twelve_string + thirteen_string
@@ -216,6 +220,7 @@ class TestPrograms(TestCase):
     def test_fp_area(self):
         self.run_mips_test_code("fp_area.asm")
         self.assertEqual(mips_machine.registers["F12"], 12.2 * 12.5)
+
 
 if __name__ == '__main__':
     main()
