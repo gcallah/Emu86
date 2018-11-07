@@ -163,6 +163,7 @@ class IntegerTok(Operand):
 
 class FloatTok(Operand):
     def __init__(self, data_type=".float", val=0.0):
+        print("hi")
         self.data_type = data_type
         # do a bit of error checking for precision for the hex value
         if data_type == ".float":
