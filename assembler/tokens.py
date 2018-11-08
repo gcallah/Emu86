@@ -163,7 +163,6 @@ class IntegerTok(Operand):
 
 class FloatTok(Operand):
     def __init__(self, data_type=".float", val=0.0):
-        print("hi")
         self.data_type = data_type
         # do a bit of error checking for precision for the hex value
         if data_type == ".float":
@@ -184,7 +183,6 @@ class FloatTok(Operand):
                 if (temp_float != val):
                     raise TooBigForDouble(str(val))
             elif type(val) is str:
-                print("val =", val)
                 temp_float = b_to_f64(val)
                 temp_bin2 = f_to_b64(temp_float)
                 temp_float2 = b_to_f64(temp_bin2)
