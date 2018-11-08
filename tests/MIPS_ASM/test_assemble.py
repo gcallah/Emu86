@@ -182,15 +182,32 @@ class AssembleTestCase(TestCase):
                                  low2=0, high2=MAX_TEST):
         for i in range(0, NUM_TESTS):
             a = random.uniform(low1, high1)
-            # silly solution right now - we can't do negative numbers atm
+            # this is a lie -> silly solution right now - we can't do negative numbers atm
             b = random.uniform(low2, a)
             correct = operator(a, b)
 
+            is_a_neg = False
+            is_b_neg = False
+
+            #pre-processing to deal with negatives
+            if a < 0: 
+                is_a_neg = True
+                a = abs(a)
+            if b < 0:
+                is_b_neg = True
+                b = abs(b)
+
             a_binary = f_to_b64(a)
+            #if a was neg overwrite the sign bit to 1
+            if (is_a_neg):
+                a_binary = "1" + a_binary[1:]
             mips_machine.registers["F8"] = a_binary[:32]
             mips_machine.registers["F9"] = a_binary[32:]
 
             b_binary = f_to_b64(b)
+            #if b was neg overwrite the sign bit to 1
+            if (is_b_neg):
+                b_binary = "1" + b_binary[1:]
             mips_machine.registers["F10"] = b_binary[:32]
             mips_machine.registers["F11"] = b_binary[32:]
             mips_machine.base = "hex"
@@ -204,7 +221,16 @@ class AssembleTestCase(TestCase):
             first_32 = str(mips_machine.registers["F12"])
             last_32 = str(mips_machine.registers["F13"])
             binary_result = first_32 + last_32
+
+            #check if the binary result is negative
+            #if so mark a flag and overwrite the value to positive
+            is_result_neg = False
+            if binary_result[0] == "1":
+                is_result_neg = True
+                binary_result = "0" + binary_result[1:] 
+
             result = b_to_f64(binary_result)
+            result = result * -1 if is_result_neg else result
             self.assertEqual(result, correct)
 
             # h_reg = str(mips_machine.registers["HI"])
@@ -238,12 +264,13 @@ class AssembleTestCase(TestCase):
                                low1=0, high1=2 ** 11, low2=0, high2=2 ** 11)
 
     def test_addd(self):
-        self.two_op_test_double_float(opfunc.add, 'ADD.D')
+        self.two_op_test_double_float(opfunc.add, 'ADD.D')#,
+                                # low1=-10, high1=0, low2=-10, high2=0)
 
     def test_subd(self):
         self.two_op_test_double_float(opfunc.sub, 'SUB.D')
 
 
 if __name__ == '__main__':
-    # main()
-    pass
+    main()
+    # pass
