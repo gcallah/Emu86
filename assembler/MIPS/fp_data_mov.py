@@ -101,7 +101,7 @@ class LoadDouble(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 2)
+        check_num_args(self.get_nm(), ops, 2, type_ins=1)
         if isinstance(ops[0], Register):
             checkEven(ops[0])
             if isinstance(ops[1], RegAddress):
@@ -138,7 +138,9 @@ class StoreDouble(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 2)
+        print("starting sdc")
+        check_num_args(self.get_nm(), ops, 2, type_ins=1)
+        print("made it past numm_args")
         if isinstance(ops[0], Register):
             checkEven(ops[0])
             if isinstance(ops[1], RegAddress):
@@ -146,6 +148,7 @@ class StoreDouble(Instruction):
                 reg_name = "F" + str(int(ops[0].get_nm()[1:]))
                 second_half = vm.registers[reg_name].get_val()
                 full_b = first_half + second_half
+                print("full_b", full_b)
                 v = b_to_f64(full_b)
                 ops[1].set_val(v)
             else:

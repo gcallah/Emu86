@@ -102,11 +102,6 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R8"],  53)
         self.assertEqual(mips_machine.memory["4"], 53)
 
-    def fp_test_sum_calculation(self):
-        self.run_mips_test_code("fp_sum_test.asm")
-        self.assertEqual(mips_machine.registers["F12"], 69134.8023)
-        self.assertEqual(mips_machine.memory["8"], 69134.8023)
-
     def test_arithmetic_expression(self):
         self.run_mips_test_code("arithmetic_expression.asm")
         self.assertEqual(mips_machine.registers["R8"], -31)
@@ -226,6 +221,12 @@ class TestPrograms(TestCase):
         self.run_mips_test_code("fp_area.asm")
         self.assertEqual(mips_machine.registers["F12"], 12.2 * 12.5)
 
+    #test for add double
+    # def test_fp_sum_calculation(self):
+    #     print("running double LOOK AT ME TYPING WORDS")
+    #     self.run_mips_test_code("fp_sum_test.asm")
+    #     self.assertEqual(mips_machine.registers["F12"], 69134.8023)
+    #     self.assertEqual(mips_machine.memory["8"], 69134.8023)
 
 if __name__ == '__main__':
     main()

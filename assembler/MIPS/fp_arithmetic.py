@@ -178,7 +178,7 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     a_first_32 = vm.registers[curr_reg]
     a_last_32 = vm.registers[next_reg]
     a = a_first_32 + a_last_32
-
+    # print("in add.d a is", a)
     # second number from the pair of registers
     reg_number = int(ops[2].get_nm()[1:])
     curr_reg = "F" + str(reg_number + 0)
@@ -186,10 +186,10 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     b_first_32 = vm.registers[curr_reg]
     b_last_32 = vm.registers[next_reg]
     b = b_first_32 + b_last_32
-
+    # print("in add.d b is", b)
     a = b_to_f64(a)
     b = b_to_f64(b)
-
+    # print("in add.d a float, b float", a, b)
     res = operator(a, b)
     # check_overflow(res)
 
