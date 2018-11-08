@@ -138,19 +138,28 @@ class StoreDouble(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        print("starting sdc")
         check_num_args(self.get_nm(), ops, 2, type_ins=1)
-        print("made it past numm_args")
         if isinstance(ops[0], Register):
             checkEven(ops[0])
             if isinstance(ops[1], RegAddress):
-                first_half = ops[0].get_val()
-                reg_name = "F" + str(int(ops[0].get_nm()[1:]))
-                second_half = vm.registers[reg_name].get_val()
+                reg_number = int(ops[0].get_nm()[1:])
+                curr_reg = "F" + str(reg_number + 0)
+                next_reg = "F" + str(reg_number + 1)
+                first_half = vm.registers[curr_reg]
+                second_half = vm.registers[next_reg]   
                 full_b = first_half + second_half
-                print("full_b", full_b)
                 v = b_to_f64(full_b)
                 ops[1].set_val(v)
+
+                #deprecated code below
+                # print(ops[0])
+                # first_half = ops[0].get_val()
+                # reg_name = "F" + str(int(ops[0].get_nm()[1:]))
+                # second_half = vm.registers[reg_name]
+                # full_b = first_half + second_half
+                # print("full_b", full_b)
+                # v = b_to_f64(full_b)
+                # ops[1].set_val(v)
             else:
                 InvalidArgument(ops[1].get_nm())
         else:

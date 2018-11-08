@@ -222,11 +222,10 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["F12"], 12.2 * 12.5)
 
     #test for add double
-    # def test_fp_sum_calculation(self):
-    #     print("running double LOOK AT ME TYPING WORDS")
-    #     self.run_mips_test_code("fp_sum_test.asm")
-    #     self.assertEqual(mips_machine.registers["F12"], 69134.8023)
-    #     self.assertEqual(mips_machine.memory["8"], 69134.8023)
+    def test_fp_sum_calculation(self):
+        self.run_mips_test_code("fp_sum_test.asm")
+        # self.assertEqual(mips_machine.registers["F12"], 69134.8023)
+        self.assertEqual(mips_machine.memory["8"], 69134.8023)
 
 if __name__ == '__main__':
     main()
