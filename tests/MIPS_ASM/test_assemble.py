@@ -183,9 +183,8 @@ class AssembleTestCase(TestCase):
         for i in range(0, NUM_TESTS):
             a = random.uniform(low1, high1)
             # this is a lie -> silly solution right now - we can't do negative numbers atm
-            b = random.uniform(low2, a)
+            b = random.uniform(low2, high2)
             correct = operator(a, b)
-
             is_a_neg = False
             is_b_neg = False
 
@@ -264,8 +263,7 @@ class AssembleTestCase(TestCase):
                                low1=0, high1=2 ** 11, low2=0, high2=2 ** 11)
 
     def test_addd(self):
-        self.two_op_test_double_float(opfunc.add, 'ADD.D')#,
-                                # low1=-10, high1=0, low2=-10, high2=0)
+        self.two_op_test_double_float(opfunc.add, 'ADD.D')
 
     def test_subd(self):
         self.two_op_test_double_float(opfunc.sub, 'SUB.D')

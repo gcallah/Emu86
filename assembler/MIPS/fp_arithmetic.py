@@ -168,8 +168,10 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     check_num_args(instr, ops, 3, type_ins=1)
     check_reg_only(instr, ops)
 
-    # go through the register ops and make sure that they're even numbered
+    is_a_neg = False
+    is_b_neg = False
 
+    # go through the register ops and make sure that they're even numbered
     # they are even good
     # first number from the pair of registers
     reg_number = int(ops[1].get_nm()[1:])
@@ -178,7 +180,11 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     a_first_32 = vm.registers[curr_reg]
     a_last_32 = vm.registers[next_reg]
     a = a_first_32 + a_last_32
-    # print("in add.d a is", a)
+
+    if a[0] == "1":
+        is_a_neg = True
+        a = "0" + a[1:]
+
     # second number from the pair of registers
     reg_number = int(ops[2].get_nm()[1:])
     curr_reg = "F" + str(reg_number + 0)
@@ -186,14 +192,30 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     b_first_32 = vm.registers[curr_reg]
     b_last_32 = vm.registers[next_reg]
     b = b_first_32 + b_last_32
-    # print("in add.d b is", b)
+
+    if b[0] == "1":
+        is_b_neg = True
+        b = "0" + b[1:]
+
     a = b_to_f64(a)
     b = b_to_f64(b)
-    # print("in add.d a float, b float", a, b)
+
+    if is_a_neg:
+        a *= -1
+    if is_b_neg:
+        b *= -1
+
     res = operator(a, b)
+    is_res_neg = False
+    if res < 0: 
+        is_res_neg = True
+        res = abs(res)
     # check_overflow(res)
 
     res_binary = f_to_b64(res)
+
+    if (is_res_neg):
+        res_binary = "1" + res_binary[1:]
 
     res_first_32 = res_binary[:32]
     res_last_32 = res_binary[32:]
