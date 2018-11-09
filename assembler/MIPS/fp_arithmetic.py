@@ -260,3 +260,17 @@ class Subd(Instruction):
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm):
         three_op_double_arith_reg(ops, vm, self.name, opfunc.sub)
+
+
+class Multd(Instruction):
+    """
+        <instr>
+            MULT.D
+        </instr>
+        <syntax>
+            MULT.D reg, reg, reg
+        </syntax>
+    """
+    # ops is a list of operands (reg, reg, reg)
+    def fhook(self, ops, vm):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.mul)

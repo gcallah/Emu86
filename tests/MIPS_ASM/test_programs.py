@@ -224,7 +224,6 @@ class TestPrograms(TestCase):
     #test for add double
     def test_fp_sum_calculation(self):
         self.run_mips_test_code("fp_sum_test.asm")
-        # self.assertEqual(mips_machine.registers["F12"], 69134.8023)
         self.assertEqual(mips_machine.memory["8"], 69134.8023)
 
 if __name__ == '__main__':
