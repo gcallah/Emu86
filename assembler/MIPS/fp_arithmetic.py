@@ -99,7 +99,7 @@ class Mults(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3)
+        check_num_args(self.name, ops, 3, type_ins = 1)
         check_reg_only(self.name, ops)
         a = ops[1].get_val()
         b = ops[2].get_val()
@@ -125,7 +125,7 @@ class Divs(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3)
+        check_num_args(self.name, ops, 3, type_ins = 1)
         check_reg_only(self.name, ops)
         if ops[2].get_val() == 0:
             raise DivisionZero()

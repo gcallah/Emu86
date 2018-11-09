@@ -268,6 +268,9 @@ class AssembleTestCase(TestCase):
     def test_subd(self):
         self.two_op_test_double_float(opfunc.sub, 'SUB.D')
 
+    def test_multd(self):
+        self.two_op_test_double_float(opfunc.mul, 'MULT.D')
+
 
 if __name__ == '__main__':
     main()
