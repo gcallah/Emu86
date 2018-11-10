@@ -156,7 +156,8 @@ class FXor(Instruction):
         for i in range(len(floatOne)):
             if floatOne[i] == '1' and floatTwo[i] == '1':
                 newFloat += '0'
-            if (floatOne[i] == '0' and floatTwo[i] == '1') or (floatOne[i] == '1' and floatTwo[i] == '0'):
+            if ((floatOne[i] == '0' and floatTwo[i] == '1') or
+                    (floatOne[i] == '1' and floatTwo[i] == '0')):
                 newFloat += '1'
             elif floatOne[i] == '.':
                 newFloat += '.'
