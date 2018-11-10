@@ -182,14 +182,15 @@ class AssembleTestCase(TestCase):
                                  low2=0, high2=MAX_TEST):
         for i in range(0, NUM_TESTS):
             a = random.uniform(low1, high1)
-            # this is a lie -> silly solution right now - we can't do negative numbers atm
+            # this is a lie -> silly solution right now
+            # we can't do negative numbers atm
             b = random.uniform(low2, high2)
             correct = operator(a, b)
             is_a_neg = False
             is_b_neg = False
 
-            #pre-processing to deal with negatives
-            if a < 0: 
+            # pre-processing to deal with negatives
+            if a < 0:
                 is_a_neg = True
                 a = abs(a)
             if b < 0:
@@ -197,14 +198,14 @@ class AssembleTestCase(TestCase):
                 b = abs(b)
 
             a_binary = f_to_b64(a)
-            #if a was neg overwrite the sign bit to 1
+            # if a was neg overwrite the sign bit to 1
             if (is_a_neg):
                 a_binary = "1" + a_binary[1:]
             mips_machine.registers["F8"] = a_binary[:32]
             mips_machine.registers["F9"] = a_binary[32:]
 
             b_binary = f_to_b64(b)
-            #if b was neg overwrite the sign bit to 1
+            # if b was neg overwrite the sign bit to 1
             if (is_b_neg):
                 b_binary = "1" + b_binary[1:]
             mips_machine.registers["F10"] = b_binary[:32]
@@ -221,12 +222,12 @@ class AssembleTestCase(TestCase):
             last_32 = str(mips_machine.registers["F13"])
             binary_result = first_32 + last_32
 
-            #check if the binary result is negative
-            #if so mark a flag and overwrite the value to positive
+            # check if the binary result is negative
+            # if so mark a flag and overwrite the value to positive
             is_result_neg = False
             if binary_result[0] == "1":
                 is_result_neg = True
-                binary_result = "0" + binary_result[1:] 
+                binary_result = "0" + binary_result[1:]
 
             result = b_to_f64(binary_result)
             result = result * -1 if is_result_neg else result
