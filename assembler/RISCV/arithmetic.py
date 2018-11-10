@@ -346,7 +346,7 @@ class Sra(Instruction):
     """
     def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
-        bin_str_op2 = bin(abs(op2.get_val()))[2:]       
+        bin_str_op2 = bin(abs(op2.get_val()))[2:]
         if op2.get_val() >= 0:
             sign = '0'
         else:

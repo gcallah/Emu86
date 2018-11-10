@@ -181,7 +181,6 @@ class AssembleTestCase(TestCase):
         self.assertEqual(riscv_machine.registers["X10"], 15)
 
 
-
 '''
     def test_slt_eq(self):
         riscv_machine.registers["R8"] = 1
