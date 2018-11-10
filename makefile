@@ -31,6 +31,7 @@ PYTHONFILES += $(MIPS_DIR)/*.py
 PYTHONFILES += $(TDIR)/*/*.py
 PYTHONFILES += $(RISCV_DIR)/*.py
 PYTHONFILES += $(shell ls JavaScript/*.py)
+PYTHONFILES += *.py
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
