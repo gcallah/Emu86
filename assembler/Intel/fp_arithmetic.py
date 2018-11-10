@@ -9,7 +9,8 @@ from assembler.ops_check import one_op_arith, checkFloat
 from .arithmetic import checkflag
 
 
-def convert_float_binary(num, dec_place=5):
+def convert_float_binary(num, dec_place=10):
+    print(str(num))
     whole, dec = str(num).split(".")
     whole = int(whole)
     dec = int(dec)
@@ -218,8 +219,15 @@ class FNotf(Instruction):
             NOT reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        one_op_arith(ops, vm, self.name, opfunc.inv)
+    def notFunc(val):
+        floatOne = convert_float_binary(val)
+        newFloat = ""
+        for i in range(len(floatOne)):
+            if floatOne[i] == '1':
+                newFloat += '0'
+            else:
+                newFloat += '1'
+        return (newFloat)
 
 
 class FDIV(Instruction):

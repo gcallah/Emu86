@@ -11,7 +11,7 @@ sys.path.append(".") # noqa
 
 import operator as opfunc
 import functools
-from assembler.Intel.fp_arithmetic import FAndf, FOrf
+from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
@@ -143,23 +143,27 @@ class AssembleTestCase(TestCase):
     # Single Op Tests #
     ###################
 
-    def one_op_test_float(self, operator, instr):
-        for i in range(NUM_TESTS):
-            a = float(random.randint(MIN_TEST, MAX_TEST))
-            correct = operator(a)
-            intel_machine.registers["EAX"] = a
-            intel_machine.base = "dec"
-            assemble(instr + " eax", 'intel', intel_machine)
-            self.assertEqual(intel_machine.registers["EAX"], correct)
 
-    def one_op_test(self, operator, instr):
+
+    def one_op_test(self, operator, instr, op_type=None):
         for i in range(NUM_TESTS):
             a = random.randint(MIN_TEST, MAX_TEST)
-            correct = operator(a)
+            if op_type == FLOAT:
+                a = random.uniform(MIN_TEST, MAX_TEST)
+                correct = float(operator(a))
+            else:
+                correct = operator(a)
+
             intel_machine.registers["EAX"] = a
             intel_machine.base = "dec"
-            assemble(instr + " eax", 'intel', intel_machine)
-            self.assertEqual(intel_machine.registers["EAX"], correct)
+            if op_type == FLOAT:
+                self.assertEqual(float(operator(intel_machine.registers["EAX"])), correct)
+            else:
+                assemble(instr + " eax", 'intel', intel_machine)
+                self.assertEqual(intel_machine.registers["EAX"], correct)
+
+    def test_FNotf(self):
+        self.one_op_test(FNotf.notFunc, "FNotf",op_type=FLOAT)
 
     def test_not(self):
         self.one_op_test(opfunc.inv, "not")
