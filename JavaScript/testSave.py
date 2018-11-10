@@ -1,12 +1,9 @@
 from selenium import webdriver
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
+from unittest import TestCase, main
 
 driver = webdriver.Chrome()
 
-from unittest import TestCase, main
 
 class TestSave(TestCase):
 
@@ -31,13 +28,14 @@ class TestSave(TestCase):
         self.getById('save-button').click()
         save_prompt = driver.switch_to.alert
         save_prompt.send_keys("power.hello")
-        save_prompt.accept();
+        save_prompt.accept()
         try:
-            driver.switch_to.alert.accept();
+            driver.switch_to.alert.accept()
             print("Alert raised!")
-        except:
+        except Exception:
             print("Valid file name")
         driver.close()
+
 
 if __name__ == '__main__':
     main()

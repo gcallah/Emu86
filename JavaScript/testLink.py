@@ -1,7 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
 
 from unittest import TestCase, main
 
@@ -11,7 +8,7 @@ link = {
     '1': 'area.asm',
     '2': 'arithmetic_expression.asm',
     '3': 'arithmetic_shift.asm',
-    '4': 'array.asm', 
+    '4': 'array.asm',
     '5': 'array_average_test.asm',
     '6': 'cel_to_fah.asm',
     '7': 'change_array_elem_test.asm',
@@ -24,6 +21,7 @@ link = {
     '14': 'power.asm',
     '15': 'sum_test.asm'
 }
+
 
 class TestLink(TestCase):
 
@@ -55,6 +53,6 @@ class TestLink(TestCase):
 
         self.close_page()
 
+
 if __name__ == '__main__':
     main()
-
