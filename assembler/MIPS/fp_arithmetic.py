@@ -99,7 +99,7 @@ class Mults(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3, type_ins = 1)
+        check_num_args(self.name, ops, 3, type_ins=1)
         check_reg_only(self.name, ops)
         a = ops[1].get_val()
         b = ops[2].get_val()
@@ -125,7 +125,7 @@ class Divs(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3, type_ins = 1)
+        check_num_args(self.name, ops, 3, type_ins=1)
         check_reg_only(self.name, ops)
         if ops[2].get_val() == 0:
             raise DivisionZero()
@@ -207,7 +207,7 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
 
     res = operator(a, b)
     is_res_neg = False
-    if res < 0: 
+    if res < 0:
         is_res_neg = True
         res = abs(res)
     # check_overflow(res)

@@ -146,12 +146,12 @@ class StoreDouble(Instruction):
                 curr_reg = "F" + str(reg_number + 0)
                 next_reg = "F" + str(reg_number + 1)
                 first_half = vm.registers[curr_reg]
-                second_half = vm.registers[next_reg]   
+                second_half = vm.registers[next_reg]
                 full_b = first_half + second_half
                 v = b_to_f64(full_b)
                 ops[1].set_val(v)
 
-                #deprecated code below
+                # deprecated code below
                 # print(ops[0])
                 # first_half = ops[0].get_val()
                 # reg_name = "F" + str(int(ops[0].get_nm()[1:]))
