@@ -1,5 +1,4 @@
 import argparse
-from assembler.virtual_machine import intel_machine, mips_machine
 from assembler.assemble import assemble
 
 flavors = {
@@ -14,6 +13,7 @@ numsys = {
     "2": "hex"
 }
 
+
 def convert_reg_contents(registers):
     for reg in registers:
         hex_list = hex(int(registers[reg])).split('x')
@@ -22,6 +22,7 @@ def convert_reg_contents(registers):
             registers[reg] = "-" + hex_list[1]
         else:
             registers[reg] = hex_list[1]
+
 
 def convert_mem_contents(memory):
     for loc in memory:
@@ -32,6 +33,7 @@ def convert_mem_contents(memory):
         else:
             memory[loc] = hex_list[1]
 
+
 def convert_stack_contents(stack):
     for loc in stack:
         hex_list = hex(int(stack[loc])).split('x')
@@ -40,6 +42,7 @@ def convert_stack_contents(stack):
             stack[loc] = "-" + hex_list[1]
         else:
             stack[loc] = hex_list[1]
+
 
 def display_results(last_instr, error, vm):
     if vm.base == "hex":
@@ -54,10 +57,10 @@ def display_results(last_instr, error, vm):
             print("\t" + reg + ": " + str(vm.registers[reg]) + "\t")
     else:
         count = 0
-        for reg in vm.registers :
+        for reg in vm.registers:
             if reg[0] == "F":
                 continue
-            print("\t" + reg + ":" + str(vm.registers[reg]) + "\t", end = "")
+            print("\t" + reg + ":" + str(vm.registers[reg]) + "\t", end="")
             if reg == "R20":
                 print()
                 count += 2
@@ -79,33 +82,33 @@ def main():
     last_instr = None
     error = None
     parser = argparse.ArgumentParser()
-    parser.add_argument("-I", help = "flavor: Intel", action="store_true")
-    parser.add_argument("-A", help = "flavor: AT&T", action="store_true")
-    parser.add_argument("-MASM", help = "flavor: MIPS_ASM", action="store_true")
-    parser.add_argument("-MMML", help = "flavor: MIPS_MML", action="store_true")
+    parser.add_argument("-I", help="flavor: Intel", action="store_true")
+    parser.add_argument("-A", help="flavor: AT&T", action="store_true")
+    parser.add_argument("-MASM", help="flavor: MIPS_ASM", action="store_true")
+    parser.add_argument("-MMML", help="flavor: MIPS_MML", action="store_true")
 
-    parser.add_argument("-x", help = "base: hex", action="store_true")
-    parser.add_argument("-d", help = "base: decimal", action="store_true")
+    parser.add_argument("-x", help="base: hex", action="store_true")
+    parser.add_argument("-d", help="base: decimal", action="store_true")
 
-    parser.add_argument("file", help = "file path of asm file")
+    parser.add_argument("file", help="file path of asm file")
 
     args = parser.parse_args()
     if args.I:
-         flavor = "intel"
+        flavor = "intel"
     elif args.A:
-         flavor = "att"
+        flavor = "att"
     elif args.MASM:
-         flavor = "mips_asm"
+        flavor = "mips_asm"
     elif args.MMML:
-         flavor = "mips_mml"
+        flavor = "mips_mml"
 
     if args.x:
-         base = "hex"
+        base = "hex"
     elif args.d:
-         base = "dec"
+        base = "dec"
 
-    if flavor == None:
-         return
+    if flavor is None:
+        return
 
     file_nm = args.file
     asm_file = open(file_nm, "r")
@@ -114,7 +117,7 @@ def main():
         code += line
     if flavor == "intel" or flavor == "att":
         intel_machine.flavor = flavor
-        if base == None:
+        if base is None:
             base = "dec"
         intel_machine.base = base
         (last_instr, error, bit_code) = assemble(code, intel_machine.flavor,
@@ -122,14 +125,13 @@ def main():
         display_results(last_instr, error, intel_machine)
     else:
         mips_machine.flavor = flavor
-        if base == None:
+        if base is None:
             base = "hex"
         mips_machine.base = base
-        print (mips_machine.base)
+        print(mips_machine.base)
         (last_instr, error, bit_code) = assemble(code, mips_machine.flavor,
                                                  mips_machine)
         display_results(last_instr, error, mips_machine)
-
 
 
 main()
