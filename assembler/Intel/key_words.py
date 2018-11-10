@@ -1,6 +1,6 @@
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .fp_arithmetic import FADD, FDIV, FSUB, FMUL, FNeg, FAndf, FOrf
+from .fp_arithmetic import FADD, FDIV, FSUB, FMUL, FNeg, FAndf, FOrf,FXor
 from .fp_arithmetic import FDec, FInc, FNotf, FShl, FShr
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
@@ -65,6 +65,7 @@ instructions = {
         'FNotf': FNotf('FNotf'),
         'FAndf': FAndf('FAndf'),
         "FShl": FShl('FShl'),
+        'FXor':FXor('FXor'),
         'FShr': FShr('FShr')
         }
 
