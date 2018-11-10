@@ -346,10 +346,14 @@ class Sra(Instruction):
     """
     def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
-        bin_str_op2 = bin(abs(op2.get_val()))[2:]
-        signed_str = bin_str_op2[0] * op3.get_val()
+        bin_str_op2 = bin(abs(op2.get_val()))[2:]       
+        if op2.get_val() >= 0:
+            sign = '0'
+        else:
+            sign = '1'
+        signed_str = sign * op3.get_val()
         shifted_str = signed_str + bin_str_op2[: - op3.get_val()]
-        op1.set_val(int(shifted_str))
+        op1.set_val(int(shifted_str, 2))
         vm.changes.add(op1.get_nm())
 
 
@@ -365,9 +369,13 @@ class Srai(Instruction):
     def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops)
         bin_str_op2 = bin(abs(op2.get_val()))[2:]
-        signed_str = bin_str_op2[0] * op3.get_val()
+        if op2.get_val() >= 0:
+            sign = '0'
+        else:
+            sign = '1'
+        signed_str = sign * op3.get_val()
         shifted_str = signed_str + bin_str_op2[: - op3.get_val()]
-        op1.set_val(int(shifted_str))
+        op1.set_val(int(shifted_str, 2))
         vm.changes.add(op1.get_nm())
 
 

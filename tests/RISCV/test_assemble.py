@@ -158,6 +158,29 @@ class AssembleTestCase(TestCase):
     def test_remu(self):
         self.two_op_test_unsigned(opfunc.mod, "REMU")
 
+    def test_sra(self):
+        riscv_machine.registers["X8"] = 10
+        riscv_machine.registers["X9"] = 4
+        riscv_machine.base = "hex"
+        assemble("40000 SRA X10, X8, X9", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 0)
+        riscv_machine.registers["X8"] = -10
+        riscv_machine.registers["X9"] = 4
+        riscv_machine.base = "hex"
+        assemble("40000 SRA X10, X8, X9", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 15)
+
+    def test_srai(self):
+        riscv_machine.registers["X8"] = 10
+        riscv_machine.base = "hex"
+        assemble("40000 SRAI X10, X8, 4", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 0)
+        riscv_machine.registers["X8"] = -10
+        riscv_machine.base = "hex"
+        assemble("40000 SRAI X10, X8, 4", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 15)
+
+
 
 '''
     def test_slt_eq(self):
