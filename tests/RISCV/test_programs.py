@@ -44,6 +44,10 @@ class TestPrograms(TestCase):
         self.assertEqual(riscv_machine.registers["X9"], 50)
         self.assertEqual(riscv_machine.registers["X10"], ord('l'))
         self.assertEqual(riscv_machine.registers["X11"], 5)
+    
+    def test_loop(self):
+        self.run_riscv_test_code("loop.asm")
+        self.assertEqual(riscv_machine.registers["X11"], 16)
 
 
 if __name__ == '__main__':
