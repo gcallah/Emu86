@@ -23,51 +23,57 @@ sample = {
 
 class TestSample(TestCase):
 
-    def load_page(self, driver):
-        driver.get('http://www.emu86.org/')
+    def load_page(self):
+        self.driver.get('http://www.emu86.org/')
 
-    def close_page(self, driver):
-        driver.quit()
+    def close_page(self):
+        self.driver.quit()
 
-    def get_by_x_path(self, driver, value):
-        return driver.find_element_by_xpath(value)
+    def get_by_x_path(self, value):
+        return self.driver.find_element_by_xpath(value)
 
-    def getById(self, driver, id):
-        return driver.find_element_by_id(id)
+    def getById(self, id):
+        return self.driver.find_element_by_id(id)
 
-    def option_test(self, intel_flag):
-        driver = webdriver.Chrome()
-        self.load_page(driver)
-        if not intel_flag:
-            mips_asm = '//*[@id="content-main"]/h5/form/select/option[3]'
-            self.get_by_x_path(driver, mips_asm).click()
-        self.getById(driver, 'subButton').click()
+    def option_test(self, flag):
+        self.driver = webdriver.Chrome()
+        self.load_page()
+        lang_flag = '//*[@id="content-main"]/h5/form/select/option['
+        lang_flag += str(flag) + ']'
+        self.get_by_x_path(lang_flag).click()
+        self.getById('subButton').click()
         option_path = '//*[@id="sample"]/option'
         option_range = 17
-        if not intel_flag:
+        if flag == 3 or flag == 4:
             option_range = 15
         for sample_opt in range(1, option_range):
-            self.get_by_x_path(driver, '//*[@id="sample"]').click()
+            self.get_by_x_path('//*[@id="sample"]').click()
             opt_num_path = option_path + '[' + str(sample_opt) + ']'
-            self.get_by_x_path(driver, opt_num_path).click()
+            self.get_by_x_path(opt_num_path).click()
             val = ""
             if sample_opt != 1:
-                file_name = '../tests/Intel/'
-                if not intel_flag:
-                    file_name = '../tests/MIPS_ASM/'
+                file_name = '../tests/'
+                if flag == 1:
+                    file_name += 'Intel/'
+                elif flag == 2:
+                    file_name += 'ATT/'
+                elif flag == 3:
+                    file_name += 'MIPS_ASM/'
+                else:
+                    file_name += 'MIPS_MML/'
                 file_name += sample[str(sample_opt - 1)]
                 file = open(file_name, 'r')
                 val = file.read()
                 file.close()
-            code = self.get_by_x_path(driver, '//*[@id="id_code"]')
+            code = self.get_by_x_path('//*[@id="id_code"]')
             code_val = code.get_attribute('value')
             text_area = repr(code_val)
             self.assertEqual(text_area, repr(val))
-        self.close_page(driver)
+        self.close_page()
 
     def test_options(self):
-        self.option_test(True)
-        self.option_test(False)
+        for flag in range(1, 5):
+            self.option_test(flag)
 
 
 if __name__ == '__main__':
