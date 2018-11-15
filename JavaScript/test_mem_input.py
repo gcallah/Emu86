@@ -35,24 +35,19 @@ class TestMemory(TestCase):
             self.load_page()
             a = random.randint(low1, high1)
             b = random.randint(low1, high1)
-            validInput = True
+            message = ""
             try:
                 int(hex(b).upper().split('X')[-1])
             except Exception:
-                validInput = False
+                message = "Not a valid value for decimal number system"
             self.set_Mem(a, b)
             try:
-                driver.switch_to.alert.accept()
-                if validInput:
-                    print("Valid Input: " + "Alert raised!")
-                else:
-                    print("Invalid Input: " + "OK!")
+                alert = driver.switch_to.alert
+                alert_message = alert.text
+                alert.accept()
+                self.assertEqual(message, alert_message)
             except Exception:
-                if validInput:
-                    print("Valid Input: " + "OK!")
-                else:
-                    print("Invalid Input: " + "Alert raised!")
-
+                self.assertEqual(message, "")
         self.close_page()
 
 
