@@ -61,19 +61,22 @@ class TestLink(TestCase):
             main_x_path = '//*[@id="content-main"]/div/details[2]/'
             self.get_by_x_path('//*[@id="user-tools"]/a[2]').click()
             self.get_by_x_path(main_x_path + 'summary').click()
-            self.get_by_x_path(main_x_path + 'details[' + str(flag) + ']/summary').click()
+            lang_select = main_x_path + 'details[' + str(flag) + ']/summary'
+            self.get_by_x_path(lang_select).click()
             sub_path = 'details[' + str(flag) + ']/ul/li['
             sub_path += str(sample) + ']/a'
             self.get_by_x_path(main_x_path + sub_path).click()
             link_clicked = 'https://github.com/gcallah/Emu86/'
             if flag == 1:
                 link_clicked += 'blob/master/tests/Intel/' + link[str(sample)]
-            if flag == 2:
+            elif flag == 2:
                 link_clicked += 'blob/master/tests/ATT/' + link[str(sample)]
-            if flag == 3:
-                link_clicked += 'blob/master/tests/MIPS_ASM/' + mips_link[str(sample)]
-            if flag == 4:
-                link_clicked += 'blob/master/tests/MIPS_MML/' + mips_link[str(sample)]
+            else:
+                if flag == 3:
+                    link_clicked += 'blob/master/tests/MIPS_ASM/'
+                else:
+                    link_clicked += 'blob/master/tests/MIPS_MML/'
+                link_clicked += mips_link[str(sample)]
             self.assertEqual(self.driver.current_url, link_clicked)
         self.close_page()
 
