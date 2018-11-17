@@ -103,7 +103,6 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.memory["4"], 53)
 
     def test_arithmetic_expression(self):
-        mips_machine.base = "dec"
         self.run_mips_test_code("arithmetic_expression.asm")
         self.assertEqual(mips_machine.registers["R8"], -31)
         self.assertEqual(mips_machine.registers["R10"], 52)
@@ -203,7 +202,8 @@ class TestPrograms(TestCase):
 
     def b_to_f(self, value):
         hx = hex(int(value, 2))
-        return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+        result = struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+        return float('%.3f' % result)
 
     # loading data
     def test_fp_data(self):
