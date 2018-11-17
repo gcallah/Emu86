@@ -107,6 +107,14 @@ class TestPrograms(TestCase):
         self.assertEqual(mips_machine.registers["R8"], -31)
         self.assertEqual(mips_machine.registers["R10"], 52)
 
+    def test_fp_arithmetic_expression(self):
+        self.run_mips_test_code("fp_arithmetic_expression.asm")
+        eight_string = mips_machine.registers["F8"]
+        nine_string = mips_machine.registers["F9"]
+        bin_string = eight_string + nine_string
+        float_value = self.b_to_f(bin_string)
+        self.assertEqual(float_value, 28.187)
+
     def test_area(self):
         self.run_mips_test_code("area.asm")
         self.assertEqual(mips_machine.registers["R8"], 35)
@@ -194,7 +202,8 @@ class TestPrograms(TestCase):
 
     def b_to_f(self, value):
         hx = hex(int(value, 2))
-        return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+        result = struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+        return float('%.3f' % result)
 
     # loading data
     def test_fp_data(self):
