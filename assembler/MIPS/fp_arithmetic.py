@@ -286,4 +286,4 @@ class Divd(Instruction):
     """
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm):
-        three_op_double_arith_reg(ops, vm, self.name, opfunc.div)
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.truediv)

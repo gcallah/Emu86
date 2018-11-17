@@ -182,14 +182,16 @@ class AssembleTestCase(TestCase):
                                  low2=0, high2=MAX_TEST):
         for i in range(0, NUM_TESTS):
             a = random.uniform(low1, high1)
-            # this is a lie -> silly solution right now
-            # we can't do negative numbers atm
             b = random.uniform(low2, high2)
             correct = operator(a, b)
             is_a_neg = False
             is_b_neg = False
 
             # pre-processing to deal with negatives
+            # we will be keep track if the value is a negative
+            # or a positive with a flag for a and for b
+            # using this flag to set the sign bit after 
+            # we do the conversion of the abs of the number
             if a < 0:
                 is_a_neg = True
                 a = abs(a)
@@ -217,7 +219,6 @@ class AssembleTestCase(TestCase):
 
             # the answer from the assembly call
             # will be in the F12, F13 registers
-
             first_32 = str(mips_machine.registers["F12"])
             last_32 = str(mips_machine.registers["F13"])
             binary_result = first_32 + last_32
@@ -232,23 +233,6 @@ class AssembleTestCase(TestCase):
             result = b_to_f64(binary_result)
             result = result * -1 if is_result_neg else result
             self.assertEqual(result, correct)
-
-            # h_reg = str(mips_machine.registers["HI"])
-            # for i in range(0, 32-len(h_reg)):
-            #     h_reg = "0" + h_reg
-            # l_reg = str(mips_machine.registers["LO"])
-            # for i in range(0, 32-len(l_reg)):
-            #     l_reg = "0" + l_reg
-
-            # binary_result = h_reg + l_reg
-            # hex_result = hex(int(binary_result, 2))[2:]
-            # for i in range(0, 16-len(hex_result)):
-            #     hex_result = "0"+hex_result
-            # bin_data = codecs.decode(hex_result, "hex")
-            # result = struct.unpack("d", bin_data)[0]
-            # # print ("result", result)
-            # self.assertEqual(result, correct)
-
     def test_adds(self):
         self.two_op_test_float(opfunc.add, "ADD.S")
 
@@ -271,6 +255,9 @@ class AssembleTestCase(TestCase):
 
     def test_multd(self):
         self.two_op_test_double_float(opfunc.mul, 'MULT.D')
+
+    def test_divd(self):
+        self.two_op_test_double_float(opfunc.truediv, 'DIV.D')
 
 
 if __name__ == '__main__':
