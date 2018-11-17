@@ -274,3 +274,16 @@ class Multd(Instruction):
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm):
         three_op_double_arith_reg(ops, vm, self.name, opfunc.mul)
+
+class Divd(Instruction):
+    """
+        <instr>
+            DIV.D
+        </instr>
+        <syntax>
+            DIV.D reg, reg, reg
+        </syntax>
+    """
+    # ops is a list of operands (reg, reg, reg)
+    def fhook(self, ops, vm):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.div)
