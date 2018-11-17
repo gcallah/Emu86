@@ -190,7 +190,7 @@ class AssembleTestCase(TestCase):
             # pre-processing to deal with negatives
             # we will be keep track if the value is a negative
             # or a positive with a flag for a and for b
-            # using this flag to set the sign bit after 
+            # using this flag to set the sign bit after
             # we do the conversion of the abs of the number
             if a < 0:
                 is_a_neg = True
@@ -233,6 +233,7 @@ class AssembleTestCase(TestCase):
             result = b_to_f64(binary_result)
             result = result * -1 if is_result_neg else result
             self.assertEqual(result, correct)
+
     def test_adds(self):
         self.two_op_test_float(opfunc.add, "ADD.S")
 
