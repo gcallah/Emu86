@@ -275,6 +275,7 @@ class Multd(Instruction):
     def fhook(self, ops, vm):
         three_op_double_arith_reg(ops, vm, self.name, opfunc.mul)
 
+
 class Divd(Instruction):
     """
         <instr>
