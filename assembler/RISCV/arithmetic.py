@@ -56,6 +56,15 @@ def get_three_ops_imm(instr, ops):
     return (ops[0], ops[1], ops[2])
 
 
+def get_two_op_imm(instr, ops):
+    """
+    Again, same as above, except for reg, imm format
+    """
+    check_num_args(instr, ops, 2)
+    check_immediate_two(instr, ops)
+    return (ops[0], ops[1])
+
+
 def check_overflow(val, vm):
     '''
     To emulate the wraparound that occurs when a number
@@ -482,16 +491,17 @@ class Lui(Instruction):
     </syntax>
     <desc>
         Loads a constant (EXPECTED TO BE 20 BITS MAX)
-        That's been shifted left by 12 bits (3 zeros)
+        That's been shifted left by 12 bits
     </desc>
     """
     def fhook(self, ops, vm):
+        if ops[1].get_val() > 1048576:
+            raise IncorrectImmLength()
         check_num_args(self.name, ops, 2)
         check_immediate_two(self.name, ops)
-        if ops[1] > 1048576:
-            raise IncorrectImmLength()
-        ops[0].set_val(check_overflow(opfunc.lshift(
-                       ops[1].get_val(), 3)))
+        print(ops[0].get_nm(), ' ', ops[1].get_val())
+        ops[0].set_val(check_overflow(opfunc.lshift(ops[1].get_val(),
+                       12), vm))
         vm.changes.add(ops[0].get_nm())
 
 

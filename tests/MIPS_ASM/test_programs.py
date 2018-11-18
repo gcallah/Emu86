@@ -227,7 +227,7 @@ class TestPrograms(TestCase):
         self.run_mips_test_code("fp_sum_test.asm")
         self.assertEqual(mips_machine.memory["8"], 69134.8023)
 
-    #arithmetic expression: -(x + y - 2 * z)
+    # arithmetic expression: -(x + y - 2 * z)
     def test_fp_arithmetic_expression(self):
         self.run_mips_test_code("fp_arithmetic_expression.asm")
         eight_string = mips_machine.registers["F8"]
