@@ -24,6 +24,17 @@ MIN_MUL = -10000  # right now we don't want to overflow!
 REGISTER_SIZE = BITS
 
 
+def check_overflow(val, vm):
+    '''
+    To emulate the wraparound that occurs when a number
+    has too many bits to represent in machine code.
+
+    '''
+    if (val > MAX_INT):
+        val = val - MAX_INT + 1
+    return val
+
+
 class AssembleTestCase(TestCase):
 
     #####################
@@ -181,17 +192,16 @@ class AssembleTestCase(TestCase):
         assemble("40000 SRAI X10, X8, 4", 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["X10"], 15)
 
-    # def test_lui(self):
-    #     for _ in range(0, NUM_TESTS):
-    #         a = random.randint(0, 1048576)
-    #         hex_string = hex(a).upper()
-    #         correct = opfunc.lshift(a, 12)
-    #         print(a, hex(a))
-    #         print("YO", correct)
-    #         riscv_machine.base = "hex"
-    #         print(assemble("40000 LUI X10, " + hex_string, 'riscv',
-    #                        riscv_machine))
-    #         self.assertEqual(riscv_machine.registers["X10"], correct)
+    def test_lui(self):
+        for _ in range(0, NUM_TESTS):
+            a = random.randint(0, 1048576)
+            hex_string = hex(a).upper()
+            correct = check_overflow(opfunc.lshift(a, 12), riscv_machine)
+            # print(a, hex(a))
+            # print("YO", correct)
+            riscv_machine.base = "hex"
+            assemble("40000 LUI X10, " + hex_string, 'riscv', riscv_machine)
+            self.assertEqual(riscv_machine.registers["X10"], correct)
 
 
 '''

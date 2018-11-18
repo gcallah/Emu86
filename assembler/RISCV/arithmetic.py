@@ -495,14 +495,14 @@ class Lui(Instruction):
     </desc>
     """
     def fhook(self, ops, vm):
-        if ops[1].get_val() > 1048576:
+        (op1, op2) = get_two_op_imm(self.get_nm(), ops)
+        if op2.get_val() > 1048576:
             raise IncorrectImmLength()
-        check_num_args(self.name, ops, 2)
-        check_immediate_two(self.name, ops)
-        print(ops[0].get_nm(), ' ', ops[1].get_val())
-        ops[0].set_val(check_overflow(opfunc.lshift(ops[1].get_val(),
+        # print(op2.get_val())
+        op1.set_val(check_overflow(opfunc.lshift(op2.get_val(),
                        12), vm))
-        vm.changes.add(ops[0].get_nm())
+        # print(op1.get_val())
+        vm.changes.add(op1.get_nm())
 
 
 # class Auipc(Instruction):
