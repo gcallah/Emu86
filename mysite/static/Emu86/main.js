@@ -352,14 +352,14 @@ function convert(name,value)
     var hex_or_dec = null;
     var radios = document.getElementsByName("base");
     for (var index = 0; index < radios.length; index++) {
-        if (radios[index].checked) {
+        if (radios[index].value) {
             hex_or_dec = radios[index].value;
             break;
         }
     }
     var value1 = null;
     if (hex_or_dec == "hex"){
-        value1=(parseInt(hex, 16).toString(2));
+        value1=(parseInt(value, 16).toString(2));
     }
     else{
         value1=parseInt(value.toString(), 10).toString(2);
