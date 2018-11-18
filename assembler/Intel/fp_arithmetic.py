@@ -130,6 +130,12 @@ class FShr(Instruction):
             SHR reg, con
         </syntax>
     """
+    def shiftRightFunc(val):
+        floatOne = convert_float_binary(val)
+        newFloat = "0"
+        for i in range(1,len(floatOne)):
+            newFloat +=floatOne[i]
+        return (newFloat)
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.rshift)
 
@@ -145,6 +151,7 @@ class FXor(Instruction):
             XOR reg, con
         </syntax>
     """
+
     def xorFunc(intVal, intVal2):
         floatOne = convert_float_binary(intVal)
         floatTwo = convert_float_binary(intVal2)
@@ -183,14 +190,6 @@ class FShl(Instruction):
 
 
 class FDec(Instruction):
-    """
-        <instr>
-             dec
-        </instr>
-        <syntax>
-            DEC reg
-        </syntax>
-    """
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() - 1)
