@@ -206,6 +206,15 @@ class FNeg(Instruction):
             NEG reg
         </syntax>
     """
+    def FnegFunc(val):
+        floatOne = convert_float_binary(val)
+        newFloat = ""
+        for i in range(len(floatOne)):
+            if floatOne[i] == '1':
+                newFloat += '0'
+            else:
+                newFloat += '1'
+        return (newFloat)
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.neg)
         return ''
@@ -220,6 +229,7 @@ class FInc(Instruction):
             INC reg
         </syntax>
     """
+
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 1)
         ops[0].set_val(ops[0].get_val() + 1)
