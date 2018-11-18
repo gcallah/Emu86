@@ -130,7 +130,7 @@ class AssembleTestCase(TestCase):
         self.assertEqual(riscv_machine.registers["X10"], 1)
 
     def test_sltu(self):
-        riscv_machine.registers["X8"] = 1
+        riscv_machine.registers["X8"] = -1
         riscv_machine.registers["X9"] = 0
         riscv_machine.base = "hex"
         assemble("40000 SLTU X10, X9, X8", 'riscv', riscv_machine)
@@ -143,7 +143,8 @@ class AssembleTestCase(TestCase):
 
     def test_sltiu(self):
         riscv_machine.registers["X9"] = 0
-        assemble("40000 SLTI X10, X9, 1", 'riscv', riscv_machine)
+        neg_one = '-1'
+        assemble("40000 SLTIU X10, X9, " + neg_one, 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["X10"], 1)
 
     def test_div(self):
