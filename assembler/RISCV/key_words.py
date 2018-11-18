@@ -2,6 +2,7 @@ from .arithmetic import Add, Addi, Sub, Mul, And, Andi
 from .arithmetic import Xor, Xori, Or, Ori, Srl, Sll
 from .arithmetic import Srli, Slli, Slt, Sltu, Slti, Sltiu
 from .arithmetic import Sra, Srai, Div, Divu, Rem, Remu
+from .arithmetic import Lui
 from .control_flow import Jr, Jal, Jalr, Beq, Bne, Blt
 from .data_mov import Load, Store
 from assembler.tokens import DataType
@@ -40,6 +41,7 @@ key_words = {
     'DIVU': Divu('DIVU'),
     'REM': Rem('REM'),
     'REMU': Remu('REMU'),
+    'LUI': Lui('LUI'),
 
     # control
     'JR': Jr('Jr'),
@@ -82,6 +84,7 @@ op_func_codes = {
     'SLTI': '0010011',
     'SLTIU': '0010011',
     'SRAI': '0010011',
+    'LUI': '0110111',
 
     # S-Format
     'SW': '0100011',

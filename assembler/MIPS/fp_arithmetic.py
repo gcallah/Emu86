@@ -181,7 +181,7 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     a_last_32 = vm.registers[next_reg]
     a = a_first_32 + a_last_32
 
-    if a[0] == "1":
+    if a != 0 and a[0] == "1":
         is_a_neg = True
         a = "0" + a[1:]
 
@@ -193,12 +193,15 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     b_last_32 = vm.registers[next_reg]
     b = b_first_32 + b_last_32
 
-    if b[0] == "1":
+    if b != 0 and b[0] == "1":
         is_b_neg = True
         b = "0" + b[1:]
 
-    a = b_to_f64(a)
-    b = b_to_f64(b)
+    if a != 0:
+        a = b_to_f64(a)
+
+    if b != 0:
+        b = b_to_f64(b)
 
     if is_a_neg:
         a *= -1
@@ -274,3 +277,17 @@ class Multd(Instruction):
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm):
         three_op_double_arith_reg(ops, vm, self.name, opfunc.mul)
+
+
+class Divd(Instruction):
+    """
+        <instr>
+            DIV.D
+        </instr>
+        <syntax>
+            DIV.D reg, reg, reg
+        </syntax>
+    """
+    # ops is a list of operands (reg, reg, reg)
+    def fhook(self, ops, vm):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.truediv)

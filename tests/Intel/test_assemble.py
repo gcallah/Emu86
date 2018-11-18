@@ -61,11 +61,11 @@ class AssembleTestCase(TestCase):
                 self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_fadd(self):
-        print("fadd")
+        # print("fadd")
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
 
     def test_fsub(self):
-        print("fsub")
+        # print("fsub")
         self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
 
     def test_FAndf(self):

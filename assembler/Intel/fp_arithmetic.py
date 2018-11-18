@@ -10,7 +10,7 @@ from .arithmetic import checkflag
 
 
 def convert_float_binary(num, dec_place=10):
-    print(str(num))
+    # print(str(num))
     whole, dec = str(num).split(".")
     whole = int(whole)
     dec = int(dec)
@@ -62,7 +62,7 @@ class FAndf(Instruction):
     #     two_op_arith(ops, vm, self.name, opfunc.and_)
     #     return ''
     def andFunc(intVal, intVal2):
-        print(intVal, intVal2)
+        # print(intVal, intVal2)
         floatOne = convert_float_binary(intVal)
         floatTwo = convert_float_binary(intVal2)
         while len(floatOne) < len(floatTwo):

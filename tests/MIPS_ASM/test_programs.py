@@ -194,7 +194,8 @@ class TestPrograms(TestCase):
 
     def b_to_f(self, value):
         hx = hex(int(value, 2))
-        return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+        result = struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
+        return float(result)
 
     # loading data
     def test_fp_data(self):
@@ -225,6 +226,15 @@ class TestPrograms(TestCase):
     def test_fp_sum_calculation(self):
         self.run_mips_test_code("fp_sum_test.asm")
         self.assertEqual(mips_machine.memory["8"], 69134.8023)
+
+    # arithmetic expression: -(x + y - 2 * z)
+    def test_fp_arithmetic_expression(self):
+        self.run_mips_test_code("fp_arithmetic_expression.asm")
+        eight_string = mips_machine.registers["F8"]
+        nine_string = mips_machine.registers["F9"]
+        bin_string = eight_string + nine_string
+        float_value = self.b_to_f(bin_string)
+        self.assertEqual(float_value, -(15.5 + 10.813 - 2 * 27.25))
 
 
 if __name__ == '__main__':

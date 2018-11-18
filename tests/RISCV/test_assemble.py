@@ -24,6 +24,17 @@ MIN_MUL = -10000  # right now we don't want to overflow!
 REGISTER_SIZE = BITS
 
 
+def check_overflow(val, vm):
+    '''
+    To emulate the wraparound that occurs when a number
+    has too many bits to represent in machine code.
+
+    '''
+    if (val > MAX_INT):
+        val = val - MAX_INT + 1
+    return val
+
+
 class AssembleTestCase(TestCase):
 
     #####################
@@ -130,7 +141,7 @@ class AssembleTestCase(TestCase):
         self.assertEqual(riscv_machine.registers["X10"], 1)
 
     def test_sltu(self):
-        riscv_machine.registers["X8"] = 1
+        riscv_machine.registers["X8"] = -1
         riscv_machine.registers["X9"] = 0
         riscv_machine.base = "hex"
         assemble("40000 SLTU X10, X9, X8", 'riscv', riscv_machine)
@@ -143,7 +154,8 @@ class AssembleTestCase(TestCase):
 
     def test_sltiu(self):
         riscv_machine.registers["X9"] = 0
-        assemble("40000 SLTI X10, X9, 1", 'riscv', riscv_machine)
+        neg_one = '-1'
+        assemble("40000 SLTIU X10, X9, " + neg_one, 'riscv', riscv_machine)
         self.assertEqual(riscv_machine.registers["X10"], 1)
 
     def test_div(self):
@@ -157,6 +169,39 @@ class AssembleTestCase(TestCase):
 
     def test_remu(self):
         self.two_op_test_unsigned(opfunc.mod, "REMU")
+
+    def test_sra(self):
+        riscv_machine.registers["X8"] = 10
+        riscv_machine.registers["X9"] = 4
+        riscv_machine.base = "hex"
+        assemble("40000 SRA X10, X8, X9", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 0)
+        riscv_machine.registers["X8"] = -10
+        riscv_machine.registers["X9"] = 4
+        riscv_machine.base = "hex"
+        assemble("40000 SRA X10, X8, X9", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 15)
+
+    def test_srai(self):
+        riscv_machine.registers["X8"] = 10
+        riscv_machine.base = "hex"
+        assemble("40000 SRAI X10, X8, 4", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 0)
+        riscv_machine.registers["X8"] = -10
+        riscv_machine.base = "hex"
+        assemble("40000 SRAI X10, X8, 4", 'riscv', riscv_machine)
+        self.assertEqual(riscv_machine.registers["X10"], 15)
+
+    def test_lui(self):
+        for _ in range(0, NUM_TESTS):
+            a = random.randint(0, 1048576)
+            hex_string = hex(a).upper()
+            correct = check_overflow(opfunc.lshift(a, 12), riscv_machine)
+            # print(a, hex(a))
+            # print("YO", correct)
+            riscv_machine.base = "hex"
+            assemble("40000 LUI X10, " + hex_string, 'riscv', riscv_machine)
+            self.assertEqual(riscv_machine.registers["X10"], correct)
 
 
 '''

@@ -56,6 +56,15 @@ def get_three_ops_imm(instr, ops):
     return (ops[0], ops[1], ops[2])
 
 
+def get_two_op_imm(instr, ops):
+    """
+    Again, same as above, except for reg, imm format
+    """
+    check_num_args(instr, ops, 2)
+    check_immediate_two(instr, ops)
+    return (ops[0], ops[1])
+
+
 def check_overflow(val, vm):
     '''
     To emulate the wraparound that occurs when a number
@@ -347,9 +356,13 @@ class Sra(Instruction):
     def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
         bin_str_op2 = bin(abs(op2.get_val()))[2:]
-        signed_str = bin_str_op2[0] * op3.get_val()
+        if op2.get_val() >= 0:
+            sign = '0'
+        else:
+            sign = '1'
+        signed_str = sign * op3.get_val()
         shifted_str = signed_str + bin_str_op2[: - op3.get_val()]
-        op1.set_val(int(shifted_str))
+        op1.set_val(int(shifted_str, 2))
         vm.changes.add(op1.get_nm())
 
 
@@ -365,9 +378,13 @@ class Srai(Instruction):
     def fhook(self, ops, vm):
         (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops)
         bin_str_op2 = bin(abs(op2.get_val()))[2:]
-        signed_str = bin_str_op2[0] * op3.get_val()
+        if op2.get_val() >= 0:
+            sign = '0'
+        else:
+            sign = '1'
+        signed_str = sign * op3.get_val()
         shifted_str = signed_str + bin_str_op2[: - op3.get_val()]
-        op1.set_val(int(shifted_str))
+        op1.set_val(int(shifted_str, 2))
         vm.changes.add(op1.get_nm())
 
 
@@ -474,17 +491,18 @@ class Lui(Instruction):
     </syntax>
     <desc>
         Loads a constant (EXPECTED TO BE 20 BITS MAX)
-        That's been shifted left by 12 bits (3 zeros)
+        That's been shifted left by 12 bits
     </desc>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
-        check_immediate_two(self.name, ops)
-        if ops[1] > 1048576:
+        (op1, op2) = get_two_op_imm(self.get_nm(), ops)
+        if op2.get_val() > 1048576:
             raise IncorrectImmLength()
-        ops[0].set_val(check_overflow(opfunc.lshift(
-                       ops[1].get_val(), 3)))
-        vm.changes.add(ops[0].get_nm())
+        # print(op2.get_val())
+        op1.set_val(check_overflow(opfunc.lshift(op2.get_val(),
+                       12), vm))
+        # print(op1.get_val())
+        vm.changes.add(op1.get_nm())
 
 
 # class Auipc(Instruction):
