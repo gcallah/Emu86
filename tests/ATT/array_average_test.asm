@@ -14,6 +14,4 @@ forCount1: cmp %ebx, %ecx
 body: add (%ebx), %eax
       inc %ebx
       jmp forCount1
-endCount: idiv %ecx 
-
-
+endCount: idiv %ecx
