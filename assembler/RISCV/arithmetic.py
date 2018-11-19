@@ -500,7 +500,7 @@ class Lui(Instruction):
             raise IncorrectImmLength()
         # print(op2.get_val())
         op1.set_val(check_overflow(opfunc.lshift(op2.get_val(),
-                       12), vm))
+                    12), vm))
         # print(op1.get_val())
         vm.changes.add(op1.get_nm())
 

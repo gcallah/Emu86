@@ -77,7 +77,6 @@ class AssembleTestCase(TestCase):
     def test_FOrf(self):
         self.two_op_test(FOrf.orFunc, "FOrf", op_type=FLOAT)
 
-
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
 
@@ -164,8 +163,10 @@ class AssembleTestCase(TestCase):
 
     def test_FShr(self):
         self.one_op_test(FShr.shiftRightFunc, "FShr", op_type=FLOAT)
+
     def test_FNeg(self):
         self.one_op_test(FNeg.FnegFunc, "FNeg", op_type=FLOAT)
+
     def test_FNotf(self):
         self.one_op_test(FNotf.notFunc, "FNotf", op_type=FLOAT)
 

@@ -41,15 +41,15 @@ def two_op_arith(ops, vm, instr, operator):
         vm.changes.add(ops[0].get_nm())
 
 
-class FADD(Instruction):
+class FAdd(Instruction):
     """
         <instr>
              add
         </instr>
         <syntax>
-            ADD reg, reg
-            ADD reg, mem
-            ADD reg, const
+            FADD reg, reg
+            FADD reg, mem
+            FADD reg, const
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -80,12 +80,12 @@ class FAndf(Instruction):
         return newFloat
 
 
-class FSUB(Instruction):
+class FSub(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.sub)
 
 
-class FMUL(Instruction):
+class FMul(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.mul)
 
@@ -133,9 +133,10 @@ class FShr(Instruction):
     def shiftRightFunc(val):
         floatOne = convert_float_binary(val)
         newFloat = "0"
-        for i in range(1,len(floatOne)):
-            newFloat +=floatOne[i]
-        return (newFloat)
+        for i in range(1, len(floatOne)):
+            newFloat += floatOne[i]
+        return(newFloat)
+
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.rshift)
 
@@ -214,6 +215,7 @@ class FNeg(Instruction):
             else:
                 newFloat += '1'
         return (newFloat)
+
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.neg)
         return ''
@@ -255,7 +257,7 @@ class FNotf(Instruction):
         return (newFloat)
 
 
-class FDIV(Instruction):
+class FDiv(Instruction):
     def fhook(self, ops, vm):
         return
         # check_num_args(self.name, ops, 1)
