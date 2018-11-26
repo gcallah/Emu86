@@ -15,10 +15,13 @@ def convert_float_binary(num, dec_place=10):
     whole = int(whole)
     dec = int(dec)
     res = bin(whole).lstrip("0b") + "."
+    if dec ==  0:
+        return res+'0'
     for x in range(dec_place):
-        whole, dec = str((dec_convert(dec)) * 2).split(".")
-        dec = int(dec)
-        res += whole
+        if len(str((dec_convert(dec)) * 2).split("."))==2:
+            whole, dec = str((dec_convert(dec)) * 2).split(".")
+            dec = int(dec)
+            res += whole
     return res
 
 
@@ -86,6 +89,17 @@ class FSub(Instruction):
 
 
 class FMul(Instruction):
+    def mulFunc(val, val2):
+        product = 0
+        long=val2
+        short=val
+        if val>val2:
+            long = val
+            short = val2
+        for i in range(short):
+            opfunc.add(product,long)
+        return product
+
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.mul)
 
@@ -185,6 +199,13 @@ class FShl(Instruction):
             SHL reg, con
         </syntax>
     """
+    def shiftLeftFunc(val):
+        floatOne = convert_float_binary(val)
+        newFloat = ''
+        for i in range(1, len(floatOne)):
+            newFloat += floatOne[i]
+        newFloat+='0'
+        return(newFloat)
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.lshift)
         return ''
