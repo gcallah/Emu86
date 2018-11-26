@@ -49,6 +49,14 @@ class TestPrograms(TestCase):
         self.run_riscv_test_code("loop.asm")
         self.assertEqual(riscv_machine.registers["X11"], 16)
 
+    def test_add_to_array_elem_test(self):
+        self.run_riscv_test_code("change_array_elem_test.asm")
+        self.assertEqual(riscv_machine.registers["X8"], 361)
+        self.assertEqual(riscv_machine.registers["X13"], 361)
+        self.assertEqual(riscv_machine.registers["X17"], 10)
+        self.assertEqual(riscv_machine.registers["X9"], 40)
+        self.assertEqual(riscv_machine.registers["X10"], 10)
+
 
 if __name__ == '__main__':
     main()
