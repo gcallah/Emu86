@@ -497,7 +497,7 @@ class Lui(Instruction):
     def fhook(self, ops, vm):
         (op1, op2) = get_two_op_imm(self.get_nm(), ops)
         if op2.get_val() > 1048576:
-            raise IncorrectImmLength()
+            raise IncorrectImmLength(op2.get_val())
         # print(op2.get_val())
         op1.set_val(check_overflow(opfunc.lshift(op2.get_val(),
                     12), vm))
