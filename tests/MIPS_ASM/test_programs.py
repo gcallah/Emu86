@@ -162,15 +162,15 @@ class TestPrograms(TestCase):
 
     def convertHiLoForFP(self):
         h_reg = str(mips_machine.registers["HI"])
-        for i in range(0, 32-len(h_reg)):
+        for _ in range(0, 32-len(h_reg)):
             h_reg = "0" + h_reg
         l_reg = str(mips_machine.registers["LO"])
-        for i in range(0, 32-len(l_reg)):
+        for _ in range(0, 32-len(l_reg)):
             l_reg = "0" + l_reg
 
         binary_result = h_reg + l_reg
         hex_result = hex(int(binary_result, 2))[2:]
-        for i in range(0, 16-len(hex_result)):
+        for _ in range(0, 16-len(hex_result)):
             hex_result = "0"+hex_result
         bin_data = codecs.decode(hex_result, "hex")
         result = struct.unpack("d", bin_data)[0]
