@@ -15,14 +15,14 @@ def convert_float_binary(num, dec_place=10):
     whole = int(whole)
     dec = int(dec)
     res = bin(whole).lstrip("0b") + "."
-    if num < 0 :
+    if num < 0:
         res = '1'+res
     else:
         res = '0'+res
-    if dec ==  0:
+    if dec == 0:
         return res+'0'
     for x in range(dec_place):
-        if len(str((dec_convert(dec)) * 2).split("."))==2:
+        if len(str((dec_convert(dec)) * 2).split(".")) == 2:
             whole, dec = str((dec_convert(dec)) * 2).split(".")
             dec = int(dec)
             res += whole
@@ -72,9 +72,9 @@ class FAndf(Instruction):
         # print(intVal, intVal2)
         floatOne = convert_float_binary(intVal)
         floatTwo = convert_float_binary(intVal2)
-        signedDict = {'one':floatOne[0],'two':floatTwo[0]}
-        floatOne=floatOne[1:]
-        floatTwo=floatTwo[1:]
+        signedDict = {'one': floatOne[0], 'two': floatTwo[0]}
+        floatOne = floatOne[1:]
+        floatTwo = floatTwo[1:]
         while len(floatOne) < len(floatTwo):
             floatOne = "0" + floatOne
         while len(floatTwo) < len(floatOne):
@@ -87,10 +87,10 @@ class FAndf(Instruction):
                 newFloat += '.'
             else:
                 newFloat += '0'
-        if signedDict['one']=='1' and signedDict['two']=='1':
-            newFloat='1'+newFloat
+        if signedDict['one'] == '1' and signedDict['two'] == '1':
+            newFloat = '1'+newFloat
         else:
-            newFloat='0'+newFloat
+            newFloat = '0'+newFloat
         return newFloat
 
 
@@ -102,13 +102,13 @@ class FSub(Instruction):
 class FMul(Instruction):
     def mulFunc(val, val2):
         product = 0
-        long=val2
-        short=val
-        if val>val2:
+        long = val2
+        short = val
+        if val > val2:
             long = val
             short = val2
         for i in range(short):
-            opfunc.add(product,long)
+            opfunc.add(product, long)
         return product
 
     def fhook(self, ops, vm):
@@ -129,9 +129,9 @@ class FOrf(Instruction):
     def orFunc(intVal, intVal2):
         floatOne = convert_float_binary(intVal)
         floatTwo = convert_float_binary(intVal2)
-        signedDict = {'one':floatOne[0],'two':floatTwo[0]}
-        floatOne=floatOne[1:]
-        floatTwo=floatTwo[1:]
+        signedDict = {'one': floatOne[0], 'two': floatTwo[0]}
+        floatOne = floatOne[1:]
+        floatTwo = floatTwo[1:]
         while len(floatOne) < len(floatTwo):
             floatOne = "0" + floatOne
         while len(floatTwo) < len(floatOne):
@@ -144,10 +144,10 @@ class FOrf(Instruction):
                 newFloat += '.'
             else:
                 newFloat += '0'
-        if signedDict['one']=='1' or signedDict['two']=='1':
-            newFloat='1'+newFloat
+        if signedDict['one'] == '1' or signedDict['two'] == '1':
+            newFloat = '1'+newFloat
         else:
-            newFloat='0'+newFloat
+            newFloat = '0'+newFloat
         return newFloat
 
 
@@ -164,15 +164,14 @@ class FShr(Instruction):
     """
     def shiftRightFunc(val):
         floatOne = convert_float_binary(val)
-        floatOne=floatOne[1:]
+        floatOne = floatOne[1:]
         newFloat = "0"
         for i in range(1, len(floatOne)):
             newFloat += floatOne[i]
-        if val<0:
-            return('1'+newFloat)
+        if val < 0:
+            return('1' + newFloat)
         else:
-            return('0'+newFloat)
-
+            return('0' + newFloat)
 
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.rshift)
@@ -193,9 +192,9 @@ class FXor(Instruction):
     def xorFunc(intVal, intVal2):
         floatOne = convert_float_binary(intVal)
         floatTwo = convert_float_binary(intVal2)
-        signedDict = {'one':floatOne[0],'two':floatTwo[0]}
-        floatOne=floatOne[1:]
-        floatTwo=floatTwo[1:]
+        signedDict = {'one': floatOne[0], 'two': floatTwo[0]}
+        floatOne = floatOne[1:]
+        floatTwo = floatTwo[1:]
         while len(floatOne) < len(floatTwo):
             floatOne = "0" + floatOne
         while len(floatTwo) < len(floatOne):
@@ -211,10 +210,10 @@ class FXor(Instruction):
                 newFloat += '.'
             else:
                 newFloat += '0'
-        if signedDict['one']==signedDict['two']:
-            newFloat='0'+newFloat
+        if signedDict['one'] == signedDict['two']:
+            newFloat = '0' + newFloat
         else:
-            newFloat='1'+newFloat
+            newFloat = '1' + newFloat
         return newFloat
 
 
@@ -231,16 +230,17 @@ class FShl(Instruction):
     """
     def shiftLeftFunc(val):
         floatOne = convert_float_binary(val)
-        floatOne=floatOne[1:]
+        floatOne = floatOne[1:]
         newFloat = ''
         for i in range(1, len(floatOne)):
             newFloat += floatOne[i]
-        newFloat+='0'
-        if val<0:
+        newFloat += '0'
+        if val < 0:
             return('1'+newFloat)
         else:
             return('0'+newFloat)
         return(newFloat)
+
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.lshift)
         return ''
@@ -264,14 +264,14 @@ class FNeg(Instruction):
     """
     def FnegFunc(val):
         floatOne = convert_float_binary(val)
-        floatOne=floatOne[1:]
+        floatOne = floatOne[1:]
         newFloat = ""
         for i in range(len(floatOne)):
             if floatOne[i] == '1':
                 newFloat += '0'
             else:
                 newFloat += '1'
-        if val<0:
+        if val < 0:
             return('1'+newFloat)
         else:
             return('0'+newFloat)
@@ -309,14 +309,14 @@ class FNotf(Instruction):
     """
     def notFunc(val):
         floatOne = convert_float_binary(val)
-        floatOne=floatOne[1:]
+        floatOne = floatOne[1:]
         newFloat = ""
         for i in range(len(floatOne)):
             if floatOne[i] == '1':
                 newFloat += '0'
             else:
                 newFloat += '1'
-        if val<0:
+        if val < 0:
             return('1'+newFloat)
         else:
             return('0'+newFloat)

@@ -11,7 +11,8 @@ sys.path.append(".") # noqa
 
 import operator as opfunc
 import functools
-from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf, FXor, FNeg, FShr, FShl
+from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf, FXor, FNeg
+from assembler.Intel.fp_arithmetic import FShr, FShl
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
@@ -163,8 +164,10 @@ class AssembleTestCase(TestCase):
 
     def test_FShr(self):
         self.one_op_test(FShr.shiftRightFunc, "FShr", op_type=FLOAT)
+
     def test_FShl(self):
-        self.one_op_test(FShr.shiftRightFunc, "FShl", op_type=FLOAT)
+        self.one_op_test(FShl.shiftLeftFunc, "FShl", op_type=FLOAT)
+
     def test_FNeg(self):
         self.one_op_test(FNeg.FnegFunc, "FNeg", op_type=FLOAT)
 
