@@ -151,11 +151,15 @@ getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:] # noqa
 
 
 def f_to_b64(value):
+    if (value == 0):
+        return "0"*64
     val = struct.unpack('q', struct.pack('d', value))[0]
     return "0" + getBin(val)
 
 
 def b_to_f64(value):
+    if (value == "0"*64):
+        return 0.0
     hx = hex(int(value, 2))
     return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
@@ -180,10 +184,11 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     a_first_32 = vm.registers[curr_reg]
     a_last_32 = vm.registers[next_reg]
     a = a_first_32 + a_last_32
-
     if a != 0 and a[0] == "1":
         is_a_neg = True
         a = "0" + a[1:]
+
+
 
     # second number from the pair of registers
     reg_number = int(ops[2].get_nm()[1:])
@@ -192,7 +197,6 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     b_first_32 = vm.registers[curr_reg]
     b_last_32 = vm.registers[next_reg]
     b = b_first_32 + b_last_32
-
     if b != 0 and b[0] == "1":
         is_b_neg = True
         b = "0" + b[1:]
