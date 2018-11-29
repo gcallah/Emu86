@@ -198,43 +198,43 @@ class TestPrograms(TestCase):
         return float(result)
 
     # loading data
-    # def test_fp_data(self):
-    #     self.run_mips_test_code("fp_data.asm")
-    #     self.assertEqual(mips_machine.registers["F8"],  8.0)
-    #     self.assertEqual(mips_machine.registers["F10"], 10.5)
+    def test_fp_data(self):
+        self.run_mips_test_code("fp_data.asm")
+        self.assertEqual(mips_machine.registers["F8"],  8.0)
+        self.assertEqual(mips_machine.registers["F10"], 10.5)
 
-    #     # since F12's value is a double, we need to reconstruct the binary
-    #     # string from 12+13 and turn it back into a float from there
-    #     twelve_string = mips_machine.registers["F12"]
-    #     thirteen_string = mips_machine.registers["F13"]
-    #     bin_string = twelve_string + thirteen_string
-    #     float_value = self.b_to_f(bin_string)
+        # since F12's value is a double, we need to reconstruct the binary
+        # string from 12+13 and turn it back into a float from there
+        twelve_string = mips_machine.registers["F12"]
+        thirteen_string = mips_machine.registers["F13"]
+        bin_string = twelve_string + thirteen_string
+        float_value = self.b_to_f(bin_string)
 
-    #     self.assertEqual(float_value, 20.555)
+        self.assertEqual(float_value, 20.555)
 
-    # # power function
-    # def test_fp_power(self):
-    #     self.run_mips_test_code("fp_power.asm")
-    #     self.assertEqual(mips_machine.registers["F8"], 166.375)
+    # power function
+    def test_fp_power(self):
+        self.run_mips_test_code("fp_power.asm")
+        self.assertEqual(mips_machine.registers["F8"], 166.375)
 
-    # # area function
-    # def test_fp_area(self):
-    #     self.run_mips_test_code("fp_area.asm")
-    #     self.assertEqual(mips_machine.registers["F12"], 12.2 * 12.5)
+    # area function
+    def test_fp_area(self):
+        self.run_mips_test_code("fp_area.asm")
+        self.assertEqual(mips_machine.registers["F12"], 12.2 * 12.5)
 
-    # # test for add double
-    # def test_fp_sum_calculation(self):
-    #     self.run_mips_test_code("fp_sum_test.asm")
-    #     self.assertEqual(mips_machine.memory["8"], 69134.8023)
+    # test for add double
+    def test_fp_sum_calculation(self):
+        self.run_mips_test_code("fp_sum_test.asm")
+        self.assertEqual(mips_machine.memory["8"], 69134.8023)
 
-    # # arithmetic expression: -(x + y - 2 * z)
-    # def test_fp_arithmetic_expression(self):
-    #     self.run_mips_test_code("fp_arithmetic_expression.asm")
-    #     eight_string = mips_machine.registers["F8"]
-    #     nine_string = mips_machine.registers["F9"]
-    #     bin_string = eight_string + nine_string
-    #     float_value = self.b_to_f(bin_string)
-    #     self.assertEqual(float_value, -(15.5 + 10.813 - 2 * 27.25))
+    # arithmetic expression: -(x + y - 2 * z)
+    def test_fp_arithmetic_expression(self):
+        self.run_mips_test_code("fp_arithmetic_expression.asm")
+        eight_string = mips_machine.registers["F8"]
+        nine_string = mips_machine.registers["F9"]
+        bin_string = eight_string + nine_string
+        float_value = self.b_to_f(bin_string)
+        self.assertEqual(float_value, -(15.5 + 10.813 - 2 * 27.25))
 
     def test_fp_celsius_conversion(self):
         self.run_mips_test_code("fp_cel_to_fah.asm")
@@ -243,6 +243,14 @@ class TestPrograms(TestCase):
         bin_string = twelve_string + thirteen_string
         float_value = self.b_to_f(bin_string)
         self.assertEqual(float_value, (1.8)*10.0+32.0)
+
+    def test_fp_celsius_conversion_celius_0(self):
+        self.run_mips_test_code("fp_cel_to_fah_w_0.asm")
+        twelve_string = mips_machine.registers["F12"]
+        thirteen_string = mips_machine.registers["F13"]
+        bin_string = twelve_string + thirteen_string
+        float_value = self.b_to_f(bin_string)
+        self.assertEqual(float_value, (1.8)*0.0+32.0)
 
 if __name__ == '__main__':
     main()
