@@ -50,6 +50,7 @@ class Loadc(Instruction):
         if isinstance(ops[0], Register):
             checkEven(ops[0])
             if isinstance(ops[1], RegAddress):
+                print("move data load c", ops[0].get_nm())
                 # if (float(ops[1].get_val()) > float(2 ** 22)):
                 #     raise TooBigForSingle(str(float(ops[1].get_val())))
                 ops[0].set_val(float(ops[1].get_val()))
