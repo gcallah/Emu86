@@ -217,7 +217,6 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     if res < 0:
         is_res_neg = True
         res = abs(res)
-    # check_overflow(res)
 
     res_binary = f_to_b64(res)
 
@@ -235,7 +234,6 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     ops[0].set_val(res_first_32)
     vm.registers[next_reg] = res_last_32
 
-    # ops[0].set_val(res_first_32)
     vm.changes.add(ops[0].get_nm())
     # vm.changes.add(vm.registers[curr_reg])
     vm.changes.add(vm.registers[next_reg])

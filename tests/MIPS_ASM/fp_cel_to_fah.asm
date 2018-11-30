@@ -3,6 +3,7 @@
     cTemp: .double 10.0
     scale: .double 1.8
     offsetAdd: .double 32.0
+    fTemp: .double 10.0
 
 ; Convert from Celsius to Fahrenheit
 ; Store result in fTemp
@@ -12,3 +13,4 @@
     0x40008 MULT.D F8, F8, F10
     0x4000C LDC F12, 8(F28)
     0x40010 ADD.D F12, F8, F12
+    0x40014 SDC F12, 0xC(F28)
