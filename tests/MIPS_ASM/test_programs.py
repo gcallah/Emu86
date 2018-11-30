@@ -243,7 +243,7 @@ class TestPrograms(TestCase):
 
     def test_fp_celsius_conversion_celsius_0(self):
         self.run_mips_test_code("fp_cel_to_fah_w_0.asm")
-        self.assertEqual(mips_machine.memory["C"], (1.8)*10.0+32.0)
+        self.assertEqual(mips_machine.memory["C"], (1.8)*0.0+32.0)
 
 if __name__ == '__main__':
     main()
