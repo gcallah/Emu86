@@ -34,7 +34,7 @@ class TestPrograms(TestCase):
         mips_machine.base = "hex"
         test_code = self.read_test_code("tests/MIPS_ASM/" + filenm)
         assemble(test_code, 'mips_asm', mips_machine)
-        
+
     # def convert_hex_float(self, string):
     #     lst = string.split(".")
     #     int_part = int(lst[0], 16)
@@ -244,6 +244,7 @@ class TestPrograms(TestCase):
     def test_fp_celsius_conversion_celsius_0(self):
         self.run_mips_test_code("fp_cel_to_fah_w_0.asm")
         self.assertEqual(mips_machine.memory["C"], (1.8)*0.0+32.0)
+
 
 if __name__ == '__main__':
     main()

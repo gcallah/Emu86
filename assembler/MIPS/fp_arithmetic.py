@@ -188,8 +188,6 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
         is_a_neg = True
         a = "0" + a[1:]
 
-
-
     # second number from the pair of registers
     reg_number = int(ops[2].get_nm()[1:])
     curr_reg = "F" + str(reg_number + 0)
