@@ -37,13 +37,13 @@ class TestPrograms(TestCase):
         self.assertEqual(riscv_machine.registers["X8"], -31)
         self.assertEqual(riscv_machine.registers["X10"], 52)
 
-    # def test_arithmetic_shift(self):
-    #     self.run_riscv_test_code("arithmetic_shift.asm")
-    #     self.assertEqual(riscv_machine.registers["X10"], 4)
-    #     self.assertEqual(riscv_machine.registers["X11"], 10)
-    #     self.assertEqual(riscv_machine.registers["X12"], 8)
-    #     self.assertEqual(riscv_machine.registers["X13"], 8)
-    #     self.assertEqual(riscv_machine.memory["4"], 4)
+    def test_arithmetic_shift(self):
+        self.run_riscv_test_code("arithmetic_shift.asm")
+        self.assertEqual(riscv_machine.registers["X10"], 4)
+        self.assertEqual(riscv_machine.registers["X11"], 10)
+        self.assertEqual(riscv_machine.registers["X12"], 8)
+        self.assertEqual(riscv_machine.registers["X13"], 8)
+        self.assertEqual(riscv_machine.memory["4"], 4)
 
     def test_array(self):
         self.run_riscv_test_code("array.asm")
@@ -66,12 +66,12 @@ class TestPrograms(TestCase):
         self.assertEqual(riscv_machine.registers["X9"], 16)
         self.assertEqual(riscv_machine.registers["X10"], 32)
 
-    # def test_gt(self):
-    #     self.run_riscv_test_code("gt.asm")
-    #     self.assertEqual(riscv_machine.registers["X8"], 17)
-    #     self.assertEqual(riscv_machine.registers["X9"], 16)
-    #     self.assertEqual(riscv_machine.registers["X13"], 16)
-    #     self.assertEqual(riscv_machine.registers["X14"], 19)
+    def test_gt(self):
+        self.run_riscv_test_code("gt.asm")
+        self.assertEqual(riscv_machine.registers["X8"], 17)
+        self.assertEqual(riscv_machine.registers["X9"], 16)
+        self.assertEqual(riscv_machine.registers["X13"], 16)
+        self.assertEqual(riscv_machine.registers["X14"], 19)
 
     def test_loop(self):
         self.run_riscv_test_code("loop.asm")
