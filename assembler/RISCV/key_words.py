@@ -5,6 +5,7 @@ from .arithmetic import Sra, Srai, Div, Divu, Rem, Remu
 from .arithmetic import Lui
 from .control_flow import Jr, Jal, Jalr, Beq, Bne, Blt
 from .data_mov import Load, Store
+from .interrupts import Syscall
 from assembler.tokens import DataType
 
 key_words = {
@@ -49,10 +50,10 @@ key_words = {
     'JALR': Jalr('JALR'),
     'BEQ': Beq('BEQ'),
     'BNE': Bne('BNE'),
-    'BLT': Blt('BLT')
+    'BLT': Blt('BLT'),
 
     # interrupts
-
+    'SYSCALL': Syscall('SYSCALL'),
 }
 
 op_func_codes = {
@@ -85,6 +86,7 @@ op_func_codes = {
     'SLTIU': '0010011',
     'SRAI': '0010011',
     'LUI': '0110111',
+    'SYSCALL': '0001100',
 
     # S-Format
     'SW': '0100011',

@@ -26,6 +26,12 @@ class TestPrograms(TestCase):
         test_code = self.read_test_code("tests/RISCV/" + filnm)
         assemble(test_code, 'riscv', riscv_machine)
 
+    def test_celsius_conversion(self):
+        self.run_riscv_test_code("cel_to_fah.asm")
+        self.assertEqual(riscv_machine.registers["X8"], 95)
+        self.assertEqual(riscv_machine.memory["4"], 95)
+        self.assertEqual(riscv_machine.registers["X9"], 5)
+
     def test_area(self):
         self.run_riscv_test_code("area.asm")
         self.assertEqual(riscv_machine.registers["X8"], 35)
@@ -60,11 +66,19 @@ class TestPrograms(TestCase):
         self.assertEqual(riscv_machine.registers["X9"], 40)
         self.assertEqual(riscv_machine.registers["X10"], 10)
 
+    def test_int_square_root(self):
+        self.run_riscv_test_code("int_square_root.asm")
+        self.assertEqual(riscv_machine.registers["X8"], 10)
+
     def test_data(self):
         self.run_riscv_test_code("data.asm")
         self.assertEqual(riscv_machine.registers["X8"],  8)
         self.assertEqual(riscv_machine.registers["X9"], 16)
         self.assertEqual(riscv_machine.registers["X10"], 32)
+
+    def test_power(self):
+        self.run_riscv_test_code("power.asm")
+        self.assertEqual(riscv_machine.registers["X8"], 65536)
 
     def test_gt(self):
         self.run_riscv_test_code("gt.asm")
