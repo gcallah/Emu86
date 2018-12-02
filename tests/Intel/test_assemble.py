@@ -11,7 +11,8 @@ sys.path.append(".") # noqa
 
 import operator as opfunc
 import functools
-from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf, FXor
+from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf, FXor, FNeg
+from assembler.Intel.fp_arithmetic import FShr, FShl
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
@@ -150,19 +151,25 @@ class AssembleTestCase(TestCase):
         for i in range(NUM_TESTS):
             a = random.randint(MIN_TEST, MAX_TEST)
             if op_type == FLOAT:
-                a = random.uniform(MIN_TEST, MAX_TEST)
-                correct = float(operator(a))
-            else:
-                correct = operator(a)
-
+                a = float(random.uniform(MIN_TEST, MAX_TEST))
+            correct = operator(a)
             intel_machine.registers["EAX"] = a
             intel_machine.base = "dec"
             if op_type == FLOAT:
-                result = float(operator(intel_machine.registers["EAX"]))
+                result = operator(intel_machine.registers["EAX"])
                 self.assertEqual(result, correct)
             else:
                 assemble(instr + " eax", 'intel', intel_machine)
                 self.assertEqual(intel_machine.registers["EAX"], correct)
+
+    def test_FShr(self):
+        self.one_op_test(FShr.shiftRightFunc, "FShr", op_type=FLOAT)
+
+    def test_FShl(self):
+        self.one_op_test(FShl.shiftLeftFunc, "FShl", op_type=FLOAT)
+
+    def test_FNeg(self):
+        self.one_op_test(FNeg.FnegFunc, "FNeg", op_type=FLOAT)
 
     def test_FNotf(self):
         self.one_op_test(FNotf.notFunc, "FNotf", op_type=FLOAT)

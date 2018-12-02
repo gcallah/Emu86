@@ -20,5 +20,3 @@ endIfSmall: add eax, [ebx]
             inc ebx
             jmp forCount1
 endCount: mov edx, eax
-
-

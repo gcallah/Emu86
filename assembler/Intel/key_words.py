@@ -1,7 +1,7 @@
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .fp_arithmetic import FADD, FDIV, FSUB, FMUL, FNeg, FAndf, FOrf, FXor
-from .fp_arithmetic import FDec, FInc, FNotf, FShl, FShr
+from .fp_arithmetic import FAdd, FDiv, FSub, FMul, FNeg, FAndf, FOrf
+from .fp_arithmetic import FXor, FShr, FDec, FInc, FNotf, FShl
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 from .data_mov import Mov, Pop, Push, Lea
@@ -13,6 +13,7 @@ je = Je('JE')
 jne = Jne('JNE')
 jg = Jg('JG')
 jl = Jl('JL')
+
 instructions = {
         # interrupts:
         'INT': Interrupt('INT'),
@@ -54,11 +55,11 @@ instructions = {
         'NEG': Neg('NEG'),
 
         # floating point
-        'FADD': FADD('FADD'),
-        'FDIV': FDIV('FDIV'),
-        'FMUL': FMUL('FMUL'),
+        'FADD': FAdd('FADD'),
+        'FDIV': FDiv('FDIV'),
+        'FMUL': FMul('FMUL'),
         'FOrf': FOrf('FOrf'),
-        'FSUB': FSUB('FSUB'),
+        'FSUB': FSub('FSUB'),
         'FNeg': FNeg('FNeg'),
         'FDec': FDec('FDec'),
         'FInc': FInc('FInc'),
@@ -66,7 +67,7 @@ instructions = {
         'FAndf': FAndf('FAndf'),
         "FShl": FShl('FShl'),
         'FXor': FXor('FXor'),
-        'FShr': FShr('FShr')
+        'FShr': FShr('FShr'),
         }
 
 intel_key_words = {

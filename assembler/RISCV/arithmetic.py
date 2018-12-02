@@ -448,6 +448,43 @@ class Remu(Instruction):
         vm.changes.add(ops[0].get_nm())
 
 
+class Lui(Instruction):
+    """
+    <instr>
+        LUI
+    </instr>
+    <syntax>
+        LUI reg, imm
+    </syntax>
+    <desc>
+        Loads a constant (EXPECTED TO BE 20 BITS MAX)
+        That's been shifted left by 12 bits
+    </desc>
+    """
+    def fhook(self, ops, vm):
+        (op1, op2) = get_two_op_imm(self.get_nm(), ops)
+        if op2.get_val() > 1048576:
+            raise IncorrectImmLength(op2.get_val())
+        # print(op2.get_val())
+        op1.set_val(check_overflow(opfunc.lshift(op2.get_val(),
+                    12), vm))
+        # print(op1.get_val())
+        vm.changes.add(op1.get_nm())
+
+
+'''
+# class Auipc(Instruction):
+    """
+    <instr>
+        AUIPC
+    </instr>
+    <syntax>
+        AUIPC reg, reg, reg
+    </syntax>
+    """
+    # Does lui, and then adds that value to the PC
+    # instead of loading to a register.
+
 # class Mulh(Instruction):
     """
     <instr>
@@ -479,40 +516,4 @@ class Remu(Instruction):
         MULHSU reg, reg, reg
     </syntax>
     """
-
-
-class Lui(Instruction):
-    """
-    <instr>
-        LUI
-    </instr>
-    <syntax>
-        LUI reg, imm
-    </syntax>
-    <desc>
-        Loads a constant (EXPECTED TO BE 20 BITS MAX)
-        That's been shifted left by 12 bits
-    </desc>
-    """
-    def fhook(self, ops, vm):
-        (op1, op2) = get_two_op_imm(self.get_nm(), ops)
-        if op2.get_val() > 1048576:
-            raise IncorrectImmLength()
-        # print(op2.get_val())
-        op1.set_val(check_overflow(opfunc.lshift(op2.get_val(),
-                       12), vm))
-        # print(op1.get_val())
-        vm.changes.add(op1.get_nm())
-
-
-# class Auipc(Instruction):
-    """
-    <instr>
-        AUIPC
-    </instr>
-    <syntax>
-        AUIPC reg, reg, reg
-    </syntax>
-    """
-    # Does lui, and then adds that value to the PC
-    # instead of loading to a register.
+'''

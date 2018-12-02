@@ -162,15 +162,15 @@ class TestPrograms(TestCase):
 
     def convertHiLoForFP(self):
         h_reg = str(mips_machine.registers["HI"])
-        for i in range(0, 32-len(h_reg)):
+        for _ in range(0, 32-len(h_reg)):
             h_reg = "0" + h_reg
         l_reg = str(mips_machine.registers["LO"])
-        for i in range(0, 32-len(l_reg)):
+        for _ in range(0, 32-len(l_reg)):
             l_reg = "0" + l_reg
 
         binary_result = h_reg + l_reg
         hex_result = hex(int(binary_result, 2))[2:]
-        for i in range(0, 16-len(hex_result)):
+        for _ in range(0, 16-len(hex_result)):
             hex_result = "0"+hex_result
         bin_data = codecs.decode(hex_result, "hex")
         result = struct.unpack("d", bin_data)[0]
@@ -235,6 +235,15 @@ class TestPrograms(TestCase):
         bin_string = eight_string + nine_string
         float_value = self.b_to_f(bin_string)
         self.assertEqual(float_value, -(15.5 + 10.813 - 2 * 27.25))
+
+    # test for converting celsius to fahrenheit
+    def test_fp_celsius_conversion(self):
+        self.run_mips_test_code("fp_cel_to_fah.asm")
+        self.assertEqual(mips_machine.memory["C"], (1.8)*10.0+32.0)
+
+    def test_fp_celsius_conversion_celsius_0(self):
+        self.run_mips_test_code("fp_cel_to_fah_w_0.asm")
+        self.assertEqual(mips_machine.memory["C"], (1.8)*0.0+32.0)
 
 
 if __name__ == '__main__':

@@ -20,4 +20,3 @@ label3: inc %eax
     jne label4
     dec %eax
 label4: inc %eax
-
