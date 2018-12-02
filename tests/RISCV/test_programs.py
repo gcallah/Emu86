@@ -28,7 +28,7 @@ class TestPrograms(TestCase):
 
     def test_area(self):
         self.run_riscv_test_code("area.asm")
-        self.assertEqual(riscv_machine.registers["X8"], 35 )
+        self.assertEqual(riscv_machine.registers["X8"], 35)
         self.assertEqual(riscv_machine.registers["X9"], 27)
         self.assertEqual(riscv_machine.registers["X10"], 945)
 
@@ -81,10 +81,6 @@ class TestPrograms(TestCase):
         self.run_riscv_test_code("sum_test.asm")
         self.assertEqual(riscv_machine.registers["X8"], 53)
         self.assertEqual(riscv_machine.memory["4"], 53)
-
-
-
-
 
 
 if __name__ == '__main__':
