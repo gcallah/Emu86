@@ -128,10 +128,20 @@
                     {% endif %}
                 {% endif %}
                 {% if flavor == "mips_asm" %}
-                    {% if sample == "dataAccess_fp" %}
-                        <option value="dataAccess_fp" selected>Accessing data in memory for floating point</option>
+                    {% if sample == "area_fp" %}
+                        <option value="area_fp" selected>Area of a rectangle using floating point</option>
                     {% else %}
-                        <option value="dataAccess_fp">Accessing data in memory for floating point</option>
+                        <option value="area_fp">Area of a rectangle using floating point</option>
+                    {% endif %}
+                    {% if sample == "data_fp" %}
+                        <option value="data_fp" selected>Accessing data in memory for floating point</option>
+                    {% else %}
+                        <option value="data_fp">Accessing data in memory for floating point</option>
+                    {% endif %}
+                    {% if sample == "power_fp" %}
+                        <option value="power_fp" selected>Raise a floating point to a power</option>
+                    {% else %}
+                        <option value="power_fp">Raise a floating point to a power</option>
                     {% endif %}
                 {% endif %}
             </select>

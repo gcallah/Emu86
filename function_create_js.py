@@ -22,9 +22,9 @@ intel_function_names = {
 }
 
 fp_function_names = {
-    "fp_area.asm": "fp_area",
-    "fp_data.asm": "fp_data",
-    "fp_power.asm": "fp_power"
+    "fp_area.asm": "area_fp",
+    "fp_data.asm": "data_fp",
+    "fp_power.asm": "power_fp"
 }
 
 
@@ -177,41 +177,42 @@ def function_directory_fp(func_dict, directory_lst):
     for file_name in func_dict:
         function_code = ""
         count = 0
-        function_code += "function " + func_dict[file_name] + "_fp(flavor) {"
+        function_code += "function " + func_dict[file_name] + "(flavor) {"
         function_code += "\n\tcode_string = '';"
         for dire in directory_lst:
             sample_test = open(dire + file_name, "r")
-            if count == 0:
-                function_code += "\n\tif (flavor == 'intel'){\n"
-            elif count == 1:
-                function_code += "\n\telse if (flavor == 'mips_asm'){\n"
+            # if count == 0:
+            #     function_code += "\n\tif (flavor == 'intel'){\n"
+            # elif count == 1:
+            #     function_code += "\n\telse if (flavor == 'mips_asm'){\n"
 
-            function_code += "\t\tcode_string += "
-            if count == 1:
-                function_code += repr(sample_test.read())
-            else:
-                sample_conv = ""
-                for line in sample_test:
-                    sample_conv += line
-                    """
-                    if line.strip() == "":
-                        sample_conv += line
-                    elif line.strip()[0] == ";":
-                        sample_conv += line
-                    else:
-                        sample_conv += line
-                        # sample_conv += convert_line_hex_to_fp(line)
-                    """
-                function_code += repr(sample_conv)
+            function_code += "\n\tcode_string += "
+            function_code += repr(sample_test.read())
+            # if count == 1:
+            #     function_code += repr(sample_test.read())
+            # else:
+            #     sample_conv = ""
+            #     for line in sample_test:
+            #         sample_conv += line
+                    
+                    # if line.strip() == "":
+                    #     sample_conv += line
+                    # elif line.strip()[0] == ";":
+                    #     sample_conv += line
+                    # else:
+                    #     sample_conv += line
+                    #     # sample_conv += convert_line_hex_to_fp(line)
+               
+                # function_code += repr(sample_conv)
             sample_test.close()
-            function_code += ";\n\t}"
+            function_code += ";\n\t"
             count += 1
         function_code += "\n\tdocument.getElementById('id_code')"
         function_code += ".value = code_string;\n}"
         file_code += function_code + "\n"
     return file_code
 
-def create_js_file():
+def create_js_files():
     intel_directory = ["tests/Intel/", "tests/ATT/"]
     js_file_dec = open("mysite/static/Emu86/helper_functions.js", "w")
     file_code = function_directory(function_names, intel_directory +
@@ -229,13 +230,13 @@ def create_js_file():
 
     js_file_fp = open("mysite/static/Emu86/helper_functions_fp.js", "w")
     file_code = function_directory_fp(fp_function_names, ["tests/MIPS_ASM/"])
-    file_code += function_directory_fp(intel_function_names, intel_directory)
+    # file_code += function_directory_fp(intel_function_names, intel_directory)
     js_file_fp.write(file_code)
     js_file_fp.close()
 
 
 def main():
-    create_js_file()
+    create_js_files()
 
 
 main()
