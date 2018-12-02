@@ -361,12 +361,12 @@ function convert(name,value)
     var message= `Binary value of ${name}: `;
     var hex_or_dec = document.getElementsByName("base")[0].value;
     var value1 = null;
-    
+
     if (hex_or_dec == "hex"){
-        value1=(parseInt(value, 16).toString(2));
+        value1=(parseInt(value, 16));
     }
     else{
-        value1=parseInt(value.toString(), 10).toString(2);
+        value1=parseInt(value.toString(), 10);
     }
     if(value1>=0) {
         message=message+((value1).toString(2));
@@ -374,7 +374,7 @@ function convert(name,value)
     }
     else
     {
-        message=message+((value1>>>0).toString(2));
+        message=message+((value1 >>> 0).toString(2));
         alert(message);
     }
 }
