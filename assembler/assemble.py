@@ -264,7 +264,7 @@ def exec(tok_lines, flavor, vm, last_instr):
         # we have hit one of the JUMP instructions: jump to that line.
         add_debug("In FlowBreak", vm)
         dump_flags(vm)
-        if isinstance(curr_instr[INSTR_MIPS], Jal):
+        if isinstance(curr_instr[INSTR_MIPS], Jal) and flavor != 'riscv':
             vm.registers["R31"] = vm.get_ip()
         if isinstance(curr_instr[INSTR_MIPS], Jr):
             return jump_to_label(brk.label, source, vm)
@@ -362,6 +362,8 @@ def assemble(code, flavor, vm, step=False):
         last_instr = ep.msg.split(":")[0] + ": Exiting program"
         if flavor == "mips_asm" or flavor == "mips_mml":
             vm.set_ip(2147484032)
+        elif flavor == "riscv":
+            vm.set_ip(470351872)
 
     if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: "
