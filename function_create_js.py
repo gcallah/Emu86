@@ -13,16 +13,20 @@ function_names = {
     "change_array_elem_test.asm": "modify",
     "int_square_root.asm": "sqrt",
     "arithmetic_shift.asm": "arithShift",
-    "array.asm": "array",
-    "fp_area.asm": "fp_area",
-    "fp_data.asm": "fp_data",
-    "fp_power.asm": "fp_power"
+    "array.asm": "array"
 }
 
 intel_function_names = {
     "key_test.asm": "keyInterrupt",
     "mem_register_test.asm": "dataAccess"
 }
+
+fp_function_names = {
+    "fp_area.asm": "area_fp",
+    "fp_data.asm": "data_fp",
+    "fp_power.asm": "power_fp"
+}
+
 
 INTEL = 0
 ATT = 1
@@ -65,6 +69,29 @@ def convert_line_hex_to_dec(code):
         code = code[:start] + str(dec_num) + code[end:]
     return code
 
+def hex_to_float(h):
+    h2 = h[2:]
+    h2 = binascii.unhexlify(h2)
+    return struct.unpack('>f', h2)[0]
+
+def convert_line_hex_to_fp(code):
+    hex_num = re.compile(r'0x\d+[A-F]*')
+    match_lst = hex_num.findall(code)
+    for match in match_lst:
+        start = code.find(match)
+        end = start + len(match)
+        # fp_num = hex_to_float(code[start:end])
+        fp_num = code[start:end]
+        code = code[:start] + str(fp_num) + code[end:]
+    hex_num = re.compile(r'0x[A-F]+\d*')
+    match_lst = hex_num.findall(code)
+    for match in match_lst:
+        start = code.find(match)
+        end = start + len(match)
+        # fp_num = hex_to_float(code[start:end])
+        fp_num = code[start:end]
+        code = code[:start] + str(fp_num) + code[end:]
+    return code
 
 def function_directory(func_dict, directory_lst):
     file_code = ""
@@ -145,8 +172,47 @@ def function_directory_hex(func_dict, directory_lst):
         file_code += function_code + "\n"
     return file_code
 
+def function_directory_fp(func_dict, directory_lst):
+    file_code = ""
+    for file_name in func_dict:
+        function_code = ""
+        count = 0
+        function_code += "function " + func_dict[file_name] + "(flavor) {"
+        function_code += "\n\tcode_string = '';"
+        for dire in directory_lst:
+            sample_test = open(dire + file_name, "r")
+            # if count == 0:
+            #     function_code += "\n\tif (flavor == 'intel'){\n"
+            # elif count == 1:
+            #     function_code += "\n\telse if (flavor == 'mips_asm'){\n"
 
-def create_js_file():
+            function_code += "\n\tcode_string += "
+            function_code += repr(sample_test.read())
+            # if count == 1:
+            #     function_code += repr(sample_test.read())
+            # else:
+            #     sample_conv = ""
+            #     for line in sample_test:
+            #         sample_conv += line
+                    
+                    # if line.strip() == "":
+                    #     sample_conv += line
+                    # elif line.strip()[0] == ";":
+                    #     sample_conv += line
+                    # else:
+                    #     sample_conv += line
+                    #     # sample_conv += convert_line_hex_to_fp(line)
+               
+                # function_code += repr(sample_conv)
+            sample_test.close()
+            function_code += ";\n\t"
+            count += 1
+        function_code += "\n\tdocument.getElementById('id_code')"
+        function_code += ".value = code_string;\n}"
+        file_code += function_code + "\n"
+    return file_code
+
+def create_js_files():
     intel_directory = ["tests/Intel/", "tests/ATT/"]
     js_file_dec = open("mysite/static/Emu86/helper_functions.js", "w")
     file_code = function_directory(function_names, intel_directory +
@@ -162,9 +228,15 @@ def create_js_file():
     js_file_hex.write(file_code)
     js_file_hex.close()
 
+    js_file_fp = open("mysite/static/Emu86/helper_functions_fp.js", "w")
+    file_code = function_directory_fp(fp_function_names, ["tests/MIPS_ASM/"])
+    # file_code += function_directory_fp(intel_function_names, intel_directory)
+    js_file_fp.write(file_code)
+    js_file_fp.close()
+
 
 def main():
-    create_js_file()
+    create_js_files()
 
 
 main()

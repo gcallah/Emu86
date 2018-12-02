@@ -17,11 +17,15 @@ def h_to_b64(value):
 
 
 def f_to_b64(value):
+    if (value == 0):
+        return "0"*64
     val = struct.unpack('q', struct.pack('d', value))[0]
     return "0" + getBin(val)
 
 
 def b_to_f64(value):
+    if (value == "0"*64):
+        return 0.0
     hx = hex(int(value, 2))
     return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 

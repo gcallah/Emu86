@@ -236,6 +236,15 @@ class TestPrograms(TestCase):
         float_value = self.b_to_f(bin_string)
         self.assertEqual(float_value, -(15.5 + 10.813 - 2 * 27.25))
 
+    # test for converting celsius to fahrenheit
+    def test_fp_celsius_conversion(self):
+        self.run_mips_test_code("fp_cel_to_fah.asm")
+        self.assertEqual(mips_machine.memory["C"], (1.8)*10.0+32.0)
+
+    def test_fp_celsius_conversion_celsius_0(self):
+        self.run_mips_test_code("fp_cel_to_fah_w_0.asm")
+        self.assertEqual(mips_machine.memory["C"], (1.8)*0.0+32.0)
+
 
 if __name__ == '__main__':
     main()

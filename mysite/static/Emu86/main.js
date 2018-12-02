@@ -23,6 +23,7 @@ function selectSample()
     var selected = selectBar.options[selectBar.selectedIndex].value;
     var flav = document.getElementsByName("flavor")[0];
     var base = document.getElementsByName("base")[0].value;
+    
     if (flav && base == "dec"){
         if (selected == "none"){
             document.getElementById("id_code").value = "";
@@ -121,6 +122,15 @@ function selectSample()
         }
         else if (selected == "dataAccess") {
             dataAccess_hex(flav.value);
+        }
+        else if (selected == "data_fp") {
+            data_fp(flav.value);
+        }
+        else if (selected == "power_fp") {
+            power_fp(flav.value);
+        }
+        else if (selected == "area_fp") {
+            area_fp(flav.value);
         }
     }
 }
