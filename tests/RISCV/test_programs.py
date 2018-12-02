@@ -26,6 +26,12 @@ class TestPrograms(TestCase):
         test_code = self.read_test_code("tests/RISCV/" + filnm)
         assemble(test_code, 'riscv', riscv_machine)
 
+    def test_celsius_conversion(self):
+        self.run_riscv_test_code("cel_to_fah.asm")
+        self.assertEqual(riscv_machine.registers["X8"], 95)
+        self.assertEqual(riscv_machine.memory["4"], 95)
+        self.assertEqual(riscv_machine.registers["X9"], 5)
+
     def test_area(self):
         self.run_riscv_test_code("area.asm")
         self.assertEqual(riscv_machine.registers["X8"], 35)
