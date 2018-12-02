@@ -44,7 +44,6 @@
                 <br> <br>
             {% endif %}
             Sample Programs: 
-            
             <select id="sample" name="sample" onchange="selectSample()">
                 {% if sample == "none" %}
                     <option value="none" selected></option>
@@ -126,6 +125,13 @@
                         <option value="dataAccess" selected>Accessing data in memory</option>
                     {% else %}
                         <option value="dataAccess">Accessing data in memory</option>
+                    {% endif %}
+                {% endif %}
+                {% if flavor == "mips_asm" %}
+                    {% if sample == "dataAccess_fp" %}
+                        <option value="dataAccess_fp" selected>Accessing data in memory for floating point</option>
+                    {% else %}
+                        <option value="dataAccess_fp">Accessing data in memory for floating point</option>
                     {% endif %}
                 {% endif %}
             </select>
