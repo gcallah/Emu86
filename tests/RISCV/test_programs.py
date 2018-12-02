@@ -66,6 +66,10 @@ class TestPrograms(TestCase):
         self.assertEqual(riscv_machine.registers["X9"], 40)
         self.assertEqual(riscv_machine.registers["X10"], 10)
 
+    def test_int_square_root(self):
+        self.run_riscv_test_code("int_square_root.asm")
+        self.assertEqual(riscv_machine.registers["X8"], 10)
+
     def test_data(self):
         self.run_riscv_test_code("data.asm")
         self.assertEqual(riscv_machine.registers["X8"],  8)
