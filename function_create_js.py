@@ -108,6 +108,8 @@ def function_directory(func_dict, directory_lst):
                 function_code += "\n\telse if (flavor == 'att'){\n"
             elif count == 2:
                 function_code += "\n\telse if (flavor == 'mips_asm'){\n"
+            elif count == 3:
+                function_code += "\n\telse if (flavor == 'mips_mml'){\n"
             else:
                 function_code += "\n\telse{\n"
 
@@ -148,11 +150,13 @@ def function_directory_hex(func_dict, directory_lst):
                 function_code += "\n\telse if (flavor == 'att'){\n"
             elif count == 2:
                 function_code += "\n\telse if (flavor == 'mips_asm'){\n"
+            elif count == 3:
+                function_code += "\n\telse if (flavor == 'mips_mml'){\n"
             else:
                 function_code += "\n\telse{\n"
 
             function_code += "\t\tcode_string += "
-            if count == 2 or count == 3:
+            if count == 2 or count == 3 or count == 4:
                 function_code += repr(sample_test.read())
             else:
                 sample_conv = ""
@@ -216,14 +220,16 @@ def create_js_files():
     intel_directory = ["tests/Intel/", "tests/ATT/"]
     js_file_dec = open("mysite/static/Emu86/helper_functions.js", "w")
     file_code = function_directory(function_names, intel_directory +
-                                   ["tests/MIPS_ASM/", "tests/MIPS_MML/"])
+                                   ["tests/MIPS_ASM/", "tests/MIPS_MML/",
+                                   "tests/RISCV/"])
     file_code += function_directory(intel_function_names, intel_directory)
     js_file_dec.write(file_code)
     js_file_dec.close()
 
     js_file_hex = open("mysite/static/Emu86/helper_functions_hex.js", "w")
     file_code = function_directory_hex(function_names, intel_directory +
-                                       ["tests/MIPS_ASM/", "tests/MIPS_MML/"])
+                                       ["tests/MIPS_ASM/", "tests/MIPS_MML/",
+                                       "tests/RISCV/"])
     file_code += function_directory_hex(intel_function_names, intel_directory)
     js_file_hex.write(file_code)
     js_file_hex.close()
