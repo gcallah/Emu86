@@ -81,8 +81,11 @@ def processRegisters(machineRegisters):
                          list(machineRegisters.keys())[35:], 'F')
     return(r, f)
 
-def getCurrRegister(register):
-  return 'F'
+def getCurrRegister(post_body):
+  if 'curr_reg' in post_body:
+    return post_body['curr_reg']
+  else:
+    return ''
 
 def main_page(request):
     last_instr = ""
@@ -109,7 +112,7 @@ def main_page(request):
             riscv_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
-            curr_reg = request.POST['curr_reg'] if 'curr_reg' in request.POST else ''
+            curr_reg = getCurrRegister(request.POST)
             if lang in MIPS:
                 intel_machine.flavor = None
                 riscv_machine.flavor = None
@@ -307,7 +310,7 @@ def main_page(request):
         site_hdr += mips_machine.base.upper()
         hex_conversion(mips_machine)
         r_reg, f_reg = processRegisters(mips_machine.registers)
-        curr_reg = request.POST['curr_reg'] if 'curr_reg' in request.POST else ''
+        curr_reg = getCurrRegister(request.POST)
         return render(request, 'main.html',
                       {'form': form,
                        HEADER: site_hdr,

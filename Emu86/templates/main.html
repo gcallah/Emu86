@@ -693,7 +693,6 @@
             SubmitForm(true, true);
         }
         var elem = document.getElementById("viewReg");
-        // console.log("current register value is ", document.getElementsByName('curr_reg')[0].value);
         if (document.getElementsByName('curr_reg')[0].value == "R" || document.getElementsByName('curr_reg')[0].value == "") {
             document.querySelectorAll('.F').forEach(function(button) {
                 button.style.display = "none";
@@ -717,7 +716,6 @@
             var elem = document.getElementById("viewReg");
             if (document.querySelectorAll('.R')[0].style.display == "none") {
                 document.getElementsByName('curr_reg')[0].value = "R";
-                console.log(document.getElementsByName('curr_reg')[0].value);
 
                 document.querySelectorAll('.F').forEach(function(button) {
                     button.style.display = "none";
@@ -731,7 +729,7 @@
                 elem.innerHTML = "View F Registers";
             } else {
                 document.getElementsByName('curr_reg')[0].value = "F";
-                console.log(document.getElementsByName('curr_reg')[0].value);
+                
                 document.querySelectorAll('.R').forEach(function(button) {
                     button.style.display = "none";
                 });
