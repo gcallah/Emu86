@@ -64,13 +64,13 @@ function power(flavor) {
 		code_string += '; In edx, we put the number to raise to the power we put in ebx.\n      mov $2, %edx\n      mov $16, %ebx\n      call power\n      mov $0, %eax\n      int $32\n\npower: mov %edx, %ecx\nloop: imul %ecx, %edx\n      dec %ebx\n      cmp %ebx, $1\n      jne loop\n      ret\n';
 	}
 	else if (flavor == 'mips_asm'){
-		code_string += '; In R8, we put the number to raise to the power we put in R9.\n      4194304 ADDI R8, R0, 2\n      4194308 ADDI R9, R9, 10\n      4194312 JAL 16777280\n      4194316 SYSCALL\n\npower: 4194320 ADD R16, R0, R8\nloop: 4194324 MULT R8, R16\n      4194328 MFLO R8\n      4194332 ADDI R9, R9, -1\n      4194336 ADDI R10, R0, 1\n      4194340 BNE R9, R10, -5\n      4194344 JR R31';
+		code_string += '; In R8, we put the number to raise to the power we put in R9.\n      4194304 ADDI R8, R0, 2\n      4194308 ADDI R9, R9, 16\n      4194312 JAL 16777280\n      4194316 SYSCALL\n\npower: 4194320 ADD R16, R0, R8\nloop: 4194324 MULT R8, R16\n      4194328 MFLO R8\n      4194332 ADDI R9, R9, -1\n      4194336 ADDI R10, R0, 1\n      4194340 BNE R9, R10, -5\n      4194344 JR R31';
 	}
 	else if (flavor == 'mips_mml'){
 		code_string += '; In R8, we put the number to raise to the power we put in R9.\n    400000 ADDI R8, R0, 2\n    400004 ADDI R9, R9, 10\n    400008 JAL 1000040\n    40000C SYSCALL\n\n    400010 ADD R16, R0, R8\n    400014 MULT R8, R16\n    400018 MFLO R8\n    40001C ADDI R9, R9, -1\n    400020 ADDI R10, R0, 1\n    400024 BNE R9, R10, -5\n    400028 JR R31';
 	}
 	else{
-		code_string += '; In X8, we put the number to raise to the power we put in X9.\n      4194304 ADDI X8, X0, 2\n      4194308 ADDI X9, X9, 10\n      4194312 ADD X16, X0, X8\nloop: 4194316 MUL X8, X8, X16\n      4194320 ADDI X9, X9, -1\n      4194324 ADDI X10, X0, 1\n      4194328 BNE X9, X10, -4\n      4194332 SYSCALL';
+		code_string += '; In X8, we put the number to raise to the power we put in X9.\n      4194304 ADDI X8, X0, 2\n      4194308 ADDI X9, X9, 16\n      4194312 ADD X16, X0, X8\nloop: 4194316 MUL X8, X8, X16\n      4194320 ADDI X9, X9, -1\n      4194324 ADDI X10, X0, 1\n      4194328 BNE X9, X10, -4\n      4194332 SYSCALL';
 	}
 	document.getElementById('id_code').value = code_string;
 }
