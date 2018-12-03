@@ -1,5 +1,7 @@
 import argparse
 from assembler.assemble import assemble
+from assembler.virtual_machine import intel_machine, mips_machine
+from assembler.virtual_machine import riscv_machine
 
 flavors = {
     "1": "intel",
@@ -74,18 +76,42 @@ def display_results(last_instr, error, vm):
         print("\t" + mem + ": " + str(vm.memory[mem]))
 
 
+def reset_vms():
+    intel_machine.re_init()
+    mips_machine.re_init()
+    riscv_machine.re_init()
+    intel_machine.flavor = None
+    mips_machine.flavor = None
+    riscv_machine.flavor = None
+    intel_machine.base = None
+    mips_machine.base = None
+    riscv_machine.base = None
+
+
+def run_assemble(vm, base, code):
+    if vm.flavor == "intel" or vm.flavor == "att":
+        if base is None:
+            base = "dec"
+    else:
+        if base is None:
+            base = "hex"
+    vm.base = base
+    (last_instr, error, bit_code) = assemble(code, vm.flavor, vm)
+    display_results(last_instr, error, vm)
+
+
 def main():
     global intel_machine
     global mips_machine
-    flavor = None
+    global riscv_machine
+    reset_vms()
     base = None
-    last_instr = None
-    error = None
     parser = argparse.ArgumentParser()
     parser.add_argument("-I", help="flavor: Intel", action="store_true")
     parser.add_argument("-A", help="flavor: AT&T", action="store_true")
     parser.add_argument("-MASM", help="flavor: MIPS_ASM", action="store_true")
     parser.add_argument("-MMML", help="flavor: MIPS_MML", action="store_true")
+    parser.add_argument("-R", help="flavor: RISCV", action="store_true")
 
     parser.add_argument("-x", help="base: hex", action="store_true")
     parser.add_argument("-d", help="base: decimal", action="store_true")
@@ -93,45 +119,38 @@ def main():
     parser.add_argument("file", help="file path of asm file")
 
     args = parser.parse_args()
+
+    vm = None
     if args.I:
-        flavor = "intel"
+        intel_machine.flavor = "intel"
+        vm = intel_machine
     elif args.A:
-        flavor = "att"
+        intel_machine.flavor = "att"
+        vm = intel_machine
     elif args.MASM:
-        flavor = "mips_asm"
+        mips_machine.flavor = "mips_asm"
+        vm = mips_machine
     elif args.MMML:
-        flavor = "mips_mml"
+        mips_machine.flavor = "mips_mml"
+        vm = mips_machine
+    elif args.R:
+        riscv_machine.flavor = "riscv"
+        vm = riscv_machine
+    else:
+        return
 
     if args.x:
         base = "hex"
     elif args.d:
         base = "dec"
 
-    if flavor is None:
-        return
-
     file_nm = args.file
     asm_file = open(file_nm, "r")
     code = ""
     for line in asm_file:
         code += line
-    if flavor == "intel" or flavor == "att":
-        intel_machine.flavor = flavor
-        if base is None:
-            base = "dec"
-        intel_machine.base = base
-        (last_instr, error, bit_code) = assemble(code, intel_machine.flavor,
-                                                 intel_machine)
-        display_results(last_instr, error, intel_machine)
-    else:
-        mips_machine.flavor = flavor
-        if base is None:
-            base = "hex"
-        mips_machine.base = base
-        print(mips_machine.base)
-        (last_instr, error, bit_code) = assemble(code, mips_machine.flavor,
-                                                 mips_machine)
-        display_results(last_instr, error, mips_machine)
+
+    run_assemble(vm, base, code)
 
 
 main()
