@@ -99,10 +99,11 @@ def convert_line_hex_to_fp(code):
 def sample_dir(func_dict, directory_lst, base):
     file_code = ""
     for file_name in func_dict:
-        function_code = ""
+        function_code = "function " + func_dict[file_name]
         count = 0
-        function_code += "function " + func_dict[file_name] + "(flavor) {"
-        function_code += "\n\tcode_string = '';"
+        if base == HEX:
+            function_code += "_hex"
+        function_code += "(flavor) {\n\tcode_string = '';"
         for dire in directory_lst:
             sample_test = open(dire + file_name, "r")
             if count == 0:
