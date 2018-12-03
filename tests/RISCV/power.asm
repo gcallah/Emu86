@@ -1,4 +1,4 @@
-; In R8, we put the number to raise to the power we put in R9.
+; In X8, we put the number to raise to the power we put in X9.
       0x400000 ADDI X8, X0, 2
       0x400004 ADDI X9, X9, 10
       0x400008 ADD X16, X0, X8
