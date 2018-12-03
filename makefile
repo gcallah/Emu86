@@ -14,6 +14,7 @@ MUDIR = myutils
 MODELS_DIR = models
 UDIR = utils
 TDIR = tests
+TEST_DIR = test_scripts
 SRCS = $(INTEL_DIR)/arithmetic.py $(INTEL_DIR)/control_flow.py $(INTEL_DIR)/data_mov.py $(INTEL_DIR)/interrupts.py 
 MIPS_SRCS = $(MIPS_DIR)/arithmetic.py $(MIPS_DIR)/control_flow.py $(MIPS_DIR)/data_mov.py $(MIPS_DIR)/interrupts.py 
 INTER2 = $(ODIR)/help.ptml
@@ -101,9 +102,8 @@ help: $(SRCS) samples help_mips
 jsfile:
 	python3 function_create_js.py
 	git add function_create_js.py
-	git add mysite/static/Emu86/helper_functions.js
-	git add mysite/static/Emu86/helper_functions_hex.js
-	git commit -m "Updating js helper files"
+	git add mysite/static/Emu86/sample_functions*.js
+	git commit -m "Updating js sample files"
 	git push origin master
 
 zip: 
@@ -123,7 +123,7 @@ db:
 	git push origin master
 
 tests: FORCE
-	./all_tests.sh
+	$(TEST_DIR)/all_tests.sh
 
 dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	-git commit -a
