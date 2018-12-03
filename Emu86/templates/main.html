@@ -2,12 +2,14 @@
 
 {% block content %}
 
-
     <div class="module">
         <form id="codeForm" action="{% url 'Emu86:main_page' %}" method="post">
             <br>
             <input type="hidden" name="nxt_key">
             <input type="hidden" name="unwritable">
+            {% if curr_reg != None%}
+                <input type="hidden" name="curr_reg" value="{{ curr_reg }}">
+            {% endif %}
             {% if flavor == "intel" %}
                 <input type="hidden" name="flavor" value="intel">
             {% elif flavor == "att" %}
@@ -146,7 +148,7 @@
                 {% endif %}
             </select>
             {% if registers.items|length >= 67%}
-                <button type="button" onclick="switchReg()" id="viewReg">Display F Registers</button>
+                <button type="button" onclick="switchReg()" id="viewReg"></button>
             {% endif %}
             <br>
             <table>
@@ -690,14 +692,33 @@
         if (document.getElementsByName("button_type")[0].value == "pause") {
             SubmitForm(true, true);
         }
-
-        document.querySelectorAll('.F').forEach(function(button) {
-            button.style.display = "none";
-        });
+        var elem = document.getElementById("viewReg");
+        // console.log("current register value is ", document.getElementsByName('curr_reg')[0].value);
+        if (document.getElementsByName('curr_reg')[0].value == "R" || document.getElementsByName('curr_reg')[0].value == "") {
+            document.querySelectorAll('.F').forEach(function(button) {
+                button.style.display = "none";
+            });
+            document.querySelectorAll('.R').forEach(function(button) {
+                button.style.display = "table-row";
+            });
+            elem.innerHTML = "View F Registers";
+        } else if (document.getElementsByName('curr_reg')[0].value == "F") {
+            document.querySelectorAll('.R').forEach(function(button) {
+                button.style.display = "none";
+            });
+            document.querySelectorAll('.F').forEach(function(button) {
+                button.style.display = "table-row";
+            });
+            elem.innerHTML = "View R Registers";
+        }
+        
 
         function switchReg() {
             var elem = document.getElementById("viewReg");
             if (document.querySelectorAll('.R')[0].style.display == "none") {
+                document.getElementsByName('curr_reg')[0].value = "R";
+                console.log(document.getElementsByName('curr_reg')[0].value);
+
                 document.querySelectorAll('.F').forEach(function(button) {
                     button.style.display = "none";
                 });
@@ -709,6 +730,8 @@
                 });
                 elem.innerHTML = "View F Registers";
             } else {
+                document.getElementsByName('curr_reg')[0].value = "F";
+                console.log(document.getElementsByName('curr_reg')[0].value);
                 document.querySelectorAll('.R').forEach(function(button) {
                     button.style.display = "none";
                 });
