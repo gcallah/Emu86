@@ -1,6 +1,6 @@
 ; In R8, we put the number to raise to the power we put in R9.
       0x400000 ADDI R8, R0, 2
-      0x400004 ADDI R9, R9, 10
+      0x400004 ADDI R9, R9, 0x10
       0x400008 JAL 0x1000040
       0x40000C SYSCALL
 
