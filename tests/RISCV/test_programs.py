@@ -66,6 +66,14 @@ class TestPrograms(TestCase):
         self.assertEqual(riscv_machine.registers["X9"], 40)
         self.assertEqual(riscv_machine.registers["X10"], 10)
 
+    def test_array_avg(self):
+        self.run_riscv_test_code("array_average_test.asm")
+        self.assertEqual(riscv_machine.registers["X16"], 10)
+        self.assertEqual(riscv_machine.registers["X8"], 89)
+        self.assertEqual(riscv_machine.registers["X9"], 10)
+        self.assertEqual(riscv_machine.registers["X10"], 40)
+        self.assertEqual(riscv_machine.registers["X17"], 8)
+
     def test_int_square_root(self):
         self.run_riscv_test_code("int_square_root.asm")
         self.assertEqual(riscv_machine.registers["X8"], 10)
@@ -75,6 +83,11 @@ class TestPrograms(TestCase):
         self.assertEqual(riscv_machine.registers["X8"],  8)
         self.assertEqual(riscv_machine.registers["X9"], 16)
         self.assertEqual(riscv_machine.registers["X10"], 32)
+
+    def test_log(self):
+        self.run_riscv_test_code("log.asm")
+        self.assertEqual(riscv_machine.registers["X9"], 1024)
+        self.assertEqual(riscv_machine.registers["X8"], 9)
 
     def test_power(self):
         self.run_riscv_test_code("power.asm")

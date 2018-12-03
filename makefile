@@ -101,9 +101,8 @@ help: $(SRCS) samples help_mips
 jsfile:
 	python3 function_create_js.py
 	git add function_create_js.py
-	git add mysite/static/Emu86/helper_functions.js
-	git add mysite/static/Emu86/helper_functions_hex.js
-	git commit -m "Updating js helper files"
+	git add mysite/static/Emu86/sample_functions*.js
+	git commit -m "Updating js sample files"
 	git push origin master
 
 zip: 
