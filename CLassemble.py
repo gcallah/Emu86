@@ -3,18 +3,6 @@ from assembler.assemble import assemble
 from assembler.virtual_machine import intel_machine, mips_machine
 from assembler.virtual_machine import riscv_machine
 
-flavors = {
-    "1": "intel",
-    "2": "att",
-    "3": "mips_asm",
-    "4": "mips_mml"
-}
-
-numsys = {
-    "1": "dec",
-    "2": "hex"
-}
-
 
 def convert_reg_contents(registers):
     for reg in registers:
