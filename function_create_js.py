@@ -72,10 +72,12 @@ def convert_line_hex_to_dec(code):
         code = code[:start] + str(dec_num) + code[end:]
     return code
 
+
 def hex_to_float(h):
     h2 = h[2:]
     h2 = binascii.unhexlify(h2)
     return struct.unpack('>f', h2)[0]
+
 
 def convert_line_hex_to_fp(code):
     hex_num = re.compile(r'0x\d+[A-F]*')
@@ -95,6 +97,7 @@ def convert_line_hex_to_fp(code):
         fp_num = code[start:end]
         code = code[:start] + str(fp_num) + code[end:]
     return code
+
 
 def sample_dir(func_dict, directory_lst, base):
     file_code = ""
