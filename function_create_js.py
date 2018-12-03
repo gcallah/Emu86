@@ -144,47 +144,6 @@ def sample_dir(func_dict, directory_lst, base):
     return file_code
 
 
-# def function_directory_hex(func_dict, directory_lst):
-#     file_code = ""
-#     for file_name in func_dict:
-#         function_code = ""
-#         count = 0
-#         function_code += "function " + func_dict[file_name] + "_hex(flavor) {"
-#         function_code += "\n\tcode_string = '';"
-#         for dire in directory_lst:
-#             sample_test = open(dire + file_name, "r")
-#             if count == 0:
-#                 function_code += "\n\tif (flavor == 'intel'){\n"
-#             elif count == 1:
-#                 function_code += "\n\telse if (flavor == 'att'){\n"
-#             elif count == 2:
-#                 function_code += "\n\telse if (flavor == 'mips_asm'){\n"
-#             elif count == 3:
-#                 function_code += "\n\telse if (flavor == 'mips_mml'){\n"
-#             else:
-#                 function_code += "\n\telse{\n"
-
-#             function_code += "\t\tcode_string += "
-#             if count == 2 or count == 3 or count == 4:
-#                 function_code += repr(sample_test.read())
-#             else:
-#                 sample_conv = ""
-#                 for line in sample_test:
-#                     if line.strip() == "":
-#                         sample_conv += line
-#                     elif line.strip()[0] == ";":
-#                         sample_conv += line
-#                     else:
-#                         sample_conv += convert_line_dec_to_hex(line)
-#                 function_code += repr(sample_conv)
-#             sample_test.close()
-#             function_code += ";\n\t}"
-#             count += 1
-#         function_code += "\n\tdocument.getElementById('id_code')"
-#         function_code += ".value = code_string;\n}"
-#         file_code += function_code + "\n"
-#     return file_code
-
 def function_directory_fp(func_dict, directory_lst):
     file_code = ""
     for file_name in func_dict:
