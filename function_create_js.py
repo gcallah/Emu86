@@ -117,8 +117,9 @@ def sample_dir(func_dict, directory_lst, base):
                 function_code += "\n\telse{\n"
 
             function_code += "\t\tcode_string += "
-            if ((base == DEC and count == 0 or count == 1) or 
-                (base == HEX and count != 0 and count != 1) or count == 3):
+            if ((base == DEC and (count == 0 or count == 1)) or 
+                (base == HEX and count != 0 and count != 1) 
+                or count == 3):
                 function_code += repr(sample_test.read())
             else:
                 sample_conv = ""
