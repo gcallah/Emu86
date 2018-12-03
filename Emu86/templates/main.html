@@ -115,7 +115,7 @@
                 {% else %}
                     <option value="data">Use the data section</option>
                 {% endif %}
-                {% if flavor != "mips_asm" and flavor != "mips_mml" %}
+                {% if flavor != "mips_asm" and flavor != "mips_mml" and flavor != "riscv" %}
                     {% if sample == "keyInterrupt" %}
                         <option value="keyInterrupt" selected>Keyboard interrupt</option>
                     {% else %}
