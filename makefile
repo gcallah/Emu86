@@ -14,7 +14,6 @@ MUDIR = myutils
 MODELS_DIR = models
 UDIR = utils
 TDIR = tests
-TEST_DIR = test_scripts
 SRCS = $(INTEL_DIR)/arithmetic.py $(INTEL_DIR)/control_flow.py $(INTEL_DIR)/data_mov.py $(INTEL_DIR)/interrupts.py 
 MIPS_SRCS = $(MIPS_DIR)/arithmetic.py $(MIPS_DIR)/control_flow.py $(MIPS_DIR)/data_mov.py $(MIPS_DIR)/interrupts.py 
 INTER2 = $(ODIR)/help.ptml
@@ -123,7 +122,7 @@ db:
 	git push origin master
 
 tests: FORCE
-	$(TEST_DIR)/all_tests.sh
+	all_tests.sh
 
 dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	-git commit -a
