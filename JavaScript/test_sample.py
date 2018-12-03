@@ -44,7 +44,7 @@ class TestSample(TestCase):
         self.getById('subButton').click()
         option_path = '//*[@id="sample"]/option'
         option_range = 17
-        if flag == 3 or flag == 4:
+        if flag == 3 or flag == 4 or flag == 5:
             option_range = 15
         for sample_opt in range(1, option_range):
             self.get_by_x_path('//*[@id="sample"]').click()
@@ -59,8 +59,10 @@ class TestSample(TestCase):
                     file_name += 'ATT/'
                 elif flag == 3:
                     file_name += 'MIPS_ASM/'
-                else:
+                elif flag == 4:
                     file_name += 'MIPS_MML/'
+                else:
+                    file_name += 'RISCV/'
                 file_name += sample[str(sample_opt - 1)]
                 file = open(file_name, 'r')
                 val = file.read()
@@ -72,7 +74,7 @@ class TestSample(TestCase):
         self.close_page()
 
     def test_options(self):
-        for flag in range(1, 5):
+        for flag in range(1, 6):
             self.option_test(flag)
 
 

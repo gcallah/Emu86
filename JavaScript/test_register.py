@@ -52,7 +52,8 @@ class TestRegisters(TestCase):
         option_path = '//*[@id="sample"]/option'
         self.get_by_x_path('//*[@id="sample"]').click()
         registers = ['EAX', 'EBX', 'ECX', 'EDX']
-        for sample_opt in range(8, 17):
+        # for sample_opt in range(8, 17):
+        for sample_opt in range(2, 17):
             self.get_by_id('clear-button').click()
             opt_num_path = option_path + '[' + str(sample_opt) + ']'
             self.get_by_x_path(opt_num_path).click()
