@@ -84,10 +84,10 @@ class TestPrograms(TestCase):
         self.assertEqual(riscv_machine.registers["X9"], 16)
         self.assertEqual(riscv_machine.registers["X10"], 32)
 
-    # def test_log(self):
-    #     self.run_riscv_test_code("log.asm")
-    #     self.assertEqual(riscv_machine.registers["X9"], 1024)
-    #     self.assertEqual(riscv_machine.registers["X8"], 9)
+    def test_log(self):
+        self.run_riscv_test_code("log.asm")
+        self.assertEqual(riscv_machine.registers["X9"], 1024)
+        self.assertEqual(riscv_machine.registers["X8"], 9)
 
     def test_power(self):
         self.run_riscv_test_code("power.asm")
