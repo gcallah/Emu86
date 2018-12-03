@@ -122,7 +122,7 @@ db:
 	git push origin master
 
 tests: FORCE
-	all_tests.sh
+	./all_tests.sh
 
 dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	-git commit -a
