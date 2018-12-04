@@ -8,6 +8,7 @@ from unittest import TestCase, main
 
 from assembler.assemble import assemble
 from area import Area
+from sum_test import Sum
 """
 Test entire programs.
 
@@ -115,9 +116,10 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.memory[hex(22).split('x')[-1]], 0)
 
     def test_sum_calculation(self):
-        self.run_intel_test_code("tests/Intel/sum_test.asm")
-        self.assertEqual(intel_machine.registers["EAX"],  53)
-        self.assertEqual(intel_machine.memory["1"], 53)
+        self.run_intel_test_code("tests/Intel/sum_test.py")
+        intel_machine.registers["EAX"] = Sum.computeSummation(53.0,3.5)
+        self.assertEqual(intel_machine.registers["EAX"],53.0+3.5)
+
 
     def test_arithmetic_expression(self):
         self.run_intel_test_code("tests/Intel/arithmetic_expression.asm")
