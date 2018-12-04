@@ -81,6 +81,11 @@ def processRegisters(machineRegisters):
                          list(machineRegisters.keys())[35:], 'F')
     return(r, f)
 
+def getCurrRegister(post_body):
+  if 'curr_reg' in post_body:
+    return post_body['curr_reg']
+  else:
+    return ''
 
 def main_page(request):
     last_instr = ""
@@ -107,6 +112,7 @@ def main_page(request):
             riscv_machine.re_init()
             form = MainForm()
             lang = request.POST['language']
+            curr_reg = getCurrRegister(request.POST)
             if lang in MIPS:
                 intel_machine.flavor = None
                 riscv_machine.flavor = None
@@ -139,7 +145,8 @@ def main_page(request):
                                'bit_code': "",
                                'button_type': "",
                                'changes': [],
-                               'stack_change': ""
+                               'stack_change': "",
+                               'curr_reg': curr_reg
                                })
             if lang in INTEL:
                 mips_machine.flavor = None
@@ -303,6 +310,7 @@ def main_page(request):
         site_hdr += mips_machine.base.upper()
         hex_conversion(mips_machine)
         r_reg, f_reg = processRegisters(mips_machine.registers)
+        curr_reg = getCurrRegister(request.POST)
         return render(request, 'main.html',
                       {'form': form,
                        HEADER: site_hdr,
@@ -327,7 +335,8 @@ def main_page(request):
                        'bit_code': bit_code,
                        'button_type': button,
                        'changes': mips_machine.changes,
-                       'stack_change': mips_machine.stack_change
+                       'stack_change': mips_machine.stack_change,
+                       'curr_reg': curr_reg
                        })
     if intel_machine.flavor in INTEL:
         intel_machine.order_mem()
