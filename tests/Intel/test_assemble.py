@@ -12,7 +12,7 @@ sys.path.append(".") # noqa
 import operator as opfunc
 import functools
 from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf, FXor, FNeg
-from assembler.Intel.fp_arithmetic import FShr, FShl
+from assembler.Intel.fp_arithmetic import FShr, FShl, FMul
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
@@ -78,6 +78,8 @@ class AssembleTestCase(TestCase):
     def test_FOrf(self):
         self.two_op_test(FOrf.orFunc, "FOrf", op_type=FLOAT)
 
+    def test_FMul(self):
+        self.two_op_test(FMul.multiply, "FMul", op_type=FLOAT)
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
 
