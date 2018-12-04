@@ -7,8 +7,6 @@ from assembler.virtual_machine import intel_machine
 from unittest import TestCase, main
 
 from assembler.assemble import assemble
-from area import Area
-from sum_test import Sum
 """
 Test entire programs.
 
