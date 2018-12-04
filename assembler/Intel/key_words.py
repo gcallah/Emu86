@@ -4,6 +4,8 @@ from .fp_arithmetic import FAdd, FDiv, FSub, FMul, FNeg, FAndf, FOrf
 from .fp_arithmetic import FXor, FShr, FDec, FInc, FNotf, FShl
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
+
+
 from .data_mov import Mov, Pop, Push, Lea
 from .data_mov_att import Movb, Movw, Movl
 from .interrupts import Interrupt
@@ -68,6 +70,7 @@ instructions = {
         "FShl": FShl('FShl'),
         'FXor': FXor('FXor'),
         'FShr': FShr('FShr'),
+        #Other
         }
 
 intel_key_words = {

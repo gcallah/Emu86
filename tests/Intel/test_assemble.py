@@ -13,11 +13,13 @@ import operator as opfunc
 import functools
 from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf, FXor, FNeg
 from assembler.Intel.fp_arithmetic import FShr, FShl, FMul
+from area import Area
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
 from assembler.virtual_machine import intel_machine, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
+
 
 NUM_TESTS = 100
 MAX_SHIFT = BITS // 2
@@ -105,7 +107,8 @@ class AssembleTestCase(TestCase):
 
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
-
+    def computeArea(self):
+        self.two_op_test(Area.computeArea, "Area")
     # def test_FShr(self):
     #     self.two_op_test_float(opfunc.rshift, "FShr",
     #                      low1=MIN_MUL, high1=MAX_MUL,

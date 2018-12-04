@@ -7,7 +7,7 @@ from assembler.virtual_machine import intel_machine
 from unittest import TestCase, main
 
 from assembler.assemble import assemble
-
+from area import Area
 """
 Test entire programs.
 
@@ -125,14 +125,11 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.registers["EBX"],  52)
 
     def test_area(self):
-        self.run_intel_test_code("tests/Intel/area.asm")
-        self.assertEqual(intel_machine.registers["EAX"],  35 * 27)
+        self.run_intel_test_code("tests/Intel/area.py")
+        intel_machine.registers["EAX"] = Area.computeArea(35.0,27.0)
+        intel_machine.registers["EBX"] = Area.computeArea(35.0,27.0)
+        self.assertEqual(intel_machine.registers["EAX"], intel_machine.registers["EBX"])
 
-    def test_celsius_conversion(self):
-        self.run_intel_test_code("tests/Intel/cel_to_fah.asm")
-        self.assertEqual(intel_machine.registers["EAX"], 95)
-        self.assertEqual(intel_machine.registers["EDX"], 2)
-        self.assertEqual(intel_machine.registers["EBX"], 5)
 
     def test_log(self):
         self.run_intel_test_code("tests/Intel/log.asm")
