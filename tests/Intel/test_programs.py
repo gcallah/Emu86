@@ -114,10 +114,9 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.memory[hex(22).split('x')[-1]], 0)
 
     def test_sum_calculation(self):
-        self.run_intel_test_code("tests/Intel/sum_test.py")
-        intel_machine.registers["EAX"] = Sum.computeSummation(53.0,3.5)
-        self.assertEqual(intel_machine.registers["EAX"],53.0+3.5)
-
+        self.run_intel_test_code("tests/Intel/sum_test.asm")
+        self.assertEqual(intel_machine.registers["EAX"],  53)
+        self.assertEqual(intel_machine.memory["1"], 53)
 
     def test_arithmetic_expression(self):
         self.run_intel_test_code("tests/Intel/arithmetic_expression.asm")
@@ -125,11 +124,8 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.registers["EBX"],  52)
 
     def test_area(self):
-        self.run_intel_test_code("tests/Intel/area.py")
-        intel_machine.registers["EAX"] = Area.computeArea(35.0,27.0)
-        intel_machine.registers["EBX"] = Area.computeArea(35.0,27.0)
-        self.assertEqual(intel_machine.registers["EAX"], intel_machine.registers["EBX"])
-
+        self.run_intel_test_code("tests/Intel/area.asm")
+        self.assertEqual(intel_machine.registers["EAX"], 945)
 
     def test_log(self):
         self.run_intel_test_code("tests/Intel/log.asm")

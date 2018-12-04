@@ -13,7 +13,7 @@ import operator as opfunc
 import functools
 from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf, FXor, FNeg
 from assembler.Intel.fp_arithmetic import FShr, FShl, FMul
-from area import Area
+# from area import Area
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
