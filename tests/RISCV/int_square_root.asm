@@ -14,4 +14,3 @@ WHILELE: 0x40004 ADD X10, X0, X9
          0x40018 BEQ X12, X0, -6
 ENDWHILELE: 0x4001C ADDI X9, X9, -2
             0x40020 ADD X8, X0, X9
-            
