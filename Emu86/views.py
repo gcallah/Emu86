@@ -47,6 +47,12 @@ def dump_dict(d, intel_machine):
     for key, val in d.items():
         add_debug(str(key) + ": " + str(val), intel_machine)
 
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:] # noqa
+def f_to_b64(value):
+    if (value == 0):
+        return "0"*64
+    val = struct.unpack('q', struct.pack('d', value))[0]
+    return "0" + getBin(val)
 
 # to convert a float to a hex
 # using double for a significant amount of precisions
@@ -286,6 +292,9 @@ def main_page(request):
                 intel_machine.data_init = request.POST[DATA_INIT]
                 intel_machine.start_ip = int(request.POST['start_ip'])
             if mips_machine.flavor is not None:
+                # print("value 254.223423", f_to_b64(254.223423))
+                # print("value 254.223423 first 32\t", str(f_to_b64(254.223423))[:32])
+                # print("value 254.223423 last 32\t", f_to_b64(254.223423)[32:])
                 get_reg_contents(mips_machine.registers, request)
                 get_mem_contents(mips_machine.memory, request)
                 get_stack_contents(mips_machine.stack, request)
@@ -423,6 +432,8 @@ def is_hex_form(request):
 
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
+    # print("registers[F8]", registers["F8"])
+    # print("registers[F9]", registers["F9"])
     for reg in registers:
         if reg[0] == 'R':
             if hex_term:
@@ -432,6 +443,17 @@ def get_reg_contents(registers, request):
         if reg[0] == 'F' and type(registers[reg]) is str and 'x' in str(registers[reg]):
             registers[reg] = hex_to_float(registers[reg])
             pass
+        elif type(registers[reg]) is str:
+            if int(str(reg[1:])) % 2 == 1:
+                # print("registers[",reg,"]", registers[reg])
+                temp = registers[reg]
+                temp = (64 - len(temp)) * "0" + temp
+                # print("temp", temp)
+                registers[reg] = hex(int(temp, 2))
+                return
+            else:
+                # print("hi")
+                registers[reg] = hex(int(registers[reg], 2))
 
 def get_flag_contents(flags, request):
     for flag in flags:
