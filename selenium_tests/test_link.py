@@ -66,7 +66,8 @@ class TestLink(TestCase):
             sub_path = 'details[' + str(flag) + ']/ul/li['
             sub_path += str(sample) + ']/a'
             self.get_by_x_path(main_x_path + sub_path).click()
-            link_clicked = 'https://github.com/gcallah/Emu86/blob/master/tests/'
+            link_clicked = 'https://github.com/gcallah/Emu86/'
+            link_clicked += 'blob/master/tests/'
             if flag == 1:
                 link_clicked += 'Intel/' + link[str(sample)]
             elif flag == 2:
