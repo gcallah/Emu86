@@ -429,7 +429,7 @@ def get_reg_contents(registers, request):
                 registers[reg] = int(request.POST[reg], 16)
             else:
                 registers[reg] = request.POST[reg]
-        if reg[0] == 'F' and type(registers[reg]) is str:
+        if reg[0] == 'F' and type(registers[reg]) is str and 'x' in str(registers[reg]):
             registers[reg] = hex_to_float(registers[reg])
             pass
 
@@ -473,7 +473,7 @@ def convert_reg_contents(registers):
                 registers[reg] = "-" + hex_list[1]
             else:
                 registers[reg] = hex_list[1]
-        elif reg[0] == 'F' and registers[reg] != 0:
+        elif reg[0] == 'F' and not type(registers[reg]) is str and registers[reg] != 0:
             registers[reg] = float_to_hex(registers[reg])
             pass
 
