@@ -107,6 +107,7 @@ class AssembleTestCase(TestCase):
 
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
+
     def computeArea(self):
         self.two_op_test(Area.computeArea, "Area")
     # def test_FShr(self):

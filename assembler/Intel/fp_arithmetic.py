@@ -100,14 +100,15 @@ class FSub(Instruction):
 
 
 class FMul(Instruction):
-    def multiplyMantissas(val1,val2):
-        val1='1'+val1
-        val2='1'+val2
-        return(int(val1,2)*int(val2,2))
+    def multiplyMantissas(val1, val2):
+        val1 = '1' + val1
+        val2 = '1' + val2
+        return(int(val1, 2)*int(val2, 2))
+
     def convertIEEE(val):
         binary = convert_float_binary(val)
         binary = binary[1:]
-        found=False
+        found = False
         posVal = 0
         posDecimal = 0
         for i in range(len(binary)):
@@ -115,25 +116,26 @@ class FMul(Instruction):
                 posVal = i
                 found = True
             if binary[i] == '.':
-                posDecimal=i
+                posDecimal = i
         expo = posDecimal - posVal - 1
         Mantissa = binary[posVal+1:posDecimal] + binary[posDecimal+1:]
-        return (expo,Mantissa)
-    def multiply(val1,val2):
+        return (expo, Mantissa)
+
+    def multiply(val1, val2):
         convert1 = FMul.convertIEEE(val1)
         convert2 = FMul.convertIEEE(val2)
-        productMantisa = FMul.multiplyMantissas(convert1[1],convert2[1])
+        productMantisa = FMul.multiplyMantissas(convert1[1], convert2[1])
         bitresult = str(bin(productMantisa))[1:]
         print(bitresult.lstrip("0b"))
-        while len(bitresult)<23:
-            bitresult+='0'
-        exponentResult = (convert1[0]+convert2[0])+127
+        while len(bitresult) < 23:
+            bitresult += '0'
+        exponentResult = (convert1[0] + convert2[0]) + 127
         returnBin = None
         expoFinalResult = bin(exponentResult).lstrip("0b")
 
-        while len(expoFinalResult)!=8:
-            expoFinalResult+='0'
-        if val1<0 or val2<0:
+        while len(expoFinalResult) != 8:
+            expoFinalResult += '0'
+        if val1 < 0 or val2 < 0:
             returnBin = '1'+expoFinalResult+bitresult.lstrip("0b")
         else:
             returnBin = '0'+expoFinalResult+bitresult.lstrip("0b")

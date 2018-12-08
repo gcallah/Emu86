@@ -70,7 +70,7 @@ instructions = {
         "FShl": FShl('FShl'),
         'FXor': FXor('FXor'),
         'FShr': FShr('FShr'),
-        #Other
+        # Other
         }
 
 intel_key_words = {
