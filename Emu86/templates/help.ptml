@@ -87,6 +87,13 @@
                 </summary>
 <!--include sample_programs_mips_mml.txt -->
             </details>
+
+            <details> 
+                <summary class="sum3">
+                    RISC-V Programs
+                </summary>
+<!--include sample_programs_riscv.txt -->
+            </details>
         </details>
 
         <details>
