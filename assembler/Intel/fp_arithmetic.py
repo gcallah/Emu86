@@ -5,7 +5,7 @@ fp_arithmetic.py: arithmetic floating point instructions.
 import operator as opfunc
 from assembler.errors import check_num_args
 from assembler.tokens import Instruction
-from assembler.ops_check import one_op_arith, checkFloat
+from assembler.ops_check import checkFloat
 from .arithmetic import checkflag
 
 
@@ -63,9 +63,6 @@ class FAdd(Instruction):
         two_op_arith(ops, vm, self.name, opfunc.add)
 
 
-
-
-
 class FSub(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, opfunc.sub)
@@ -84,7 +81,7 @@ class FMul(Instruction):
         posVal = 0
         posDecimal = 0
         for i in range(len(binary)):
-            if binary[i] == '1' and found == False:
+            if binary[i] == '1' and not found:
                 posVal = i
                 found = True
             if binary[i] == '.':
@@ -124,21 +121,6 @@ class FDec(Instruction):
         vm.changes.add(ops[0].get_nm())
 
 
-
-
-
 class FDiv(Instruction):
     def fhook(self, ops, vm):
         return
-        # check_num_args(self.name, ops, 1)
-        #
-        # hireg = int(vm.registers['EDX']) << 32
-        # lowreg = int(vm.registers['EAX'])
-        # dividend = hireg + lowreg
-        # if ops[0].get_val() == 0:
-        #     raise DivisionZero()
-        # vm.registers['EAX'] = dividend // ops[0].get_val()
-        # vm.registers['EDX'] = dividend % ops[0].get_val()
-        # vm.changes.add('EAX')
-        # vm.changes.add('EDX')
-        # return ''
