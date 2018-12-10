@@ -49,6 +49,7 @@ class Jal(Instruction):
 # The original implementation of JAL was pretty off. 
 # I've corrected it, but it needs to be tested some more. 
 
+
 class Jalr(Instruction):
     """
         <instr>
@@ -60,11 +61,19 @@ class Jalr(Instruction):
         <descr>
             Jump to address and place return address in GPR
             R[rd] = PC + 4; PC = ( R[rs1] + sext(imm) ) & 0xfffffffe
+            The and makes it so that the least significant bit is 0
         </descr>
     """
     def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+        current_ip = vm.get_ip()
+        target = ops[1] + ops[2]        
+        ops[0].set_val(current_ip + 4)
+        vm.changes.add(ops[0].get_nm())
         raise Jump(str(target.get_val()))
+# I need to find a better way to zero out the LSB. I think I 
+# will be converting into binary form of string, slicing and 
+# then converting back. It's the converting back that I have 
+# conflicts on. 
 
 
 class Beq(Instruction):
