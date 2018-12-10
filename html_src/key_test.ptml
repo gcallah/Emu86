@@ -13,6 +13,9 @@
             <h1>
             Intel
             </h1>
+            <p>
+Asking for key input
+            </p>
             <pre>
             <code>
 INT 22
@@ -20,6 +23,16 @@ MOV EBX, EAX
 MOV ECX, 0
 MOV ESI, 0
 
+            </code>
+            </pre>
+            <p>
+Move input to memory location esi
+            </p>
+            <p>
+Ask for key input again
+            </p>
+            <pre>
+            <code>
 L1: MOV [ESI], EAX
 MOV EAX, 0
 INT 22
@@ -28,6 +41,13 @@ CMP EBX,EAX
 INC ESI
 JNE L1
 
+            </code>
+            </pre>
+            <p>
+Ask for key input 
+            </p>
+            <pre>
+            <code>
 L2: MOV EAX, 0
 INT 22
 DEC ECX
@@ -38,6 +58,16 @@ MOV EAX, 0
 INT 22
 MOV EBX, EAX
 
+            </code>
+            </pre>
+            <p>
+Move input to memory location esi
+            </p>
+            <p>
+Ask for key input again
+            </p>
+            <pre>
+            <code>
 L3: MOV [ESI], EAX
 INC ESI
 MOV EAX, 0

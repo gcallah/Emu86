@@ -4,6 +4,6 @@
 # exit on any error with that error status:
 set -e
 
-export JDIR="JavaScript"
+export SDIR="selenium_tests"
 
-for js_test_file in $JDIR/*.py; do echo "$js_test_file"; python3 "$js_test_file"; done
+for s_test_file in $SDIR/*.py; do echo "$s_test_file"; python3 "$s_test_file"; done

@@ -9,6 +9,10 @@ from assembler.virtual_machine import intel_machine, mips_machine
 from assembler.virtual_machine import riscv_machine
 from assembler.assemble import assemble, add_debug
 
+# for floating point to binary and back
+import struct
+import binascii
+
 logger = logging.getLogger(__name__)
 CODE = 'code'
 NXT_KEY = 'nxt_key'
@@ -42,6 +46,31 @@ def get_hdr():
 def dump_dict(d, intel_machine):
     for key, val in d.items():
         add_debug(str(key) + ": " + str(val), intel_machine)
+
+getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:] # noqa
+
+
+def f_to_b64(value):
+    if (value == 0):
+        return "0"*64
+    val = struct.unpack('q', struct.pack('d', value))[0]
+    return "0" + getBin(val)
+
+# to convert a float to a hex
+# using double for a significant amount of precisions
+# (i think its up to 48 bits of precision)
+
+
+def float_to_hex(f):
+    return hex(struct.unpack('<I', struct.pack('<f', f))[0])
+
+
+# to convert the ieee 754 hex back to the actual float value
+
+def hex_to_float(h):
+    h2 = h[2:]
+    h2 = binascii.unhexlify(h2)
+    return struct.unpack('>f', h2)[0]
 
 
 def welcome(request):
@@ -81,11 +110,13 @@ def processRegisters(machineRegisters):
                          list(machineRegisters.keys())[35:], 'F')
     return(r, f)
 
+
 def getCurrRegister(post_body):
-  if 'curr_reg' in post_body:
-    return post_body['curr_reg']
-  else:
-    return ''
+    if 'curr_reg' in post_body:
+        return post_body['curr_reg']
+    else:
+        return ''
+
 
 def main_page(request):
     last_instr = ""
@@ -406,12 +437,29 @@ def is_hex_form(request):
 
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
-
+    # print("registers[F8]", registers["F8"])
+    # print("registers[F9]", registers["F9"])
     for reg in registers:
-        if hex_term:
-            registers[reg] = int(request.POST[reg], 16)
-        else:
-            registers[reg] = request.POST[reg]
+        if reg[0] == 'R':
+            if hex_term:
+                registers[reg] = int(request.POST[reg], 16)
+            else:
+                registers[reg] = request.POST[reg]
+        if reg[0] == 'F' and type(registers[reg]) is str:
+            if 'x' in str(registers[reg]):
+                registers[reg] = hex_to_float(registers[reg])
+            pass
+        elif type(registers[reg]) is str:
+            if int(str(reg[1:])) % 2 == 1:
+                # print("registers[",reg,"]", registers[reg])
+                temp = registers[reg]
+                temp = (64 - len(temp)) * "0" + temp
+                # print("temp", temp)
+                registers[reg] = hex(int(temp, 2))
+                return
+            else:
+                # print("hi")
+                registers[reg] = hex(int(registers[reg], 2))
 
 
 def get_flag_contents(flags, request):
@@ -427,10 +475,13 @@ def get_mem_contents(memory, request):
         for key_val in mem_data:
             if key_val != "":
                 key_mem, val_mem = key_val.split(":")[0], key_val.split(":")[1]
-                if hex_term:
-                    memory[key_mem] = int(val_mem, 16)
+                if '.' not in val_mem:
+                    if hex_term:
+                        memory[key_mem] = int(val_mem, 16)
+                    else:
+                        memory[key_mem] = int(val_mem)
                 else:
-                    memory[key_mem] = int(val_mem)
+                    pass
 
 
 def get_stack_contents(stack, request):
@@ -444,22 +495,30 @@ def get_stack_contents(stack, request):
 
 def convert_reg_contents(registers):
     for reg in registers:
-        hex_list = hex(int(registers[reg])).split('x')
-        hex_list[1] = hex_list[1].upper()
-        if "-" in hex_list[0]:
-            registers[reg] = "-" + hex_list[1]
-        else:
-            registers[reg] = hex_list[1]
+        if reg[0] == 'R':
+            hex_list = hex(int(registers[reg])).split('x')
+            hex_list[1] = hex_list[1].upper()
+            if "-" in hex_list[0]:
+                registers[reg] = "-" + hex_list[1]
+            else:
+                registers[reg] = hex_list[1]
+        elif reg[0] == 'F' and not type(registers[reg]) is str:
+            if registers[reg] != 0:
+                registers[reg] = float_to_hex(registers[reg])
+            pass
 
 
 def convert_mem_contents(memory):
     for loc in memory:
-        hex_list = hex(int(memory[loc])).split('x')
-        hex_list[1] = hex_list[1].upper()
-        if "-" in hex_list[0]:
-            memory[loc] = "-" + hex_list[1]
+        if '.' not in str(memory[loc]):
+            hex_list = hex(int(memory[loc])).split('x')
+            hex_list[1] = hex_list[1].upper()
+            if "-" in hex_list[0]:
+                memory[loc] = "-" + hex_list[1]
+            else:
+                memory[loc] = hex_list[1]
         else:
-            memory[loc] = hex_list[1]
+            pass
 
 
 def convert_stack_contents(stack):

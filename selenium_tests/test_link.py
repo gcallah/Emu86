@@ -67,21 +67,24 @@ class TestLink(TestCase):
             sub_path += str(sample) + ']/a'
             self.get_by_x_path(main_x_path + sub_path).click()
             link_clicked = 'https://github.com/gcallah/Emu86/'
+            link_clicked += 'blob/master/tests/'
             if flag == 1:
-                link_clicked += 'blob/master/tests/Intel/' + link[str(sample)]
+                link_clicked += 'Intel/' + link[str(sample)]
             elif flag == 2:
-                link_clicked += 'blob/master/tests/ATT/' + link[str(sample)]
+                link_clicked += 'ATT/' + link[str(sample)]
             else:
                 if flag == 3:
-                    link_clicked += 'blob/master/tests/MIPS_ASM/'
+                    link_clicked += 'MIPS_ASM/'
+                elif flag == 4:
+                    link_clicked += 'MIPS_MML/'
                 else:
-                    link_clicked += 'blob/master/tests/MIPS_MML/'
+                    link_clicked += 'RISCV/'
                 link_clicked += mips_link[str(sample)]
             self.assertEqual(self.driver.current_url, link_clicked)
         self.close_page()
 
     def test_links(self):
-        for flag in range(1, 4):
+        for flag in range(1, 6):
             self.link_test(flag)
 
 

@@ -11,9 +11,8 @@ sys.path.append(".") # noqa
 
 import operator as opfunc
 import functools
-from assembler.Intel.fp_arithmetic import FAndf, FOrf, FNotf, FXor, FNeg
-from assembler.Intel.fp_arithmetic import FShr, FShl, FMul
-# from area import Area
+
+
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
@@ -56,32 +55,18 @@ class AssembleTestCase(TestCase):
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
-            if op_type == FLOAT:
-                self.assertEqual(float(operator(intel_machine.registers["EAX"],
-                                 intel_machine.registers["EBX"])), correct)
-            else:
-                assemble(instr + " eax, ebx", 'intel', intel_machine)
-                self.assertEqual(intel_machine.registers["EAX"], correct)
+            assemble(instr + " eax, ebx", 'intel', intel_machine)
+            self.assertEqual(intel_machine.registers["EAX"], correct)
 
-    def test_fadd(self):
-        # print("fadd")
-        self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
+    # def test_fadd(self):
+    #     # print("fadd")
+    #     self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
 
-    def test_fsub(self):
-        # print("fsub")
-        self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
-
-    def test_FAndf(self):
-        self.two_op_test(FAndf.andFunc, "FAndf", op_type=FLOAT)
-
-    def test_xorf(self):
-        self.two_op_test(FXor.xorFunc, "FXor", op_type=FLOAT)
-
-    def test_FOrf(self):
-        self.two_op_test(FOrf.orFunc, "FOrf", op_type=FLOAT)
-
-    def test_FMul(self):
-        self.two_op_test(FMul.multiply, "FMul", op_type=FLOAT)
+    # def test_fsub(self):
+    #     # print("fsub")
+    #     self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
+    # def test_FMul(self):
+    #     self.two_op_test(FMul.multiply, "FMul", op_type=FLOAT)
     # def test_fmul(self):
     #     self.two_op_test_float(opfunc.mul, "FMUL")
 
@@ -107,8 +92,6 @@ class AssembleTestCase(TestCase):
 
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
-    def computeArea(self):
-        self.two_op_test(Area.computeArea, "Area")
     # def test_FShr(self):
     #     self.two_op_test_float(opfunc.rshift, "FShr",
     #                      low1=MIN_MUL, high1=MAX_MUL,
@@ -166,18 +149,6 @@ class AssembleTestCase(TestCase):
             else:
                 assemble(instr + " eax", 'intel', intel_machine)
                 self.assertEqual(intel_machine.registers["EAX"], correct)
-
-    def test_FShr(self):
-        self.one_op_test(FShr.shiftRightFunc, "FShr", op_type=FLOAT)
-
-    def test_FShl(self):
-        self.one_op_test(FShl.shiftLeftFunc, "FShl", op_type=FLOAT)
-
-    def test_FNeg(self):
-        self.one_op_test(FNeg.FnegFunc, "FNeg", op_type=FLOAT)
-
-    def test_FNotf(self):
-        self.one_op_test(FNotf.notFunc, "FNotf", op_type=FLOAT)
 
     def test_not(self):
         self.one_op_test(opfunc.inv, "not")

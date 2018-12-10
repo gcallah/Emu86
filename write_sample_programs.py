@@ -26,7 +26,8 @@ def create_href():
                     "tests/Intel",
                     "tests/ATT",
                     "tests/MIPS_ASM",
-                    "tests/MIPS_MML"
+                    "tests/MIPS_MML",
+                    "tests/RISCV"
                     ]
     for dire in directories:
         directory_intel = os.fsencode(dire)
@@ -37,8 +38,10 @@ def create_href():
             name += "_att"
         elif dire == "tests/MIPS_ASM":
             name += "_mips_asm"
-        else:
+        elif dire == "tests/MIPS_MML":
             name += "_mips_mml"
+        else:
+            name += "_riscv"
         file_name = open(name + ".txt", "w")
         file_name.write(tab * 3 + '<ul class="nested">\n')
         for file in os.listdir(directory_intel):
