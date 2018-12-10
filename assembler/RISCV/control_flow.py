@@ -6,7 +6,7 @@ control_flow.py: control flow instructions,
 from assembler.errors import check_num_args, OutofBounds, InvalidArgument
 from assembler.tokens import Instruction, Register, IntegerTok
 from assembler.flowbreak import Jump
-from assembler.ops_check import get_one_op
+from assembler.ops_check import get_one_op, get_two_ops
 
 
 class Jr(Instruction):
@@ -41,9 +41,13 @@ class Jal(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+        current_ip = vm.get_ip()
+        target = current_ip + ops[1]
+        ops[0].set_val(current_ip + 4)
+        vm.changes.add(ops[0].get_nm())
         raise Jump(str(target.get_val()))
-
+# The original implementation of JAL was pretty off. 
+# I've corrected it, but it needs to be tested some more. 
 
 class Jalr(Instruction):
     """
@@ -158,6 +162,7 @@ class Blt(Instruction):
         else:
             raise InvalidArgument(ops[0].get_nm())
         val_one, val_two = (0, 0)
+
         if isinstance(ops[0], Register):
             val_one = ops[0].get_val()
             if isinstance(ops[1], Register):
@@ -166,6 +171,7 @@ class Blt(Instruction):
                 InvalidArgument(ops[1].get_nm())
         else:
             InvalidArgument(ops[0].get_nm())
+
         if val_one < val_two:
             current_ip = vm.get_ip()
             if current_ip + disp * 4 >= 0:
