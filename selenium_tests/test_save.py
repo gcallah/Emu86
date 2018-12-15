@@ -21,7 +21,7 @@ class TestSave(TestCase):
     def create_file_name(self):
         name = []
         for i in range(0, 10):
-            ord_let = randint(0,25)
+            ord_let = randint(0, 25)
             letter = chr(ord('a') + ord_let)
             name.append(letter)
             if i == 6:
@@ -49,7 +49,7 @@ class TestSave(TestCase):
             alert.accept()
             self.assertEqual(alert_message, valid_file)
         except Exception:
-            self.assertEqual("",valid_file)
+            self.assertEqual("", valid_file)
         self.close_page()
 
 
