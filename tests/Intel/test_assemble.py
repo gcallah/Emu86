@@ -41,14 +41,18 @@ class AssembleTestCase(TestCase):
     def two_op_test(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST,
-                    op_type=INT):
+                    op_type=INT,first_val = INT,second_val= INT):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
             if op_type == FLOAT:
-                a = random.uniform(low1, high1)
-                b = random.uniform(low2, high2)
+                if first_val == FLOAT:
+                    a = random.uniform(low1, high1)
+                if second_val == FLOAT:
+                    b = random.uniform(low2, high2)
+                print(a,b)
                 correct = float(operator(a, b))
+                print(correct)
             else:
                 correct = operator(a, b)
 
@@ -56,12 +60,12 @@ class AssembleTestCase(TestCase):
             intel_machine.registers["EBX"] = b
             intel_machine.base = "dec"
             assemble(instr + " eax, ebx", 'intel', intel_machine)
+
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
     # def test_fadd(self):
     #     # print("fadd")
     #     self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
-
     # def test_fsub(self):
     #     # print("fsub")
     #     self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
@@ -163,6 +167,8 @@ class AssembleTestCase(TestCase):
     def test_dec(self):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
+
+
 
     # def test_FNeg(self):
     #     self.one_op_test_float(opfunc.neg, "FNeg")
