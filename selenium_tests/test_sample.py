@@ -32,7 +32,7 @@ class TestSample(TestCase):
     def get_by_x_path(self, value):
         return self.driver.find_element_by_xpath(value)
 
-    def getById(self, id):
+    def get_by_id(self, id):
         return self.driver.find_element_by_id(id)
 
     def option_test(self, flag):
@@ -41,7 +41,7 @@ class TestSample(TestCase):
         lang_flag = '//*[@id="content-main"]/h5/form/select/option['
         lang_flag += str(flag) + ']'
         self.get_by_x_path(lang_flag).click()
-        self.getById('subButton').click()
+        self.get_by_id('subButton').click()
         option_path = '//*[@id="sample"]/option'
         option_range = 17
         if flag == 3 or flag == 4 or flag == 5:

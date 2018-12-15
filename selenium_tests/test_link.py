@@ -48,15 +48,14 @@ class TestLink(TestCase):
     def get_by_x_path(self, value):
         return self.driver.find_element_by_xpath(value)
 
-    def getById(self, id):
-        return self.driver.find_element_by_id(id)
-
     def link_test(self, flag):
         self.driver = webdriver.Chrome()
         num_links = 16
+        # MIPS and RISCV have 14 hyperlinks
         if flag > 2:
             num_links = 14
         for sample in range(1, num_links):
+            # click on the sample links for each language
             self.load_page()
             main_x_path = '//*[@id="content-main"]/div/details[2]/'
             self.get_by_x_path('//*[@id="user-tools"]/a[2]').click()
@@ -80,10 +79,12 @@ class TestLink(TestCase):
                 else:
                     link_clicked += 'RISCV/'
                 link_clicked += mips_link[str(sample)]
+            # check if current url after clicking link is correct
             self.assertEqual(self.driver.current_url, link_clicked)
         self.close_page()
 
     def test_links(self):
+        # flag represents the different languages
         for flag in range(1, 6):
             self.link_test(flag)
 
