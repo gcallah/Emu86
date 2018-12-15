@@ -38,10 +38,9 @@ class AssembleTestCase(TestCase):
     # Two Operand Tests #
     #####################
 
-    def two_op_test(self, operator, instr,
-                    low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST,
-                    op_type=INT,first_val = INT,second_val= INT):
+    def two_op_test(self, operator, instr, low1=MIN_TEST, high1=MAX_TEST,
+                    low2=MIN_TEST, high2=MAX_TEST, op_type=INT,
+                    first_val=INT, second_val=INT):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
@@ -50,9 +49,7 @@ class AssembleTestCase(TestCase):
                     a = random.uniform(low1, high1)
                 if second_val == FLOAT:
                     b = random.uniform(low2, high2)
-                print(a,b)
-                correct = float(operator(a, b))
-                print(correct)
+                correct = operator(a, b)
             else:
                 correct = operator(a, b)
 
@@ -168,8 +165,6 @@ class AssembleTestCase(TestCase):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
 
-
-
     # def test_FNeg(self):
     #     self.one_op_test_float(opfunc.neg, "FNeg")
 
@@ -179,6 +174,7 @@ class AssembleTestCase(TestCase):
 
     def test_push_and_pop(self):
         # Note: size(correct_stack) = size(stack + memory)
+
         correct_stack = [None] * (STACK_TOP+1)
 
         # Traverse the stack registers.
