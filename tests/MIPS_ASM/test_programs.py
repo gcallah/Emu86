@@ -239,14 +239,25 @@ class TestPrograms(TestCase):
     # test for converting celsius to fahrenheit
     def test_fp_celsius_conversion(self):
         self.run_mips_test_code("fp_cel_to_fah.asm")
+        eight_string = mips_machine.registers["F12"]
+        nine_string = mips_machine.registers["F13"]
+        bin_string = eight_string + nine_string
+        float_value = self.b_to_f(bin_string)
+        self.assertEqual(float_value, (1.8)*10.0+32.0)
         self.assertEqual(mips_machine.memory["C"], (1.8)*10.0+32.0)
 
     def test_fp_celsius_conversion_celsius_0(self):
         self.run_mips_test_code("fp_cel_to_fah_w_0.asm")
+        eight_string = mips_machine.registers["F12"]
+        nine_string = mips_machine.registers["F13"]
+        bin_string = eight_string + nine_string
+        float_value = self.b_to_f(bin_string)
+        self.assertEqual(float_value, (1.8)*0.0+32.0)
         self.assertEqual(mips_machine.memory["C"], (1.8)*0.0+32.0)
 
     def test_fp_precision_testing(self):
         self.run_mips_test_code("fp_precision_testing.asm")
+        self.assertEqual(mips_machine.registers["F8"], 5.1)
         self.assertEqual(mips_machine.memory["C"], 5.1)
 if __name__ == '__main__':
     main()
