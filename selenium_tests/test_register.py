@@ -64,7 +64,7 @@ class TestRegisters(TestCase):
         self.load_page()
         lang_flag = '//*[@id="content-main"]/h5/form/select/option['
         lang_flag += str(lang) + ']'
-        # set the number system 
+        # set the number system
         num_sys = "dec"
         if lang == 3:
             num_sys = "hex"
@@ -92,7 +92,7 @@ class TestRegisters(TestCase):
                 alert = self.driver.switch_to.alert
                 alert_message = alert.text
                 alert.accept()
-                # check to see if the binary message is the same as the 
+                # check to see if the binary message is the same as the
                 # alert message
                 self.assertEqual(message, alert_message)
         self.close_page()
@@ -108,6 +108,7 @@ class TestRegisters(TestCase):
 
         # testing register clicks for MIPS in hex
         self.reg_test(3, mips_reg)
+
 
 if __name__ == '__main__':
     main()
