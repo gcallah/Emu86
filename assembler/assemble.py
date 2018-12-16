@@ -8,6 +8,7 @@ from .parse import add_debug, parse
 from .lex import lex
 from .MIPS.control_flow import Jal, Jr
 from .MIPS.key_words import op_func_codes
+from .RISCV.control_flow import  Jr, Jal
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 

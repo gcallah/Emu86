@@ -6,7 +6,14 @@ control_flow.py: control flow instructions,
 from assembler.errors import check_num_args, OutofBounds, InvalidArgument
 from assembler.tokens import Instruction, Register, IntegerTok
 from assembler.flowbreak import Jump
-from assembler.ops_check import get_one_op
+from assembler.ops_check import get_one_op, get_two_ops
+from .argument_check import check_immediate_two
+
+
+def get_two_op_imm(instr, ops):
+    check_num_args(instr, ops, 2)
+    check_immediate_two(instr, ops)
+    return (ops[0], ops[1])
 
 
 class Jr(Instruction):
@@ -41,11 +48,17 @@ class Jal(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
+        (op1, op2) = get_two_op_imm(self.get_nm(), ops)
         current_ip = vm.get_ip()
-        target = current_ip + ops[1]
-        ops[0].set_val(current_ip + 4)
-        vm.changes.add(ops[0].get_nm())
-        raise Jump(str(target.get_val()))
+        target = current_ip + op2.get_val()
+        print(op2.get_val())
+        print("curr", current_ip, 'tar', target)
+
+        op1.set_val(current_ip + 4)
+        print(current_ip + 4 )
+        vm.changes.add(op1.get_nm())
+        raise Jump(str(target))
+
 # The original implementation of JAL was pretty off.
 # I've corrected it, but it needs to be tested some more.
 
@@ -66,10 +79,11 @@ class Jalr(Instruction):
     """
     def fhook(self, ops, vm):
         current_ip = vm.get_ip()
+
         target = ops[1] + ops[2]
         ops[0].set_val(current_ip + 4)
         vm.changes.add(ops[0].get_nm())
-        raise Jump(str(target.get_val()))
+        raise Jump(str(target))
 # I need to find a better way to zero out the LSB. I think I
 # will be converting into binary form of string, slicing and
 # then converting back. It's the converting back that I have
