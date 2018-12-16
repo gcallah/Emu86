@@ -240,9 +240,11 @@ class IncorrectImmLength(Error):
     def __init__(self, offender):
         self.msg = NOT_CORRECT_BITS + offender
 
+
 class TooPrecise(Error):
     def __init__(self, offender):
         self.msg = TOO_PRECISE + offender
+
 
 def check_num_args(instr, ops, correct_num, type_ins=0):
     """

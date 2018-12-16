@@ -6,7 +6,7 @@ control_flow.py: control flow instructions,
 from assembler.errors import check_num_args, OutofBounds, InvalidArgument
 from assembler.tokens import Instruction, Register, IntegerTok
 from assembler.flowbreak import Jump
-from assembler.ops_check import get_one_op, get_two_ops
+from assembler.ops_check import get_one_op
 from .argument_check import check_immediate_two
 
 
@@ -55,7 +55,7 @@ class Jal(Instruction):
         print("curr", current_ip, 'tar', target)
 
         op1.set_val(current_ip + 4)
-        print(current_ip + 4 )
+        print(current_ip + 4)
         vm.changes.add(op1.get_nm())
         raise Jump(str(target))
 

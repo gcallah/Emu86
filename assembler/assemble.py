@@ -23,7 +23,6 @@ INSTR_MIPS = 1
 OPS_MIPS = 2
 
 
-
 def dump_flags(vm):
     for flag, val in vm.flags.items():
         add_debug("Flag = " + flag + "; val = " + str(val), vm)
@@ -253,14 +252,14 @@ def exec(tok_lines, flavor, vm, last_instr):
             vm.inc_ip()
             last_instr = curr_instr[INSTR_MIPS].f(curr_instr[OPS_MIPS:], vm)
 
-        # if flavor == "riscv":
-        #     if ip // 4 >= len(tok_lines):
-        #         raise InvalidInstruction("Past end of code.")
-        #     (curr_instr, source) = tok_lines[ip // 4]
-        #     if vm.get_ip() != curr_instr[PC_RISCV].get_val():
-        #         raise InvalidArgument(hex(curr_instr[PC_RISCV].get_val()))
-        #     vm.inc_ip()
-        #     last_instr = curr_instr[INSTR_RISCV].f(curr_instr[OPS_RISCV:], vm)
+    # if flavor == "riscv":
+    #     if ip // 4 >= len(tok_lines):
+    #         raise InvalidInstruction("Past end of code.")
+    #     (curr_instr, source) = tok_lines[ip // 4]
+    #     if vm.get_ip() != curr_instr[PC_RISCV].get_val():
+    #         raise InvalidArgument(hex(curr_instr[PC_RISCV].get_val()))
+    #     vm.inc_ip()
+    #     last_instr = curr_instr[INSTR_RISCV].f(curr_instr[OPS_RISCV:], vm)
 
         else:
             if ip >= len(tok_lines):
