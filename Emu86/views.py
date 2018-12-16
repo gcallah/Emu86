@@ -437,29 +437,28 @@ def is_hex_form(request):
 
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
-    # print("registers[F8]", registers["F8"])
-    # print("registers[F9]", registers["F9"])
     for reg in registers:
         if reg[0] == 'R':
             if hex_term:
                 registers[reg] = int(request.POST[reg], 16)
             else:
                 registers[reg] = request.POST[reg]
-        if reg[0] == 'F' and type(registers[reg]) is str:
+        elif reg[0] == 'F' and type(registers[reg]) is str:
             if 'x' in str(registers[reg]):
                 registers[reg] = hex_to_float(registers[reg])
-            pass
-        elif type(registers[reg]) is str:
-            if int(str(reg[1:])) % 2 == 1:
-                # print("registers[",reg,"]", registers[reg])
-                temp = registers[reg]
-                temp = (64 - len(temp)) * "0" + temp
-                # print("temp", temp)
-                registers[reg] = hex(int(temp, 2))
-                return
             else:
-                # print("hi")
-                registers[reg] = hex(int(registers[reg], 2))
+                if int(str(reg[1:])) % 2 == 1:
+                    temp = registers[reg]
+                    temp = (64 - len(temp)) * "0" + temp
+                    registers[reg] = hex(int(temp, 2))
+                    return
+                else:
+                    registers[reg] = hex(int(registers[reg], 2))
+        else:
+            if hex_term:
+                registers[reg] = int(request.POST[reg], 16)
+            else:
+                registers[reg] = request.POST[reg]
 
 
 def get_flag_contents(flags, request):
