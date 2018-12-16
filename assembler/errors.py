@@ -40,6 +40,7 @@ TOO_BIG_FOR_SINGLE = "Value too big to store in a single: "
 TOO_BIG_FOR_DOUBLE = "Value too big to store in a double: "
 NOT_EVEN_REGISTER = "Invalid odd-numbered register: "
 NOT_CORRECT_BITS = "Instruction expected integer of max length 20 bits"
+TOO_PRECISE = "Floating point number has too many decimal places: "
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -239,6 +240,9 @@ class IncorrectImmLength(Error):
     def __init__(self, offender):
         self.msg = NOT_CORRECT_BITS + offender
 
+class TooPrecise(Error):
+    def __init__(self, offender):
+        self.msg = TOO_PRECISE + offender
 
 def check_num_args(instr, ops, correct_num, type_ins=0):
     """
