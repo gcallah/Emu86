@@ -8,7 +8,7 @@ from .parse import add_debug, parse
 from .lex import lex
 from .MIPS.control_flow import Jal, Jr
 from .MIPS.key_words import op_func_codes
-from .RISCV.control_flow import  Jr, Jal
+# from .RISCV.control_flow import  Jr, Jal
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 
@@ -17,9 +17,11 @@ JMP_STR = "A jump instruction."
 
 INSTR_INTEL = 0
 OPS_INTEL = 1
+
 PC_MIPS = 0
 INSTR_MIPS = 1
 OPS_MIPS = 2
+
 
 
 def dump_flags(vm):
@@ -250,6 +252,16 @@ def exec(tok_lines, flavor, vm, last_instr):
                 raise InvalidArgument(hex(curr_instr[PC_MIPS].get_val()))
             vm.inc_ip()
             last_instr = curr_instr[INSTR_MIPS].f(curr_instr[OPS_MIPS:], vm)
+
+        # if flavor == "riscv":
+        #     if ip // 4 >= len(tok_lines):
+        #         raise InvalidInstruction("Past end of code.")
+        #     (curr_instr, source) = tok_lines[ip // 4]
+        #     if vm.get_ip() != curr_instr[PC_RISCV].get_val():
+        #         raise InvalidArgument(hex(curr_instr[PC_RISCV].get_val()))
+        #     vm.inc_ip()
+        #     last_instr = curr_instr[INSTR_RISCV].f(curr_instr[OPS_RISCV:], vm)
+
         else:
             if ip >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
@@ -261,13 +273,14 @@ def exec(tok_lines, flavor, vm, last_instr):
             if vm.get_ip() == vm.labels[label]:
                 vm.next_stack_change = label
         return (True, source, "")
+
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
         add_debug("In FlowBreak", vm)
         dump_flags(vm)
         if isinstance(curr_instr[INSTR_MIPS], Jal) and flavor != 'riscv':
             vm.registers["R31"] = vm.get_ip()
-        if isinstance(curr_instr[INSTR_MIPS], Jr):
+        if isinstance(curr_instr[INSTR_MIPS], Jr and flavor != 'riscv'):
             return jump_to_label(brk.label, source, vm)
         return jump_to_label(brk.label, source, vm, True)
     except ExitProg:
@@ -310,8 +323,6 @@ def assemble(code, flavor, vm, step=False):
 
     # break the code into tokens:
     try:
-        # tok_lines = lex(code, vm)
-
         tok_lines = lex(code, flavor, vm)
         tok_lines = parse(tok_lines, flavor, vm)
     except Error as err:
