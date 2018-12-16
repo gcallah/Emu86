@@ -438,12 +438,7 @@ def is_hex_form(request):
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
     for reg in registers:
-        if reg[0] == 'R':
-            if hex_term:
-                registers[reg] = int(request.POST[reg], 16)
-            else:
-                registers[reg] = request.POST[reg]
-        elif reg[0] == 'F' and type(registers[reg]) is str:
+        if reg[0] == 'F' and type(registers[reg]) is str:
             if 'x' in str(registers[reg]):
                 registers[reg] = hex_to_float(registers[reg])
             else:
