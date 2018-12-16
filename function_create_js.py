@@ -75,8 +75,8 @@ def convert_line_hex_to_dec(code):
 
 def hex_to_float(h):
     h2 = h[2:]
-    h2 = binascii.unhexlify(h2)
-    return struct.unpack('>f', h2)[0]
+    h2 = binascii.unhexlify(h2)         # noqa
+    return struct.unpack('>f', h2)[0]   # noqa
 
 
 def convert_line_hex_to_fp(code):
@@ -122,8 +122,8 @@ def sample_dir(func_dict, directory_lst, base):
 
             function_code += "\t\tcode_string += "
             if ((base == DEC and (count == 0 or count == 1)) or
-                (base == HEX and count != 0 and count != 1) or
-                (count == 3)):
+                    base == HEX and count != 0 and count != 1 or
+                    count == 3):
                 function_code += repr(sample_test.read())
             else:
                 sample_conv = ""
@@ -169,7 +169,7 @@ def function_directory_fp(func_dict, directory_lst):
             #     sample_conv = ""
             #     for line in sample_test:
             #         sample_conv += line
-            '''        
+            '''
                     if line.strip() == "":
                         sample_conv += line
                     elif line.strip()[0] == ";":
@@ -177,8 +177,8 @@ def function_directory_fp(func_dict, directory_lst):
                     else:
                         sample_conv += line
                         sample_conv += convert_line_hex_to_fp(line)
+                function_code += repr(sample_conv)
             '''
-                # function_code += repr(sample_conv)
             sample_test.close()
             function_code += ";\n\t"
             count += 1
@@ -186,6 +186,7 @@ def function_directory_fp(func_dict, directory_lst):
         function_code += ".value = code_string;\n}"
         file_code += function_code + "\n"
     return file_code
+
 
 def create_js_files():
     intel_directory = ["tests/Intel/", "tests/ATT/"]
