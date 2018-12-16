@@ -6,7 +6,7 @@ control_flow.py: control flow instructions,
 from assembler.errors import check_num_args, OutofBounds, InvalidArgument
 from assembler.tokens import Instruction, Register, IntegerTok
 from assembler.flowbreak import Jump
-from assembler.ops_check import get_one_op, get_two_ops
+from assembler.ops_check import get_one_op
 
 
 class Jr(Instruction):
@@ -46,8 +46,8 @@ class Jal(Instruction):
         ops[0].set_val(current_ip + 4)
         vm.changes.add(ops[0].get_nm())
         raise Jump(str(target.get_val()))
-# The original implementation of JAL was pretty off. 
-# I've corrected it, but it needs to be tested some more. 
+# The original implementation of JAL was pretty off.
+# I've corrected it, but it needs to be tested some more.
 
 
 class Jalr(Instruction):
@@ -66,14 +66,14 @@ class Jalr(Instruction):
     """
     def fhook(self, ops, vm):
         current_ip = vm.get_ip()
-        target = ops[1] + ops[2]        
+        target = ops[1] + ops[2]
         ops[0].set_val(current_ip + 4)
         vm.changes.add(ops[0].get_nm())
         raise Jump(str(target.get_val()))
-# I need to find a better way to zero out the LSB. I think I 
-# will be converting into binary form of string, slicing and 
-# then converting back. It's the converting back that I have 
-# conflicts on. 
+# I need to find a better way to zero out the LSB. I think I
+# will be converting into binary form of string, slicing and
+# then converting back. It's the converting back that I have
+# conflicts on.
 
 
 class Beq(Instruction):

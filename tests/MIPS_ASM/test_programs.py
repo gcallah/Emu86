@@ -259,5 +259,7 @@ class TestPrograms(TestCase):
         self.run_mips_test_code("fp_precision_testing.asm")
         self.assertEqual(mips_machine.registers["F8"], 5.1)
         self.assertEqual(mips_machine.memory["C"], 5.1)
+
+
 if __name__ == '__main__':
     main()
