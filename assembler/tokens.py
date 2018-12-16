@@ -215,13 +215,6 @@ class FloatTok(Operand):
             return float('%.3f' % (hex_to_float(self.value)))
         else:
             return float('%.4f' % (b_to_f64(self.value)))
-        # h2 = self.value
-        # for i in range(0, 16-len(h2)):
-        #   h2 = "0"+h2
-        # bi = codecs.decode(h2, "hex")
-        # f = struct.unpack("d", bi)
-        # return f[0]
-        # return self.value
 
     def negate_val(self):
         self.value *= -1.0
