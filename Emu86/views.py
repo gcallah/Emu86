@@ -489,17 +489,17 @@ def get_stack_contents(stack, request):
 
 def convert_reg_contents(registers):
     for reg in registers:
-        if reg[0] == 'R':
+        if reg[0] == 'F' and not type(registers[reg]) is str:
+            if registers[reg] != 0:
+                registers[reg] = float_to_hex(registers[reg])
+            pass
+        else:
             hex_list = hex(int(registers[reg])).split('x')
             hex_list[1] = hex_list[1].upper()
             if "-" in hex_list[0]:
                 registers[reg] = "-" + hex_list[1]
             else:
                 registers[reg] = hex_list[1]
-        elif reg[0] == 'F' and not type(registers[reg]) is str:
-            if registers[reg] != 0:
-                registers[reg] = float_to_hex(registers[reg])
-            pass
 
 
 def convert_mem_contents(memory):
