@@ -10,7 +10,7 @@ from assembler.ops_check import one_op_arith
 from assembler.virtual_machine import intel_machine, STACK_TOP, STACK_BOTTOM
 from .arithmetic import checkflag
 from ctypes import *
-
+from fp_conversions import anyfloat
 
 def dec_convert(val):
     while val > 1:
