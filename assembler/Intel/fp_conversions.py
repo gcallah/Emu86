@@ -149,7 +149,6 @@ class anyfloat(_anyfloat):
         float in the 64 bits ieee754 double precision format."""
 
         u, v = struct.unpack(">LL", struct.pack(">d", x))
-        print('us',u,v)
         return (u << 32) | v
 
     def bin(self, size = DEFAULT_SIZE, sep=' '):
