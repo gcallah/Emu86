@@ -178,6 +178,8 @@ class AssembleTestCase(TestCase):
         self.one_op_test(dec, "dec")
     def test_fabs(self):
         self.one_op_test(opfunc.abs, "FABS",FLOAT,False)
+    def test_chs(self):
+        self.one_op_test(opfunc.abs, "FCHS",FLOAT)
     # def test_FNeg(self):
     #     self.one_op_test_float(opfunc.neg, "FNeg")
 

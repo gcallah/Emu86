@@ -111,10 +111,14 @@ class anyfloat(_anyfloat):
 
         return [sign, e, s]
 
-    def changeSign(self,size = DEFAULT_SIZE):
-        print("SIGN ",self.sign)
-        self.sign = 0
-        print("SIGN ",self.sign)
+    def abs_sign(self):
+        self.sign = 0 #changes sign to  0 (positive)
+    def change_sign(self):
+        if self.sign == 0:
+            self.sign = 1
+        else:
+            self.sign = 0
+
     def to_ieee(self, size = DEFAULT_SIZE):
         """Convert to an ieee754 integer.
 

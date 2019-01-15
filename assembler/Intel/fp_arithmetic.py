@@ -75,11 +75,23 @@ class FAbs(Instruction):
             </syntax>
         """
         def fhook(self, ops, vm):
-            intel_machine.registers["FRB"]
-            IEEE = anyfloat.from_float(intel_machine.registers["FRB"])
-            IEEE.changeSign()
+            IEEE = anyfloat.from_float(intel_machine.registers["FRB"]) #IEEE representation of floating point instruction
+            IEEE.abs_sign()
             intel_machine.registers["FRT"]=float(IEEE)
-
+class FChs(Instruction):
+        """
+        complements the sign of floating-point register (FPR) FRB
+            <instr>
+                 test_fchs
+            </instr>
+            <syntax>
+                fchs FRT
+            </syntax>
+        """
+        def fhook(self, ops, vm):
+            IEEE = anyfloat.from_float(intel_machine.registers["FRB"]) #IEEE representation of floating point instruction
+            IEEE.change_sign()
+            intel_machine.registers["FRB"]=float(IEEE)
 class FDiv(Instruction):
     def fhook(self, ops, vm):
         return

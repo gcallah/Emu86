@@ -60,7 +60,8 @@ instructions = {
         'FDIV': FDiv('FDIV'),
         'FMUL': FMul('FMUL'),
         'FSUB': FSub('FSUB'),
-        'FABS': FAbs('FABS')
+        'FABS': FAbs('FABS'),
+        'FCHS': FChs('FCHS')
         # Other
         }
 
