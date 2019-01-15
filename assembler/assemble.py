@@ -289,6 +289,7 @@ def exec(tok_lines, flavor, vm, last_instr):
 
 
 def assemble(code, flavor, vm, step=False):
+
     """
         Assembles and runs code.
         Args:
@@ -307,7 +308,6 @@ def assemble(code, flavor, vm, step=False):
     last_instr = ''
     error = ''
     bit_code = ''
-
     if vm.next_stack_change != "":
         vm.stack_change = vm.next_stack_change
         vm.next_stack_change = ""

@@ -136,20 +136,32 @@ class AssembleTestCase(TestCase):
     # Single Op Tests #
     ###################
 
-    def one_op_test(self, operator, instr, op_type=None):
-        for i in range(NUM_TESTS):
-            a = random.randint(MIN_TEST, MAX_TEST)
-            if op_type == FLOAT:
-                a = float(random.uniform(MIN_TEST, MAX_TEST))
-            correct = operator(a)
-            intel_machine.registers["EAX"] = a
-            intel_machine.base = "dec"
-            if op_type == FLOAT:
-                result = operator(intel_machine.registers["EAX"])
-                self.assertEqual(result, correct)
-            else:
-                assemble(instr + " eax", 'intel', intel_machine)
-                self.assertEqual(intel_machine.registers["EAX"], correct)
+    def one_op_test(self, operator, instr, op_type=None, replaces = True):
+        if instr == 'FABS':
+            for i in range(NUM_TESTS):  #changeback to num_tests
+
+                intel_machine.base = "dec"
+                if op_type == FLOAT:
+                    a = float(random.uniform(MIN_MUL, MAX_MUL))
+                    intel_machine.registers["FRB"] = a
+                    correct = operator(a)
+                    if replaces == False:
+                        intel_machine.registers["FRT"] = None
+                        assemble(instr, 'intel', intel_machine)
+                        print(a)
+                        print(intel_machine.registers["FRT"])
+                        print(correct)
+                        self.assertEqual(intel_machine.registers["FRT"], correct)
+                    else:
+                        assemble(instr , 'intel', intel_machine)
+                        self.assertEqual(intel_machine.registers["FRB"], correct)
+
+                else:
+                    a = random.randint(MIN_TEST, MAX_TEST)
+                    intel_machine.registers["EAX"] = a
+                    correct = operator(a)
+                    assemble(instr + " eax", 'intel', intel_machine,False,True)
+                    self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_not(self):
         self.one_op_test(opfunc.inv, "not")
@@ -164,7 +176,8 @@ class AssembleTestCase(TestCase):
     def test_dec(self):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
-
+    def test_fabs(self):
+        self.one_op_test(opfunc.abs, "FABS",FLOAT,False)
     # def test_FNeg(self):
     #     self.one_op_test_float(opfunc.neg, "FNeg")
 

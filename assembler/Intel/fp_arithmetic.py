@@ -6,27 +6,10 @@ import operator as opfunc
 from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from assembler.ops_check import checkFloat
+from assembler.ops_check import one_op_arith
+from assembler.virtual_machine import intel_machine, STACK_TOP, STACK_BOTTOM
 from .arithmetic import checkflag
-
-
-def convert_float_binary(num, dec_place=10):
-    # print(str(num))
-    whole, dec = str(num).split(".")
-    whole = int(whole)
-    dec = int(dec)
-    res = bin(whole).lstrip("0b") + "."
-    if num < 0:
-        res = '1'+res
-    else:
-        res = '0'+res
-    if dec == 0:
-        return res+'0'
-    for x in range(dec_place):
-        if len(str((dec_convert(dec)) * 2).split(".")) == 2:
-            whole, dec = str((dec_convert(dec)) * 2).split(".")
-            dec = int(dec)
-            res += whole
-    return res
+from ctypes import *
 
 
 def dec_convert(val):
@@ -65,7 +48,7 @@ class FAdd(Instruction):
 
 class FSub(Instruction):
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.sub)
+        one_op_arith(ops, vm, self.name, opfunc.sub)
 
 
 class FMul(Instruction):
