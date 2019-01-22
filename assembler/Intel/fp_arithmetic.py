@@ -6,6 +6,7 @@ import operator as opfunc
 from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from .arithmetic import checkflag
+from assembler.virtual_machine import intel_machine
 from .fp_conversions import anyfloat
 
 
@@ -29,17 +30,18 @@ def two_op_arith(ops, vm, instr, operator):
 
 class FAdd(Instruction):
     """
+    sets sum  of floating-point register (FPR) FRA and
+    floating-point register (FPB)
+    and place the results into FPR FRT
         <instr>
-             add
+             FADD
         </instr>
         <syntax>
-            FADD reg, reg
-            FADD reg, mem
-            FADD reg, const
+            FADD FRT, FRA, FRB
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.add)
+        return add(intel_machine.registers["FRB"],intel_machine.registers["FRA"])
 
 
 class FMul(Instruction):
@@ -53,7 +55,7 @@ class FAbs(Instruction):
         sets bit  of floating-point register (FPR) FRB to 0
         and place the results into FPR FRT
             <instr>
-                 test_fabs
+                 FABS
             </instr>
             <syntax>
                 fabs FRT, FRB
@@ -70,7 +72,7 @@ class FChs(Instruction):
         """
         complements the sign of floating-point register (FPR) FRB
             <instr>
-                 test_fchs
+                 FCHS
             </instr>
             <syntax>
                 fchs FRT

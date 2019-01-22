@@ -199,3 +199,69 @@ class anyfloat(_anyfloat):
         else:
             d = Fraction(s * 2**k, 1)
         return -d if self.sign else d
+def binaryAdd(bin1,bin2):
+    additionBin = ""
+    carryOver = 0
+    i = -1
+    while i!=(len(bin1)*-1)-1:
+        if bin1[i]=='.':
+            additionBin='.'+additionBin
+            i-=1
+            continue
+        sum = int(bin1[i]) + int(bin2[i]) + carryOver
+        if sum == 1 or sum == 0:
+            additionBin = str(sum) + additionBin
+            carryOver = 0
+        elif sum == 2:
+            additionBin = str(0) + additionBin
+            carryOver = 1
+        else:
+            additionBin = str(1) + additionBin
+            carryOver = 1
+        i-=1
+    if carryOver!=0:
+        additionBin = str(carryOver) + additionBin
+    return additionBin
+def convertFraction(mantissa):
+    product = 0
+    for i in range(len(mantissa)):
+        product += (int(mantissa[i])*(2**(-i-1)))
+    return product
+def convertFromIEE(IEEE):
+    print("IEEE", IEEE)
+    bits = IEEE.split(" ")
+    sign, expo, mantissa = bits[0], bits[1], bits[2]
+
+    fraction = convertFraction(mantissa)
+    print(fraction)
+    print(expo)
+    float = (1+ fraction) * (2**(int(expo,2)))
+    if sign == '0':
+        return float
+    return -1*float
+def add(val1,val2):
+    if val2 > val1:
+        val1,val2 = val2, val1
+    X1 = anyfloat.from_float(val1)
+    sign1,expo1,mantissaBin1 = X1.sign, X1.exponent, X1.bin(size=(8,23)).split(" ")[2]
+    X2 = anyfloat.from_float(val2)
+    sign2,expo2,mantissaBin2 = X2.sign, X2.exponent, X2.bin(size=(8,23)).split(" ")[2]
+    expoDiff = expo1 - expo2
+    print(expo1, expo2)
+    print("expo",expoDiff)
+    if expoDiff > 0:
+        allignedMant2 = "1"+mantissaBin2
+        for i in range(expoDiff-1):
+            allignedMant2 = "0"+allignedMant2
+            allignedMant2 = allignedMant2[:-1]
+        allignedMant2 = "0."+allignedMant2
+        allignedMant2 = allignedMant2[:-1]
+    else:
+        allignedMant2 = "1."+mantissaBin2
+    allignedMant1 = '1.'+mantissaBin1
+    if sign1 == sign2: #add
+        allignedMant3 = binaryAdd(allignedMant1,allignedMant2)
+    decimalPlace = allignedMant3.find(".")
+    IEEE = str(sign1) + " " + bin(expo1) + " " + allignedMant3[decimalPlace+1:]
+    print(IEEE)
+    return convertFromIEE(IEEE)

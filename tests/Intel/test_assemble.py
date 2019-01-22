@@ -93,34 +93,6 @@ class AssembleTestCase(TestCase):
 
     def test_xor(self):
         self.two_op_test(opfunc.xor, "xor")
-    # def test_FShr(self):
-    #     self.two_op_test_float(opfunc.rshift, "FShr",
-    #                      low1=MIN_MUL, high1=MAX_MUL,
-    #                      low2=0, high2=MAX_SHIFT)
-    # def test_FShl(self):
-    #     self.two_op_test_float(opfunc.lshift, "FShl",
-    #                      low1=MIN_MUL, high1=MAX_MUL,
-    #                      low2=0, high2=MAX_SHIFT)
-
-    # def test_FOrf(self):
-    #     self.two_op_test_float(opfunc.or_, "FOrf")
-
-    # def test_FNeg(self):
-    #     self.two_op_test_float(opfunc.neg, "FNeg")
-
-    # def test_FDec(self):
-    #     fdec = functools.partial(opfunc.add, -1)
-    #     self.one_op_test_float(Fdec, "FDec")
-
-    # def test_FOrf(self):
-    #     self.two_op_test_float(opfunc.or_, "FOrf")
-
-    # def test_FInc(self):
-    #     FInc = functools.partial(opfunc.add, 1)
-    #     self.one_op_test_float(FInc, "FInc")
-
-    # def test_FNotf(self):
-    #     self.one_op_test(opfunc.inv, "FNotf")
 
     def test_shl(self):
         self.two_op_test(opfunc.lshift, "shl",
@@ -174,9 +146,9 @@ class AssembleTestCase(TestCase):
     def test_dec(self):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
-    def FABS(self):
+    def test_fabs(self):
         self.one_op_test(opfunc.abs, "FABS",FLOAT,False)
-    def CHS(self):
+    def test_chs(self):
         self.one_op_test(Mathops.change_sign, "FCHS",FLOAT)
     # def test_FNeg(self):
     #     self.one_op_test_float(opfunc.neg, "FNeg")
