@@ -174,9 +174,9 @@ class AssembleTestCase(TestCase):
     def test_dec(self):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
-    def test_fabs(self):
+    def FABS(self):
         self.one_op_test(opfunc.abs, "FABS",FLOAT,False)
-    def test_chs(self):
+    def CHS(self):
         self.one_op_test(Mathops.change_sign, "FCHS",FLOAT)
     # def test_FNeg(self):
     #     self.one_op_test_float(opfunc.neg, "FNeg")
