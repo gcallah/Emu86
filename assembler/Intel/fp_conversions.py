@@ -266,3 +266,6 @@ def add(val1,val2):
     IEEE = str(sign1) + " " + bin(expo1) + " " + allignedMant3[2:]
     print(IEEE)
     return convertFromIEE(IEEE)
+def sub(val1,val2):  #subtraction is the same as addition, (x-y) = (x+(-y))
+    val2= val2*-1
+    return add(val1,val2)
