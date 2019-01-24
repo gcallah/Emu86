@@ -7,7 +7,7 @@ from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from .arithmetic import checkflag
 from assembler.virtual_machine import intel_machine
-from .fp_conversions import anyfloat
+from .fp_conversions import anyfloat,add
 
 
 def dec_convert(val):
@@ -41,7 +41,8 @@ class FAdd(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        return add(intel_machine.registers["FRB"],intel_machine.registers["FRA"])
+        intel_machine.registers["FRT"] = add(intel_machine.registers["FRB"],intel_machine.registers["FRA"])
+        print("SOLVED ", intel_machine.registers["FRT"])
 
 
 class FMul(Instruction):

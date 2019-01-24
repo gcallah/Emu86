@@ -46,23 +46,30 @@ class AssembleTestCase(TestCase):
             b = random.randint(low2, high2)
             if op_type == FLOAT:
                 if first_val == FLOAT:
-                    a = random.uniform(low1, high1)
+                    a = float(random.uniform(MIN_MUL, MAX_MUL))
                 if second_val == FLOAT:
-                    b = random.uniform(low2, high2)
+                    b = float(random.uniform(MIN_MUL, MAX_MUL))
                 correct = operator(a, b)
+                intel_machine.registers["FRA"] = a
+                intel_machine.registers["FRB"] = b
+                print("frbTwo ",intel_machine.registers["FRA"])
+                print("frbONE ",intel_machine.registers["FRB"])
+                intel_machine.registers["FRT"] = None #since no replacement, destination float register
+                assemble(instr , 'intel', intel_machine)
+                assert abs(intel_machine.registers["FRT"]-correct) < 0.00001, str(intel_machine.registers["FRT"]) + " does not equal " + str(correct)
+                #self.assertEqual(intel_machine.registers["FRT"], correct)
             else:
                 correct = operator(a, b)
+                intel_machine.registers["EAX"] = a
+                intel_machine.registers["EBX"] = b
+                intel_machine.base = "dec"
+                assemble(instr + " eax, ebx", 'intel', intel_machine)
 
-            intel_machine.registers["EAX"] = a
-            intel_machine.registers["EBX"] = b
-            intel_machine.base = "dec"
-            assemble(instr + " eax, ebx", 'intel', intel_machine)
+                self.assertEqual(intel_machine.registers["EAX"], correct)
 
-            self.assertEqual(intel_machine.registers["EAX"], correct)
-
-    # def test_fadd(self):
-    #     # print("fadd")
-    #     self.two_op_test(opfunc.add, "FADD", op_type=FLOAT)
+    def test_fadd(self):
+        # print("fadd")
+        self.two_op_test(opfunc.add, "FADD", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
     # def test_fsub(self):
     #     # print("fsub")
     #     self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)

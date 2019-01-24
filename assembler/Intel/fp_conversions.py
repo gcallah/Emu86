@@ -4,8 +4,6 @@ from fractions import Fraction
 import struct
 
 DEFAULT_SIZE = (11, 52)
-
-
 def trunc_round(n, k):
     rshift = n.bit_length() - 1 - k
     if rshift >= 0:
@@ -14,40 +12,28 @@ def trunc_round(n, k):
         n <<= (-rshift)
     return (n + 1) >> 1
 
-
 def more_bin_digits(n, k):
     return bool(n >> k)
-
 
 def unset_high_bit(n):
     assert n > 0
     return n ^ (1 << (n.bit_length() - 1))
 
-
 def fbin(n, nbits):
     assert (0 <= n)
     assert not (n >> nbits)
-    return "{val:0>{width}}".format(val=bin(n)[2:], width=nbits)
-
-
+    return "{val:0>{width}}".format(val = bin(n)[2:], width = nbits)
 _anyfloat = namedtuple("anyfloat", "sign exponent significand")
 
 
 class anyfloat(_anyfloat):
-    _anyfloat.sign = None
-    _anyfloat.exponent = None
-    _anyfloat.significand = None
+
     _b32 = 1 << 32
     _b64 = 1 << 64
-
     def __new__(cls, sign, exponent, significand):
         assert sign in (0, 1)
         if significand:
             significand = significand//(significand & -significand)
-        _anyfloat.sign = sign
-        _anyfloat.exponent = exponent
-        _anyfloat.significand = significand
-
         return _anyfloat.__new__(cls, sign, exponent, significand)
 
     @staticmethod
@@ -55,17 +41,15 @@ class anyfloat(_anyfloat):
         A = ~(~0 << a)
         AA = A >> 1
         if mantissa <= 0:
-            return ((A, 0) if (mantissa == -1)
-            else (A, 1 << (b-1))) if mantissa else (0, 0)
+            return ( (A, 0) if (mantissa == -1) else (A, 1 << (b-1)) ) if mantissa else (0, 0)
         elif log2 <= - AA:
             nbits = b + log2 + AA
             rounded = trunc_round(mantissa, nbits) if (nbits >= 0) else 0
             return (1, 0) if more_bin_digits(rounded, b) else (0, rounded)
         elif log2 <= AA:
             rounded = trunc_round(mantissa, b + 1)
-            return (((log2 + 1 + AA, 0) if (log2 < AA) else (A, 0))
-            if more_bin_digits(rounded, b+1)
-            else (log2 + AA, unset_high_bit(rounded)))
+            return (( (log2 + 1 + AA, 0) if (log2 < AA) else (A, 0) )
+            if more_bin_digits(rounded, b+1) else (log2 + AA, unset_high_bit(rounded)) )
         else:
             return (A, 0)
 
@@ -77,73 +61,63 @@ class anyfloat(_anyfloat):
         assert 0 <= significand < (1 << b)
         if exponent == A:
             return (0, -2 if significand else -1)
-        elif exponent:  # normal case
-            return (exponent - AA, significand | (1 << b))
-        else:  # subnormal case
+        elif exponent: # normal case
+            return (exponent - AA, significand|(1 << b))
+        else: # subnormal case
             if significand:
                 return (significand.bit_length() - AA - b, significand)
             else:
                 return (0, 0)
-
     def __float__(self):
         return self.int64_to_float(self.to_ieee())
 
     @classmethod
     def from_float(cls, x):
-        """Create an anyfloat instance from a python float
-        (64 bits double precision number)."""
-        return cls.from_ieee(cls.float_to_int64(x))
-
+        """Create an anyfloat instance from a python float (64 bits double precision number)."""
+        val= cls.from_ieee(cls.float_to_int64(x))
+        return val
     @classmethod
-    def from_ieee(cls, n, size=DEFAULT_SIZE):
+    def from_ieee(cls, n, size = DEFAULT_SIZE):
         """Create an anyfloat from an ieee754 integer.
 
-        Create an anyfloat from an integer which binary
-        representation is the ieee754
-        format of a floating point number.
-        The argument 'size' is a tuple (w, p)
-        containing the width of the exponent part
-        and the significand part in
+        Create an anyfloat from an integer which binary representation is the ieee754
+        format of a floating point number. The argument 'size' is a tuple (w, p)
+        containing the width of the exponent part and the significand part in
         this ieee754 format."""
         w, p = size
         r = n >> p
         significand = (r << p) ^ n
         sign = int(r >> w)
-        if sign not in (0, 1):
-            raise ValueError(("Integer value out of range", n, size))
+        if not sign in (0, 1):
+            raise ValueError(("Integer value out of range for ieee754 format", n, size))
         exponent = (sign << w) ^ r
         e, s = cls._decode(exponent, significand, w, p)
         if e == -2:
             sign = 0
-        _anyfloat.sign = sign
-        _anyfloat.exponent = exponent
-        _anyfloat.significand = significand
+        cls.sign = sign
+        cls.exponent = e
+        cls.significand = s
         return cls(sign, e, s)
 
-    def ieee_parts(self, size=DEFAULT_SIZE):
+    def ieee_parts(self, size = DEFAULT_SIZE):
         w, p = size
         e, s = self._encode(self.exponent, self.significand, w, p)
         sign = 0 if (e + 1) >> w else self.sign
-
         return [sign, e, s]
 
     def abs_sign(self):
-        self.sign = 0
-        """changes sign to  0 (positive)"""
-
+        self.sign = 0 #changes sign to  0 (positive)
     def change_sign(self):
         if self.sign == 0:
             self.sign = 1
         else:
             self.sign = 0
 
-    def to_ieee(self, size=DEFAULT_SIZE):
+    def to_ieee(self, size = DEFAULT_SIZE):
         """Convert to an ieee754 integer.
 
-        Convert self to an integer which binary representation
-        is the ieee754 format corresponding
-        to the 'size' argument (read the documentation of from_ieee()
-        for the meaning of the size
+        Convert self to an integer which binary representation is the ieee754 format corresponding
+        to the 'size' argument (read the documentation of from_ieee() for the meaning of the size
         argument.
         """
         sign, e, s = self.ieee_parts(size)
@@ -153,13 +127,11 @@ class anyfloat(_anyfloat):
     def int64_to_float(cls, n):
         """Convert a 64 bits integer to a python float.
 
-        This class method converts an integer representing a
-        64 bits floating point
-        number in the ieee754 double precision
-        format to this floating point number."""
+        This class method converts an integer representing a 64 bits floating point
+        number in the ieee754 double precision format to this floating point number."""
 
         if not (0 <= n < cls._b64):
-            raise ValueError(("Integer value out of range", n))
+            raise ValueError(("Integer value out of range for 64 bits ieee754 format", n))
         u, v = divmod(n, cls._b32)
         return struct.unpack(">d", struct.pack(">LL", u, v))[0]
 
@@ -171,22 +143,19 @@ class anyfloat(_anyfloat):
         float in the 64 bits ieee754 double precision format."""
 
         u, v = struct.unpack(">LL", struct.pack(">d", x))
+
         return (u << 32) | v
 
-    def bin(self, size=DEFAULT_SIZE, sep=' '):
+    def bin(self, size = DEFAULT_SIZE, sep=' '):
         """Return a binary representation of self.
 
-        The returned string contains only the characters
-        '0' and '1' and shows the ieee754 representation
-        of the real number corresponding to self whith the given
+        The returned string contains only the characters '0' and '1' and shows the
+        ieee754 representation of the real number corresponding to self whith the given
         size = (w, p).
         """
         if sep:
             sign, e, s = self.ieee_parts(size)
-            signVal = fbin(sign, 1)
-            expoVal = fbin(e, size[0])
-            mantissaVal = fbin(s, size[1])
-            return sep.join(signVal, expoVal, mantissaVal)
+            return sep.join((fbin(sign, 1), fbin(e, size[0]), fbin(s, size[1])))
         else:
             return fbin(self.to_ieee(size), sum(size) + 1)
 
@@ -222,36 +191,51 @@ def binaryAdd(bin1,bin2):
     if carryOver!=0:
         additionBin = str(carryOver) + additionBin
     return additionBin
+def binarySubtract(val1,val2):
+    difference = [0 for x in val1 if x!='.']
+    bin1 = [int(x) for x in val1 if x!='.']
+    bin2 = [int(x) for x in val2 if x!='.']
+    for i in range(1,len(bin1)+1):
+        value = (bin1[-i])-(bin2[-i])
+        if value == -1:
+            j= -i
+            while bin1[j]==0:
+                j-=1
+            bin1[j]-=1
+            for k in range(j+1,-i):
+                bin1[k]=1
+            bin1[-i]=2
+            value = (bin1[-i])-(bin2[-i])
+        difference[-i] = value
+    difference.insert(1,'.')
+    binary = ''.join(str(x) for x in difference)
+    return binary
 def convertFraction(mantissa):
     product = 0
     for i in range(len(mantissa)):
         product += (int(mantissa[i])*(2**(-i-1)))
     return product
 def convertFromIEE(IEEE):
-    print("IEEE", IEEE)
     bits = IEEE.split(" ")
     sign, expo, mantissa = bits[0], bits[1], bits[2]
 
     fraction = convertFraction(mantissa)
-    print(fraction)
-    print(expo)
     float = (1+ fraction) * (2**(int(expo,2)))
     if sign == '0':
         return float
     return -1*float
 def add(val1,val2):
-    if val2 > val1:
+    if abs(val2) > abs(val1):
         val1,val2 = val2, val1
     X1 = anyfloat.from_float(val1)
-    sign1,expo1,mantissaBin1 = X1.sign, X1.exponent, X1.bin(size=(8,23)).split(" ")[2]
+    sign1,expo1,mantissaBin1 = X1.sign, X1.exponent, X1.bin(size=(11,52)).split(" ")[2]
     X2 = anyfloat.from_float(val2)
-    sign2,expo2,mantissaBin2 = X2.sign, X2.exponent, X2.bin(size=(8,23)).split(" ")[2]
+    sign2,expo2,mantissaBin2 = X2.sign, X2.exponent, X2.bin(size=(11,52)).split(" ")[2]
     expoDiff = expo1 - expo2
-    print(expo1, expo2)
-    print("expo",expoDiff)
-    if expoDiff > 0:
+    print(expoDiff)
+    if expoDiff != 0:
         allignedMant2 = "1"+mantissaBin2
-        for i in range(expoDiff-1):
+        for i in range(abs(expoDiff)-1):
             allignedMant2 = "0"+allignedMant2
             allignedMant2 = allignedMant2[:-1]
         allignedMant2 = "0."+allignedMant2
@@ -259,9 +243,26 @@ def add(val1,val2):
     else:
         allignedMant2 = "1."+mantissaBin2
     allignedMant1 = '1.'+mantissaBin1
+    print("all",allignedMant1)
+    print("all",allignedMant2)
     if sign1 == sign2: #add
         allignedMant3 = binaryAdd(allignedMant1,allignedMant2)
+    else:
+        allignedMant3 = binarySubtract(allignedMant1,allignedMant2)
     decimalPlace = allignedMant3.find(".")
-    IEEE = str(sign1) + " " + bin(expo1) + " " + allignedMant3[decimalPlace+1:]
+    print("ALL",allignedMant3)
+    if decimalPlace != 1:
+        expo1+=(decimalPlace-1)
+        rightSide = allignedMant3[1:decimalPlace]
+        allignedMant3 = allignedMant3[0]+"."+rightSide+allignedMant3[decimalPlace+1:-len(rightSide)]
+    if allignedMant3[0]=='0':
+        firstOne = allignedMant3.find("1")
+        print("first",firstOne)
+        expo1-=(firstOne-1)
+        allignedMant3 = allignedMant3[firstOne]+'.'+allignedMant3[firstOne+1:]
+        while len(allignedMant3)<54:
+            allignedMant3+='0'
+        print(allignedMant3)
+    IEEE = str(sign1) + " " + bin(expo1) + " " + allignedMant3[2:]
     print(IEEE)
     return convertFromIEE(IEEE)
