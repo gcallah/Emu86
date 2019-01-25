@@ -41,6 +41,7 @@ class AssembleTestCase(TestCase):
     def two_op_test(self, operator, instr, low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST, op_type=INT,
                     first_val=INT, second_val=INT):
+
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
@@ -52,12 +53,10 @@ class AssembleTestCase(TestCase):
                 correct = operator(a, b)
                 intel_machine.registers["FRA"] = a
                 intel_machine.registers["FRB"] = b
-                print("frbTwo ",intel_machine.registers["FRA"])
-                print("frbONE ",intel_machine.registers["FRB"])
                 intel_machine.registers["FRT"] = None #since no replacement, destination float register
                 assemble(instr , 'intel', intel_machine)
-                assert abs(intel_machine.registers["FRT"]-correct) < 0.00001, str(intel_machine.registers["FRT"]) + " does not equal " + str(correct)
-                #self.assertEqual(intel_machine.registers["FRT"], correct)
+                self.assertAlmostEqual(intel_machine.registers["FRT"], correct)
+                #assert abs(intel_machine.registers["FRT"]-correct) < 0.00001, str(intel_machine.registers["FRT"]) + " does not equal " + str(correct)
             else:
                 correct = operator(a, b)
                 intel_machine.registers["EAX"] = a
@@ -67,21 +66,14 @@ class AssembleTestCase(TestCase):
 
                 self.assertEqual(intel_machine.registers["EAX"], correct)
 
+
     def test_fadd(self):
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
-    def test_fadd(self):
-        print("FSUB")
+    def test_fsub(self):
         self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
-    # def test_fsub(self):
-    #     # print("fsub")
-    #     self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT)
-    # def test_FMul(self):
-    #     self.two_op_test(FMul.multiply, "FMul", op_type=FLOAT)
-    # def test_fmul(self):
-    #     self.two_op_test_float(opfunc.mul, "FMUL")
+    def test_fmul(self):
+        self.two_op_test(opfunc.mul, "FMUL", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
 
-    # def test_FAndf(self):
-    #     self.two_op_test(opfunc.and_, "FAndf")
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")

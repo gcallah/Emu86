@@ -232,7 +232,6 @@ def add(val1,val2):
     X2 = anyfloat.from_float(val2)
     sign2,expo2,mantissaBin2 = X2.sign, X2.exponent, X2.bin(size=(11,52)).split(" ")[2]
     expoDiff = expo1 - expo2
-    print(expoDiff)
     if expoDiff != 0:
         allignedMant2 = "1"+mantissaBin2
         for i in range(abs(expoDiff)-1):
@@ -243,29 +242,72 @@ def add(val1,val2):
     else:
         allignedMant2 = "1."+mantissaBin2
     allignedMant1 = '1.'+mantissaBin1
-    print("all",allignedMant1)
-    print("all",allignedMant2)
     if sign1 == sign2: #add
         allignedMant3 = binaryAdd(allignedMant1,allignedMant2)
     else:
         allignedMant3 = binarySubtract(allignedMant1,allignedMant2)
     decimalPlace = allignedMant3.find(".")
-    print("ALL",allignedMant3)
     if decimalPlace != 1:
         expo1+=(decimalPlace-1)
         rightSide = allignedMant3[1:decimalPlace]
         allignedMant3 = allignedMant3[0]+"."+rightSide+allignedMant3[decimalPlace+1:-len(rightSide)]
     if allignedMant3[0]=='0':
         firstOne = allignedMant3.find("1")
-        print("first",firstOne)
         expo1-=(firstOne-1)
         allignedMant3 = allignedMant3[firstOne]+'.'+allignedMant3[firstOne+1:]
         while len(allignedMant3)<54:
             allignedMant3+='0'
-        print(allignedMant3)
     IEEE = str(sign1) + " " + bin(expo1) + " " + allignedMant3[2:]
-    print(IEEE)
     return convertFromIEE(IEEE)
 def sub(val1,val2):  #subtraction is the same as addition, (x-y) = (x+(-y))
     val2= val2*-1
     return add(val1,val2)
+def binaryMultiply(bin1,bin2):
+    bin1=bin1.strip(".")
+    bin2=bin2.strip(".")
+    binList1 = [int(x) for x in bin1]
+    binList2 = [int(x) for x in bin2]
+    product = []
+    for i in range(1,len(binList2)+1):
+        if binList2[-i]==1:
+            arr = [x for x in binList1]
+            extraZero = [0]*(i-1)
+            arr.extend(extraZero)
+            product.append(arr)
+    maxLen = len(product[-1])
+    for i in range(len(product)):
+        while len(product[i])!=maxLen:
+            product[i] = [0]+product[i]
+    for i in range(len(product)):
+        product[i]= "".join(str(e) for e in product[i])
+    while len(product)>1:
+        maxLen=max([len(x) for x in product])
+        val1 = product[0]
+        val2 = product[1]
+        while len(val1)<maxLen:
+            val1 = '0'+val1
+        while len(val2)<maxLen:
+            val2 = '0'+val2
+        val3 = binaryAdd(val1,val2)
+        product.append(val3)
+        product = product[2:]
+    return product[0]
+
+def mul(val1,val2):
+    if abs(val2) > abs(val1):
+        val1,val2 = val2, val1
+    if val1==0 or val2==0:
+        return 0
+    multiplier = anyfloat.from_float(val1)
+    multiplierSign,multiplierExpo,multiplierMantissaBin = multiplier.sign, multiplier.exponent, multiplier.bin(size=(11,52)).split(" ")[2]
+    multiplicand = anyfloat.from_float(val2)
+    multiplicandSign,multiplicandExpo,multiplicandMantissaBin = multiplicand.sign, multiplicand.exponent, multiplicand.bin(size=(11,52)).split(" ")[2]
+    productSign = multiplierSign ^ multiplicandSign #xor
+    productExponent = multiplierExpo + multiplicandExpo
+    allignedMultiplierMantissa = "1"+multiplierMantissaBin
+    allignedMultiplicandMantissa = '1'+multiplicandMantissaBin
+    productMantissa = binaryMultiply(allignedMultiplierMantissa,allignedMultiplicandMantissa)
+    productMantissa = productMantissa[0] + '.' + productMantissa[1:-1]
+    productExponent+=(len(productMantissa)-105)
+    IEEE = str(productSign) + " " + bin(productExponent) + " " + productMantissa[2:]
+    return convertFromIEE(IEEE)

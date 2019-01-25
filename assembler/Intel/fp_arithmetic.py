@@ -7,7 +7,7 @@ from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from .arithmetic import checkflag
 from assembler.virtual_machine import intel_machine
-from .fp_conversions import anyfloat,add,sub
+from .fp_conversions import anyfloat,add,sub,mul
 
 
 def dec_convert(val):
@@ -42,7 +42,7 @@ class FAdd(Instruction):
     """
     def fhook(self, ops, vm):
         intel_machine.registers["FRT"] = add(intel_machine.registers["FRB"],intel_machine.registers["FRA"])
-        print("SOLVED ", intel_machine.registers["FRT"])
+
 
 class FSub(Instruction):
     """
@@ -62,9 +62,19 @@ class FSub(Instruction):
 
 
 class FMul(Instruction):
-
+    """
+    sets product  of floating-point register (FPR) FRA and
+    floating-point register (FPB)
+    and place the results into FPR FRT
+        <instr>
+             FMUL
+        </instr>
+        <syntax>
+            FMUL FRT, FRA, FRB
+        </syntax>
+    """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.mul)
+        intel_machine.registers["FRT"] = mul(intel_machine.registers["FRA"],intel_machine.registers["FRB"])
 
 
 class FAbs(Instruction):
