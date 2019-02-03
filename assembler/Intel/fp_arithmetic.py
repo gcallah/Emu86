@@ -7,7 +7,7 @@ from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from .arithmetic import checkflag
 from assembler.virtual_machine import intel_machine
-from .fp_conversions import anyfloat,add,sub,mul
+from .fp_conversions import anyfloat,add,sub,mul,div
 
 
 def dec_convert(val):
@@ -114,4 +114,4 @@ class FChs(Instruction):
 
 class FDiv(Instruction):
     def fhook(self, ops, vm):
-        return
+        intel_machine.registers["FRT"] = div(intel_machine.registers["FRA"],intel_machine.registers["FRB"])

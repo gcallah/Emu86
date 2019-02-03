@@ -73,7 +73,9 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
     def test_fmul(self):
         self.two_op_test(opfunc.mul, "FMUL", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
-
+    def test_fdiv(self):
+        print("FDIV")
+        self.two_op_test(opfunc.truediv, "FDIV", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")

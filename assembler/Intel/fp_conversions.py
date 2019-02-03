@@ -311,3 +311,10 @@ def mul(val1,val2):
     productExponent+=(len(productMantissa)-105)
     IEEE = str(productSign) + " " + bin(productExponent) + " " + productMantissa[2:]
     return convertFromIEE(IEEE)
+
+"""There is a faster way to do division.  Its called
+   division by reciprocal approximation.  It takes about the same
+   time as a fl. pt. multiply.  """
+def div(val1,val2):
+    return mul(val1,1/val2)
+    
