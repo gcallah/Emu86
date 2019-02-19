@@ -45,19 +45,29 @@ class AssembleTestCase(TestCase):
     # Two Operand Tests #
     #####################
 
-    def two_op_test(self, operator, instr,
+    def two_op_test(self, operator, instr, float=False,
                     low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST):
+                    low2=MIN_TEST, high2=MAX_TEST,):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
+            if float:
+                a = random.uniform(low1, high1)
+                b = random.uniform(low2, high2)
             correct = operator(a, b)
-            mips_machine.registers["R8"] = a
-            mips_machine.registers["R9"] = b
             mips_machine.base = "hex"
-            assemble("40000 " + instr + " R10, R8, R9",
+            if float:
+                mips_machine.registers["F8"] = a
+                mips_machine.registers["F10"] = b
+                assemble("40000 " + instr + " F12, F8, F10",
+                         'mips_asm', mips_machine)
+                self.assertEqual(mips_machine.registers["F12"], correct)
+            else:
+                mips_machine.registers["R8"] = a
+                mips_machine.registers["R9"] = b
+                assemble("40000 " + instr + " R10, R8, R9",
                      'mips_asm', mips_machine)
-            self.assertEqual(mips_machine.registers["R10"], correct)
+                self.assertEqual(mips_machine.registers["R10"], correct)
 
     def two_op_test_imm(self, operator, instr,
                         low1=MIN_TEST, high1=MAX_TEST,
@@ -163,20 +173,6 @@ class AssembleTestCase(TestCase):
                              low1=MIN_MUL, high1=MAX_MUL,
                              low2=0, high2=MAX_SHIFT)
 
-    def two_op_test_float(self, operator, instr,
-                          low1=MIN_TEST, high1=MAX_TEST,
-                          low2=MIN_TEST, high2=MAX_TEST):
-        for i in range(0, NUM_TESTS):
-            a = random.uniform(low1, high1)
-            b = random.uniform(low2, high2)
-            correct = operator(a, b)
-            mips_machine.registers["F8"] = a
-            mips_machine.registers["F10"] = b
-            mips_machine.base = "hex"
-            assemble("40000 " + instr + " F12, F8, F10",
-                     'mips_asm', mips_machine)
-            self.assertEqual(mips_machine.registers["F12"], correct)
-
     def two_op_test_double_float(self, operator, instr,
                                  low1=0, high1=MAX_TEST,
                                  low2=0, high2=MAX_TEST):
@@ -235,18 +231,18 @@ class AssembleTestCase(TestCase):
             self.assertEqual(result, correct)
 
     def test_adds(self):
-        self.two_op_test_float(opfunc.add, "ADD.S")
+        self.two_op_test(opfunc.add, "ADD.S", True)
 
     def test_subs(self):
-        self.two_op_test_float(opfunc.sub, "SUB.S")
+        self.two_op_test(opfunc.sub, "SUB.S", True)
 
     def test_mults(self):
-        self.two_op_test_float(opfunc.mul, "MULT.S",
-                               low1=0, high1=2 ** 11, low2=0, high2=2 ** 11)
+        self.two_op_test(opfunc.mul, "MULT.S", True,
+                         low1=0, high1=2 ** 11, low2=0, high2=2 ** 11)
 
     def test_divs(self):
-        self.two_op_test_float(opfunc.truediv, "DIV.S",
-                               low1=0, high1=2 ** 11, low2=0, high2=2 ** 11)
+        self.two_op_test(opfunc.truediv, "DIV.S", True,
+                         low1=0, high1=2 ** 11, low2=0, high2=2 ** 11)
 
     def test_addd(self):
         self.two_op_test_double_float(opfunc.add, 'ADD.D')
