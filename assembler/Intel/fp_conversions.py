@@ -1,4 +1,5 @@
 from __future__ import print_function
+from assembler.virtual_machine import intel_machine
 from collections import namedtuple
 from fractions import Fraction
 import struct
@@ -225,6 +226,12 @@ def convertFromIEE(IEEE):
         return float
     return -1*float
 def add(val1,val2):
+    print("added")
+    print(intel_machine.registers)
+    print("val FRA: ",intel_machine.registers["FRA"])
+    print("val2: ",val2)
+    val1,val2 = float(val1),float(val2)
+
     if abs(val2) > abs(val1):
         val1,val2 = val2, val1
     X1 = anyfloat.from_float(val1)
@@ -317,4 +324,3 @@ def mul(val1,val2):
    time as a fl. pt. multiply.  """
 def div(val1,val2):
     return mul(val1,1/val2)
-    

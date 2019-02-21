@@ -41,6 +41,7 @@ class FAdd(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
+        print("add fhook")
         intel_machine.registers["FRT"] = add(intel_machine.registers["FRB"],intel_machine.registers["FRA"])
 
 

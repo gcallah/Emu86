@@ -36,7 +36,7 @@ MISSING_CLOSEBRACK = "Missing closing bracket"
 MISSING_CLOSEPAREN = "Missing closing parenthesis"
 ZERO_DIVISION = "Division by zero"
 OUT_OF_BOUNDS = "Displacement out of bounds"
-TOO_BIG_FOR_SINGLE = "Value too big to store in a single: "
+TOO_BIG_FOR_SINGLE = "Value too big to store in a single precision: "
 TOO_BIG_FOR_DOUBLE = "Value too big to store in a double: "
 NOT_EVEN_REGISTER = "Invalid odd-numbered register: "
 NOT_CORRECT_BITS = "Instruction expected integer of max length 20 bits"
@@ -223,6 +223,7 @@ class OutofBounds(Error):
 
 class TooBigForSingle(Error):
     def __init__(self, offender):
+        print("msg: too big")
         self.msg = TOO_BIG_FOR_SINGLE + offender
 
 

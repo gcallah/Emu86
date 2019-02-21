@@ -10,7 +10,7 @@ function AlertError()
     if(raised)
     {
         raised=raised.value;
-        if (raised != "") 
+        if (raised != "")
         {
             alert(document.getElementById("error").value);
         }
@@ -23,7 +23,6 @@ function selectSample()
     var selected = selectBar.options[selectBar.selectedIndex].value;
     var flav = document.getElementsByName("flavor")[0];
     var base = document.getElementsByName("base")[0].value;
-    
     if (flav && base == "dec"){
         if (selected == "none"){
             document.getElementById("id_code").value = "";
@@ -204,7 +203,7 @@ function highlightCode(){
         var countCode = 0;
         var countRepeats = 0;
         var codeArray = input.value.split("\n");
-        var textArea = true; 
+        var textArea = true;
         if (instr.value != "") {
             for (var index = 0; index < codeArray.length; index++) {
                 var string = codeArray[index].trim();
@@ -220,7 +219,7 @@ function highlightCode(){
                     continue;
                 }
                 if (!(string === "") && textArea && string[0] != ";"){
-                    countCode++; 
+                    countCode++;
                 }
                 if (string == lastInstr){
                     countRepeats++;
@@ -229,11 +228,11 @@ function highlightCode(){
             input.focus();
             var startIndex = 0;
             for (var time = 0; time < countRepeats; time++) {
-                startIndex = input.value.indexOf(lastInstr, startIndex) 
+                startIndex = input.value.indexOf(lastInstr, startIndex)
                              + lastInstr.length;
             }
             startIndex -= lastInstr.length;
-            input.setSelectionRange(startIndex, 
+            input.setSelectionRange(startIndex,
                    startIndex + lastInstr.length);
         }
     }
@@ -290,7 +289,7 @@ function Savecode()
             document.body.appendChild(anchor);
             anchor.click();
             document.body.removeChild(anchor);
-            window.URL.revokeObjectURL(url);  
+            window.URL.revokeObjectURL(url);
         }
     }
 }
@@ -353,7 +352,7 @@ function pauseButton(){
             document.getElementsByName("button_type")[0].value = "pause";
             SubmitForm();
         }
-    }   
+    }
 }
 
 function convert(name,value)

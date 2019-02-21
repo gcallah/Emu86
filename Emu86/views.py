@@ -293,6 +293,7 @@ def main_page(request):
                     riscv_machine.nxt_key = key
 
             if intel_machine.flavor is not None:
+                print(intel_machine.registers)
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
                 get_stack_contents(intel_machine.stack, request)
@@ -315,9 +316,11 @@ def main_page(request):
                 riscv_machine.start_ip = int(request.POST['start_ip'])
 
             if intel_machine.flavor in INTEL:
+                print("Intel flavor")
                 (last_instr, error, bit_code) = assemble(request.POST[CODE],
                                                          intel_machine.flavor,
                                                          intel_machine, step)
+                print((last_instr, error, bit_code))
             if mips_machine.flavor in MIPS:
                 (last_instr, error, bit_code) = assemble(request.POST[CODE],
                                                          mips_machine.flavor,
@@ -438,23 +441,26 @@ def is_hex_form(request):
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
     for reg in registers:
-        if reg[0] == 'F' and type(registers[reg]) is str:
-            if 'x' in str(registers[reg]):
-                registers[reg] = hex_to_float(registers[reg])
-            else:
-                if int(str(reg[1:])) % 2 == 1:
-                    temp = registers[reg]
-                    temp = (64 - len(temp)) * "0" + temp
-                    registers[reg] = hex(int(temp, 2))
-                    return
+        if reg is not 'FRA' and reg is not 'FRB'and reg is not'FRT':
+            if reg[0] == 'F' and type(registers[reg]) is str:
+                if 'x' in str(registers[reg]):
+                    registers[reg] = hex_to_float(registers[reg])
                 else:
-                    registers[reg] = hex(int(registers[reg], 2))
-        else:
-            if hex_term:
-                registers[reg] = int(request.POST[reg], 16)
+                    if int(str(reg[1:])) % 2 == 1:
+                        temp = registers[reg]
+                        temp = (64 - len(temp)) * "0" + temp
+                        registers[reg] = hex(int(temp, 2))
+                        return
+                    else:
+                        registers[reg] = hex(int(registers[reg], 2))
             else:
-                registers[reg] = request.POST[reg]
-
+                if hex_term:
+                    registers[reg] = int(request.POST[reg], 16)
+                else:
+                    registers[reg] = request.POST[reg]
+        else:
+            print("float",reg,registers[reg])
+            registers[reg] = request.POST[reg]
 
 def get_flag_contents(flags, request):
     for flag in flags:

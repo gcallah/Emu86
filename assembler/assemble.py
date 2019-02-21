@@ -262,6 +262,7 @@ def exec(tok_lines, flavor, vm, last_instr):
     #     last_instr = curr_instr[INSTR_RISCV].f(curr_instr[OPS_RISCV:], vm)
 
         else:
+            print("test265")
             if ip >= len(tok_lines):
                 raise InvalidInstruction("Past end of code.")
 
@@ -309,6 +310,7 @@ def assemble(code, flavor, vm, step=False):
     error = ''
     bit_code = ''
     if vm.next_stack_change != "":
+        print("next stack")
         vm.stack_change = vm.next_stack_change
         vm.next_stack_change = ""
         if len(vm.c_stack) != 0 and not isinstance(vm.c_stack[-1], int):
@@ -322,8 +324,11 @@ def assemble(code, flavor, vm, step=False):
 
     # break the code into tokens:
     try:
+        print("try tok")
         tok_lines = lex(code, flavor, vm)
+        print("t",tok_lines)
         tok_lines = parse(tok_lines, flavor, vm)
+        print("t",tok_lines)
     except Error as err:
         return (last_instr, err.msg, bit_code)
 
@@ -347,9 +352,11 @@ def assemble(code, flavor, vm, step=False):
             else:
                 while (vm.get_ip() < len(tok_lines) and
                        count < MAX_INSTRUCTIONS):
+                    print("sucess")
                     (success, last_instr, error) = exec(tok_lines, flavor, vm,
                                                         last_instr)
                     if not success:
+                        # print("line360")
                         return (last_instr, error, bit_code)
                     count += 1
         else:  # step through code
@@ -368,8 +375,10 @@ def assemble(code, flavor, vm, step=False):
                 last_instr = "Reached end of executable code."
                 # rewind:
                 vm.set_ip(vm.start_ip)
+            print("line379")
             return (last_instr, error, bit_code)
     except ExitProg as ep:
+        print("exitval")
         last_instr = ep.msg.split(":")[0] + ": Exiting program"
         if flavor == "mips_asm" or flavor == "mips_mml":
             vm.set_ip(2147484032)
@@ -382,5 +391,5 @@ def assemble(code, flavor, vm, step=False):
                  + str(MAX_INSTRUCTIONS))
     else:
         error = ''
-
+    print("returning")
     return (last_instr, error, bit_code)

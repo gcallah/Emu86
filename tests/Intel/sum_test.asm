@@ -1,6 +1,6 @@
 ; Declare number and sum.
 .data
-    number DW -105
+    number DW 15
     sum DW ?
 
 ; Store first number to EAX
@@ -10,4 +10,3 @@
     mov eax, [number]
     add eax, 158
     mov [sum], eax
-

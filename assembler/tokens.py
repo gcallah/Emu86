@@ -170,12 +170,14 @@ class FloatTok(Operand):
         self.data_type = data_type
         # do a bit of error checking for precision for the hex value
         if data_type == ".float":
-            if type(val) is float:
-                temp_hex = float_to_hex(val)
-                temp_val = hex_to_float(temp_hex)
-                if (temp_val != val):
-                    raise TooBigForSingle(str(val))
-            elif type(val) is str:
+            print("data")
+        #
+        #     # if type(val) is float:
+        #     #     # temp_hex = float_to_hex(val)
+        #     #     # temp_val = hex_to_float(temp_hex)
+        #     #     # if (temp_val != val):
+        #     #     #     raise TooBigForSingle(str(val))
+            if type(val) is str:
                 temp_float = hex_to_float(val)
                 temp_hex = float_to_hex(temp_float)
                 if (temp_hex != val):
