@@ -271,6 +271,8 @@ class Address(Location):
 
     def get_val(self):
         if self.name in self.mem:
+            if "." in str(self.mem[self.name]):
+                return float(self.mem[self.name])
             return int(self.mem[self.name])
         else:
             return 0
