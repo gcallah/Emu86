@@ -34,12 +34,11 @@ class FAdd(Instruction):
     """
     sets sum  of floating-point register (FPR) FRA and
     floating-point register (FPB)
-    and place the results into FPR FRT
         <instr>
              FADD
         </instr>
         <syntax>
-            FADD FRT, FRA, FRB
+            FADD FRA, FRB
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -51,12 +50,11 @@ class FSub(Instruction):
     """
     sets sum  of floating-point register (FPR) FRA and
     floating-point register (FPB)
-    and place the results into FPR FRT
         <instr>
              FSUB
         </instr>
         <syntax>
-            FSUB FRT, FRA, FRB
+            FSUB FRA, FRB
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -67,12 +65,11 @@ class FMul(Instruction):
     """
     sets product  of floating-point register (FPR) FRA and
     floating-point register (FPB)
-    and place the results into FPR FRT
         <instr>
              FMUL
         </instr>
         <syntax>
-            FMUL FRT, FRA, FRB
+            FMUL  FRA, FRB
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -108,5 +105,15 @@ class FChs(Instruction):
 
 
 class FDiv(Instruction):
+        """
+        sets quotient  of floating-point register (FPR) FRA and
+        floating-point register (FPB)
+            <instr>
+                 Fdiv
+            </instr>
+            <syntax>
+                FDIV  FRA, FRB
+            </syntax>
+        """
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, div)
