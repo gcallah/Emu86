@@ -225,7 +225,7 @@ def convertFromIEE(IEEE):
     if sign == '0':
         return float
     return -1*float
-def abs(val):
+def fabs(val):
     IEEE = anyfloat.from_float(val)
     IEEE.abs_sign()
     return float(IEEE)

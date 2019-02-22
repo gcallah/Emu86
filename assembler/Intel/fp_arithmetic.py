@@ -7,7 +7,7 @@ from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from .arithmetic import checkflag
 from assembler.virtual_machine import intel_machine
-from .fp_conversions import anyfloat,add,sub,mul,div,abs,chs
+from .fp_conversions import anyfloat,add,sub,mul,div,fabs,chs
 
 
 def dec_convert(val):
@@ -90,7 +90,7 @@ class FAbs(Instruction):
             </syntax>
         """
         def fhook(self, ops, vm):
-            two_op_arith(ops, vm, self.name, abs)
+            two_op_arith(ops, vm, self.name, fabs)
 
 
 class FChs(Instruction):
