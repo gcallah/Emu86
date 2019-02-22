@@ -108,7 +108,7 @@ class FChs(Instruction):
 
 class FDiv(Instruction):
     """
-    sets product  of floating-point register (FPR) FRA and
+    sets quotient of floating-point register (FPR) FRA and
     floating-point register (FPB)
 
         <instr>

@@ -53,8 +53,8 @@ class AssembleTestCase(TestCase):
                 correct = operator(a, b)
                 intel_machine.registers["FRA"] = a
                 intel_machine.registers["FRB"] = b
-                print(intel_machine.registers["FRA"],intel_machine.registers["FRB"])
                 print("assembled",assemble(instr + " fra, frb" , 'intel', intel_machine))
+                print(intel_machine.registers["FRA"],correct)
                 self.assertAlmostEqual(intel_machine.registers["FRA"], correct)
                 #assert abs(intel_machine.registers["FRT"]-correct) < 0.00001, str(intel_machine.registers["FRT"]) + " does not equal " + str(correct)
             else:
@@ -69,8 +69,8 @@ class AssembleTestCase(TestCase):
 
     def test_fadd(self):
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
-    # def test_fsub(self):
-    #     self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
+    def test_fsub(self):
+        self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
     def test_fmul(self):
         self.two_op_test(opfunc.mul, "FMUL", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
     def test_fdiv(self):
