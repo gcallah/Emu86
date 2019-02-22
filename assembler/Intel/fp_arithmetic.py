@@ -50,6 +50,7 @@ class FSub(Instruction):
     """
     sets sum  of floating-point register (FPR) FRA and
     floating-point register (FPB)
+
         <instr>
              FSUB
         </instr>
@@ -65,11 +66,12 @@ class FMul(Instruction):
     """
     sets product  of floating-point register (FPR) FRA and
     floating-point register (FPB)
+
         <instr>
              FMUL
         </instr>
         <syntax>
-            FMUL  FRA, FRB
+            FMUL FRA, FRB
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -105,15 +107,16 @@ class FChs(Instruction):
 
 
 class FDiv(Instruction):
-        """
-        sets quotient  of floating-point register (FPR) FRA and
-        floating-point register (FPB)
-            <instr>
-                 Fdiv
-            </instr>
-            <syntax>
-                FDIV  FRA, FRB
-            </syntax>
-        """
+    """
+    sets product  of floating-point register (FPR) FRA and
+    floating-point register (FPB)
+
+        <instr>
+             FDIV
+        </instr>
+        <syntax>
+            FDIV FRA, FRB
+        </syntax>
+    """
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, div)
