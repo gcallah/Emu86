@@ -7,7 +7,7 @@ from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from .arithmetic import checkflag
 from assembler.virtual_machine import intel_machine
-from .fp_conversions import anyfloat,add,sub,mul,div
+from .fp_conversions import anyfloat,add,sub,mul,div,abs,chs
 
 
 def dec_convert(val):
@@ -22,9 +22,11 @@ def two_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 2)
+
     ops[0].set_val(
         checkflag(operator(ops[0].get_val(),
                            ops[1].get_val()), vm))
+
     vm.changes.add(ops[0].get_nm())
 
 
@@ -41,8 +43,8 @@ class FAdd(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        print("add fhook")
-        intel_machine.registers["FRT"] = add(intel_machine.registers["FRB"],intel_machine.registers["FRA"])
+        two_op_arith(ops, vm, self.name, add)
+
 
 
 class FSub(Instruction):
@@ -58,8 +60,7 @@ class FSub(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        intel_machine.registers["FRT"] = sub(intel_machine.registers["FRA"],intel_machine.registers["FRB"])
-        print("SOLVED ", intel_machine.registers["FRT"])
+        two_op_arith(ops, vm, self.name, sub)
 
 
 class FMul(Instruction):
@@ -75,8 +76,7 @@ class FMul(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        intel_machine.registers["FRT"] = mul(intel_machine.registers["FRA"],intel_machine.registers["FRB"])
-
+        two_op_arith(ops, vm, self.name, mul)
 
 class FAbs(Instruction):
         """
@@ -90,10 +90,7 @@ class FAbs(Instruction):
             </syntax>
         """
         def fhook(self, ops, vm):
-            IEEE = anyfloat.from_float(intel_machine.registers["FRB"])
-            """IEEE representation of floating point instruction"""
-            IEEE.abs_sign()
-            intel_machine.registers["FRT"] = float(IEEE)
+            two_op_arith(ops, vm, self.name, abs)
 
 
 class FChs(Instruction):
@@ -107,12 +104,9 @@ class FChs(Instruction):
             </syntax>
         """
         def fhook(self, ops, vm):
-            IEEE = anyfloat.from_float(intel_machine.registers["FRB"])
-            """IEEE representation of floating point instruction"""
-            IEEE.change_sign()
-            intel_machine.registers["FRB"] = float(IEEE)
+            two_op_arith(ops, vm, self.name, chs)
 
 
 class FDiv(Instruction):
     def fhook(self, ops, vm):
-        intel_machine.registers["FRT"] = div(intel_machine.registers["FRA"],intel_machine.registers["FRB"])
+        two_op_arith(ops, vm, self.name, div)

@@ -243,11 +243,10 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
             # default is float (single precision) if user doesnt say
             if data_type != ".float" and data_type != ".double":
                 data_type = ".float"
-                print("word",word)
+
             if vm.base == "dec":
                 # TODO: Screen shot to give me the
                 # floating point token class from token.py
-                print("worddec")
                 analysis.append(FloatTok(data_type=data_type, val=float(word)))
             else:   # hexadecimal
 
@@ -333,7 +332,7 @@ def lex(code, flavor, vm):
         tok_lines: the tokenized version
     """
     lines = code.split("\n")
-    print("line",lines)
+
     pre_processed_lines = []
     tok_lines = []  # this will hold the tokenized version of the code
     i = 0
@@ -362,7 +361,7 @@ def lex(code, flavor, vm):
         if flavor == "mips_mml":
             tok_lines.append(sep_line_mml(line, i, vm, language_keys))
         else:
-            print("seplines")
+
             tok_lines.append(sep_line(line, i, flavor, data_sec,
                                       vm, language_keys))
         if line == ".data":
@@ -377,5 +376,4 @@ def lex(code, flavor, vm):
         # we count line numbers to store label jump locations:
         if add_to_ip:
             i += 1
-    print("precodessed, ",pre_processed_lines)
     return tok_lines

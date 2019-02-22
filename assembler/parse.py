@@ -212,7 +212,6 @@ def get_data_token(token_line, pos):
     elif isinstance(token_line[pos], IntegerTok):
         return token_line[pos].get_val(), pos + 1
     elif isinstance(token_line[pos], FloatTok):
-        print("istance2")
         if (token_line[pos].get_type() == ".float" and
                 token_line[pos].get_val() > float(2 ** 22)):
             raise TooBigForSingle(str(token_line[pos].get_val()))
@@ -331,18 +330,11 @@ def get_values(token_line, data_type, pos, values_list):
         ascii_list, pos = parse_string_token(token_line, pos)
         values_list.extend(ascii_list)
     else:
-        print("firstdata")
         first_data, pos = get_data_token(token_line, pos)
-        print("first:",first_data)
-        print("pos: ",pos)
         if first_data == DONT_INIT:
-            print("dont")
             values_list.append(randrange(0, dtype_info[data_type][MAX_VAL]))
-            print("v1: ",values_list)
         else:
-            print("v: ",values_list)
             values_list.append(first_data)
-            print(values_list)
     if pos >= len(token_line):
         return values_list, pos
     else:
@@ -702,7 +694,6 @@ def get_op(token_line, pos, flavor, vm):
 
 # Floating Point Token
     elif isinstance(token_line[pos], FloatTok):
-        print("istance1")
         return token_line[pos], pos+1
 
 # Constant Token

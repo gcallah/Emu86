@@ -225,11 +225,18 @@ def convertFromIEE(IEEE):
     if sign == '0':
         return float
     return -1*float
+def abs(val):
+    IEEE = anyfloat.from_float(val)
+    IEEE.abs_sign()
+    return float(IEEE)
+def chs(val):
+    print("cchs called")
+    IEEE = anyfloat.from_float(val)
+    IEEE.change_sign()
+    return float(IEEE)
+
 def add(val1,val2):
-    print("added")
-    print(intel_machine.registers)
-    print("val FRA: ",intel_machine.registers["FRA"])
-    print("val2: ",val2)
+    print("addFUNCTION",val1,val2)
     val1,val2 = float(val1),float(val2)
 
     if abs(val2) > abs(val1):

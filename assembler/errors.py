@@ -223,7 +223,7 @@ class OutofBounds(Error):
 
 class TooBigForSingle(Error):
     def __init__(self, offender):
-        print("msg: too big")
+
         self.msg = TOO_BIG_FOR_SINGLE + offender
 
 

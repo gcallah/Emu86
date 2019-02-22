@@ -41,7 +41,6 @@ getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:] # noqa
 
 
 def h_to_b64(value):
-    print("in h to b, value =", value)
     return "0" + hex(int(value, 2))
 
 
@@ -170,7 +169,6 @@ class FloatTok(Operand):
         self.data_type = data_type
         # do a bit of error checking for precision for the hex value
         if data_type == ".float":
-            print("data")
         #
         #     # if type(val) is float:
         #     #     # temp_hex = float_to_hex(val)
