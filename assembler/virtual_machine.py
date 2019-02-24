@@ -122,6 +122,16 @@ class VirtualMachine:
 class IntelMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
+        self.fp_stack_registers = OrderedDict(
+                    [('ST0',0.0),
+                    ('ST1',0.0),
+                    ('ST2',0.0),
+                    ('ST3',0.0),
+                    ('ST4',0.0),
+                    ('ST5',0.0),
+                    ('ST6',0.0),
+                    ('ST7',0.0),
+                    ])
         self.registers = OrderedDict(
                     [
                         ('EAX', 0),
@@ -148,9 +158,20 @@ class IntelMachine(VirtualMachine):
                         ('SF', 0),
                         ('ZF', 0),
                     ])
-
+    def add_to_Float_Stack(self,val):
+        prev = self.fp_stack_registers["ST0"]
+        self.fp_stack_registers["ST0"] = val
+        for i in range(1,len(self.fp_stack_registers)):
+            curr = self.fp_stack_registers["ST"+str(i)]
+            self.fp_stack_registers["ST"+str(i)] = prev
+            prev = curr
+        print(self.fp_stack_registers)
+    def reset_FP_Stack(self):
+        for i in range(len(self.fp_stack_registers)):
+            self.fp_stack_registers["ST"+str(i)] = 0.0
     def re_init(self):
         super().re_init()
+        self.reset_FP_Stack()
         self.registers[STACK_PTR_INTEL] = STACK_TOP
 
     def stack_init(self):
