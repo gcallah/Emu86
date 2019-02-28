@@ -354,7 +354,6 @@ def assemble(code, flavor, vm, step=False):
                     (success, last_instr, error) = exec(tok_lines, flavor, vm,
                                                         last_instr)
                     if not success:
-                        
                         return (last_instr, error, bit_code)
                     count += 1
         else:  # step through code

@@ -441,7 +441,7 @@ def is_hex_form(request):
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
     for reg in registers:
-        if reg is not 'FRA' and reg is not 'FRB'and reg is not'FRT':
+        if reg != 'FRA' and reg != 'FRB'and reg != 'FRT':
             if reg[0] == 'F' and type(registers[reg]) is str:
                 if 'x' in str(registers[reg]):
                     registers[reg] = hex_to_float(registers[reg])
@@ -459,8 +459,9 @@ def get_reg_contents(registers, request):
                 else:
                     registers[reg] = request.POST[reg]
         else:
-            print("float",reg,registers[reg])
+            print("float", reg, registers[reg])
             registers[reg] = request.POST[reg]
+
 
 def get_flag_contents(flags, request):
     for flag in flags:
