@@ -2,12 +2,12 @@
 fp_arithmetic.py: arithmetic floating point instructions.
 """
 
-import operator as opfunc
+# import operator as opfunc
 from assembler.errors import check_num_args
 from assembler.tokens import Instruction
 from .arithmetic import checkflag
-from assembler.virtual_machine import intel_machine
-from .fp_conversions import anyfloat,add,sub,mul,div,fabs,chs
+# from assembler.virtual_machine import intel_machine
+from .fp_conversions import add, sub, mul, div, fabs, chs
 
 
 def dec_convert(val):
@@ -45,7 +45,6 @@ class FAdd(Instruction):
         two_op_arith(ops, vm, self.name, add)
 
 
-
 class FSub(Instruction):
     """
     sets sum  of floating-point register (FPR) FRA and
@@ -77,33 +76,34 @@ class FMul(Instruction):
     def fhook(self, ops, vm):
         two_op_arith(ops, vm, self.name, mul)
 
+
 class FAbs(Instruction):
-        """
-        sets bit  of floating-point register (FPR) FRB to 0
-        and place the results into FPR FRT
-            <instr>
-                 FABS
-            </instr>
-            <syntax>
-                fabs FRT, FRB
-            </syntax>
-        """
-        def fhook(self, ops, vm):
-            two_op_arith(ops, vm, self.name, fabs)
+    """
+    sets bit  of floating-point register (FPR) FRB to 0
+    and place the results into FPR FRT
+        <instr>
+                FABS
+        </instr>
+        <syntax>
+            fabs FRT, FRB
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, fabs)
 
 
 class FChs(Instruction):
-        """
-        complements the sign of floating-point register (FPR) FRB
-            <instr>
-                 FCHS
-            </instr>
-            <syntax>
-                fchs FRT
-            </syntax>
-        """
-        def fhook(self, ops, vm):
-            two_op_arith(ops, vm, self.name, chs)
+    """
+    complements the sign of floating-point register (FPR) FRB
+        <instr>
+                FCHS
+        </instr>
+        <syntax>
+            fchs FRT
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, chs)
 
 
 class FDiv(Instruction):

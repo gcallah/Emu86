@@ -66,7 +66,7 @@ class AssembleTestCase(TestCase):
                 mips_machine.registers["R8"] = a
                 mips_machine.registers["R9"] = b
                 assemble("40000 " + instr + " R10, R8, R9",
-                     'mips_asm', mips_machine)
+                         'mips_asm', mips_machine)
                 self.assertEqual(mips_machine.registers["R10"], correct)
 
     def two_op_test_imm(self, operator, instr,

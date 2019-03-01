@@ -18,7 +18,7 @@ from unittest import TestCase, main
 from assembler.tokens import MAX_INT, MIN_INT, BITS
 from assembler.virtual_machine import intel_machine, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
-from assembler.Intel.math_operations import Mathops
+# from assembler.Intel.math_operations import Mathops
 
 NUM_TESTS = 100
 MAX_SHIFT = BITS // 2
@@ -53,10 +53,13 @@ class AssembleTestCase(TestCase):
                 correct = operator(a, b)
                 intel_machine.registers["FRA"] = a
                 intel_machine.registers["FRB"] = b
-                print("assembled",assemble(instr + " fra, frb" , 'intel', intel_machine))
-                print(intel_machine.registers["FRA"],correct)
+                code = instr + " fra, frb"
+                print("assembled", assemble(code, 'intel', intel_machine))
+                print(intel_machine.registers["FRA"], correct)
                 self.assertAlmostEqual(intel_machine.registers["FRA"], correct)
-                #assert abs(intel_machine.registers["FRT"]-correct) < 0.00001, str(intel_machine.registers["FRT"]) + " does not equal " + str(correct)
+                """assert abs(intel_machine.registers["FRT"]-correct) < 0.00001,
+                str(intel_machine.registers["FRT"]) + " does not equal "
+                + str(correct)"""
             else:
                 correct = operator(a, b)
                 intel_machine.registers["EAX"] = a
@@ -66,15 +69,21 @@ class AssembleTestCase(TestCase):
 
                 self.assertEqual(intel_machine.registers["EAX"], correct)
 
-
     def test_fadd(self):
-        self.two_op_test(opfunc.add, "FADD", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
+        self.two_op_test(opfunc.add, "FADD", op_type=FLOAT,
+                         first_val=FLOAT, second_val=FLOAT)
+
     def test_fsub(self):
-        self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
+        self.two_op_test(opfunc.sub, "FSUB", op_type=FLOAT,
+                         first_val=FLOAT, second_val=FLOAT)
+
     def test_fmul(self):
-        self.two_op_test(opfunc.mul, "FMUL", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
+        self.two_op_test(opfunc.mul, "FMUL", op_type=FLOAT,
+                         first_val=FLOAT, second_val=FLOAT)
+
     def test_fdiv(self):
-        self.two_op_test(opfunc.truediv, "FDIV", op_type=FLOAT, first_val=FLOAT, second_val=FLOAT)
+        self.two_op_test(opfunc.truediv, "FDIV", op_type=FLOAT,
+                         first_val=FLOAT, second_val=FLOAT)
 
     def test_add(self):
         self.two_op_test(opfunc.add, "add")
@@ -110,22 +119,31 @@ class AssembleTestCase(TestCase):
     # Single Op Tests #
     ###################
 
-    def one_op_test(self, operator, instr, op_type=None, replaces = True):  # replace boolean needed because some fp instructions do not replace the contents of the register, but rather place it another register
-        for i in range(NUM_TESTS):  #changeback to num_tests
+    def one_op_test(self, operator, instr, op_type=None, replaces=True):
+        """replace boolean needed because some fp instructions
+        do not replace the contents of the register,
+        but rather place it another register"""
+        for i in range(NUM_TESTS):  # changeback to num_tests
             intel_machine.base = "dec"
             if op_type == FLOAT:
                 a = float(random.uniform(MIN_MUL, MAX_MUL))
-                intel_machine.registers["FRB"] = a #source float register
+                intel_machine.registers["FRB"] = a  # source float register
                 correct = operator(a)
-                # if replaces == False:
-                #     intel_machine.registers["FRT"] = None #since no replacement, destination float register
-                #     assemble(instr + ' frb', 'intel', intel_machine)
-                #     self.assertEqual(intel_machine.registers["FRT"], correct) #since the new value is in the destination register, compare correct to FRT
-                # else:
+                """
+                if replaces == False:
+                     intel_machine.registers["FRT"] = None
+                     #since no replacement, destination float register
+                     assemble(instr + ' frb', 'intel', intel_machine)
+                     self.assertEqual(intel_machine.registers["FRT"], correct)
+                     #since the new value is in the destination register,
+                     #compare correct to FRT
+                else:"""
                 print("about to be assembled")
-                assemble(instr + ' frb' , 'intel', intel_machine)
+                assemble(instr + ' frb', 'intel', intel_machine)
                 print(intel_machine.registers["FRB"])
-                self.assertEqual(intel_machine.registers["FRB"], correct) #since the new value has not been replaced(in source register), compare FRB to correct
+                self.assertEqual(intel_machine.registers["FRB"], correct)
+                # since the new value has not been replaced
+                # (in source register), compare FRB to correct
 
             else:
                 a = random.randint(MIN_TEST, MAX_TEST)
@@ -147,12 +165,12 @@ class AssembleTestCase(TestCase):
     def test_dec(self):
         dec = functools.partial(opfunc.add, -1)
         self.one_op_test(dec, "dec")
+    """
     # def test_fabs(self):
     #     self.one_op_test(opfunc.abs, "FABS",FLOAT,False)
     # def test_chs(self):
     #     self.one_op_test(Mathops.change_sign, "FCHS",FLOAT)
-
-
+    """
     ##################
     # Push / Pop     #
     ##################
