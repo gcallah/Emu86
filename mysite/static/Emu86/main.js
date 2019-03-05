@@ -5,7 +5,7 @@
 
 function AlertError()
 {
-    var raised=document.getElementById("error")
+    let raised=document.getElementById("error")
 
     if(raised)
     {
@@ -20,9 +20,9 @@ function AlertError()
 function selectSample()
 {
     selectBar = document.getElementsByName("sample")[0];
-    var selected = selectBar.options[selectBar.selectedIndex].value;
-    var flav = document.getElementsByName("flavor")[0];
-    var base = document.getElementsByName("base")[0].value;
+    const selected = selectBar.options[selectBar.selectedIndex].value;
+    const flav = document.getElementsByName("flavor")[0];
+    const base = document.getElementsByName("base")[0].value;
     if (flav && base == "dec"){
         if (selected == "none"){
             document.getElementById("id_code").value = "";
@@ -138,11 +138,11 @@ function checkForScript()
 {
     data = document.getElementById("id_code").value;
     if (data.indexOf("<script>") != -1){
-        var temp_val = data.split("<script>");
+        const temp_val = data.split("<script>");
         data = temp_val.join("");
     }
     if (data.indexOf("</script>") != -1){
-        var temp_val = data.split("</script>");
+        const temp_val = data.split("</script>");
         data = temp_val.join("");
     }
     document.getElementById("id_code").value = data;
@@ -480,7 +480,7 @@ async function slowCall() {
 }
 
 function displayHelp(button_type){
-    var string = "";
+    let string = "";
     if (button_type == "clear"){
         string = "Reset register and memory values.";
     }
