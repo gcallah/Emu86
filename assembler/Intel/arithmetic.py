@@ -206,6 +206,10 @@ class Neg(Instruction):
         <syntax>
             NEG reg
         </syntax>
+        <descr>
+           Replaces the value of operand with
+           it's two's complement.
+        </descr>
     """
     def fhook(self, ops, vm):
         one_op_arith(ops, vm, self.name, opfunc.neg)
