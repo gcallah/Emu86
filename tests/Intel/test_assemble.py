@@ -18,6 +18,7 @@ from unittest import TestCase, main
 from assembler.tokens import MAX_INT, MIN_INT, BITS
 from assembler.virtual_machine import intel_machine, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
+from assembler.Intel.fp_arithmetic import convert_hex_to_decimal
 # from assembler.Intel.math_operations import Mathops
 
 NUM_TESTS = 100
@@ -68,6 +69,9 @@ class AssembleTestCase(TestCase):
                 assemble(instr + " eax, ebx", 'intel', intel_machine)
 
                 self.assertEqual(intel_machine.registers["EAX"], correct)
+
+    def test_convert_hex_to_decimal(self):
+        self.assertEqual(convert_hex_to_decimal('a2.4c'), 162.296875)
 
     def test_fadd(self):
         self.two_op_test(opfunc.add, "FADD", op_type=FLOAT,
