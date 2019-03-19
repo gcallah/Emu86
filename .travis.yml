@@ -1,0 +1,19 @@
+# Our YAML file for running Travis CI.
+language: python
+python:
+    - "3.6"
+
+services:
+    - docker
+
+install:
+    - pip install -r docker/requirements-dev.txt
+
+env:
+    - PYTHONPATH=/home/travis/build/gcallah/Emu86
+
+script:
+    - make tests
+
+notifications:
+  slack: emu86:OyuLjhil66hjpwce1HyB43bL
