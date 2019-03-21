@@ -320,7 +320,6 @@ class RegAddress(Address):
 
 class Register(Location):
     def __init__(self, name, vm, val=0):
-        print("REG",name[:2],vm,val)
         super().__init__(name, vm, val)
         isFloat = False
         if name[:2].upper()=='ST':
@@ -343,7 +342,7 @@ class Register(Location):
         return str(self.name)
 
     def get_val(self):
-        if self.name[:2].upper() == "ST" or FLOAT:
+        if self.name[:2].upper() == "ST":
             return float(self.registers[self.name])
         return int(self.registers[self.name])
 

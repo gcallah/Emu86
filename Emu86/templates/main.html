@@ -671,9 +671,9 @@
                 </tr>
 
             </table>
-            <table>
+            <table style="margin-top:-355px;margin-left:360px;">
                 <tr>
-                    <th id="MemStack">
+                    <th id="FloatStack">
                         <br>
                             Floating Point Registers Stack:
                         <br>
@@ -682,25 +682,25 @@
                 <tr>
                     <td>
                         <table id="stack-table">
-                            {% for addrr, cont in floatingStack.items %}
+                            {% for reg, cont in floatingStack.items %}
                                 <tr>
                                     <td id="mem-loc" style="height:5px">
-                                        {{ addrr }}
+                                        {{ reg }}
                                     </td>
                                     <td id="contents" style="height:5px">
                                         {% if data_init == "on" %}
                                             <input
                                                 id="mem-cont"
                                                 value="{{ cont }}"
-                                                name="{{ addrr }}"
-                                                size="5"
+                                                name="{{ reg }}"
+                                                size="14"
                                             >
                                         {% else %}
                                             <input
                                                 id="mem-cont"
                                                 value="{{ cont }}"
-                                                name="{{ addrr }}"
-                                                size="5"
+                                                name="{{ reg }}"
+                                                size="14"
                                                 readonly="readonly"
                                                 style="background-color:#eff;"
                                             >

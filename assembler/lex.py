@@ -108,9 +108,8 @@ def generate_float_stack_dict(vm, flavor):
         A dictionary of (registers, register tokens)
     """
     registers = {}
-    print("line 111")
     for reg in vm.fp_stack_registers:
-        print(reg)
+
         registers[reg] = Register(reg, vm)
     return registers
 
@@ -127,7 +126,7 @@ def make_language_keys(vm, flavor):
     """
     language_keys = {}
     language_keys.update(keywords_to_tokens)
-    print("reg:",generate_reg_dict(vm, flavor))
+
     language_keys.update(generate_reg_dict(vm, flavor))
     if flavor == "mips_asm" or flavor == "mips_mml":
         from .MIPS.key_words import key_words
@@ -229,7 +228,12 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
     """
     analysis = []
     words = split_code(code, flavor)
-
+    print("WORDS",words)
+    for i in range(len(words)):  #fixes parsing error with negative floats
+        if words[i]=='-':
+            words[i+1]='-'+words[i+1]
+    words = [x for x in words if x!='-']
+    print("WORDS",words)
     data_type = None
     print("Lang",language_keys)
     for word in words:
@@ -263,10 +267,11 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
             # default is float (single precision) if user doesnt say
             if data_type != ".float" and data_type != ".double":
                 data_type = ".float"
-
+                print("FLOATTOKNO",word)
             if vm.base == "dec":
                 # TODO: Screen shot to give me the
                 # floating point token class from token.py
+                print("FLOATTOKVAL",word)
                 analysis.append(FloatTok(data_type=data_type, val=float(word)))
             else:   # hexadecimal
 

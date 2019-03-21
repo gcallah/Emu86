@@ -94,7 +94,7 @@ def number_token(token_line, pos, flavor, vm):
         Integer or address token, next positon to look at
     """
     if flavor == "intel":
-        print("flavored intel")
+
         return (token_line[pos], pos + 1)
     elif (pos + 1 < len(token_line) and
           isinstance(token_line[pos + 1], OpenParen)):
@@ -719,10 +719,7 @@ def get_op(token_line, pos, flavor, vm):
     elif isinstance(token_line[pos], NewSymbol):
         print(token_line[pos].get_nm())
 
-        # if token_line[pos].get_nm().upper() in vm.fp_stack_registers:  #is floating point register
-        #     print("in register")
-        #     print(token_line[pos].get_val())
-        #     reg = register_token(token_line, pos, flavor, vm)
+
         if token_line[pos].get_nm() in vm.labels:
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
         elif token_line[pos].get_nm() in vm.symbols:
@@ -751,17 +748,15 @@ def get_op_list(token_line, pos, flavor, vm, op_lst):
     Returns:
         A list of ops, next position
     """
-    print(token_line)
-    print("line 746")
+
     op, pos = get_op(token_line, pos, flavor, vm)
     op_lst.append(op)
-    print("getop")
     if pos >= len(token_line):
-        print("line 750")
+
 
         return op_lst, pos
     else:
-        print("LINE 753")
+
         next_op = token_line[pos]
         if isinstance(next_op, Comma):
             return get_op_list(token_line, pos + 1, flavor, vm, op_lst)
@@ -852,9 +847,8 @@ def parse(tok_lines, flavor, vm):
     mem_loc = 0
     ip_init = None
     for tokens in tok_lines:
-        print("1",tokens,'\n')
+
         if isinstance(tokens[0][TOKENS], Section):
-            print("2\n")
             if tokens[0][TOKENS].get_nm() == "data":
                 parse_data = True
                 parse_text = False
@@ -866,10 +860,10 @@ def parse(tok_lines, flavor, vm):
             else:
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
-            print("3\n")
+
             mem_loc = parse_data_token(tokens[0], vm, flavor, mem_loc)
         elif parse_text:
-            print("4\n")
+            
             vm.set_data_init("off")
 
             parsed_unit = parse_exec_unit(tokens[0], flavor, vm)

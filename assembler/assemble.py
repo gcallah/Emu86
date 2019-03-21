@@ -326,10 +326,9 @@ def assemble(code, flavor, vm, step=False):
     try:
 
         tok_lines = lex(code, flavor, vm)
-        print(tok_lines)
-        print("LINE 330")
+
         tok_lines = parse(tok_lines, flavor, vm)
-        print("toklines",tok_lines)
+
     except Error as err:
         return (last_instr, err.msg, bit_code)
 
