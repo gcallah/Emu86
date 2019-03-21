@@ -320,8 +320,19 @@ class RegAddress(Address):
 
 class Register(Location):
     def __init__(self, name, vm, val=0):
+        print("REG",name[:2],vm,val)
         super().__init__(name, vm, val)
-        self.registers = vm.registers
+        isFloat = False
+        if name[:2].upper()=='ST':
+            isFloat = True
+        if isFloat:
+            self.registers = vm.fp_stack_registers
+        # if FLOAT ==True:
+        #     self.registers = vm.fp_stack_registers
+        #     #self.val = self.registers[self.name]
+        #     print("registers changed")
+        else:
+            self.registers = vm.registers
         self.val = self.registers[self.name]
         self.writable = True
         self.multiplier = 1
@@ -332,7 +343,7 @@ class Register(Location):
         return str(self.name)
 
     def get_val(self):
-        if self.name[0] == "F":
+        if self.name[:2].upper() == "ST" or FLOAT:
             return float(self.registers[self.name])
         return int(self.registers[self.name])
 
@@ -376,6 +387,7 @@ class Label(Location):
 
 class NewSymbol(Token):
     def __init__(self, name, index=None):
+        print("newsymbol name", name)
         super().__init__(name)
 
 

@@ -40,8 +40,10 @@ class ErrorTestCase(TestCase):
 
     def test_unknown_name(self):
         intel_machine.base = "dec"
+
         (output, error, bit_code) = assemble("add fred, wilma",
                                              'intel', intel_machine)
+        
         self.assertTrue(error.startswith(UNKNOWN_NM))
 
     def test_reg_unwritable(self):

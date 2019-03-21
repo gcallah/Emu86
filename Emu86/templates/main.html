@@ -33,19 +33,19 @@
             <input type="hidden" name="button_type" value="{{ button_type }}" >
             <input type="hidden" name="mem_data" value="">
             <input type="hidden" name="base" value="{{ base }}">
-            
+
             {% if data_init == "on" %}
                 <br>
                 Set Data Memory:&ensp;
-                Location: <input type="text" id="memText"> 
+                Location: <input type="text" id="memText">
                 <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                Value:&ensp;&ensp;&ensp;<input type="text" id="valueText"> 
+                Value:&ensp;&ensp;&ensp;<input type="text" id="valueText">
                 <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                 Repeat:&ensp;&ensp;<input type="text" id="repeatText" value="1">
                 <input type="button" id="setMem" value="Set" onclick="AddMem()">
                 <br> <br>
             {% endif %}
-            Sample Programs: 
+            Sample Programs:
             <select id="sample" name="sample" onchange="selectSample()">
                 {% if sample == "none" %}
                     <option value="none" selected></option>
@@ -162,8 +162,8 @@
                                 title="Clear the contents of memory and the stack."
                                 id="clear-button"
                                 onclick="clearButton()"
-                                onmouseover="displayHelp(this.name)" 
-                                onmouseleave="hideHelp()" 
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
                                 {% endif %}>
@@ -172,7 +172,7 @@
                                 title="Execute all lines of code"
                                 id="run-button"
                                 onclick="runButton()"
-                                onmouseover="displayHelp(this.name)" 
+                                onmouseover="displayHelp(this.name)"
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
@@ -182,7 +182,7 @@
                                 title="Execute one instruction at a time."
                                 id="step-button"
                                 onclick="stepButton()"
-                                onmouseover="displayHelp(this.name)" 
+                                onmouseover="displayHelp(this.name)"
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
@@ -192,7 +192,7 @@
                                 id="save-button"
                                 title="Saves the code "
                                 onclick="Savecode()"
-                                onmouseover="displayHelp(this.name)" 
+                                onmouseover="displayHelp(this.name)"
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
@@ -202,7 +202,7 @@
                                 title="Demo code line by line."
                                 id="demo-button"
                                 onclick="demoButton()"
-                                onmouseover="displayHelp(this.name)" 
+                                onmouseover="displayHelp(this.name)"
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
@@ -212,7 +212,7 @@
                                 title="Pauses code."
                                 id="pause-button"
                                 onclick="pauseButton()"
-                                onmouseover="displayHelp(this.name)" 
+                                onmouseover="displayHelp(this.name)"
                                 onmouseleave="hideHelp()">
                             <br>
                             <div class="help-pop">
@@ -265,7 +265,7 @@
                                 {% else %}
                                     </tr> <tr class={{reg.0}}>
                                 {% endif %}
-                              
+
                                 {% if reg in unwritable %}
                                     <td id="unwritable">
                                 {% else %}
@@ -279,7 +279,7 @@
                                 {% else %}
                                     <td id="contents">
                                 {% endif %}
-                                
+
                                 {% if data_init == "on" %}
                                     <input
                                         {% if reg in unwritable %}
@@ -345,6 +345,7 @@
                                     </tr>
                                 </table>
                             </tr>
+
                             </table>
                         {% else %}
                             <!-- else there are F registers as well -->
@@ -390,7 +391,7 @@
                                 {% else %}
                                     </tr> <tr class="R">
                                 {% endif %}
-                              
+
                                 {% if reg in unwritable %}
                                     <td id="unwritable">
                                 {% else %}
@@ -404,7 +405,7 @@
                                 {% else %}
                                     <td id="contents">
                                 {% endif %}
-                                
+
                                 {% if data_init == "on" %}
                                     <input
                                         {% if reg in unwritable %}
@@ -456,7 +457,7 @@
                                 {% else %}
                                     </tr> <tr class="F">
                                 {% endif %}
-                              
+
                                 {% if reg in unwritable %}
                                     <td id="unwritable">
                                 {% else %}
@@ -470,7 +471,7 @@
                                 {% else %}
                                     <td id="contents">
                                 {% endif %}
-                                
+
                                 {% if data_init == "on" %}
                                     <input
                                         {% if reg in unwritable %}
@@ -538,14 +539,14 @@
                             </tr>
                             </table>
 
-                            
+
                         {% endif %}
                     </td>
                 </tr>
             </table>
             <hr>
             <br>
-            Last Instruction Executed: 
+            Last Instruction Executed:
             <input type="text" name="last_instr" max_length="64"
                 size="64" readonly="readonly" value="{{ last_instr }}">
             <br>
@@ -583,8 +584,8 @@
                     <div style="height:300px;overflow:auto;">
                         <table id="memory-table">
                             {% for addr, cont in memory.items %}
-                                <script> 
-                                    document.getElementsByName("mem_data")[0].value += "{{ addr }}:{{ cont }}, "; 
+                                <script>
+                                    document.getElementsByName("mem_data")[0].value += "{{ addr }}:{{ cont }}, ";
                                 </script>
                                 <tr>
                                     <td id="mem-loc" style="height:5px">
@@ -668,7 +669,51 @@
                     </div>
                     </td>
                 </tr>
-            
+
+            </table>
+            <table>
+                <tr>
+                    <th id="MemStack">
+                        <br>
+                            Floating Point Registers Stack:
+                        <br>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <table id="stack-table">
+                            {% for addrr, cont in floatingStack.items %}
+                                <tr>
+                                    <td id="mem-loc" style="height:5px">
+                                        {{ addrr }}
+                                    </td>
+                                    <td id="contents" style="height:5px">
+                                        {% if data_init == "on" %}
+                                            <input
+                                                id="mem-cont"
+                                                value="{{ cont }}"
+                                                name="{{ addrr }}"
+                                                size="5"
+                                            >
+                                        {% else %}
+                                            <input
+                                                id="mem-cont"
+                                                value="{{ cont }}"
+                                                name="{{ addrr }}"
+                                                size="5"
+                                                readonly="readonly"
+                                                style="background-color:#eff;"
+                                            >
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    </td>
+
+                </tr>
+
             </table>
         </form>
         <br>
@@ -710,7 +755,7 @@
             });
             elem.innerHTML = "View R Registers";
         }
-        
+
 
         function switchReg() {
             var elem = document.getElementById("viewReg");
@@ -729,7 +774,7 @@
                 elem.innerHTML = "View F Registers";
             } else {
                 document.getElementsByName('curr_reg')[0].value = "F";
-                
+
                 document.querySelectorAll('.R').forEach(function(button) {
                     button.style.display = "none";
                 });
