@@ -27,6 +27,8 @@ def convert_hex_to_decimal(fhex):
     if fhex[0]=='-':
         flag = -1
         fhex = fhex[1:]
+    if '.' not in fhex:
+        return int(fhex,16)
     before_point_hex, after_point_hex = fhex.split('.')
     before_point_dec, after_point_dec = 0, 0
     for i in range(len(before_point_hex)):
@@ -35,6 +37,7 @@ def convert_hex_to_decimal(fhex):
         after_point_dec += mapping[after_point_hex[i]]*(16**(-1*(i+1)))
     res =  '{}.{}'.format(str(before_point_dec),str(after_point_dec)[2:])
     return flag*float(res)
+
 
 
 def convert_dec_to_hex(fdec):
@@ -46,20 +49,24 @@ def convert_dec_to_hex(fdec):
     flag = 1
     if fdec < 0:
         flag = -1
-    fdec = flag*fdec
+    fdec = flag * fdec
     fdec = str(fdec)
+    if '.' not in fdec:
+        if flag == -1:
+            return '-' + hex(int(fdec))[2:]
+        else:
+            return hex(int(fdec))[2:]
     before_point_dec, after_point_dec = fdec.split('.')
     before_point_hex = hex(int(before_point_dec))[2:]
-    binary = convert_after_point_dec_to_binary('0.'+after_point_dec)
+    binary = convert_after_point_dec_to_binary('0.' + after_point_dec)
     after_point_hex = ''
-    for i in range(0,len(binary),4):
-        after_point_hex += convert_grouped_binary_to_hex(binary[i:i+4])
+    for i in range(0, len(binary), 4):
+        after_point_hex += convert_grouped_binary_to_hex(binary[i:i + 4])
     if flag == -1:
-        final_hex = '-'+before_point_hex+'.'+after_point_hex
+        final_hex = '-' + before_point_hex + '.' + after_point_hex
     elif flag == 1:
-        final_hex = before_point_hex+'.'+after_point_hex
+        final_hex = before_point_hex + '.' + after_point_hex
     return final_hex
-
 
 def convert_after_point_dec_to_binary(dec):
     a = float(dec)
@@ -91,6 +98,38 @@ def dec_convert(val):
     return val
 
 
+
+def floating_point_addition(num1,num2):
+    """
+    :param num1: floating point hexadecimal number in str format
+    :param num2: floating point hexadecimal number in str format
+    :return: hexadecimal equivalent of addition of num1 and num2 in str format
+    Eg:- 'a2.e' + '3f.b' -> 'e2.9'
+    """
+    num1_dec,num2_dec = convert_hex_to_decimal(num1),convert_hex_to_decimal(num2)
+    res = num1_dec+num2_dec
+    hex_equi = convert_dec_to_hex(res)
+    if '.' not in hex_equi:
+        hex_equi += '.0'
+    return hex_equi
+
+
+def floating_point_subtraction(num1,num2):
+    """
+    :param num1: floating point hexadecimal number in str format
+    :param num2: floating point hexadecimal number in str format
+    :return: hexadecimal equivalent of subtraction of num1 and num2 in str format
+    Eg:- 'a2.e' - '3f.b' -> '63.3'
+    """
+    num1_dec,num2_dec = convert_hex_to_decimal(num1),convert_hex_to_decimal(num2)
+    res = num1_dec-num2_dec
+    hex_equi = convert_dec_to_hex(res)
+    if '.' not in hex_equi:
+        hex_equi += '.0'
+    return hex_equi
+
+
+
 def two_op_arith(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
@@ -101,7 +140,7 @@ def two_op_arith(ops, vm, instr, operator):
     ops[0].set_val(
         checkflag(operator(ops[0].get_val(),
                            ops[1].get_val()), vm))
-
+    
     vm.changes.add(ops[0].get_nm())
 
 

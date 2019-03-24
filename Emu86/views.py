@@ -388,6 +388,7 @@ def main_page(request):
                        'registers': intel_machine.registers,
                        'memory': intel_machine.memory,
                        'stack': intel_machine.stack,
+                       'floatingStack': intel_machine.fp_stack_registers, 
                        'symbols': intel_machine.symbols,
                        'cstack': intel_machine.c_stack,
                        'flags': intel_machine.flags,

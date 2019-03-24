@@ -1,8 +1,2 @@
-setuptools==40.5.0
 Django==2.1.2
 django-extensions==2.1.2
-coverage==4.5.1
-django-autofixture==0.12.1
-selenium==3.14.1
-urllib3==1.23
-flake8==3.6.0

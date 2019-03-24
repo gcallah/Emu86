@@ -66,6 +66,7 @@ def minus_token(token_line, pos):
 
 def register_token(token_line, pos, flavor, vm):
     if flavor == "intel" or flavor == "att":
+
         return (token_line[pos], pos + 1)
     elif (pos + 1 < len(token_line) and
           isinstance(token_line[pos + 1], OpenParen)):
@@ -93,6 +94,7 @@ def number_token(token_line, pos, flavor, vm):
         Integer or address token, next positon to look at
     """
     if flavor == "intel":
+
         return (token_line[pos], pos + 1)
     elif (pos + 1 < len(token_line) and
           isinstance(token_line[pos + 1], OpenParen)):
@@ -694,6 +696,7 @@ def get_op(token_line, pos, flavor, vm):
 
 # Floating Point Token
     elif isinstance(token_line[pos], FloatTok):
+        print("floating point",token_line[pos].get_val())
         return token_line[pos], pos+1
 
 # Constant Token
@@ -714,6 +717,9 @@ def get_op(token_line, pos, flavor, vm):
 
 # Symbol/Label Token
     elif isinstance(token_line[pos], NewSymbol):
+        print(token_line[pos].get_nm())
+
+
         if token_line[pos].get_nm() in vm.labels:
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
         elif token_line[pos].get_nm() in vm.symbols:
@@ -742,12 +748,15 @@ def get_op_list(token_line, pos, flavor, vm, op_lst):
     Returns:
         A list of ops, next position
     """
+
     op, pos = get_op(token_line, pos, flavor, vm)
     op_lst.append(op)
-
     if pos >= len(token_line):
+
+
         return op_lst, pos
     else:
+
         next_op = token_line[pos]
         if isinstance(next_op, Comma):
             return get_op_list(token_line, pos + 1, flavor, vm, op_lst)
@@ -790,7 +799,7 @@ def parse_exec_unit(token_line, flavor, vm):
     pos = 0
     token_instruction = []
     op_lst = []
-
+    print("parse exec")
     # retrieve PC counter
     if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
         token_instruction.append(get_pc(token_line, pos))
@@ -798,6 +807,7 @@ def parse_exec_unit(token_line, flavor, vm):
 
     # retrieve instruction
     if not isinstance(token_line[pos], Instruction):
+        print("line 805")
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
     pos += 1
@@ -805,17 +815,21 @@ def parse_exec_unit(token_line, flavor, vm):
     # retrieve ops
     if pos < len(token_line):
         op_lst, pos = get_op_list(token_line, pos, flavor, vm, op_lst)
+        print("line 813")
     token_instruction.extend(op_lst)
-
+    print(token_instruction[1])
+    print("line 815")
     # switch ops if flavor is AT&T
     if flavor == 'att' and len(token_instruction) > 2:
         switch_vals = token_instruction[1], token_instruction[2]
         token_instruction[1] = switch_vals[1]
         token_instruction[2] = switch_vals[0]
+
     return token_instruction
 
 
 def parse(tok_lines, flavor, vm):
+    print("PARSING", tok_lines)
     """
     Parses the analysis obtained from lexical analysis
 
@@ -833,6 +847,7 @@ def parse(tok_lines, flavor, vm):
     mem_loc = 0
     ip_init = None
     for tokens in tok_lines:
+
         if isinstance(tokens[0][TOKENS], Section):
             if tokens[0][TOKENS].get_nm() == "data":
                 parse_data = True
@@ -845,11 +860,16 @@ def parse(tok_lines, flavor, vm):
             else:
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
+
             mem_loc = parse_data_token(tokens[0], vm, flavor, mem_loc)
         elif parse_text:
+            
             vm.set_data_init("off")
+
             parsed_unit = parse_exec_unit(tokens[0], flavor, vm)
+
             token_instrs.append((parsed_unit, tokens[1]))
+
             if (flavor == "mips_asm" or
                 flavor == "mips_mml" or
                     flavor == "riscv") and ip_init is None:
