@@ -119,7 +119,7 @@ def floating_point_subtraction(num1,num2):
     :param num1: floating point hexadecimal number in str format
     :param num2: floating point hexadecimal number in str format
     :return: hexadecimal equivalent of subtraction of num1 and num2 in str format
-    Eg:- 'a2.e' + '3f.b' -> '63.3'
+    Eg:- 'a2.e' - '3f.b' -> '63.3'
     """
     num1_dec,num2_dec = convert_hex_to_decimal(num1),convert_hex_to_decimal(num2)
     res = num1_dec-num2_dec
