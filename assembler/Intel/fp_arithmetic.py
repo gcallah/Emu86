@@ -106,12 +106,20 @@ def floating_point_addition(num1,num2):
     :return: hexadecimal equivalent of addition of num1 and num2 in str format
     Eg:- 'a2.e' + '3f.b' -> 'e2.9'
     """
-    num1_dec,num2_dec = convert_hex_to_decimal(num1),convert_hex_to_decimal(num2)
-    res = num1_dec+num2_dec
-    hex_equi = convert_dec_to_hex(res)
-    if '.' not in hex_equi:
-        hex_equi += '.0'
-    return hex_equi
+    flag1, flag2 = (num1[0] == '-'), (num2[0] == '-')
+    if flag1 and flag2:
+        return '-' + floating_point_addition(num1[1:], num2[1:])
+    elif flag1:
+        return floating_point_subtraction(num2, num1[1:])
+    elif flag2:
+        return floating_point_subtraction(num1, num2[1:])
+    elif not flag1 and not flag2:
+        num1_dec, num2_dec = convert_hex_to_decimal(num1), convert_hex_to_decimal(num2)
+        res = num1_dec + num2_dec
+        hex_equi = convert_dec_to_hex(res)
+        if '.' not in hex_equi:
+            hex_equi += '.0'
+        return hex_equi
 
 
 def floating_point_subtraction(num1,num2):
