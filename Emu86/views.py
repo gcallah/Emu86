@@ -293,7 +293,6 @@ def main_page(request):
                     riscv_machine.nxt_key = key
 
             if intel_machine.flavor is not None:
-                print(intel_machine.registers)
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
                 get_stack_contents(intel_machine.stack, request)
@@ -316,11 +315,9 @@ def main_page(request):
                 riscv_machine.start_ip = int(request.POST['start_ip'])
 
             if intel_machine.flavor in INTEL:
-                print("Intel flavor")
                 (last_instr, error, bit_code) = assemble(request.POST[CODE],
                                                          intel_machine.flavor,
                                                          intel_machine, step)
-                print((last_instr, error, bit_code))
             if mips_machine.flavor in MIPS:
                 (last_instr, error, bit_code) = assemble(request.POST[CODE],
                                                          mips_machine.flavor,
@@ -460,7 +457,6 @@ def get_reg_contents(registers, request):
                 else:
                     registers[reg] = request.POST[reg]
         else:
-            print("float", reg, registers[reg])
             registers[reg] = request.POST[reg]
 
 

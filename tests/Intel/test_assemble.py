@@ -55,8 +55,6 @@ class AssembleTestCase(TestCase):
             #     intel_machine.registers["EAX"] = a
             #     intel_machine.registers["FRB"] = b
             #     code = instr + " fra, frb"
-            #     print("assembled", assemble(code, 'intel', intel_machine))
-            #     print(intel_machine.registers["FRA"], correct)
             #     self.assertAlmostEqual(intel_machine.registers["FRA"], correct)
             #     """assert abs(intel_machine.registers["FRT"]-correct) < 0.00001,
             #     str(intel_machine.registers["FRT"]) + " does not equal "
@@ -146,9 +144,7 @@ class AssembleTestCase(TestCase):
                      #since the new value is in the destination register,
                      #compare correct to FRT
                 else:"""
-                print("about to be assembled")
                 assemble(instr + ' frb', 'intel', intel_machine)
-                print(intel_machine.registers["FRB"])
                 self.assertEqual(intel_machine.registers["FRB"], correct)
                 # since the new value has not been replaced
                 # (in source register), compare FRB to correct

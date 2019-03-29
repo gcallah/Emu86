@@ -353,7 +353,6 @@ def binaryMultiply(bin1, bin2):
 
 
 def mul(val1, val2):
-    print("vals", val1, val2)
     if abs(val2) > abs(val1):
         val1, val2 = val2, val1
     if val1 == 0 or val2 == 0:
@@ -374,7 +373,6 @@ def mul(val1, val2):
     productExponent += (len(productMantissa) - 105)
     IEEE = str(productSign)+" "+bin(productExponent)+" "+productMantissa[2:]
     returnVal = convertFromIEE(IEEE)
-    print("MULVAL", returnVal)
     return returnVal
 
 

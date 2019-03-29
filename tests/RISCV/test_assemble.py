@@ -197,8 +197,6 @@ class AssembleTestCase(TestCase):
             a = random.randint(0, 1048576)
             hex_string = hex(a).upper()
             correct = check_overflow(opfunc.lshift(a, 12), riscv_machine)
-            # print(a, hex(a))
-            # print("YO", correct)
             riscv_machine.base = "hex"
             assemble("40000 LUI X10, " + hex_string, 'riscv', riscv_machine)
             self.assertEqual(riscv_machine.registers["X10"], correct)
