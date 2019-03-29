@@ -94,6 +94,8 @@ def generate_reg_dict(vm, flavor):
         else:
             registers[reg] = Register(reg, vm)
     return registers
+
+
 def generate_float_stack_dict(vm, flavor):
     """
     Generates a dictionary
@@ -112,6 +114,7 @@ def generate_float_stack_dict(vm, flavor):
 
         registers[reg] = Register(reg, vm)
     return registers
+
 
 def make_language_keys(vm, flavor):
     """

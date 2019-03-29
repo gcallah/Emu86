@@ -18,7 +18,8 @@ from unittest import TestCase, main
 from assembler.tokens import MAX_INT, MIN_INT, BITS
 from assembler.virtual_machine import intel_machine, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
-from assembler.Intel.fp_arithmetic import convert_hex_to_decimal, convert_dec_to_hex
+from assembler.Intel.fp_arithmetic import convert_hex_to_decimal
+from assembler.Intel.fp_arithmetic import convert_dec_to_hex
 # from assembler.Intel.math_operations import Mathops
 
 NUM_TESTS = 100
@@ -42,7 +43,6 @@ class AssembleTestCase(TestCase):
     def two_op_test(self, operator, instr, low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST, op_type=INT,
                     first_val=INT, second_val=INT):
-
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
