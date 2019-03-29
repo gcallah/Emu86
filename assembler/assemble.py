@@ -289,7 +289,6 @@ def exec(tok_lines, flavor, vm, last_instr):
 
 
 def assemble(code, flavor, vm, step=False):
-    print("assembling")
 
     """
         Assembles and runs code.

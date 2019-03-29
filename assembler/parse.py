@@ -696,7 +696,6 @@ def get_op(token_line, pos, flavor, vm):
 
 # Floating Point Token
     elif isinstance(token_line[pos], FloatTok):
-        print("floating point",token_line[pos].get_val())
         return token_line[pos], pos+1
 
 # Constant Token
@@ -717,7 +716,6 @@ def get_op(token_line, pos, flavor, vm):
 
 # Symbol/Label Token
     elif isinstance(token_line[pos], NewSymbol):
-        print(token_line[pos].get_nm())
 
 
         if token_line[pos].get_nm() in vm.labels:
@@ -799,7 +797,6 @@ def parse_exec_unit(token_line, flavor, vm):
     pos = 0
     token_instruction = []
     op_lst = []
-    print("parse exec")
     # retrieve PC counter
     if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
         token_instruction.append(get_pc(token_line, pos))
@@ -815,10 +812,7 @@ def parse_exec_unit(token_line, flavor, vm):
     # retrieve ops
     if pos < len(token_line):
         op_lst, pos = get_op_list(token_line, pos, flavor, vm, op_lst)
-        print("line 813")
     token_instruction.extend(op_lst)
-    print(token_instruction[1])
-    print("line 815")
     # switch ops if flavor is AT&T
     if flavor == 'att' and len(token_instruction) > 2:
         switch_vals = token_instruction[1], token_instruction[2]
@@ -829,7 +823,6 @@ def parse_exec_unit(token_line, flavor, vm):
 
 
 def parse(tok_lines, flavor, vm):
-    print("PARSING", tok_lines)
     """
     Parses the analysis obtained from lexical analysis
 

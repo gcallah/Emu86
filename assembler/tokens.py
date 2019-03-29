@@ -342,7 +342,7 @@ class Register(Location):
         return str(self.name)
 
     def get_val(self):
-        if self.name[:2].upper() == "ST":
+        if self.name[:2].upper() == "ST" or self.name[0].upper() == "F":
             return float(self.registers[self.name])
         return int(self.registers[self.name])
 

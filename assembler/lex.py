@@ -139,7 +139,7 @@ def make_language_keys(vm, flavor):
         from .Intel.key_words import instructions
         language_keys.update(instructions)
         if flavor == "intel":
-            language_keys.update(generate_float_stack_dict(vm, flavor))
+            # language_keys.update(generate_float_stack_dict(vm, flavor))
             from .Intel.key_words import intel_key_words
             language_keys.update(intel_key_words)
         else:
@@ -228,14 +228,11 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
     """
     analysis = []
     words = split_code(code, flavor)
-    print("WORDS",words)
-    for i in range(len(words)):  #fixes parsing error with negative floats
-        if words[i]=='-':
-            words[i+1]='-'+words[i+1]
-    words = [x for x in words if x!='-']
-    print("WORDS",words)
+    # for i in range(len(words)):  #fixes parsing error with negative floats
+    #     if words[i]=='-':
+    #         words[i+1]='-'+words[i+1]
+    # words = [x for x in words if x!='-']
     data_type = None
-    print("Lang",language_keys)
     for word in words:
         # keyword:
         if word.upper() in language_keys:
@@ -267,11 +264,9 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
             # default is float (single precision) if user doesnt say
             if data_type != ".float" and data_type != ".double":
                 data_type = ".float"
-                print("FLOATTOKNO",word)
             if vm.base == "dec":
                 # TODO: Screen shot to give me the
                 # floating point token class from token.py
-                print("FLOATTOKVAL",word)
                 analysis.append(FloatTok(data_type=data_type, val=float(word)))
             else:   # hexadecimal
 
@@ -381,13 +376,11 @@ def lex(code, flavor, vm):
     # we've stripped extra whitespace, comments, and labels:
     # now perform lexical analysis
     for line in pre_processed_lines:
-        print("3",line)
         # create language-specific dictionary:
         language_keys = make_language_keys(vm, flavor)
         if flavor == "mips_mml":
             tok_lines.append(sep_line_mml(line, i, vm, language_keys))
         else:
-            print("lex line 364")
             tok_lines.append(sep_line(line, i, flavor, data_sec,
                                       vm, language_keys))
         if line == ".data":
