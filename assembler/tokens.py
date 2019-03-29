@@ -322,7 +322,7 @@ class Register(Location):
     def __init__(self, name, vm, val=0):
         super().__init__(name, vm, val)
         isFloat = False
-        if name[:2].upper()=='ST':
+        if name[:2].upper() == 'ST':
             isFloat = True
         if isFloat:
             self.registers = vm.fp_stack_registers

@@ -43,7 +43,6 @@ class ErrorTestCase(TestCase):
 
         (output, error, bit_code) = assemble("add fred, wilma",
                                              'intel', intel_machine)
-        
         self.assertTrue(error.startswith(UNKNOWN_NM))
 
     def test_reg_unwritable(self):

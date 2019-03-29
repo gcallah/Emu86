@@ -10,7 +10,6 @@ from .arithmetic import checkflag
 from .fp_conversions import add, sub, mul, div, fabs, chs
 
 
-
 def convert_hex_to_decimal(fhex):
     """
     :param fhex: floating point hexadecimal number in str format
@@ -19,25 +18,25 @@ def convert_hex_to_decimal(fhex):
     """
     mapping = {}
     for i in range(10):
-        mapping[str(i)]=i
-    for i in range(10,16):
-        mapping[chr(i-10+97)]=i
+        mapping[str(i)] = i
+    for i in range(10, 16):
+        mapping[chr(i-10+97)] = i
 
     flag = 1
-    if fhex[0]=='-':
+    if fhex[0] == '-':
         flag = -1
         fhex = fhex[1:]
     if '.' not in fhex:
-        return int(fhex,16)
+        return int(fhex, 16)
     before_point_hex, after_point_hex = fhex.split('.')
     before_point_dec, after_point_dec = 0, 0
     for i in range(len(before_point_hex)):
-        before_point_dec += mapping[before_point_hex[i]]*(16**(len(before_point_hex)-i-1))
+        map_before_pt_hex = mapping[before_point_hex[i]]
+        before_point_dec += map_before_pt_hex*(16**(len(before_point_hex)-i-1))
     for i in range(len(after_point_hex)):
         after_point_dec += mapping[after_point_hex[i]]*(16**(-1*(i+1)))
-    res =  '{}.{}'.format(str(before_point_dec),str(after_point_dec)[2:])
+    res = '{}.{}'.format(str(before_point_dec), str(after_point_dec)[2:])
     return flag*float(res)
-
 
 
 def convert_dec_to_hex(fdec):
@@ -68,28 +67,28 @@ def convert_dec_to_hex(fdec):
         final_hex = before_point_hex + '.' + after_point_hex
     return final_hex
 
+
 def convert_after_point_dec_to_binary(dec):
     a = float(dec)
     binary = ''
-    while a>0.0:
+    while a > 0.0:
         a = a*2
         binary += str(int(a))
-        if a>=1:
+        if a >= 1:
             a -= 1
     return binary
+
 
 def convert_grouped_binary_to_hex(binary):
     mapping = {}
     for i in range(10):
-        mapping[i]=str(i)
-    for i in range(10,16):
-        mapping[i]=chr(i-10+97)
+        mapping[i] = str(i)
+    for i in range(10, 16):
+        mapping[i] = chr(i-10+97)
     binary = binary+'0'*(4-len(binary))
-    integer = int(binary,2)
+    integer = int(binary, 2)
     hexequi = mapping[integer]
     return hexequi
-
-
 
 
 def dec_convert(val):
@@ -98,8 +97,7 @@ def dec_convert(val):
     return val
 
 
-
-def floating_point_addition(num1,num2):
+def floating_point_addition(num1, num2):
     """
     :param num1: floating point hexadecimal number in str format
     :param num2: floating point hexadecimal number in str format
@@ -114,7 +112,8 @@ def floating_point_addition(num1,num2):
     elif flag2:
         return floating_point_subtraction(num1, num2[1:])
     elif not flag1 and not flag2:
-        num1_dec, num2_dec = convert_hex_to_decimal(num1), convert_hex_to_decimal(num2)
+        num1_dec = convert_hex_to_decimal(num1)
+        num2_dec = convert_hex_to_decimal(num2)
         res = num1_dec + num2_dec
         hex_equi = convert_dec_to_hex(res)
         if '.' not in hex_equi:
@@ -122,11 +121,12 @@ def floating_point_addition(num1,num2):
         return hex_equi
 
 
-def floating_point_subtraction(num1,num2):
+def floating_point_subtraction(num1, num2):
     """
     :param num1: floating point hexadecimal number in str format
     :param num2: floating point hexadecimal number in str format
-    :return: hexadecimal equivalent of subtraction of num1 and num2 in str format
+    :return: hexadecimal equivalent of subtraction
+     of num1 and num2 in str format
     Eg:- 'a2.e' - '3f.b' -> '63.3'
     """
     flag1, flag2 = (num1[0] == '-'), (num2[0] == '-')
@@ -137,7 +137,8 @@ def floating_point_subtraction(num1,num2):
     elif flag2:
         return floating_point_addition(num1, num2[1:])
     else:
-        num1_dec, num2_dec = convert_hex_to_decimal(num1), convert_hex_to_decimal(num2)
+        num1_dec = convert_hex_to_decimal(num1)
+        num2_dec = convert_hex_to_decimal(num2)
         res = num1_dec - num2_dec
         hex_equi = convert_dec_to_hex(res)
         if '.' not in hex_equi:
@@ -151,11 +152,9 @@ def two_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 2)
-
     ops[0].set_val(
         checkflag(operator(ops[0].get_val(),
                            ops[1].get_val()), vm))
-    
     vm.changes.add(ops[0].get_nm())
 
 

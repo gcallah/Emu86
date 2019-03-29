@@ -696,7 +696,7 @@ def get_op(token_line, pos, flavor, vm):
 
 # Floating Point Token
     elif isinstance(token_line[pos], FloatTok):
-        print("floating point",token_line[pos].get_val())
+        print("floating point", token_line[pos].get_val())
         return token_line[pos], pos+1
 
 # Constant Token
@@ -718,8 +718,6 @@ def get_op(token_line, pos, flavor, vm):
 # Symbol/Label Token
     elif isinstance(token_line[pos], NewSymbol):
         print(token_line[pos].get_nm())
-
-
         if token_line[pos].get_nm() in vm.labels:
             return (Label(token_line[pos].get_nm(), vm), pos + 1)
         elif token_line[pos].get_nm() in vm.symbols:
@@ -748,12 +746,9 @@ def get_op_list(token_line, pos, flavor, vm, op_lst):
     Returns:
         A list of ops, next position
     """
-
     op, pos = get_op(token_line, pos, flavor, vm)
     op_lst.append(op)
     if pos >= len(token_line):
-
-
         return op_lst, pos
     else:
 
@@ -863,13 +858,9 @@ def parse(tok_lines, flavor, vm):
 
             mem_loc = parse_data_token(tokens[0], vm, flavor, mem_loc)
         elif parse_text:
-            
             vm.set_data_init("off")
-
             parsed_unit = parse_exec_unit(tokens[0], flavor, vm)
-
             token_instrs.append((parsed_unit, tokens[1]))
-
             if (flavor == "mips_asm" or
                 flavor == "mips_mml" or
                     flavor == "riscv") and ip_init is None:

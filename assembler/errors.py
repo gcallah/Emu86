@@ -1,3 +1,5 @@
+import re
+
 """
 Possible assembler errors.
 """
@@ -264,5 +266,6 @@ def check_num_args(instr, ops, correct_num, type_ins=0):
                               ops[i].get_val() < INT_MIN):
             raise IntOutOfRng(instr)
 
+
 def is_notvalidstring(instr):
-    match = re.match("^(\d{0,3})\.(\d{0,3})\.(\d{0,3})\.(\d{0,3})$", instr)
+    match = re.match("^(\d{0,3})\.(\d{0,3})\.(\d{0,3})\.(\d{0,3})$", instr) # noqa!

@@ -94,6 +94,8 @@ def generate_reg_dict(vm, flavor):
         else:
             registers[reg] = Register(reg, vm)
     return registers
+
+
 def generate_float_stack_dict(vm, flavor):
     """
     Generates a dictionary
@@ -112,6 +114,7 @@ def generate_float_stack_dict(vm, flavor):
 
         registers[reg] = Register(reg, vm)
     return registers
+
 
 def make_language_keys(vm, flavor):
     """
@@ -228,14 +231,14 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
     """
     analysis = []
     words = split_code(code, flavor)
-    print("WORDS",words)
-    for i in range(len(words)):  #fixes parsing error with negative floats
-        if words[i]=='-':
-            words[i+1]='-'+words[i+1]
-    words = [x for x in words if x!='-']
-    print("WORDS",words)
+    print("WORDS", words)
+    for i in range(len(words)):  # fixes parsing error with negative floats
+        if words[i] == '-':
+            words[i+1] = '-'+words[i+1]
+    words = [x for x in words if x != '-']
+    print("WORDS", words)
     data_type = None
-    print("Lang",language_keys)
+    print("Lang", language_keys)
     for word in words:
         # keyword:
         if word.upper() in language_keys:
@@ -267,11 +270,11 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
             # default is float (single precision) if user doesnt say
             if data_type != ".float" and data_type != ".double":
                 data_type = ".float"
-                print("FLOATTOKNO",word)
+                print("FLOATTOKNO", word)
             if vm.base == "dec":
                 # TODO: Screen shot to give me the
                 # floating point token class from token.py
-                print("FLOATTOKVAL",word)
+                print("FLOATTOKVAL", word)
                 analysis.append(FloatTok(data_type=data_type, val=float(word)))
             else:   # hexadecimal
 
@@ -381,7 +384,7 @@ def lex(code, flavor, vm):
     # we've stripped extra whitespace, comments, and labels:
     # now perform lexical analysis
     for line in pre_processed_lines:
-        print("3",line)
+        print("3", line)
         # create language-specific dictionary:
         language_keys = make_language_keys(vm, flavor)
         if flavor == "mips_mml":
