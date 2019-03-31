@@ -386,7 +386,6 @@ class Label(Location):
 
 class NewSymbol(Token):
     def __init__(self, name, index=None):
-        print("newsymbol name", name)
         super().__init__(name)
 
 
