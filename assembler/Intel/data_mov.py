@@ -19,8 +19,11 @@ class Fld(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
-        if isinstance(ops[0], FloatTok):
-            vm.add_to_Float_Stack(ops[0].get_val())
+        # if isinstance(ops[0], FloatTok):
+        #     vm.add_to_Float_Stack(ops[0].get_val())
+        vm.add_to_Float_Stack(ops[0].get_val())
+        for i in range(8):
+            vm.changes.add('ST'+str(i))
 
 
 class Mov(Instruction):
