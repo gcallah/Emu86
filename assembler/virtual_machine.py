@@ -449,7 +449,6 @@ class WASMMachine():
             self.stack[hex(i).split('x')[-1].upper()] = 0
 
 
-
 intel_machine = IntelMachine()
 mips_machine = MIPSMachine()
 riscv_machine = RISCVMachine()
