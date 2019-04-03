@@ -424,6 +424,33 @@ class RISCVMachine(VirtualMachine):
         return int(self.registers[STACK_PTR_RISCV])
 
 
+class WASMMachine():
+    def __init__(self):
+        self.locals = OrderedDict()
+        self.locals_init()
+
+        self.globals = OrderedDict()
+        self.globals_init()
+
+        self.stack = OrderedDict()
+        self.stack_init()
+
+        self.flavor = None
+        self.base = None
+
+    def locals_init(self):
+        self.locals.clear()
+
+    def globals_init(self):
+        self.globals.clear()
+
+    def stack_init(self):
+        for i in range(STACK_TOP - 3, STACK_BOTTOM - 1, -4):
+            self.stack[hex(i).split('x')[-1].upper()] = 0
+
+
+
 intel_machine = IntelMachine()
 mips_machine = MIPSMachine()
 riscv_machine = RISCVMachine()
+wasm_machine = WASMMachine()
