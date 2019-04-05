@@ -138,6 +138,9 @@ def make_language_keys(vm, flavor):
     elif flavor == "riscv":
         from .RISCV.key_words import key_words
         language_keys.update(key_words)
+    elif flavor == 'wasm':
+        from .WASM.key_words import key_words
+        language_keys.update(key_words)
     else:
         from .Intel.key_words import instructions
         language_keys.update(instructions)
@@ -260,7 +263,6 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                     else:
                         vm.labels[word[:-1]] = i
         elif re.match(sym_match, word) is not None:
-
             analysis.append(NewSymbol(word, vm))
         # Floating Points
         elif re.match(fp_match, word) is not None:
@@ -342,6 +344,46 @@ def sep_line_mml(code, i, vm, language_keys):
     return (analysis, code)
 
 
+def sep_line_wasm(code, i, vm, language_keys):
+    """
+    Returns a list of tokens created
+
+    Args:
+        code: Line of code
+        i: Line number of code
+           Needed for determining label location
+        flavor: AT&T or MIPS
+        data_sec: Boolean, determines if we are in the data section
+                  Needed to differentiate between label and symbol
+        vm: Virtual machine
+        key_words: Dictionary of key words for the flavor
+
+    Returns:
+        Tuple of the lexical analysis of the line
+        The first member is the tokens and the second is the
+        text of the code.
+    """
+    analysis = []
+    words = split_code(code, vm.flavor)
+
+    for word in words:
+        # keyword
+        if word.upper() in language_keys:
+            analysis.append(language_keys[word.upper()])
+        # variable symbol
+        elif re.match(sym_match, word) is not None:
+            analysis.append(NewSymbol(word, vm))
+    # Integers
+        else:
+            try:
+                analysis.append(IntegerTok(int(word)))
+            except IntOutOfRng:
+                raise IntOutOfRng(word)
+            except Exception:
+                raise InvalidArgument(word)
+    return (analysis, code)
+
+
 def lex(code, flavor, vm):
     """
     Lexical phase: tokenizes the code.
@@ -383,6 +425,8 @@ def lex(code, flavor, vm):
         language_keys = make_language_keys(vm, flavor)
         if flavor == "mips_mml":
             tok_lines.append(sep_line_mml(line, i, vm, language_keys))
+        elif flavor == "wasm":
+            tok_lines.append(sep_line_wasm(line, i, vm, language_keys))
         else:
             tok_lines.append(sep_line(line, i, flavor, data_sec,
                                       vm, language_keys))
