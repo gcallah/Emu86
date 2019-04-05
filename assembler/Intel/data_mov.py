@@ -21,10 +21,8 @@ class Fld(Instruction):
         check_num_args(self.get_nm(), ops, 1)
         # TODO: Validate token to check if it is a float value.
         # if isinstance(ops[0], FloatTok):
-        vm.add_to_Float_Stack(ops[0].get_val())
-        # refresh every value offset by the stack push
-        for i in range(8):
-            vm.changes.add('ST'+str(i))
+        vm.push_to_Float_Stack(ops[0].get_val())
+
 
 
 class Mov(Instruction):
