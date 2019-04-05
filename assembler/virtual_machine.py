@@ -13,7 +13,7 @@ STACK_TOP = (MEM_SIZE * 2) - 1
 STACK_BOTTOM = MEM_SIZE
 # STACK_TOP = MEM_SIZE - 1
 # STACK_BOTTOM = 0
-FLOAT_STACK_LIMIT = 7
+FLOAT_STACK_LIMIT = 8
 EMPTY_CELL = 0
 INSTR_PTR_INTEL = "EIP"
 INSTR_PTR_MIPS = "PC"
@@ -164,6 +164,11 @@ class IntelMachine(VirtualMachine):
         self.fp_stack_registers["R"+str(next_register)] = val
         self.refresh_FP_Stack()
 
+    def pop_from_Float_Stack(self):
+        prev_register = self.get_prev_register()
+        self.fp_stack_registers["R"+str(prev_register)] = 0.0
+        self.refresh_FP_Stack()
+
     def refresh_FP_Stack(self):
         for i in range(8):
             self.changes.add('ST'+str(i))
@@ -172,8 +177,13 @@ class IntelMachine(VirtualMachine):
         next_register = self.float_stack_top
         self.float_stack_top = self.float_stack_top - 1
         if self.float_stack_top == -1:
-            self.float_stack_top = FLOAT_STACK_LIMIT
+            self.float_stack_top = FLOAT_STACK_LIMIT - 1
         return next_register
+
+    def get_prev_register(self):
+        prev_register = self.float_stack_top
+        self.float_stack_top = (self.float_stack_top + 1)%FLOAT_STACK_LIMIT
+        return prev_register
 
     def reset_FP_Stack(self):
         for i in range(len(self.fp_stack_registers)):
