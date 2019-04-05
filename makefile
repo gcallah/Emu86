@@ -8,6 +8,7 @@ SDIR = assembler
 INTEL_DIR = $(SDIR)/Intel
 MIPS_DIR = $(SDIR)/MIPS
 RISCV_DIR = $(SDIR)/RISCV
+WASM_DIR = $(SDIR)/WASM
 EMUDIR = Emu86
 ODIR = $(EMUDIR)/templates
 MUDIR = myutils
@@ -30,6 +31,7 @@ PYTHONFILES += $(INTEL_DIR)/*.py
 PYTHONFILES += $(MIPS_DIR)/*.py
 PYTHONFILES += $(TDIR)/*/*.py
 PYTHONFILES += $(RISCV_DIR)/*.py
+PYTHONFILES += $(WASM_DIR)/*.py
 PYTHONFILES += $(shell ls selenium_tests/*.py)
 PYTHONFILES += *.py
 
