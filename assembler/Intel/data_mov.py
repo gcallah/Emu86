@@ -24,7 +24,6 @@ class Fld(Instruction):
         vm.push_to_Float_Stack(ops[0].get_val())
 
 
-
 class Mov(Instruction):
     """
         <instr>
