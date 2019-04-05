@@ -13,9 +13,6 @@ def two_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 2)
-    ops[0].set_val(
-        checkflag(operator(ops[0].get_val(),
-                           ops[1].get_val()), vm))
     vm.changes.add(ops[0].get_nm())
 
 
