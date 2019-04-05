@@ -36,7 +36,7 @@ class Add(Instruction):
              .add
         </instr>
         <syntax>
-            get_local $lhs 
+            get_local $lhs
             get_local $rhs
             i32.add
         </syntax>
