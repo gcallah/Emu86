@@ -173,7 +173,7 @@ class IntelMachine(VirtualMachine):
 
     def refresh_FP_Stack(self):
         for i in range(8):
-            self.changes.add('ST'+str(i))
+            self.changes.add('R'+str(i))
 
     def get_next_register(self):
         next_register = self.float_stack_top
