@@ -165,9 +165,11 @@ class IntelMachine(VirtualMachine):
         self.refresh_FP_Stack()
 
     def pop_from_Float_Stack(self):
+        curr_value_float_stack_top = self.fp_stack_registers["R"+str((self.float_stack_top+1)%FLOAT_STACK_LIMIT)]
         prev_register = self.get_prev_register()
         self.fp_stack_registers["R"+str(prev_register)] = 0.0
         self.refresh_FP_Stack()
+        return curr_value_float_stack_top
 
     def refresh_FP_Stack(self):
         for i in range(8):

@@ -158,6 +158,17 @@ def two_op_arith(ops, vm, instr, operator):
     vm.changes.add(ops[0].get_nm())
 
 
+def one_op_arith(ops, vm, instr, operator):
+    """
+        operator: this is the functional version of Python's
+            +, -, *, etc.
+    """
+
+    val_float_stack_top = vm.pop_from_Float_Stack()
+    vm.push_to_Float_Stack(operator(val_float_stack_top,ops[0].get_val()))
+
+
+
 class FAdd(Instruction):
     """
     sets sum  of floating-point register (FPR) FRA and
@@ -170,8 +181,9 @@ class FAdd(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, add)
+        # two_op_arith(ops, vm, self.name, add)
 
+        one_op_arith(ops,vm,self.name,add)
 
 class FSub(Instruction):
     """
@@ -186,7 +198,8 @@ class FSub(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, sub)
+        # two_op_arith(ops, vm, self.name, sub)
+        one_op_arith(ops, vm, self.name, sub)
 
 
 class FMul(Instruction):
