@@ -188,6 +188,7 @@ class IntelMachine(VirtualMachine):
         return self.float_stack_top
 
     def reset_FP_Stack(self):
+        self.float_stack_top = FLOAT_STACK_LIMIT
         for i in range(len(self.fp_stack_registers)):
             self.fp_stack_registers["R"+str(i)] = 0.0
 
