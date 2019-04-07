@@ -451,6 +451,8 @@ ul.messagelist {
     margin: 0;
 }
 
+
+
 ul.messagelist li {
     display: block;
     font-weight: 400;
@@ -815,6 +817,7 @@ a.deletelink:focus, a.deletelink:hover {
     border: 1px solid #003366;
 }
 
+
 #step-button {
     margin: 10px 5px 20px 5px;
     font-size: 13px;
@@ -856,6 +859,10 @@ td#flag, td#register, td#mem-loc {
     vertical-align: middle
 }
 
+td#float-cell {
+    background: #dde;
+}
+
 td#unwritable {
     color: #ffc;
     background: #936;
@@ -883,6 +890,8 @@ td#form-cell {
 td#registers-cell {
     background: #edd;
 }
+
+
 
 #user-tools {
     float: right;
@@ -1026,4 +1035,3 @@ summary.menu_sum {
     color: #639;
     margin: .5em 0em .5em 0em;
 }
-
