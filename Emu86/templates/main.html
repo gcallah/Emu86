@@ -152,7 +152,7 @@
             {% endif %}
             <br>
             <table>
-                <tr>
+                <tr colspan = "3">
                     <td id="form-cell">
                             {% csrf_token %}
                             {{ form.as_p }}
@@ -221,6 +221,42 @@
                             </div>
                             <br>
                     </td>
+
+
+                        <td>
+
+                            <table id="stack-table">
+                                {% for reg, cont in floatingStack.items %}
+                                    <tr>
+                                        <td id="mem-loc" style="height:5px">
+                                            {{ reg }}
+                                        </td>
+
+                                        <td id="contents" style="height:5px">
+                                            {% if data_init == "on" %}
+                                                <input
+                                                    id="mem-cont"
+                                                    value="{{ cont }}"
+                                                    name="{{ reg }}"
+                                                    size="14"
+                                                >
+                                            {% else %}
+                                                <input
+                                                    id="mem-cont"
+                                                    value="{{ cont }}"
+                                                    name="{{ reg }}"
+                                                    size="14"
+                                                    readonly="readonly"
+                                                    style="background-color:#eff;"
+                                                >
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        </td>
+
                     <td id="registers-cell">
                         {% if registers.items|length < 67 %}
                             <table id="registers-table">
@@ -436,6 +472,7 @@
                                     onclick=convert(name,value)>
                                 {% endif %}
                                 </td>
+
                             {% endfor %}
                             </tr>
                             <tr>
@@ -537,17 +574,21 @@
                                     </tr>
                                 </table>
                             </tr>
+
                             </table>
 
 
                         {% endif %}
                     </td>
+
                 </tr>
-            </table>
+
+              </table>
+
             <hr>
             <br>
             Last Instruction Executed:
-            <input type="text" name="last_instr" max_length="64"
+             <input type="text" name="last_instr" max_length="64"
                 size="64" readonly="readonly" value="{{ last_instr }}">
             <br>
             <br>
@@ -671,7 +712,7 @@
                 </tr>
 
             </table>
-            <table style="margin-top:-355px;margin-left:360px;">
+            <!-- <table style="margin-top:-355px;margin-left:360px;">
                 <tr>
                     <th id="FloatStack">
                         <br>
@@ -714,7 +755,7 @@
 
                 </tr>
 
-            </table>
+            </table> -->
         </form>
         <br>
 
