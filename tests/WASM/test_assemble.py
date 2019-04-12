@@ -40,10 +40,10 @@ class AssembleTestCase(TestCase):
             b = random.randint(low2, high2)
             correct = operator(a, b)
             sp = wasm_machine.get_sp()
-            wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
+            wasm_machine.stack[hex(sp).split('x')[-1].upper()] = b
             wasm_machine.inc_sp()
             sp = wasm_machine.get_sp()
-            wasm_machine.stack[hex(sp).split('x')[-1].upper()] = b
+            wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
             wasm_machine.base = "dec"
             assemble(instr, 'wasm', wasm_machine)
             sp = wasm_machine.get_sp()
@@ -52,11 +52,11 @@ class AssembleTestCase(TestCase):
     def test_add(self):
         self.two_op_test(opfunc.add, "i32.add")
 
-    # def test_sub(self):
-    #     self.two_op_test(opfunc.add, "i32.sub")
+    def test_sub(self):
+        self.two_op_test(opfunc.sub, "i32.sub")
 
-    # def test_mul(self):
-    #     self.two_op_test(opfunc.add, "i32.mul")
+    def test_mul(self):
+        self.two_op_test(opfunc.mul, "i32.mul")
 
 if __name__ == '__main__':
     main()
