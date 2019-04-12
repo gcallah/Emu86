@@ -12,8 +12,13 @@ def two_op_arith(ops, vm, instr, operator):
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 2)
-    vm.changes.add(ops[0].get_nm())
+    sp = vm.get_sp()
+    val_one = vm.stack[hex(sp).split('x')[-1].upper()]
+    vm.stack[hex(sp).split('x')[-1].upper()] = 0
+    vm.dec_sp()
+    sp = vm.get_sp()
+    val_two = vm.stack[hex(sp).split('x')[-1].upper()]
+    vm.stack[hex(sp).split('x')[-1].upper()] = operator(val_one, val_two)
 
 
 def check_overflow(val, vm):

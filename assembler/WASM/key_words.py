@@ -7,11 +7,11 @@ key_words = {
     'i32': DataType('i32'),
 
     # arithmetic
-    '.add': Add('.add'),
-    '.sub': Sub('.sub'),
-    '.mul': Mul('.mul'),
-    '.div_s': Div_S('.div_s'),
-    '.div_u': Div_U('.div_u'),
+    'i32.add': Add('.add'),
+    'i32.sub': Sub('.sub'),
+    'i32.mul': Mul('.mul'),
+    'i32.div_s': Div_S('.div_s'),
+    'i32.div_u': Div_U('.div_u'),
     'global.get': Global_mov('global.get'),
     'local.get': Local_mov('local.get'),
     'global': Store_global('global'),

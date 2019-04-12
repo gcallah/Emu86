@@ -460,6 +460,12 @@ class WASMMachine():
         self.flavor = None
         self.base = None
 
+        self.stack_ptr = STACK_BOTTOM
+        self.data_init = "on"
+        self.debug = ""
+        self.ip = 0
+        self.start_ip = 0
+
     def locals_init(self):
         self.locals.clear()
 
@@ -469,6 +475,41 @@ class WASMMachine():
     def stack_init(self):
         for i in range(STACK_TOP - 3, STACK_BOTTOM - 1, -4):
             self.stack[hex(i).split('x')[-1].upper()] = 0
+
+    def inc_sp(self):
+        sp = self.get_sp()
+        sp += 4
+        self.set_sp(sp)
+
+    def dec_sp(self):
+        sp = self.get_sp()
+        sp -= 4
+        self.set_sp(sp)
+
+    def set_sp(self, val):
+        if val < STACK_BOTTOM - 1:
+            raise StackOverflow()
+        if val > STACK_TOP:
+            raise StackUnderflow()
+
+        self.stack_ptr = val
+
+    def get_sp(self):
+        return self.stack_ptr
+
+    def set_data_init(self, on_or_off):
+        self.data_init = on_or_off
+
+    def inc_ip(self):
+        ip = self.get_ip()
+        ip += 1
+        self.set_ip(ip)
+
+    def set_ip(self, val):
+        self.ip = val
+
+    def get_ip(self):
+        return self.ip
 
 
 intel_machine = IntelMachine()

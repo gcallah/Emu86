@@ -88,11 +88,12 @@ def generate_reg_dict(vm, flavor):
         A dictionary of (registers, register tokens)
     """
     registers = {}
-    for reg in vm.registers:
-        if flavor == "att":
-            registers["%" + reg] = Register(reg, vm)
-        else:
-            registers[reg] = Register(reg, vm)
+    if flavor is not 'wasm':
+        for reg in vm.registers:
+            if flavor == "att":
+                registers["%" + reg] = Register(reg, vm)
+            else:
+                registers[reg] = Register(reg, vm)
     return registers
 
 
@@ -368,8 +369,8 @@ def sep_line_wasm(code, i, vm, language_keys):
 
     for word in words:
         # keyword
-        if word.upper() in language_keys:
-            analysis.append(language_keys[word.upper()])
+        if word in language_keys:
+            analysis.append(language_keys[word])
         # variable symbol
         elif re.match(sym_match, word) is not None:
             analysis.append(NewSymbol(word, vm))

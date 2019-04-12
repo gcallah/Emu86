@@ -799,7 +799,6 @@ def parse_exec_unit(token_line, flavor, vm):
 
     # retrieve instruction
     if not isinstance(token_line[pos], Instruction):
-        print("line 805")
         raise InvalidInstruction(token_line[pos].get_nm())
     token_instruction.append(token_line[pos])
     pos += 1
