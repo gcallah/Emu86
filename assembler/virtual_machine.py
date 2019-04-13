@@ -134,7 +134,7 @@ class IntelMachine(VirtualMachine):
                         ('R1', 0.0),
                         ('R0', 0.0),
                     ])
-        self.float_stack_top = FLOAT_STACK_LIMIT
+        self.float_stack_top = FLOAT_STACK_LIMIT - 1
 
         self.registers = OrderedDict(
                     [
@@ -179,7 +179,9 @@ class IntelMachine(VirtualMachine):
 
 
     def get_next_register(self):
-        self.float_stack_top = (self.float_stack_top - 1)%FLOAT_STACK_LIMIT
+        self.float_stack_top = (self.float_stack_top - 1)
+        if self.float_stack_top == -1:
+            self.float_stack_top = FLOAT_STACK_LIMIT - 1
         return self.float_stack_top
 
 
