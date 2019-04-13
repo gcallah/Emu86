@@ -134,7 +134,7 @@ class IntelMachine(VirtualMachine):
                         ('R1', 0.0),
                         ('R0', 0.0),
                     ])
-        self.float_stack_top = FLOAT_STACK_LIMIT - 1
+        self.float_stack_top = FLOAT_STACK_LIMIT
 
         self.registers = OrderedDict(
                     [
@@ -169,7 +169,7 @@ class IntelMachine(VirtualMachine):
     def pop_from_Float_Stack(self):
         curr_value_float_stack_top = self.fp_stack_registers["R"+str(self.float_stack_top)]
         self.fp_stack_registers["R" + str(self.float_stack_top)] = 0.0
-        self.get_prev_register()
+        self.float_stack_top = (self.float_stack_top + 1) % FLOAT_STACK_LIMIT
         self.refresh_FP_Stack()
         return curr_value_float_stack_top
 
@@ -177,16 +177,10 @@ class IntelMachine(VirtualMachine):
         for i in range(8):
             self.changes.add('R'+str(i))
 
-
     def get_next_register(self):
         self.float_stack_top = (self.float_stack_top - 1)
         if self.float_stack_top == -1:
             self.float_stack_top = FLOAT_STACK_LIMIT - 1
-        return self.float_stack_top
-
-
-    def get_prev_register(self):
-        self.float_stack_top = (self.float_stack_top + 1)%FLOAT_STACK_LIMIT
         return self.float_stack_top
 
     def reset_FP_Stack(self):
