@@ -8,6 +8,7 @@ from .forms import MainForm
 from assembler.virtual_machine import intel_machine, mips_machine
 from assembler.virtual_machine import riscv_machine
 from assembler.assemble import assemble, add_debug
+from assembler.virtual_machine import wasm_machine
 
 # for floating point to binary and back
 import struct
@@ -134,6 +135,7 @@ def main_page(request):
         intel_machine.re_init()
         mips_machine.re_init()
         riscv_machine.re_init()
+        wasm_machine.re_init()
         form = MainForm()
     else:
         base = request.POST['base']
