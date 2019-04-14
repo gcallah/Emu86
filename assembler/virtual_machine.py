@@ -457,17 +457,8 @@ class WASMMachine():
         self.globals = OrderedDict()
         self.globals_init()
 
-        self.stack = OrderedDict()
-        self.stack_init()
-
-        self.flavor = None
-        self.base = None
-
         self.stack_ptr = STACK_BOTTOM
-        self.data_init = "on"
-        self.debug = ""
         self.ip = 0
-        self.start_ip = 0
 
     def locals_init(self):
         self.locals.clear()
@@ -499,9 +490,6 @@ class WASMMachine():
 
     def get_sp(self):
         return self.stack_ptr
-
-    def set_data_init(self, on_or_off):
-        self.data_init = on_or_off
 
     def inc_ip(self):
         ip = self.get_ip()
