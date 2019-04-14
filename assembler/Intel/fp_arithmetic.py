@@ -181,9 +181,10 @@ class FAdd(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        # two_op_arith(ops, vm, self.name, add)
-
-        one_op_arith(ops,vm,self.name,add)
+        if len(ops) == 1:
+            one_op_arith(ops,vm,self.name,add)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, add)
 
 class FSub(Instruction):
     """
@@ -198,8 +199,10 @@ class FSub(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        # two_op_arith(ops, vm, self.name, sub)
-        one_op_arith(ops, vm, self.name, sub)
+        if len(ops) == 1:
+            one_op_arith(ops,vm,self.name,sub)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, sub)
 
 
 class FMul(Instruction):
@@ -215,7 +218,10 @@ class FMul(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, mul)
+        if len(ops) == 1:
+            one_op_arith(ops,vm,self.name,mul)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, mul)
 
 
 class FAbs(Instruction):
@@ -260,4 +266,7 @@ class FDiv(Instruction):
         </syntax>
     """
     def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, div)
+        if len(ops) == 1:
+            one_op_arith(ops,vm,self.name,add)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, add)
