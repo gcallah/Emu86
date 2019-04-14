@@ -267,6 +267,6 @@ class FDiv(Instruction):
     """
     def fhook(self, ops, vm):
         if len(ops) == 1:
-            one_op_arith(ops,vm,self.name,add)
+            one_op_arith(ops,vm,self.name,div)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, add)
+            two_op_arith(ops, vm, self.name, div)
