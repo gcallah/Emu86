@@ -449,7 +449,7 @@ class RISCVMachine(VirtualMachine):
         return int(self.registers[STACK_PTR_RISCV])
 
 
-class WASMMachine():
+class WASMMachine(VirtualMachine):
     def __init__(self):
         self.locals = OrderedDict()
         self.locals_init()
