@@ -451,6 +451,7 @@ class RISCVMachine(VirtualMachine):
 
 class WASMMachine(VirtualMachine):
     def __init__(self):
+        super().__init__()
         self.locals = OrderedDict()
         self.locals_init()
 
