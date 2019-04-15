@@ -252,7 +252,7 @@ class Shl(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
-        val_two = val_two % 32 # only for i32
+        val_two = bin(val_two)[2:] % 32 # only for i32
         result = opfunc.lshift(val_one, val_two)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
 
@@ -274,7 +274,7 @@ class Shr_S(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
-        val_two = val_two % 32 # only for i32
+        val_two = bin(val_two)[2:] % 32 # only for i32
         result = opfunc.rshift(val_one, val_two)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
 
@@ -296,7 +296,7 @@ class Shr_U(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
-        val_two = val_two % 32 # only for i32
+        val_two = bin(val_two)[2:] % 32 # only for i32
         result = opfunc.lshift(val_one, val_two)
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
@@ -320,7 +320,7 @@ class Rotl(Instruction):
         check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
         val_one_bin = bin(val_one)[2:]
-        val_two = val_two % 32 # only for i32
+        val_two = bin(val_two)[2:] % 32 # only for i32
         result = val_one_bin[val_two: len(val_one_bin) - val_two]
         result += val_one_bin[:val_two]
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
@@ -344,7 +344,7 @@ class Rotr(Instruction):
         check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
         val_one_bin = bin(val_one)[2:]
-        val_two = val_two % 32 # only for i32
+        val_two = bin(val_two)[2:] % 32 # only for i32
         result = val_one_bin[-val_two:]
         result += val_one_bin[: len(val_one_bin) - val_two]
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
