@@ -106,21 +106,21 @@ def sample_dir(func_dict, directory_lst, base):
         count = 0
         if base == HEX:
             function_code += "_hex"
-        function_code += "(flavor) {\n\tcode_string = '';"
+        function_code += "(flavor) {\n\tlet codeString = '';"
         for dire in directory_lst:
             sample_test = open(dire + file_name, "r")
             if count == 0:
-                function_code += "\n\tif (flavor == 'intel'){\n"
+                function_code += "\n\tif (flavor === 'intel'){\n"
             elif count == 1:
-                function_code += "\n\telse if (flavor == 'att'){\n"
+                function_code += "\n\telse if (flavor === 'att'){\n"
             elif count == 2:
-                function_code += "\n\telse if (flavor == 'mips_asm'){\n"
+                function_code += "\n\telse if (flavor === 'mips_asm'){\n"
             elif count == 3:
-                function_code += "\n\telse if (flavor == 'mips_mml'){\n"
+                function_code += "\n\telse if (flavor === 'mips_mml'){\n"
             else:
                 function_code += "\n\telse{\n"
 
-            function_code += "\t\tcode_string += "
+            function_code += "\t\tcodeString += "
             if ((base == DEC and (count == 0 or count == 1)) or
                     base == HEX and count != 0 and count != 1 or
                     count == 3):
@@ -142,7 +142,7 @@ def sample_dir(func_dict, directory_lst, base):
             function_code += ";\n\t}"
             count += 1
         function_code += "\n\tdocument.getElementById('id_code')"
-        function_code += ".value = code_string;\n}"
+        function_code += ".value = codeString;\n}"
         file_code += function_code + "\n"
     return file_code
 
@@ -153,7 +153,7 @@ def function_directory_fp(func_dict, directory_lst):
         function_code = ""
         count = 0
         function_code += "function " + func_dict[file_name] + "(flavor) {"
-        function_code += "\n\tcode_string = '';"
+        function_code += "\n\tlet codeString = '';"
         for dire in directory_lst:
             sample_test = open(dire + file_name, "r")
             # if count == 0:
@@ -161,7 +161,7 @@ def function_directory_fp(func_dict, directory_lst):
             # elif count == 1:
             #     function_code += "\n\telse if (flavor == 'mips_asm'){\n"
 
-            function_code += "\n\tcode_string += "
+            function_code += "\n\tcodeString += "
             function_code += repr(sample_test.read())
             # if count == 1:
             #     function_code += repr(sample_test.read())
@@ -183,7 +183,7 @@ def function_directory_fp(func_dict, directory_lst):
             function_code += ";\n\t"
             count += 1
         function_code += "\n\tdocument.getElementById('id_code')"
-        function_code += ".value = code_string;\n}"
+        function_code += ".value = codeString;\n}"
         file_code += function_code + "\n"
     return file_code
 
