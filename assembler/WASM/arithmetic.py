@@ -369,7 +369,7 @@ class Clz(Instruction):
         val_one_bin = bin(val_one)[2:]
         result = 0
         for i in val_one_bin:
-            if i == "0"
+            if i == "0":
                 result += 1
             else:
                 break
@@ -396,7 +396,7 @@ class Ctz(Instruction):
         val_one_bin = bin(val_one)[2:]
         result = 0
         for i in val_one_bin[::-1]:
-            if i == "0"
+            if i == "0":
                 result += 1
             else:
                 break
@@ -424,7 +424,7 @@ class Popcnt(Instruction):
         val_one_bin = bin(val_one)[2:]
         result = 0
         for i in val_one_bin:
-            if i == "1"
+            if i == "1":
                 result += 1
         vm.stack[hex(sp).split('x')[-1].upper()] = result
 
