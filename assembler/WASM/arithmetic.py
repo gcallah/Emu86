@@ -3,8 +3,18 @@ arithmetic.py: arithmetic instructions.
 """
 
 import operator as opfunc
-from assembler.errors import check_num_args
+from assembler.errors import check_num_args, DivisionZero
 from assembler.tokens import Instruction, MAX_INT
+
+
+def get_operators_from_stack(vm):
+    sp = vm.get_sp()
+    val_one = vm.stack[hex(sp).split('x')[-1].upper()]
+    vm.stack[hex(sp).split('x')[-1].upper()] = 0
+    vm.dec_sp()
+    sp = vm.get_sp()
+    val_two = vm.stack[hex(sp).split('x')[-1].upper()]
+    return val_one, val_two
 
 
 def two_op_arith(ops, vm, instr, operator):
@@ -123,3 +133,320 @@ class Div_U(Instruction):
         ops[0].set_val(check_overflow(opfunc.floordiv(
                        abs(ops[1].get_val()), abs(ops[2].get_val())), vm))
         vm.changes.add(ops[0].get_nm())
+
+
+class Rem_S(Instruction):
+    """
+        <instr>
+             .rem_s
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.rem_s
+        </syntax>
+        <descr>
+            This is the remainder instruction for signed values.
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 2)
+        if ops[1].get_val() == 0:
+            raise DivisionZero()
+        two_op_arith(ops, vm, self.name, opfunc.mod)
+
+
+class Rem_U(Instruction):
+    """
+        <instr>
+             .rem_u
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.rem_u
+        </syntax>
+        <descr>
+            This is the remainder instruction for unsigned values.
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 2)
+        val_one, val_two = get_operators_from_stack(vm)
+        if val_two == 0:
+            raise DivisionZero()
+        result = opfunc.mod(val_one, val_two)
+        check_overflow(result, vm)
+        vm.stack[hex(sp).split('x')[-1].upper()] = result
+
+
+class And(Instruction):
+    """
+        <instr>
+             .and
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.and
+        </syntax>
+        <descr>
+            $lhs and $rhs are example variables
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.and_)
+
+
+class Or(Instruction):
+    """
+        <instr>
+             .or
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.or
+        </syntax>
+        <descr>
+            $lhs and $rhs are example variables
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.or_)
+
+
+class Xor(Instruction):
+    """
+        <instr>
+             .xor
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.xor
+        </syntax>
+        <descr>
+            $lhs and $rhs are example variables
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        two_op_arith(ops, vm, self.name, opfunc.xor)
+
+
+class Shl(Instruction):
+    """
+        <instr>
+             .shl
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.shl
+        </syntax>
+        <descr>
+            Integer Shift Left
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 2)
+        val_one, val_two = get_operators_from_stack(vm)
+        val_two = val_two % 32 # only for i32
+        result = opfunc.lshift(val_one, val_two)
+        vm.stack[hex(sp).split('x')[-1].upper()] = result
+
+
+class Shr_S(Instruction):
+    """
+        <instr>
+             .shr_s
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.shr_s
+        </syntax>
+        <descr>
+            Integer Shift Right Signed
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 2)
+        val_one, val_two = get_operators_from_stack(vm)
+        val_two = val_two % 32 # only for i32
+        result = opfunc.rshift(val_one, val_two)
+        vm.stack[hex(sp).split('x')[-1].upper()] = result
+
+
+class Shr_U(Instruction):
+    """
+        <instr>
+             .shr_u
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.shr_u
+        </syntax>
+        <descr>
+            Integer Shift Right Unsigned
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 2)
+        val_one, val_two = get_operators_from_stack(vm)
+        val_two = val_two % 32 # only for i32
+        result = opfunc.lshift(val_one, val_two)
+        check_overflow(result, vm)
+        vm.stack[hex(sp).split('x')[-1].upper()] = result
+
+
+class Rotl(Instruction):
+    """
+        <instr>
+             .rotl
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.rotl
+        </syntax>
+        <descr>
+            Integer Rotate Left
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 2)
+        val_one, val_two = get_operators_from_stack(vm)
+        val_one_bin = bin(val_one)[2:]
+        val_two = val_two % 32 # only for i32
+        result = val_one_bin[val_two: len(val_one_bin) - val_two]
+        result += val_one_bin[:val_two]
+        vm.stack[hex(sp).split('x')[-1].upper()] = int(result, 2)
+
+
+class Rotr(Instruction):
+    """
+        <instr>
+             .rotr
+        </instr>
+        <syntax>
+            get_local $lhs
+            get_local $rhs
+            i32.rotr
+        </syntax>
+        <descr>
+            Integer Rotate Right
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 2)
+        val_one, val_two = get_operators_from_stack(vm)
+        val_one_bin = bin(val_one)[2:]
+        val_two = val_two % 32 # only for i32
+        result = val_one_bin[-val_two:]
+        result += val_one_bin[: len(val_one_bin) - val_two]
+        vm.stack[hex(sp).split('x')[-1].upper()] = int(result, 2)
+
+
+class Clz(Instruction):
+    """
+        <instr>
+             .clz
+        </instr>
+        <syntax>
+            get_local $lhs
+            i32.clz
+        </syntax>
+        <descr>
+            Integer Count Leading Zeros
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 1)
+        sp = vm.get_sp()
+        val_one = vm.stack[hex(sp).split('x')[-1].upper()]
+        val_one_bin = bin(val_one)[2:]
+        result = 0
+        for i in val_one_bin:
+            if i == "0"
+                result += 1
+            else:
+                break
+        vm.stack[hex(sp).split('x')[-1].upper()] = result
+
+
+class Ctz(Instruction):
+    """
+        <instr>
+             .clz
+        </instr>
+        <syntax>
+            get_local $lhs
+            i32.clz
+        </syntax>
+        <descr>
+            Integer Count Trailing Zeros
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 1)
+        sp = vm.get_sp()
+        val_one = vm.stack[hex(sp).split('x')[-1].upper()]
+        val_one_bin = bin(val_one)[2:]
+        result = 0
+        for i in val_one_bin[::-1]:
+            if i == "0"
+                result += 1
+            else:
+                break
+        vm.stack[hex(sp).split('x')[-1].upper()] = result
+
+
+class Popcnt(Instruction):
+    """
+        <instr>
+             .popcnt
+        </instr>
+        <syntax>
+            get_local $lhs
+            i32.popcnt
+        </syntax>
+        <descr>
+            Integer Population Count
+            returns the number of 1-bits in its operand
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 1)
+        sp = vm.get_sp()
+        val_one = vm.stack[hex(sp).split('x')[-1].upper()]
+        val_one_bin = bin(val_one)[2:]
+        result = 0
+        for i in val_one_bin:
+            if i == "1"
+                result += 1
+        vm.stack[hex(sp).split('x')[-1].upper()] = result
+
+
+class Eqz(Instruction):
+    """
+        <instr>
+             .eqz
+        </instr>
+        <syntax>
+            get_local $lhs
+            i32.eqz
+        </syntax>
+        <descr>
+            Integer Equal To Zero
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.name, ops, 1)
+        sp = vm.get_sp()
+        val_one = vm.stack[hex(sp).split('x')[-1].upper()]
+        result = False
+        if val_one == 0:
+            result = True
+        vm.stack[hex(sp).split('x')[-1].upper()] = result
