@@ -34,7 +34,7 @@ INTEL = {'intel': 'Intel',
 RISCV = {'riscv': 'RISC-V'
          }
 
-WASM = {'wasm' : 'WASM'}
+WASM = {'wasm': 'WASM'}
 
 
 def get_hdr():

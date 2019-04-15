@@ -168,10 +168,8 @@ class IntelMachine(VirtualMachine):
     def get_register_at_float_stack_top(self):
         return "R"+str(self.float_stack_top)
 
-    def get_float_stack_register_at_offset(self,k):
+    def get_float_stack_register_at_offset(self, k):
         return "R" + str((self.float_stack_top + k) % FLOAT_STACK_LIMIT)
-
-
 
     def pop_from_Float_Stack(self):
         curr_value_float_stack_top = self.fp_stack_registers[self.get_register_at_float_stack_top()]

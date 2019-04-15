@@ -268,7 +268,7 @@ def exec(tok_lines, flavor, vm, last_instr):
             (curr_instr, source) = tok_lines[ip]
             vm.inc_ip()
             last_instr = curr_instr[INSTR_INTEL].f(curr_instr[OPS_INTEL:], vm)
-        if flavor is not 'wasm':
+        if flavor != 'wasm':
             for label in vm.labels:
                 if vm.get_ip() == vm.labels[label]:
                     vm.next_stack_change = label
@@ -309,7 +309,7 @@ def assemble(code, flavor, vm, step=False):
     last_instr = ''
     error = ''
     bit_code = ''
-    if flavor is not 'wasm' and vm.next_stack_change != "":
+    if flavor != 'wasm' and vm.next_stack_change != "":
 
         vm.stack_change = vm.next_stack_change
         vm.next_stack_change = ""
