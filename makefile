@@ -35,6 +35,9 @@ PYTHONFILES += $(WASM_DIR)/*.py
 PYTHONFILES += $(shell ls selenium_tests/*.py)
 PYTHONFILES += *.py
 
+ESLINT = npx eslint
+JSFILES = $(shell ls mysite/static/Emu86/*.js)
+
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
 ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
@@ -74,10 +77,13 @@ website: $(INCS) $(HTML_FILES) help
 container: $(DOCKER_DIR)/Dockerfile  $(DOCKER_DIR)/requirements.txt
 	docker build -t emu86 docker
 
-lint: $(patsubst %.py,%.pylint,$(PYTHONFILES))
+lint: $(patsubst %.py,%.pylint,$(PYTHONFILES)) $(patsubst %.js,%.eslint,$(JSFILES))
 
 %.pylint:
 	$(PYLINT) $(PYLINTFLAGS) $*.py
+
+%.eslint:
+	$(ESLINT) $*.js
 
 help_mips: $(MIPS_SRCS)
 	$(EXTR) <$(MIPS_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_arithmetic.txt

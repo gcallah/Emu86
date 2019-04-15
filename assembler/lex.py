@@ -88,7 +88,7 @@ def generate_reg_dict(vm, flavor):
         A dictionary of (registers, register tokens)
     """
     registers = {}
-    if flavor is not 'wasm':
+    if flavor != 'wasm':
         for reg in vm.registers:
             if flavor == "att":
                 registers["%" + reg] = Register(reg, vm)

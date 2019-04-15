@@ -1,0 +1,27 @@
+{
+  "name": "emu86",
+  "version": "1.0.0",
+  "description": "This project will emulate an x86 assembler in Python, as a learning tool for students.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gcallah/Emu86.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gcallah/Emu86/issues"
+  },
+  "homepage": "https://github.com/gcallah/Emu86#readme",
+  "dependencies": {
+    "eslint": "^5.14.1",
+    "eslint-plugin-mocha": "^5.3.0"
+  }
+}

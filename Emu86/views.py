@@ -34,6 +34,8 @@ INTEL = {'intel': 'Intel',
 RISCV = {'riscv': 'RISC-V'
          }
 
+WASM = {'wasm': 'WASM'}
+
 
 def get_hdr():
     site_hdr = "Emu: a multi-language assembly emulator"
@@ -165,6 +167,41 @@ def main_page(request):
                                'registers': mips_machine.registers,
                                'r_registers': r_reg,
                                'f_registers': f_reg,
+                               'memory': mips_machine.memory,
+                               'stack': mips_machine.stack,
+                               'symbols': mips_machine.symbols,
+                               'cstack': mips_machine.c_stack,
+                               'flags': mips_machine.flags,
+                               'flavor': mips_machine.flavor,
+                               'data_init': mips_machine.data_init,
+                               'base': mips_machine.base,
+                               'sample': 'none',
+                               'start_ip': mips_machine.start_ip,
+                               'bit_code': "",
+                               'button_type': "",
+                               'changes': [],
+                               'stack_change': "",
+                               'curr_reg': curr_reg
+                               })
+            if lang in WASM:
+                intel_machine.flavor = None
+                riscv_machine.flavor = None
+                wasm_machine.flavor = lang
+                wasm_machine.base = base
+                site_hdr += ": " + WASM[lang] + " " + wasm_machine.base.upper()
+                hex_conversion(wasm_machine)
+                # r_reg, f_reg = processRegisters(wasm_machine.registers)
+                return render(request, 'main.html',
+                              {'form': form,
+                               HEADER: site_hdr,
+                               'last_instr': "",
+                               'error': "",
+                               'unwritable': mips_machine.unwritable,
+                               'debug': mips_machine.debug,
+                               NXT_KEY: mips_machine.nxt_key,
+                               'registers': mips_machine.registers,
+                               # 'r_registers': r_reg,
+                               # 'f_registers': f_reg,
                                'memory': mips_machine.memory,
                                'stack': mips_machine.stack,
                                'symbols': mips_machine.symbols,
