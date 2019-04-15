@@ -17,6 +17,17 @@ function addTwo(flavor) {
 	}
 	document.getElementById('id_code').value = code_string;
 }
+function float_addition(flavor)
+{
+	code_string = '';
+
+	if(flavor == 'intel')
+	{
+		code_string+= '; Declare number and sum.\n.data\n';
+	}
+
+	document.getElementById('id_code').value = code_string;
+}
 function arithExpr(flavor) {
 	code_string = '';
 	if (flavor == 'intel'){

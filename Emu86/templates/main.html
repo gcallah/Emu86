@@ -125,6 +125,11 @@
                     {% else %}
                         <option value="keyInterrupt">Keyboard interrupt</option>
                     {% endif %}
+                    {% if sample == "float_addition" %}
+                    <option value="float_addition" selected>Add Floating Point Numbers</option>
+                    {% else %}
+                    <option value="float_addition">Add Floating Point Numbers</option>
+                    {% endif %}
                     {% if sample == "dataAccess" %}
                         <option value="dataAccess" selected>Accessing data in memory</option>
                     {% else %}
