@@ -15,5 +15,5 @@ after_success:
 - "./deploy.sh"
 notifications:
   slack: emu86:OyuLjhil66hjpwce1HyB43bL
-before_install:
-- openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in emu_rsa.enc -out ~/.ssh/emu_rsa -d
+  #before_install:
+  #- openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in emu_rsa.enc -out ~/.ssh/emu_rsa -d
