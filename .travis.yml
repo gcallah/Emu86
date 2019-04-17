@@ -9,8 +9,8 @@ services:
 addons:
   ssh_known_hosts: ssh.pythonanywhere.com
 
-before_install:
-    - openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in emu_rsa.enc -out ~/.ssh/emu_rsa -d
+  #before_install:
+  #  - openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in emu_rsa.enc -out ~/.ssh/emu_rsa -d
 
 install:
     - pip install -r docker/requirements-dev.txt
