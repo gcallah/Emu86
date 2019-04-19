@@ -1,28 +1,19 @@
 language: python
-
 python:
-    - '3.6'
-
+- '3.6'
 services:
 - docker
-
 addons:
   ssh_known_hosts: ssh.pythonanywhere.com
-
-before_install:
-    openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
-
+  #before_install:
+  #- openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
 install:
-    - pip install -r docker/requirements-dev.txt
-
+- pip install -r docker/requirements-dev.txt
 env:
-    - PYTHONPATH=/home/travis/build/gcallah/Emu86
-
+- PYTHONPATH=/home/travis/build/gcallah/Emu86
 script:
-    - make tests
-
-after_success:
-    - ./deploy.sh
-
+- make tests
+  #after_success:
+  #- "./deploy.sh"
 notifications:
   slack: emu86:OyuLjhil66hjpwce1HyB43bL
