@@ -13,6 +13,7 @@ STACK_TOP = (MEM_SIZE * 2) - 1
 STACK_BOTTOM = MEM_SIZE
 # STACK_TOP = MEM_SIZE - 1
 # STACK_BOTTOM = 0
+FLOAT_STACK_LIMIT = 8
 EMPTY_CELL = 0
 INSTR_PTR_INTEL = "EIP"
 INSTR_PTR_MIPS = "PC"
@@ -124,15 +125,17 @@ class IntelMachine(VirtualMachine):
         super().__init__()
         self.fp_stack_registers = OrderedDict(
                     [
-                        ('ST0', 0.0),
-                        ('ST1', 0.0),
-                        ('ST2', 0.0),
-                        ('ST3', 0.0),
-                        ('ST4', 0.0),
-                        ('ST5', 0.0),
-                        ('ST6', 0.0),
-                        ('ST7', 0.0),
+                        ('R7', 0.0),
+                        ('R6', 0.0),
+                        ('R5', 0.0),
+                        ('R4', 0.0),
+                        ('R3', 0.0),
+                        ('R2', 0.0),
+                        ('R1', 0.0),
+                        ('R0', 0.0),
                     ])
+        self.float_stack_top = FLOAT_STACK_LIMIT
+
         self.registers = OrderedDict(
                     [
                         ('EAX', 0),
@@ -141,9 +144,6 @@ class IntelMachine(VirtualMachine):
                         ('EDX', 0),
                         ('ESI', 0),
                         ('EDI', 0),
-                        ('FRA', 0.0),
-                        ('FRB', 0.0),
-                        ('FRT', 0.0),
                         (STACK_PTR_INTEL, STACK_TOP),
                         ('EBP', 0),
                         (INSTR_PTR_INTEL, 0),
@@ -160,18 +160,38 @@ class IntelMachine(VirtualMachine):
                         ('ZF', 0),
                     ])
 
-    def add_to_Float_Stack(self, val):
-        prev = self.fp_stack_registers["ST0"]
-        self.fp_stack_registers["ST0"] = val
-        for i in range(1, len(self.fp_stack_registers)):
-            curr = self.fp_stack_registers["ST"+str(i)]
-            self.fp_stack_registers["ST"+str(i)] = prev
-            prev = curr
-        print(self.fp_stack_registers)
+    def push_to_Float_Stack(self, val):
+        next_register = self.get_next_register()
+        self.fp_stack_registers["R"+str(next_register)] = val
+        self.refresh_FP_Stack()
+
+    def get_register_at_float_stack_top(self):
+        return "R"+str(self.float_stack_top)
+
+    def get_float_stack_register_at_offset(self, k):
+        return "R" + str((self.float_stack_top + k) % FLOAT_STACK_LIMIT)
+
+    def pop_from_Float_Stack(self):
+        curr_value_float_stack_top = self.fp_stack_registers[self.get_register_at_float_stack_top()]
+        self.fp_stack_registers["R" + str(self.float_stack_top)] = 0.0
+        self.float_stack_top = (self.float_stack_top + 1) % FLOAT_STACK_LIMIT
+        self.refresh_FP_Stack()
+        return curr_value_float_stack_top
+
+    def refresh_FP_Stack(self):
+        for i in range(8):
+            self.changes.add('R'+str(i))
+
+    def get_next_register(self):
+        self.float_stack_top = (self.float_stack_top - 1)
+        if self.float_stack_top == -1:
+            self.float_stack_top = FLOAT_STACK_LIMIT - 1
+        return self.float_stack_top
 
     def reset_FP_Stack(self):
+        self.float_stack_top = FLOAT_STACK_LIMIT
         for i in range(len(self.fp_stack_registers)):
-            self.fp_stack_registers["ST"+str(i)] = 0.0
+            self.fp_stack_registers["R"+str(i)] = 0.0
 
     def re_init(self):
         super().re_init()
@@ -427,6 +447,62 @@ class RISCVMachine(VirtualMachine):
         return int(self.registers[STACK_PTR_RISCV])
 
 
+class WASMMachine(VirtualMachine):
+    def __init__(self):
+        super().__init__()
+        self.locals = OrderedDict()
+        self.locals_init()
+
+        self.globals = OrderedDict()
+        self.globals_init()
+
+        self.stack_ptr = STACK_BOTTOM
+        self.ip = 0
+
+    def locals_init(self):
+        self.locals.clear()
+
+    def globals_init(self):
+        self.globals.clear()
+
+    def stack_init(self):
+        for i in range(STACK_TOP - 3, STACK_BOTTOM - 1, -4):
+            self.stack[hex(i).split('x')[-1].upper()] = 0
+
+    def inc_sp(self):
+        sp = self.get_sp()
+        sp += 4
+        self.set_sp(sp)
+
+    def dec_sp(self):
+        sp = self.get_sp()
+        sp -= 4
+        self.set_sp(sp)
+
+    def set_sp(self, val):
+        if val < STACK_BOTTOM - 1:
+            raise StackOverflow()
+        if val > STACK_TOP:
+            raise StackUnderflow()
+
+        self.stack_ptr = val
+
+    def get_sp(self):
+        return self.stack_ptr
+
+    def inc_ip(self):
+        ip = self.get_ip()
+        ip += 1
+        self.set_ip(ip)
+
+    def set_ip(self, val):
+        self.ip = val
+
+    def get_ip(self):
+        return self.ip
+
+
 intel_machine = IntelMachine()
 mips_machine = MIPSMachine()
 riscv_machine = RISCVMachine()
+wasm_machine = WASMMachine()

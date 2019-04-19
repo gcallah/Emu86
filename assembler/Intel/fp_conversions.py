@@ -372,7 +372,8 @@ def mul(val1, val2):
     productMantissa = productMantissa[0]+'.'+productMantissa[1:-1]
     productExponent += (len(productMantissa) - 105)
     IEEE = str(productSign)+" "+bin(productExponent)+" "+productMantissa[2:]
-    return convertFromIEE(IEEE)
+    returnVal = convertFromIEE(IEEE)
+    return returnVal
 
 
 def div(val1, val2):

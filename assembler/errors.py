@@ -1,3 +1,5 @@
+import re
+
 """
 Possible assembler errors.
 """
@@ -41,6 +43,7 @@ TOO_BIG_FOR_DOUBLE = "Value too big to store in a double: "
 NOT_EVEN_REGISTER = "Invalid odd-numbered register: "
 NOT_CORRECT_BITS = "Instruction expected integer of max length 20 bits"
 TOO_PRECISE = "Floating point number has too many decimal places: "
+INVALID_STRING = "The String Provided is Invalid"
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -262,3 +265,7 @@ def check_num_args(instr, ops, correct_num, type_ins=0):
         if type_ins == 0 and (ops[i].get_val() > INT_MAX or
                               ops[i].get_val() < INT_MIN):
             raise IntOutOfRng(instr)
+
+
+def is_notvalidstring(instr):
+    match = re.match("^(\d{0,3})\.(\d{0,3})\.(\d{0,3})\.(\d{0,3})$", instr) # noqa!

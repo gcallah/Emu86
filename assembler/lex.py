@@ -88,11 +88,32 @@ def generate_reg_dict(vm, flavor):
         A dictionary of (registers, register tokens)
     """
     registers = {}
-    for reg in vm.registers:
-        if flavor == "att":
-            registers["%" + reg] = Register(reg, vm)
-        else:
-            registers[reg] = Register(reg, vm)
+    if flavor != 'wasm':
+        for reg in vm.registers:
+            if flavor == "att":
+                registers["%" + reg] = Register(reg, vm)
+            else:
+                registers[reg] = Register(reg, vm)
+    return registers
+
+
+def generate_float_stack_dict(vm, flavor):
+    """
+    Generates a dictionary
+    Keys: register name
+    Values: Register token
+
+    Args:
+        vm: Virtual machine
+        flavor: Flavor
+
+    Returns:
+        A dictionary of (registers, register tokens)
+    """
+    registers = {}
+    for reg in vm.fp_stack_registers:
+
+        registers[reg] = Register(reg, vm)
     return registers
 
 
@@ -109,6 +130,7 @@ def make_language_keys(vm, flavor):
     """
     language_keys = {}
     language_keys.update(keywords_to_tokens)
+
     language_keys.update(generate_reg_dict(vm, flavor))
     if flavor == "mips_asm" or flavor == "mips_mml":
         from .MIPS.key_words import key_words
@@ -117,10 +139,14 @@ def make_language_keys(vm, flavor):
     elif flavor == "riscv":
         from .RISCV.key_words import key_words
         language_keys.update(key_words)
+    elif flavor == 'wasm':
+        from .WASM.key_words import key_words
+        language_keys.update(key_words)
     else:
         from .Intel.key_words import instructions
         language_keys.update(instructions)
         if flavor == "intel":
+            # language_keys.update(generate_float_stack_dict(vm, flavor))
             from .Intel.key_words import intel_key_words
             language_keys.update(intel_key_words)
         else:
@@ -209,9 +235,11 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
     """
     analysis = []
     words = split_code(code, flavor)
-
+    # for i in range(len(words)):  #fixes parsing error with negative floats
+    #     if words[i]=='-':
+    #         words[i+1]='-'+words[i+1]
+    # words = [x for x in words if x!='-']
     data_type = None
-
     for word in words:
         # keyword:
         if word.upper() in language_keys:
@@ -236,14 +264,12 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                     else:
                         vm.labels[word[:-1]] = i
         elif re.match(sym_match, word) is not None:
-
             analysis.append(NewSymbol(word, vm))
         # Floating Points
         elif re.match(fp_match, word) is not None:
             # default is float (single precision) if user doesnt say
             if data_type != ".float" and data_type != ".double":
                 data_type = ".float"
-
             if vm.base == "dec":
                 # TODO: Screen shot to give me the
                 # floating point token class from token.py
@@ -319,6 +345,46 @@ def sep_line_mml(code, i, vm, language_keys):
     return (analysis, code)
 
 
+def sep_line_wasm(code, i, vm, language_keys):
+    """
+    Returns a list of tokens created
+
+    Args:
+        code: Line of code
+        i: Line number of code
+           Needed for determining label location
+        flavor: AT&T or MIPS
+        data_sec: Boolean, determines if we are in the data section
+                  Needed to differentiate between label and symbol
+        vm: Virtual machine
+        key_words: Dictionary of key words for the flavor
+
+    Returns:
+        Tuple of the lexical analysis of the line
+        The first member is the tokens and the second is the
+        text of the code.
+    """
+    analysis = []
+    words = split_code(code, vm.flavor)
+
+    for word in words:
+        # keyword
+        if word in language_keys:
+            analysis.append(language_keys[word])
+        # variable symbol
+        elif re.match(sym_match, word) is not None:
+            analysis.append(NewSymbol(word, vm))
+    # Integers
+        else:
+            try:
+                analysis.append(IntegerTok(int(word)))
+            except IntOutOfRng:
+                raise IntOutOfRng(word)
+            except Exception:
+                raise InvalidArgument(word)
+    return (analysis, code)
+
+
 def lex(code, flavor, vm):
     """
     Lexical phase: tokenizes the code.
@@ -360,8 +426,9 @@ def lex(code, flavor, vm):
         language_keys = make_language_keys(vm, flavor)
         if flavor == "mips_mml":
             tok_lines.append(sep_line_mml(line, i, vm, language_keys))
+        elif flavor == "wasm":
+            tok_lines.append(sep_line_wasm(line, i, vm, language_keys))
         else:
-
             tok_lines.append(sep_line(line, i, flavor, data_sec,
                                       vm, language_keys))
         if line == ".data":

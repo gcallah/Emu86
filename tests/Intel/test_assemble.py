@@ -18,7 +18,8 @@ from unittest import TestCase, main
 from assembler.tokens import MAX_INT, MIN_INT, BITS
 from assembler.virtual_machine import intel_machine, STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
-from assembler.Intel.fp_arithmetic import convert_hex_to_decimal, convert_dec_to_hex
+from assembler.Intel.fp_arithmetic import convert_hex_to_decimal
+from assembler.Intel.fp_arithmetic import convert_dec_to_hex
 # from assembler.Intel.math_operations import Mathops
 
 NUM_TESTS = 100
@@ -42,26 +43,24 @@ class AssembleTestCase(TestCase):
     def two_op_test(self, operator, instr, low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST, op_type=INT,
                     first_val=INT, second_val=INT):
-
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
-            if op_type == FLOAT:
-                if first_val == FLOAT:
-                    a = float(random.uniform(MIN_MUL, MAX_MUL))
-                if second_val == FLOAT:
-                    b = float(random.uniform(MIN_MUL, MAX_MUL))
-                correct = operator(a, b)
-                intel_machine.registers["FRA"] = a
-                intel_machine.registers["FRB"] = b
-                code = instr + " fra, frb"
-                print("assembled", assemble(code, 'intel', intel_machine))
-                print(intel_machine.registers["FRA"], correct)
-                self.assertAlmostEqual(intel_machine.registers["FRA"], correct)
-                """assert abs(intel_machine.registers["FRT"]-correct) < 0.00001,
-                str(intel_machine.registers["FRT"]) + " does not equal "
-                + str(correct)"""
-            else:
+        # if op_type == FLOAT:
+        #     if first_val == FLOAT:
+        #         a = float(random.uniform(MIN_MUL, MAX_MUL))
+        #     if second_val == FLOAT:
+        #         b = float(random.uniform(MIN_MUL, MAX_MUL))
+        #     correct = operator(a, b)
+        #     intel_machine.registers["EAX"] = a
+        #     intel_machine.registers["FRB"] = b
+        #     code = instr + " fra, frb"
+        #     self.assertAlmostEqual(intel_machine.registers["FRA"], correct)
+        #     """assert abs(intel_machine.registers["FRT"]-correct) < 0.00001,
+        #     str(intel_machine.registers["FRT"]) + " does not equal "
+        #     + str(correct)"""
+        # else:
+            if op_type != FLOAT:
                 correct = operator(a, b)
                 intel_machine.registers["EAX"] = a
                 intel_machine.registers["EBX"] = b
@@ -145,9 +144,7 @@ class AssembleTestCase(TestCase):
                      #since the new value is in the destination register,
                      #compare correct to FRT
                 else:"""
-                print("about to be assembled")
                 assemble(instr + ' frb', 'intel', intel_machine)
-                print(intel_machine.registers["FRB"])
                 self.assertEqual(intel_machine.registers["FRB"], correct)
                 # since the new value has not been replaced
                 # (in source register), compare FRB to correct

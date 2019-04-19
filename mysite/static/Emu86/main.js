@@ -33,6 +33,9 @@ function selectSample()
         else if (selected == "arithExpr") {
             arithExpr(flav.value);
         }
+        else if (selected == "float_addition") {
+            float_addition(flav.value);
+        }
         else if (selected == "log") {
             log(flav.value);
         }

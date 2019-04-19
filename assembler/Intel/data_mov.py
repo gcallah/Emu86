@@ -2,7 +2,7 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args
-from assembler.tokens import Instruction, Register, FloatTok
+from assembler.tokens import Instruction, Register,FloatTok
 
 
 class Fld(Instruction):
@@ -19,11 +19,8 @@ class Fld(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
-        print("OPS[0]", ops[0])
-        print(type(ops[0]))
         if isinstance(ops[0], FloatTok):
-            print("val", ops[0].get_val())
-            vm.add_to_Float_Stack(ops[0].get_val())
+            vm.push_to_Float_Stack(ops[0].get_val())
 
 
 class Mov(Instruction):

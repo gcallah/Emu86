@@ -8,6 +8,7 @@ SDIR = assembler
 INTEL_DIR = $(SDIR)/Intel
 MIPS_DIR = $(SDIR)/MIPS
 RISCV_DIR = $(SDIR)/RISCV
+WASM_DIR = $(SDIR)/WASM
 EMUDIR = Emu86
 ODIR = $(EMUDIR)/templates
 MUDIR = myutils
@@ -30,8 +31,12 @@ PYTHONFILES += $(INTEL_DIR)/*.py
 PYTHONFILES += $(MIPS_DIR)/*.py
 PYTHONFILES += $(TDIR)/*/*.py
 PYTHONFILES += $(RISCV_DIR)/*.py
+PYTHONFILES += $(WASM_DIR)/*.py
 PYTHONFILES += $(shell ls selenium_tests/*.py)
 PYTHONFILES += *.py
+
+ESLINT = npx eslint
+JSFILES = $(shell ls mysite/static/Emu86/*.js)
 
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
@@ -72,10 +77,13 @@ website: $(INCS) $(HTML_FILES) help
 container: $(DOCKER_DIR)/Dockerfile  $(DOCKER_DIR)/requirements.txt
 	docker build -t emu86 docker
 
-lint: $(patsubst %.py,%.pylint,$(PYTHONFILES))
+lint: $(patsubst %.py,%.pylint,$(PYTHONFILES)) $(patsubst %.js,%.eslint,$(JSFILES))
 
 %.pylint:
 	$(PYLINT) $(PYLINTFLAGS) $*.py
+
+%.eslint:
+	$(ESLINT) $*.js
 
 help_mips: $(MIPS_SRCS)
 	$(EXTR) <$(MIPS_DIR)/arithmetic.py | $(D2HTML) >$(TEMPLATE_DIR)/mips_arithmetic.txt
@@ -130,5 +138,6 @@ dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
 prod: $(SRCS) $(OBJ) navbar tests
+	-git commit -a
 	git push origin master
 	ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'

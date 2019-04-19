@@ -8,6 +8,7 @@ from .forms import MainForm
 from assembler.virtual_machine import intel_machine, mips_machine
 from assembler.virtual_machine import riscv_machine
 from assembler.assemble import assemble, add_debug
+from assembler.virtual_machine import wasm_machine
 
 # for floating point to binary and back
 import struct
@@ -32,6 +33,8 @@ INTEL = {'intel': 'Intel',
 
 RISCV = {'riscv': 'RISC-V'
          }
+
+WASM = {'wasm': 'WASM'}
 
 
 def get_hdr():
@@ -134,6 +137,7 @@ def main_page(request):
         intel_machine.re_init()
         mips_machine.re_init()
         riscv_machine.re_init()
+        wasm_machine.re_init()
         form = MainForm()
     else:
         base = request.POST['base']
@@ -163,6 +167,41 @@ def main_page(request):
                                'registers': mips_machine.registers,
                                'r_registers': r_reg,
                                'f_registers': f_reg,
+                               'memory': mips_machine.memory,
+                               'stack': mips_machine.stack,
+                               'symbols': mips_machine.symbols,
+                               'cstack': mips_machine.c_stack,
+                               'flags': mips_machine.flags,
+                               'flavor': mips_machine.flavor,
+                               'data_init': mips_machine.data_init,
+                               'base': mips_machine.base,
+                               'sample': 'none',
+                               'start_ip': mips_machine.start_ip,
+                               'bit_code': "",
+                               'button_type': "",
+                               'changes': [],
+                               'stack_change': "",
+                               'curr_reg': curr_reg
+                               })
+            if lang in WASM:
+                intel_machine.flavor = None
+                riscv_machine.flavor = None
+                wasm_machine.flavor = lang
+                wasm_machine.base = base
+                site_hdr += ": " + WASM[lang] + " " + wasm_machine.base.upper()
+                hex_conversion(wasm_machine)
+                # r_reg, f_reg = processRegisters(wasm_machine.registers)
+                return render(request, 'main.html',
+                              {'form': form,
+                               HEADER: site_hdr,
+                               'last_instr': "",
+                               'error': "",
+                               'unwritable': mips_machine.unwritable,
+                               'debug': mips_machine.debug,
+                               NXT_KEY: mips_machine.nxt_key,
+                               'registers': mips_machine.registers,
+                               # 'r_registers': r_reg,
+                               # 'f_registers': f_reg,
                                'memory': mips_machine.memory,
                                'stack': mips_machine.stack,
                                'symbols': mips_machine.symbols,
@@ -293,7 +332,6 @@ def main_page(request):
                     riscv_machine.nxt_key = key
 
             if intel_machine.flavor is not None:
-                print(intel_machine.registers)
                 get_reg_contents(intel_machine.registers, request)
                 get_mem_contents(intel_machine.memory, request)
                 get_stack_contents(intel_machine.stack, request)
@@ -316,11 +354,9 @@ def main_page(request):
                 riscv_machine.start_ip = int(request.POST['start_ip'])
 
             if intel_machine.flavor in INTEL:
-                print("Intel flavor")
                 (last_instr, error, bit_code) = assemble(request.POST[CODE],
                                                          intel_machine.flavor,
                                                          intel_machine, step)
-                print((last_instr, error, bit_code))
             if mips_machine.flavor in MIPS:
                 (last_instr, error, bit_code) = assemble(request.POST[CODE],
                                                          mips_machine.flavor,
@@ -388,6 +424,7 @@ def main_page(request):
                        'registers': intel_machine.registers,
                        'memory': intel_machine.memory,
                        'stack': intel_machine.stack,
+                       'floatingStack': intel_machine.fp_stack_registers,
                        'symbols': intel_machine.symbols,
                        'cstack': intel_machine.c_stack,
                        'flags': intel_machine.flags,
@@ -459,7 +496,6 @@ def get_reg_contents(registers, request):
                 else:
                     registers[reg] = request.POST[reg]
         else:
-            print("float", reg, registers[reg])
             registers[reg] = request.POST[reg]
 
 
