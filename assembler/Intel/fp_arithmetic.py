@@ -191,14 +191,15 @@ class FAdd(Instruction):
 
 class FSub(Instruction):
     """
-    sets sum  of floating-point register (FPR) FRA and
-    floating-point register (FPB)
-
+    1 op - subtracts val from stack top ST(0)
+    2 ops - sets difference  of floating stack ST(i) and floating
+    stack ST(j) to floating stack ST(i)
         <instr>
              FSUB
         </instr>
         <syntax>
-            FSUB FRA, FRB
+            FSUB val
+            FSUB ST(i), ST(j)
         </syntax>
     """
     def fhook(self, ops, vm):
