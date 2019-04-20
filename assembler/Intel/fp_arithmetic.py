@@ -171,9 +171,9 @@ def one_op_arith(ops, vm, instr, operator):
 
 class FAdd(Instruction):
     """
-    1 op - adds val to stack top ST(0)
-    2 ops - sets sum  of floating stack ST(i) and floating
-    stack ST(j) to floating stack ST(i)
+    1 op - adds val to stack top ST(0) and stores value at ST(0)
+    2 ops - sets sum  of floating stack ST(i) and floating stack
+    ST(j) to floating stack ST(i)
         <instr>
              FADD
         </instr>
@@ -191,9 +191,9 @@ class FAdd(Instruction):
 
 class FSub(Instruction):
     """
-    1 op - subtracts val from stack top ST(0)
-    2 ops - sets difference  of floating stack ST(i) and floating
-    stack ST(j) to floating stack ST(i)
+    1 op - subtracts val from stack top ST(0) and stores value at ST(0)
+    2 ops - sets difference  of floating stack ST(i) and floating stack
+    ST(j) to floating stack ST(i)
         <instr>
              FSUB
         </instr>
@@ -211,14 +211,15 @@ class FSub(Instruction):
 
 class FMul(Instruction):
     """
-    sets product  of floating-point register (FPR) FRA and
-    floating-point register (FPB)
-
+    1 op - multiplies val with stack top ST(0) and stores value at ST(0)
+    2 ops - sets product of floating stack ST(i)n and floating stack
+     ST(j) to floating stack ST(i)
         <instr>
              FMUL
         </instr>
         <syntax>
-            FMUL FRA, FRB
+            FMUL val
+            FMUL ST(i), ST(j)
         </syntax>
     """
     def fhook(self, ops, vm):
