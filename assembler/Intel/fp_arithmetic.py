@@ -171,13 +171,15 @@ def one_op_arith(ops, vm, instr, operator):
 
 class FAdd(Instruction):
     """
-    sets sum  of floating-point register (FPR) FRA and
-    floating-point register (FPB)
+    1 op - adds val to stack top ST(0)
+    2 ops - sets sum  of floating stack ST(i) and floating
+    stack ST(j) to floating stack ST(i)
         <instr>
              FADD
         </instr>
         <syntax>
-            FADD FRA, FRB
+            FADD val
+            FADD ST(i), ST(j)
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -185,6 +187,7 @@ class FAdd(Instruction):
             one_op_arith(ops,vm,self.name,add)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, add)
+
 
 class FSub(Instruction):
     """
