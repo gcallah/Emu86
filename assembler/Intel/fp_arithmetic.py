@@ -260,14 +260,15 @@ class FChs(Instruction):
 
 class FDiv(Instruction):
     """
-    sets quotient of floating-point register (FPR) FRA and
-    floating-point register (FPB)
-
+    1 op - divides stack top ST(0) with val and stores value at ST(0)
+    2 ops - sets quotient of dividing floating stack ST(i) and floating stack
+     ST(j) to floating stack ST(i)
         <instr>
              FDIV
         </instr>
         <syntax>
-            FDIV FRA, FRB
+            FDIV val
+            FDIV ST(i), ST(j)
         </syntax>
     """
     def fhook(self, ops, vm):
