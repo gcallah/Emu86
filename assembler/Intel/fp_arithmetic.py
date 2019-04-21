@@ -212,7 +212,7 @@ class FSub(Instruction):
 class FMul(Instruction):
     """
     1 op - multiplies val with stack top ST(0) and stores value at ST(0)
-    2 ops - sets product of floating stack ST(i)n and floating stack
+    2 ops - sets product of floating stack ST(i) and floating stack
      ST(j) to floating stack ST(i)
         <instr>
              FMUL
@@ -260,8 +260,8 @@ class FChs(Instruction):
 
 class FDiv(Instruction):
     """
-    1 op - divides stack top ST(0) with val and stores value at ST(0)
-    2 ops - sets quotient of dividing floating stack ST(i) and floating stack
+    1 op - divides stack top ST(0) with val and stores the result at ST(0)
+    2 ops - sets the result of dividing floating stack ST(i) by floating stack
      ST(j) to floating stack ST(i)
         <instr>
              FDIV
