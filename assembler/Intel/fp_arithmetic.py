@@ -4,8 +4,8 @@ fp_arithmetic.py: arithmetic floating point instructions.
 
 # import operator as opfunc
 from assembler.errors import check_num_args
-from assembler.tokens import Instruction
-from .arithmetic import checkflag
+from assembler.tokens import Instruction, MAX_FLOAT, MIN_FLOAT
+# from .arithmetic import checkflag
 # from assembler.virtual_machine import intel_machine
 from .fp_conversions import add, sub, mul, div, fabs, chs
 
@@ -144,6 +144,16 @@ def floating_point_subtraction(num1, num2):
         if '.' not in hex_equi:
             hex_equi += '.0'
         return hex_equi
+
+
+
+def checkflag(val, vm):
+    if(val > MAX_FLOAT):
+        vm.flags['CF'] = 1
+        val = val - MAX_FLOAT+1
+    else:
+        vm.flags['CF'] = 0
+    return val
 
 
 def two_op_arith(ops, vm, instr, operator):
