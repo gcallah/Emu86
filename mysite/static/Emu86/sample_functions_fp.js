@@ -10,8 +10,12 @@ function area_fp(flavor) {
 }
 function data_fp(flavor) {
 	let codeString = '';
+	if (flavor === 'intel'){
+		codeString += '; Declare arrays\n.data\n    x DB 0x3f99999a, 0x2, 0x40600000, 0x4, 0x5\n    y DW 0x2, 0x36, 0x3fb33333, 0x8\n    z DD 0xA DUP (0x32)\n\n; Storing values into memory using register arithmetic\n.text\n    mov R7, 0x6\n    mov [R7], [x+0x2]\n    mov [R7+0x2], [y+0x3]\n    mov [R6], [z]\n    mov [R7-0x5], [y+0x2]\n    mov [-0x5+R7], [y+0x2]';
+	}
+	else if (flavor === 'mips_asm'){
 	codeString += '; First comes the data section, where we declare some names.\n.data\n    x: .float 8.0\n    y: .float 10.5\n    z: .double 20.555\n\n; Next is the .text section, where we use them:\n.text\n    0x400000 LWC F8, 0(F28)\n    0x400004 LWC F10, 4(F28)\n    0x400008 LDC F12, 8(F28)\n';
-
+	}
 	document.getElementById('id_code').value = codeString;
 }
 function power_fp(flavor) {
