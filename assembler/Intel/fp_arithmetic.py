@@ -163,7 +163,7 @@ def one_op_arith(ops, vm, instr, operator):
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-
+    check_num_args(instr, ops, 2)
     val_float_stack_top = vm.pop_from_Float_Stack()
     vm.push_to_Float_Stack(operator(val_float_stack_top,ops[0].get_val()))
 
