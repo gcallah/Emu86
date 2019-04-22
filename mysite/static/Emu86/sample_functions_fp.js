@@ -1,7 +1,7 @@
 function area_fp(flavor) {
 	let codeString = '';
-	if (flavor === 'intel'){
-		codeString += '; Declare length and width\n.data\n    long DW 35.5\n    wide DW 27.6\n\n; Calculate area of rectangle\n.text\n    mov R0, [long]\n    imul R0, [wide]\n';
+	f (flavor === 'intel'){
+		codeString += '; Declare length and width\n.data\n    long DW 0x40600000\n    wide DW 0x1B\n\n; Calculate area of rectangle\n.text\n    mov R7, [long]\n    imul R6, [wide]\n';
 	}
 	else if (flavor === 'mips_asm'){
 	codeString += '; Declare length and width\n.data\n\tlong: .float 12.2\n\twide: .float 12.5\n\n; Calc area of rect\n.text\n\t0x40000 LWC F8, 0(F28)\n    0x40004 LWC F10, 4(F28)\n    0x40008 MULT.S F12, F8, F10';
