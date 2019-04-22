@@ -1,6 +1,6 @@
 function area_fp(flavor) {
 	let codeString = '';
-	f (flavor === 'intel'){
+	if (flavor === 'intel'){
 		codeString += '; Declare length and width\n.data\n    long DW 0x40600000\n    wide DW 0x1B\n\n; Calculate area of rectangle\n.text\n    mov R7, [long]\n    imul R6, [wide]\n';
 	}
 	else if (flavor === 'mips_asm'){
