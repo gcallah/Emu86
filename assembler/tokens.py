@@ -5,6 +5,7 @@ tokens.py: contains classes we tokenize into.
 # for floating point to binary and back
 import struct
 import binascii
+import sys
 
 from abc import abstractmethod
 
@@ -16,6 +17,9 @@ from .errors import TooBigForSingle, TooBigForDouble
 BITS = 32   # we are on a 32-bit machine
 MAX_INT = (2**(BITS-1)) - 1
 MIN_INT = -(2**(BITS-1))
+
+MAX_FLOAT = sys.float_info.max
+MIN_FLOAT = sys.float_info.min
 
 VALS = 0
 MEM_LOC = 1

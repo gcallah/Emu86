@@ -125,18 +125,13 @@
                     {% else %}
                         <option value="keyInterrupt">Keyboard interrupt</option>
                     {% endif %}
-                    {% if sample == "float_addition" %}
-                    <option value="float_addition" selected>Add Floating Point Numbers</option>
-                    {% else %}
-                    <option value="float_addition">Add Floating Point Numbers</option>
-                    {% endif %}
                     {% if sample == "dataAccess" %}
                         <option value="dataAccess" selected>Accessing data in memory</option>
                     {% else %}
                         <option value="dataAccess">Accessing data in memory</option>
                     {% endif %}
                 {% endif %}
-                {% if flavor == "mips_asm" %}
+                {% if flavor == "mips_asm" or flavor == "intel" %}
                     {% if sample == "area_fp" %}
                         <option value="area_fp" selected>Area of a rectangle using floating point</option>
                     {% else %}

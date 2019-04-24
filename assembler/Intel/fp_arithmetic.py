@@ -4,8 +4,8 @@ fp_arithmetic.py: arithmetic floating point instructions.
 
 # import operator as opfunc
 from assembler.errors import check_num_args
-from assembler.tokens import Instruction
-from .arithmetic import checkflag
+from assembler.tokens import Instruction, MAX_FLOAT, MIN_FLOAT
+# from .arithmetic import checkflag
 # from assembler.virtual_machine import intel_machine
 from .fp_conversions import add, sub, mul, div, fabs, chs
 
@@ -146,6 +146,16 @@ def floating_point_subtraction(num1, num2):
         return hex_equi
 
 
+
+def checkflag(val, vm):
+    if(val > MAX_FLOAT):
+        vm.flags['CF'] = 1
+        val = val - MAX_FLOAT+1
+    else:
+        vm.flags['CF'] = 0
+    return val
+
+
 def two_op_arith(ops, vm, instr, operator):
     """
         operator: this is the functional version of Python's
@@ -163,7 +173,7 @@ def one_op_arith(ops, vm, instr, operator):
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-
+    check_num_args(instr, ops, 1)
     val_float_stack_top = vm.pop_from_Float_Stack()
     vm.push_to_Float_Stack(operator(val_float_stack_top,ops[0].get_val()))
 
@@ -171,13 +181,15 @@ def one_op_arith(ops, vm, instr, operator):
 
 class FAdd(Instruction):
     """
-    sets sum  of floating-point register (FPR) FRA and
-    floating-point register (FPB)
+    1 op - adds val to stack top ST(0) and stores value at ST(0)
+    2 ops - sets sum  of floating stack ST(i) and floating stack
+    ST(j) to floating stack ST(i)
         <instr>
              FADD
         </instr>
         <syntax>
-            FADD FRA, FRB
+            FADD val
+            FADD ST(i), ST(j)
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -186,16 +198,18 @@ class FAdd(Instruction):
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, add)
 
+
 class FSub(Instruction):
     """
-    sets sum  of floating-point register (FPR) FRA and
-    floating-point register (FPB)
-
+    1 op - subtracts val from stack top ST(0) and stores value at ST(0)
+    2 ops - sets difference  of floating stack ST(i) and floating stack
+    ST(j) to floating stack ST(i)
         <instr>
              FSUB
         </instr>
         <syntax>
-            FSUB FRA, FRB
+            FSUB val
+            FSUB ST(i), ST(j)
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -207,14 +221,15 @@ class FSub(Instruction):
 
 class FMul(Instruction):
     """
-    sets product  of floating-point register (FPR) FRA and
-    floating-point register (FPB)
-
+    1 op - multiplies val with stack top ST(0) and stores value at ST(0)
+    2 ops - sets product of floating stack ST(i) and floating stack
+     ST(j) to floating stack ST(i)
         <instr>
              FMUL
         </instr>
         <syntax>
-            FMUL FRA, FRB
+            FMUL val
+            FMUL ST(i), ST(j)
         </syntax>
     """
     def fhook(self, ops, vm):
@@ -255,14 +270,15 @@ class FChs(Instruction):
 
 class FDiv(Instruction):
     """
-    sets quotient of floating-point register (FPR) FRA and
-    floating-point register (FPB)
-
+    1 op - divides stack top ST(0) with val and stores the result at ST(0)
+    2 ops - sets the result of dividing floating stack ST(i) by floating stack
+     ST(j) to floating stack ST(i)
         <instr>
              FDIV
         </instr>
         <syntax>
-            FDIV FRA, FRB
+            FDIV val
+            FDIV ST(i), ST(j)
         </syntax>
     """
     def fhook(self, ops, vm):
