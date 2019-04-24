@@ -8,6 +8,6 @@ ssh-add ~/.ssh/id_rsa # Add the private key to SSH
 echo "SSHing to PythonAnywhere."
 ssh gcallah@ssh.pythonanywhere.com << EOF
     cd /home/gcallah/Emu86
-    /home/gcallah/Emu86/myutils/rebuild.sh
+    /home/gcallah/Emu86/myutils/prod.sh
 EOF
 
