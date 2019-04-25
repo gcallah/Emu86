@@ -58,5 +58,17 @@ class AssembleTestCase(TestCase):
     def test_mul(self):
         self.two_op_test(opfunc.mul, "i32.mul")
 
+    def test_div_s(self):
+        self.two_op_test(opfunc.floordiv, "i32.div_s")
+    
+    def test_and(self):
+        self.two_op_test(opfunc.and_, "i32.and")
+
+    def test_or(self):
+        self.two_op_test(opfunc.or_, "i32.or")
+
+    def test_xor(self):
+        self.two_op_test(opfunc.xor, "i32.xor")
+
 if __name__ == '__main__':
     main()
