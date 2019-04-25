@@ -140,5 +140,5 @@ dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 prod: $(SRCS) $(OBJ) navbar tests
 	-git commit -a
 	git push origin master
-	# hoping we can deploy from travis now:
+	# we can deploy from travis now, so don't do:
 	# ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'
