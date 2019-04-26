@@ -324,9 +324,7 @@ def assemble(code, flavor, vm, step=False):
 
     # break the code into tokens:
     try:
-
         tok_lines = lex(code, flavor, vm)
-
         tok_lines = parse(tok_lines, flavor, vm)
 
     except Error as err:

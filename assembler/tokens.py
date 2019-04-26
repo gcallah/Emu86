@@ -391,6 +391,13 @@ class Label(Location):
 class NewSymbol(Token):
     def __init__(self, name, index=None):
         super().__init__(name)
+        self.val = 0
+
+    def get_val(self):
+        return self.val
+    
+    def set_val(self, value):
+        self.val = value
 
 
 class Symbol(Location):

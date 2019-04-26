@@ -13,10 +13,12 @@ def get_operator_one(vm):
 
 
 def get_both_operators(vm):
+    vm.dec_sp()
     val_one = get_operator_one(vm)
     vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = 0
     vm.dec_sp()
     val_two = vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]
+    vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = 0
     return val_one, val_two
 
 

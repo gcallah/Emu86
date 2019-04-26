@@ -44,6 +44,7 @@ class AssembleTestCase(TestCase):
             wasm_machine.inc_sp()
             sp = wasm_machine.get_sp()
             wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
+            wasm_machine.inc_sp()
             wasm_machine.base = "dec"
             assemble(instr, 'wasm', wasm_machine)
             sp = wasm_machine.get_sp()
