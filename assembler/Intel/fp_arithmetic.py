@@ -4,7 +4,7 @@ fp_arithmetic.py: arithmetic floating point instructions.
 
 # import operator as opfunc
 from assembler.errors import check_num_args
-from assembler.tokens import Instruction, MAX_FLOAT, MIN_FLOAT
+from assembler.tokens import Instruction, MAX_FLOAT, MIN_FLOAT, Register
 # from .arithmetic import checkflag
 # from assembler.virtual_machine import intel_machine
 from .fp_conversions import add, sub, mul, div, fabs, chs
@@ -162,10 +162,15 @@ def two_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 2)
-    ops[0].set_val(
-        checkflag(operator(ops[0].get_val(),
-                           ops[1].get_val()), vm))
-    vm.changes.add(ops[0].get_nm())
+    offset1, offset2 = [int(x.get_nm()[-1]) for x in ops]
+    first_reg = vm.get_float_stack_register_at_offset(offset1)
+    second_reg = vm.get_float_stack_register_at_offset(offset2)
+    r1, r2 = vm.fp_stack_registers[first_reg], vm.fp_stack_registers[second_reg]
+    vm.fp_stack_registers[first_reg] = r1+r2
+    # r1.set_val(
+    #     checkflag(operator(r1.get_val(),
+    #                        r2.get_val()), vm))
+    # vm.changes.add(r1)
 
 
 def one_op_arith(ops, vm, instr, operator):
