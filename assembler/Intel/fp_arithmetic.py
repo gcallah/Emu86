@@ -285,6 +285,26 @@ class FMul(Instruction):
             two_op_arith(ops, vm, self.name, mul)
 
 
+class FMulP(Instruction):
+    """
+    1 op - multiplies val with stack top ST(0) and stores value at ST(0) and then pops the stack
+    2 ops - sets product of floating stack ST(i) and floating stack
+     ST(j) to floating stack ST(i) and then pops the stack
+        <instr>
+             FMULP
+        </instr>
+        <syntax>
+            FMULP val
+            FMULP ST(i), ST(j)
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        if len(ops) == 1:
+            one_op_arith(ops,vm,self.name,mul)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, mul)
+        vm.pop_from_Float_Stack()
+
 class FAbs(Instruction):
     """
     sets bit  of floating-point register (FPR) FRB to 0
