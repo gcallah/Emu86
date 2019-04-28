@@ -204,6 +204,26 @@ class FAdd(Instruction):
             two_op_arith(ops, vm, self.name, add)
 
 
+class FaddP(Instruction):
+    """
+        1 op - adds val to stack top ST(0) and stores value at ST(0) and then pops stack
+        2 ops - sets sum  of floating stack ST(i) and floating stack  ST(j) to floating stack ST(i) and then pops stack
+            <instr>
+                 FADDP
+            </instr>
+            <syntax>
+                FADDP val
+                FADDP ST(i), ST(j)
+            </syntax>
+        """
+    def fhook(self, ops, vm):
+        if len(ops) == 1:
+            one_op_arith(ops, vm, self.name, add)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, add)
+        vm.pop_from_Float_Stack()
+
+
 class FSub(Instruction):
     """
     1 op - subtracts val from stack top ST(0) and stores value at ST(0)
