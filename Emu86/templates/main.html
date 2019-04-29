@@ -783,6 +783,24 @@
     </div>
 
     <script>
+
+    var sortedElement = document.getElementById('sample');
+    console.log('hi');
+    var tmpAry = new Array();
+    for (var i=0;i<sortedElement.options.length;i++) {
+        tmpAry[i] = new Array();
+        tmpAry[i][0] = sortedElement.options[i].text;
+        tmpAry[i][1] = sortedElement.options[i].value;
+    }
+    tmpAry.sort();
+    while (sortedElement.options.length > 0) {
+        sortedElement.options[0] = null;
+    }
+    for (var i=0;i<tmpAry.length;i++) {
+        var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+        sortedElement.options[i] = op;
+    }
+    
         if (document.getElementsByName("button_type")[0].value == "demo"){
             SubmitForm(true);
         }
