@@ -135,6 +135,20 @@ function selectSample()
             area_fp(flav.value);
         }
     }
+
+    var sortedElement = document.getElementById('sample');
+    console.log('hi');
+    var tmpAry = new Array();
+    for (var i=0;i<sortedElement.options.length;i++) {
+        tmpAry[i] = new Array();
+        tmpAry[i][0] = sortedElement.options[i].text;
+        tmpAry[i][1] = sortedElement.options[i].value;
+    }
+    tmpAry.sort();
+    while (sortedElement.options.length > 0) {
+        sortedElement.options[0] = null;
+    }
+  
 }
 
 function checkForScript()
