@@ -28,3 +28,12 @@ function power_fp(flavor) {
 	}
 	document.getElementById('id_code').value = codeString;
 }
+
+function addTwo_fp(flavor)
+{
+	let codeString = '';
+	if (flavor === 'intel'){
+		codeString += '; Declare number and sum.\n.data\n    long DW 0x40600000\n    sum DW ?\n\n; Store first number to R7\n; Add 0x40000 to value in R7\n; Store total to sum\n.text\n    mov R7, [number]\n    add R7, 0x9E\n    mov [sum], R7\n';
+	}
+	document.getElementById('id_code').value = codeString;
+}

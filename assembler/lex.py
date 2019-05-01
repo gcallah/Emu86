@@ -111,9 +111,12 @@ def generate_float_stack_dict(vm, flavor):
         A dictionary of (registers, register tokens)
     """
     registers = {}
-    for reg in vm.fp_stack_registers:
 
-        registers[reg] = Register(reg, vm)
+    for i in range(8):
+        registers['ST'+str(i)] = NewSymbol('ST'+str(i))
+    # for reg in vm.fp_stack_registers:
+        # registers[reg] = Register(reg, vm)
+
     return registers
 
 
@@ -146,7 +149,7 @@ def make_language_keys(vm, flavor):
         from .Intel.key_words import instructions
         language_keys.update(instructions)
         if flavor == "intel":
-            # language_keys.update(generate_float_stack_dict(vm, flavor))
+            language_keys.update(generate_float_stack_dict(vm, flavor))
             from .Intel.key_words import intel_key_words
             language_keys.update(intel_key_words)
         else:

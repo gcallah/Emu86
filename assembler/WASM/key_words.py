@@ -2,7 +2,8 @@ from .arithmetic import Add, Sub, Mul, Div_S, Div_U
 from .arithmetic import Rem_S, Rem_U, And, Or, Xor
 from .arithmetic import Shl, Shr_S, Shr_U, Rotl, Rotr
 from .arithmetic import Clz, Ctz, Popcnt, Eqz
-from .data_mov import Global_mov, Local_mov, Store_global, Store_local
+from .data_mov import Global_set, Local_set, Store_global, Store_local
+from .data_mov import Global_get, Local_get, Store_const
 from assembler.tokens import DataType
 
 key_words = {
@@ -31,8 +32,11 @@ key_words = {
     'i32.eqz': Eqz('.eqz'),
 
     # data movement
-    'global.get': Global_mov('global.get'),
-    'local.get': Local_mov('local.get'),
+    'global.get': Global_get('global.get'),
+    'local.get': Local_get('local.get'),
+    'global.set': Global_set('global.set'),
+    'local.set': Local_set('local.set'),
     'global': Store_global('global'),
-    'local': Store_local('local')
+    'local': Store_local('local'),
+    'i32.const': Store_const('i32.const')
 }

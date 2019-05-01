@@ -1,8 +1,8 @@
 from assembler.errors import check_num_args, InvalidArgument
-from assembler.tokens import Instruction, Symbol
+from assembler.tokens import Instruction, NewSymbol, IntegerTok
 
 
-class Global_mov(Instruction):
+class Global_get(Instruction):
     """
         <instr>
              global.get
@@ -16,18 +16,44 @@ class Global_mov(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
-        if isinstance(ops[0], Symbol):
+        if isinstance(ops[0], NewSymbol):
             try:
-                vm.dec_sp()
-                stack_loc = hex(vm.get_sp() + 1).split('x')[-1].upper()
+                stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
                 vm.stack[stack_loc] = vm.globals[ops[0].get_nm()].get_val()
+                vm.inc_sp()
             except Exception:
                 raise InvalidArgument(ops[0].get_nm())
         else:
             raise InvalidArgument(ops[0].get_nm())
 
 
-class Local_mov(Instruction):
+class Global_set(Instruction):
+    """
+        <instr>
+             global.set
+        </instr>
+        <syntax>
+            global.set var
+        </syntax>
+        <descr>
+            Copies the value of op1 onto the stack
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.get_nm(), ops, 1)
+        if isinstance(ops[0], NewSymbol):
+            try:
+                vm.dec_sp()
+                stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
+                vm.globals[ops[0].get_nm()].set_val(vm.stack[stack_loc])
+                vm.stack[stack_loc] = 0
+            except Exception:
+                raise InvalidArgument(ops[0].get_nm())
+        else:
+            raise InvalidArgument(ops[0].get_nm())
+
+
+class Local_get(Instruction):
     """
         <instr>
              local.get
@@ -41,11 +67,36 @@ class Local_mov(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
-        if isinstance(ops[0], Symbol):
+        if isinstance(ops[0], NewSymbol):
+            try:
+                stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
+                vm.stack[stack_loc] = vm.locals[ops[0].get_nm()].get_val()
+                vm.inc_sp()
+            except Exception:
+                raise InvalidArgument(ops[0].get_nm())
+        else:
+            raise InvalidArgument(ops[0].get_nm())
+
+
+class Local_set(Instruction):
+    """
+        <instr>
+             local.set
+        </instr>
+        <syntax>
+            local.set var
+        </syntax>
+        <descr>
+            Copies the value of op1 onto the stack
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.get_nm(), ops, 1)
+        if isinstance(ops[0], NewSymbol):
             try:
                 vm.dec_sp()
-                stack_loc = hex(vm.get_sp() + 1).split('x')[-1].upper()
-                vm.stack[stack_loc] = vm.local[ops[0].get_nm()].get_val()
+                stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
+                vm.locals[ops[0].get_nm()].set_val(vm.stack[stack_loc])
             except Exception:
                 raise InvalidArgument(ops[0].get_nm())
         else:
@@ -66,7 +117,7 @@ class Store_global(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
-        if isinstance(ops[0], Symbol):
+        if isinstance(ops[0], NewSymbol):
             try:
                 vm.globals[ops[0].get_nm()] = ops[0]
             except Exception:
@@ -89,9 +140,34 @@ class Store_local(Instruction):
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
-        if isinstance(ops[0], Symbol):
+        if isinstance(ops[0], NewSymbol):
             try:
                 vm.locals[ops[0].get_nm()] = ops[0]
+            except Exception:
+                raise InvalidArgument(ops[0].get_nm())
+        else:
+            raise InvalidArgument(ops[0].get_nm())
+
+
+class Store_const(Instruction):
+    """
+        <instr>
+             i32.const
+        </instr>
+        <syntax>
+            i32.const val
+        </syntax>
+        <descr>
+            Store a constant value onto the stack
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.get_nm(), ops, 1)
+        if isinstance(ops[0], IntegerTok):
+            try:
+                stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
+                vm.stack[stack_loc] = ops[0].get_val()
+                vm.inc_sp()
             except Exception:
                 raise InvalidArgument(ops[0].get_nm())
         else:

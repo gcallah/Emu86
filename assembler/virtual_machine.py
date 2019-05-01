@@ -459,6 +459,19 @@ class WASMMachine(VirtualMachine):
         self.stack_ptr = STACK_BOTTOM
         self.ip = 0
 
+    def re_init(self):
+        self.nxt_key = 0
+        self.ip = 0
+        self.mem_init()
+        self.stack_init()
+        self.data_init = "on"
+        self.changes_init()
+        self.symbols_init()
+        self.labels_init()
+        self.cstack_init()
+        self.stack_change = ""
+        self.next_stack_change = ""
+
     def locals_init(self):
         self.locals.clear()
 

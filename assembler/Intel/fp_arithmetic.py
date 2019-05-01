@@ -4,7 +4,7 @@ fp_arithmetic.py: arithmetic floating point instructions.
 
 # import operator as opfunc
 from assembler.errors import check_num_args
-from assembler.tokens import Instruction, MAX_FLOAT, MIN_FLOAT
+from assembler.tokens import Instruction, MAX_FLOAT, MIN_FLOAT, Register
 # from .arithmetic import checkflag
 # from assembler.virtual_machine import intel_machine
 from .fp_conversions import add, sub, mul, div, fabs, chs
@@ -162,10 +162,15 @@ def two_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 2)
-    ops[0].set_val(
-        checkflag(operator(ops[0].get_val(),
-                           ops[1].get_val()), vm))
-    vm.changes.add(ops[0].get_nm())
+    offset1, offset2 = [int(x.get_nm()[-1]) for x in ops]
+    first_reg = vm.get_float_stack_register_at_offset(offset1)
+    second_reg = vm.get_float_stack_register_at_offset(offset2)
+    r1, r2 = vm.fp_stack_registers[first_reg], vm.fp_stack_registers[second_reg]
+    vm.fp_stack_registers[first_reg] = operator(r1,r2)
+    # r1.set_val(
+    #     checkflag(operator(r1.get_val(),
+    #                        r2.get_val()), vm))
+    # vm.changes.add(r1)
 
 
 def one_op_arith(ops, vm, instr, operator):
@@ -199,6 +204,26 @@ class FAdd(Instruction):
             two_op_arith(ops, vm, self.name, add)
 
 
+class FaddP(Instruction):
+    """
+        1 op - adds val to stack top ST(0) and stores value at ST(0) and then pops stack
+        2 ops - sets sum  of floating stack ST(i) and floating stack  ST(j) to floating stack ST(i) and then pops stack
+            <instr>
+                 FADDP
+            </instr>
+            <syntax>
+                FADDP val
+                FADDP ST(i), ST(j)
+            </syntax>
+        """
+    def fhook(self, ops, vm):
+        if len(ops) == 1:
+            one_op_arith(ops, vm, self.name, add)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, add)
+        vm.pop_from_Float_Stack()
+
+
 class FSub(Instruction):
     """
     1 op - subtracts val from stack top ST(0) and stores value at ST(0)
@@ -217,6 +242,27 @@ class FSub(Instruction):
             one_op_arith(ops,vm,self.name,sub)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, sub)
+
+
+class FSubP(Instruction):
+    """
+    1 op - subtracts val from stack top ST(0) and stores value at ST(0) and then pops the stack
+    2 ops - sets difference  of floating stack ST(i) and floating stack
+    ST(j) to floating stack ST(i) and then pops the stack
+        <instr>
+             FSUBP
+        </instr>
+        <syntax>
+            FSUBP val
+            FSUBP ST(i), ST(j)
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        if len(ops) == 1:
+            one_op_arith(ops,vm,self.name,sub)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, sub)
+        vm.pop_from_Float_Stack()
 
 
 class FMul(Instruction):
@@ -238,6 +284,26 @@ class FMul(Instruction):
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, mul)
 
+
+class FMulP(Instruction):
+    """
+    1 op - multiplies val with stack top ST(0) and stores value at ST(0) and then pops the stack
+    2 ops - sets product of floating stack ST(i) and floating stack
+     ST(j) to floating stack ST(i) and then pops the stack
+        <instr>
+             FMULP
+        </instr>
+        <syntax>
+            FMULP val
+            FMULP ST(i), ST(j)
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        if len(ops) == 1:
+            one_op_arith(ops,vm,self.name,mul)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, mul)
+        vm.pop_from_Float_Stack()
 
 class FAbs(Instruction):
     """

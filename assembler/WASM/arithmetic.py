@@ -13,10 +13,12 @@ def get_operator_one(vm):
 
 
 def get_both_operators(vm):
+    vm.dec_sp()
     val_one = get_operator_one(vm)
     vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = 0
     vm.dec_sp()
     val_two = vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]
+    vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = 0
     return val_one, val_two
 
 
@@ -127,11 +129,10 @@ class Div_U(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
         if val_two == 0:
             raise DivisionZero()
-        result = opfunc.floordiv(val_one, val_two)
+        result = opfunc.floordiv(abs(val_one), abs(val_two))
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
 
@@ -151,9 +152,6 @@ class Rem_S(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
-        if ops[1].get_val() == 0:
-            raise DivisionZero()
         two_op_arith(ops, vm, self.name, opfunc.mod)
 
 
@@ -172,11 +170,8 @@ class Rem_U(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
-        if val_two == 0:
-            raise DivisionZero()
-        result = opfunc.mod(val_one, val_two)
+        result = opfunc.mod(abs(val_one), abs(val_two))
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
 
@@ -250,10 +245,10 @@ class Shl(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
-        val_two = bin(val_two)[2:] % 32 # only for i32
+        val_two = val_two % 32 # only for i32
         result = opfunc.lshift(val_one, val_two)
+        check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
 
 
@@ -272,9 +267,8 @@ class Shr_S(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
-        val_two = bin(val_two)[2:] % 32 # only for i32
+        val_two = val_two % 32 # only for i32
         result = opfunc.rshift(val_one, val_two)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
 
@@ -294,10 +288,11 @@ class Shr_U(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
-        val_two = bin(val_two)[2:] % 32 # only for i32
-        result = opfunc.lshift(val_one, val_two)
+        val_one_abs = abs(val_one)
+        val_two_abs = abs(val_two)
+        val_two_abs = val_two_abs % 32 # only for i32
+        result = opfunc.rshift(val_one_abs, val_two_abs)
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
 
@@ -317,7 +312,6 @@ class Rotl(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
         val_one_bin = bin(val_one)[2:]
         val_two = bin(val_two)[2:] % 32 # only for i32
@@ -341,7 +335,6 @@ class Rotr(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 2)
         val_one, val_two = get_both_operators(vm)
         val_one_bin = bin(val_one)[2:]
         val_two = bin(val_two)[2:] % 32 # only for i32
@@ -364,7 +357,6 @@ class Clz(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
         val_one = get_operator_one(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
@@ -390,7 +382,6 @@ class Ctz(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
         val_one = get_operator_one(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
@@ -441,7 +432,6 @@ class Eqz(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
         val_one = get_operator_one(vm)
         result = False
         if val_one == 0:

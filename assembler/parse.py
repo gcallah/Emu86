@@ -716,12 +716,17 @@ def get_op(token_line, pos, flavor, vm):
 
 # Symbol/Label Token
     elif isinstance(token_line[pos], NewSymbol):
-        if token_line[pos].get_nm() in vm.labels:
-            return (Label(token_line[pos].get_nm(), vm), pos + 1)
-        elif token_line[pos].get_nm() in vm.symbols:
-            return symbol_token(token_line, pos, flavor, vm)
+        if flavor == "wasm":
+            return token_line[pos], pos + 1
         else:
-            raise UnknownName(token_line[pos].get_nm())
+            if token_line[pos].get_nm() in vm.labels:
+                return (Label(token_line[pos].get_nm(), vm), pos + 1)
+            elif token_line[pos].get_nm() in vm.symbols:
+                return symbol_token(token_line, pos, flavor, vm)
+            elif flavor == 'intel' and token_line[pos].get_nm()[:2]=="ST":
+                return token_line[pos], pos + 1
+            else:
+                raise UnknownName(token_line[pos].get_nm())
 
 # Address Token
     elif is_start_address(token_line, pos, flavor):

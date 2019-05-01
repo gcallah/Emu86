@@ -44,6 +44,25 @@ class AssembleTestCase(TestCase):
             wasm_machine.inc_sp()
             sp = wasm_machine.get_sp()
             wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
+            wasm_machine.inc_sp()
+            wasm_machine.base = "dec"
+            assemble(instr, 'wasm', wasm_machine)
+            sp = wasm_machine.get_sp()
+            self.assertEqual(wasm_machine.stack[hex(sp).split('x')[-1].upper()], correct)
+
+    def two_op_test_unsigned(self, operator, instr,
+                             low1=MIN_TEST, high1=MAX_TEST,
+                             low2=MIN_TEST, high2=MAX_TEST):
+        for i in range(0, NUM_TESTS):
+            a = abs(random.randint(low1, high1))
+            b = abs(random.randint(low2, high2))
+            correct = operator(a, b)
+            sp = wasm_machine.get_sp()
+            wasm_machine.stack[hex(sp).split('x')[-1].upper()] = b
+            wasm_machine.inc_sp()
+            sp = wasm_machine.get_sp()
+            wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
+            wasm_machine.inc_sp()
             wasm_machine.base = "dec"
             assemble(instr, 'wasm', wasm_machine)
             sp = wasm_machine.get_sp()
@@ -60,6 +79,15 @@ class AssembleTestCase(TestCase):
 
     def test_div_s(self):
         self.two_op_test(opfunc.floordiv, "i32.div_s")
+
+    def test_div_u(self):
+        self.two_op_test_unsigned(opfunc.floordiv, "i32.div_u")
+
+    def test_rem_s(self):
+        self.two_op_test(opfunc.mod, "i32.rem_s")
+
+    def test_rem_u(self):
+        self.two_op_test_unsigned(opfunc.mod, "i32.rem_u")
     
     def test_and(self):
         self.two_op_test(opfunc.and_, "i32.and")
@@ -69,6 +97,21 @@ class AssembleTestCase(TestCase):
 
     def test_xor(self):
         self.two_op_test(opfunc.xor, "i32.xor")
+
+    def test_shl(self):
+        self.two_op_test(opfunc.lshift, "i32.shl", 
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=0, high2=MAX_SHIFT)
+    
+    def test_shr_s(self):
+        self.two_op_test(opfunc.rshift, "i32.shr_s",
+                         low1=MIN_MUL, high1=MAX_MUL,
+                         low2=0, high2=MAX_SHIFT)
+
+    def test_shr_u(self):
+        self.two_op_test_unsigned(opfunc.rshift, "i32.shr_u",
+                                  low1=MIN_MUL, high1=MAX_MUL,
+                                  low2=0, high2=MAX_SHIFT)
 
 if __name__ == '__main__':
     main()
