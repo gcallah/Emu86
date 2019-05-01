@@ -7,7 +7,7 @@
             to come.
             <form action="{% url 'Emu86:main_page' %}" method="post">
                 {% csrf_token %}
-                <br>Select your language:
+                <br>Select your dialect of assembler:
                 <select name="language" onchange="SetBase()">
                     <option value="intel"> Intel </option>
                     <option value="att"> AT&amp;T </option>
