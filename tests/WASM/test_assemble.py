@@ -32,6 +32,19 @@ class AssembleTestCase(TestCase):
     # Two Operand Tests #
     #####################
 
+    def one_op_test(self, operator, instr,
+                    low1=MIN_TEST, high1=MAX_TEST):
+        for i in range(0, NUM_TESTS):
+            a = random.randint(low1, high1)
+            correct = operator(a)
+            sp = wasm_machine.get_sp()
+            wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
+            wasm_machine.inc_sp()
+            wasm_machine.base = "dec"
+            assemble(instr, 'wasm', wasm_machine)
+            sp = wasm_machine.get_sp()
+            self.assertEqual(wasm_machine.stack[hex(sp).split('x')[-1].upper()], correct)
+
     def two_op_test(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST):
@@ -112,6 +125,74 @@ class AssembleTestCase(TestCase):
         self.two_op_test_unsigned(opfunc.rshift, "i32.shr_u",
                                   low1=MIN_MUL, high1=MAX_MUL,
                                   low2=0, high2=MAX_SHIFT)
+    
+    def test_rotl(self):
+        def calc_correct_rotl(a, b):
+            a_bin = bin(a)[2:]
+            diff = 0
+            if len(a_bin) < 32:
+                diff = 32 - len(a_bin)
+            for i in range(0, diff):
+                a_bin = "0" + a_bin
+            b = b % 32 # only for i32
+            result = a_bin[b:] + a_bin[:b]
+            return int(result, 2)
+        self.two_op_test_unsigned(calc_correct_rotl, "i32.rotl")
+
+    def test_rotr(self):
+        def calc_correct_rotr(a, b):
+            a_bin = bin(a)[2:]
+            diff = 0
+            if len(a_bin) < 32:
+                diff = 32 - len(a_bin)
+            for i in range(0, diff):
+                a_bin = "0" + a_bin
+            b = b % 32 # only for i32
+            result = a_bin[-b:] + a_bin[:len(a_bin)-b]
+            return int(result, 2)
+        self.two_op_test_unsigned(calc_correct_rotr, "i32.rotr")
+
+    def test_clz(self):
+        def calc_correct_clz(a):
+            a_bin = bin(a)[2:]
+            result = 0
+            for i in a_bin:
+                if i == "0":
+                    result += 1
+                else:
+                    break
+            return result
+        self.one_op_test(calc_correct_clz, "i32.clz")
+        
+    def test_ctz(self):
+        def calc_correct_ctz(a):
+            a_bin = bin(a)[2:]
+            result = 0
+            for i in a_bin[::-1]:
+                if i == "0":
+                    result += 1
+                else:
+                    break
+            return result
+        self.one_op_test(calc_correct_ctz, "i32.ctz")
+
+    def test_popcnt(self):
+        def calc_correct_popcnt(a):
+            a_bin = bin(a)[2:]
+            result = 0
+            for i in a_bin:
+                if i == "1":
+                    result += 1
+            return result
+        self.one_op_test(calc_correct_popcnt, "i32.popcnt")
+
+    def test_eqz(self):
+        def calc_correct_eqz(a):
+            if a == 0:
+                return True
+            else:
+                return False
+        self.one_op_test(calc_correct_eqz, "i32.eqz")
 
 if __name__ == '__main__':
     main()
