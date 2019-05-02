@@ -395,7 +395,7 @@ class NewSymbol(Token):
 
     def get_val(self):
         return self.val
-    
+
     def set_val(self, value):
         self.val = value
 

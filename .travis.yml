@@ -8,8 +8,8 @@ services:
 addons:
     ssh_known_hosts: ssh.pythonanywhere.com
 
-before_install:
-    - openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
+# before_install:
+    # - openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
 
 install:
     - pip install -r docker/requirements-dev.txt
@@ -20,9 +20,9 @@ env:
 script:
     - make tests
 
-after_success:
-    - cd /home/travis/build/gcallah/Emu86; ./deploy.sh
+# after_success:
+    # - cd /home/travis/build/gcallah/Emu86; ./deploy.sh
 
 notifications:
-  slack: emu86:OyuLjhil66hjpwce1HyB43bL
-    - openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
+  slack: emu86:PJWVpwvXaU6dpB2VeD6UuBzf
+    # - openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
