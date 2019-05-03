@@ -8,12 +8,12 @@ from assembler.tokens import Instruction, MAX_INT
 
 
 def get_operator_one(vm):
+    vm.dec_sp()
     val_one = vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]
     return val_one
 
 
 def get_both_operators(vm):
-    vm.dec_sp()
     val_one = get_operator_one(vm)
     vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = 0
     vm.dec_sp()
@@ -313,10 +313,16 @@ class Rotl(Instruction):
     """
     def fhook(self, ops, vm):
         val_one, val_two = get_both_operators(vm)
+        val_one = abs(val_one)
+        val_two = abs(val_two)
         val_one_bin = bin(val_one)[2:]
-        val_two = bin(val_two)[2:] % 32 # only for i32
-        result = val_one_bin[val_two: len(val_one_bin) - val_two]
-        result += val_one_bin[:val_two]
+        diff = 0
+        if len(val_one_bin) < 32:
+            diff = 32 - len(val_one_bin)
+        for i in range(0, diff):
+            val_one_bin = "0" + val_one_bin
+        val_two = val_two % 32 # only for i32
+        result = val_one_bin[val_two:] + val_one_bin[:val_two]
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
 
 
@@ -336,10 +342,16 @@ class Rotr(Instruction):
     """
     def fhook(self, ops, vm):
         val_one, val_two = get_both_operators(vm)
+        val_one = abs(val_one)
+        val_two = abs(val_two)
         val_one_bin = bin(val_one)[2:]
-        val_two = bin(val_two)[2:] % 32 # only for i32
-        result = val_one_bin[-val_two:]
-        result += val_one_bin[: len(val_one_bin) - val_two]
+        diff = 0
+        if len(val_one_bin) < 32:
+            diff = 32 - len(val_one_bin)
+        for i in range(0, diff):
+            val_one_bin = "0" + val_one_bin
+        val_two = val_two % 32 # only for i32
+        result = val_one_bin[-val_two:] + val_one_bin[: len(val_one_bin) - val_two]
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
 
 
@@ -408,7 +420,6 @@ class Popcnt(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
         val_one = get_operator_one(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
