@@ -97,55 +97,6 @@ def dec_convert(val):
     return val
 
 
-def floating_point_addition(num1, num2):
-    """
-    :param num1: floating point hexadecimal number in str format
-    :param num2: floating point hexadecimal number in str format
-    :return: hexadecimal equivalent of addition of num1 and num2 in str format
-    Eg:- 'a2.e' + '3f.b' -> 'e2.9'
-    """
-    flag1, flag2 = (num1[0] == '-'), (num2[0] == '-')
-    if flag1 and flag2:
-        return '-' + floating_point_addition(num1[1:], num2[1:])
-    elif flag1:
-        return floating_point_subtraction(num2, num1[1:])
-    elif flag2:
-        return floating_point_subtraction(num1, num2[1:])
-    elif not flag1 and not flag2:
-        num1_dec = convert_hex_to_decimal(num1)
-        num2_dec = convert_hex_to_decimal(num2)
-        res = num1_dec + num2_dec
-        hex_equi = convert_dec_to_hex(res)
-        if '.' not in hex_equi:
-            hex_equi += '.0'
-        return hex_equi
-
-
-def floating_point_subtraction(num1, num2):
-    """
-    :param num1: floating point hexadecimal number in str format
-    :param num2: floating point hexadecimal number in str format
-    :return: hexadecimal equivalent of subtraction
-     of num1 and num2 in str format
-    Eg:- 'a2.e' - '3f.b' -> '63.3'
-    """
-    flag1, flag2 = (num1[0] == '-'), (num2[0] == '-')
-    if flag1 and flag2:
-        return floating_point_subtraction(num2[1:], num1[1:])
-    elif flag1:
-        return '-' + floating_point_addition(num1[1:], num2)
-    elif flag2:
-        return floating_point_addition(num1, num2[1:])
-    else:
-        num1_dec = convert_hex_to_decimal(num1)
-        num2_dec = convert_hex_to_decimal(num2)
-        res = num1_dec - num2_dec
-        hex_equi = convert_dec_to_hex(res)
-        if '.' not in hex_equi:
-            hex_equi += '.0'
-        return hex_equi
-
-
 
 def checkflag(val, vm):
     if(val > MAX_FLOAT):
