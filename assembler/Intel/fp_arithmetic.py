@@ -3,7 +3,7 @@ fp_arithmetic.py: arithmetic floating point instructions.
 """
 
 # import operator as opfunc
-from assembler.errors import check_num_args
+from assembler.errors import check_num_args, DivisionZero
 from assembler.tokens import Instruction, MAX_FLOAT, MIN_FLOAT, Register
 # from .arithmetic import checkflag
 # from assembler.virtual_machine import intel_machine
@@ -166,7 +166,7 @@ def two_op_arith(ops, vm, instr, operator):
     first_reg = vm.get_float_stack_register_at_offset(offset1)
     second_reg = vm.get_float_stack_register_at_offset(offset2)
     r1, r2 = vm.fp_stack_registers[first_reg], vm.fp_stack_registers[second_reg]
-    vm.fp_stack_registers[first_reg] = operator(r1,r2)
+    vm.fp_stack_registers[first_reg] = checkflag(operator(r1,r2),vm)
     # r1.set_val(
     #     checkflag(operator(r1.get_val(),
     #                        r2.get_val()), vm))
@@ -179,8 +179,11 @@ def one_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 1)
-    val_float_stack_top = vm.pop_from_Float_Stack()
-    vm.push_to_Float_Stack(operator(val_float_stack_top,ops[0].get_val()))
+    if operator.__name__ == 'div' and ops[0].get_val() == 0.0:
+        raise DivisionZero()
+    else:
+        val_float_stack_top = vm.pop_from_Float_Stack()
+        vm.push_to_Float_Stack(checkflag(operator(val_float_stack_top,ops[0].get_val()),vm))
 
 
 
