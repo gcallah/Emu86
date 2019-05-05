@@ -150,6 +150,11 @@
                     {% else %}
                         <option value="power_fp">Raise a floating point to a power</option>
                     {% endif %}
+                    {% if sample == "addTwo_fp" %}
+                        <option value="addTwo_fp" selected>Add two floating point numbers</option>
+                    {% else %}
+                        <option value="addTwo_fp">Add two floating point numbers</option>
+                    {% endif %}
                 {% endif %}
             </select>
             {% if registers.items|length >= 67%}

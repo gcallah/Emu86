@@ -131,9 +131,14 @@ function selectSample()
         else if (selected == "power_fp") {
             power_fp(flav.value);
         }
+
         else if (selected == "area_fp") {
             area_fp(flav.value);
         }
+        else if (selected == "addTwo_fp") {
+            addTwo_fp(flav.value);
+        }
+
     }
 }
 
