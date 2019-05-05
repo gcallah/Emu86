@@ -306,3 +306,24 @@ class FDiv(Instruction):
             one_op_arith(ops,vm,self.name,div)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, div)
+
+
+class FDivP(Instruction):
+    """
+    1 op - divides stack top ST(0) with val and stores the result at ST(0) and pops the stack
+    2 ops - sets the result of dividing floating stack ST(i) by floating stack
+     ST(j) to floating stack ST(i) and pops the stack
+        <instr>
+             FDIVP
+        </instr>
+        <syntax>
+            FDIVP val
+            FDIVP ST(i), ST(j)
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        if len(ops) == 1:
+            one_op_arith(ops,vm,self.name,div)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, div)
+        vm.pop_from_Float_Stack()
