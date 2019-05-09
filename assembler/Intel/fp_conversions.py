@@ -1,6 +1,6 @@
 from __future__ import print_function
 # from assembler.virtual_machine import intel_machine
-from assembler.errors import DivisionZero, check_num_args
+from assembler.errors import DivisionZero
 from collections import namedtuple
 from fractions import Fraction
 import struct

@@ -3,7 +3,7 @@ arithmetic.py: arithmetic instructions.
 """
 
 import operator as opfunc
-from assembler.errors import check_num_args, DivisionZero
+from assembler.errors import DivisionZero
 from assembler.tokens import Instruction, MAX_INT
 
 
@@ -28,7 +28,8 @@ def two_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     val_one, val_two = get_both_operators(vm)
-    vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = operator(val_one, val_two)
+    position = hex(vm.get_sp()).split('x')[-1].upper()
+    vm.stack[position] = operator(val_one, val_two)
 
 
 def check_overflow(val, vm):
@@ -246,7 +247,7 @@ class Shl(Instruction):
     """
     def fhook(self, ops, vm):
         val_one, val_two = get_both_operators(vm)
-        val_two = val_two % 32 # only for i32
+        val_two = val_two % 32  # only for i32
         result = opfunc.lshift(val_one, val_two)
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
@@ -268,7 +269,7 @@ class Shr_S(Instruction):
     """
     def fhook(self, ops, vm):
         val_one, val_two = get_both_operators(vm)
-        val_two = val_two % 32 # only for i32
+        val_two = val_two % 32  # only for i32
         result = opfunc.rshift(val_one, val_two)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
 
@@ -291,7 +292,7 @@ class Shr_U(Instruction):
         val_one, val_two = get_both_operators(vm)
         val_one_abs = abs(val_one)
         val_two_abs = abs(val_two)
-        val_two_abs = val_two_abs % 32 # only for i32
+        val_two_abs = val_two_abs % 32  # only for i32
         result = opfunc.rshift(val_one_abs, val_two_abs)
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
@@ -321,7 +322,7 @@ class Rotl(Instruction):
             diff = 32 - len(val_one_bin)
         for i in range(0, diff):
             val_one_bin = "0" + val_one_bin
-        val_two = val_two % 32 # only for i32
+        val_two = val_two % 32  # only for i32
         result = val_one_bin[val_two:] + val_one_bin[:val_two]
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
 
@@ -350,8 +351,10 @@ class Rotr(Instruction):
             diff = 32 - len(val_one_bin)
         for i in range(0, diff):
             val_one_bin = "0" + val_one_bin
-        val_two = val_two % 32 # only for i32
-        result = val_one_bin[-val_two:] + val_one_bin[: len(val_one_bin) - val_two]
+        val_two = val_two % 32  # only for i32
+        first_part = val_one_bin[-val_two:]
+        second_part = val_one_bin[: len(val_one_bin) - val_two]
+        result = first_part + second_part
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
 
 

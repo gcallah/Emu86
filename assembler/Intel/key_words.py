@@ -1,6 +1,7 @@
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg
-from .fp_arithmetic import FAdd, FSub, FDiv, FMul, FAbs, FChs, FaddP, FSubP, FMulP, FDivP
+from .fp_arithmetic import FAdd, FSub, FDiv, FMul
+from .fp_arithmetic import FAbs, FChs, FaddP, FSubP, FMulP, FDivP
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 
