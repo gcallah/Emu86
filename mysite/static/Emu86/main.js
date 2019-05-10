@@ -249,51 +249,51 @@ function highlightCode(){
 function Savecode()
 {
     const flav = document.getElementsByName("flavor")[0].value;
-    let file_name = null;
+    let fileName = null;
     if (flav === "mips_asm"){
-        file_name = prompt("Please enter file name to save as, ending in .asm or .txt (for machine code): ");
+        fileName = prompt("Please enter file name to save as, ending in .asm or .txt (for machine code): ");
     }
     else if (flav === "mips_mml"){
-        file_name = prompt("Please enter file name to save as, ending in .txt (for machine code): ");
+        fileName = prompt("Please enter file name to save as, ending in .txt (for machine code): ");
     }
     else{
-        file_name = prompt("Please enter file name to save as, ending in .asm: ");
+        fileName = prompt("Please enter file name to save as, ending in .asm: ");
     }
-    if (file_name === null){
+    if (fileName === null){
         alert("Save cancelled");
     }
-    else if (file_name === ""){
+    else if (fileName === ""){
         alert("Invalid file name");
     }
-    else if (file_name.length < 5){
-        alert("Invalid file name: " + file_name);
+    else if (fileName.length < 5){
+        alert("Invalid file name: " + fileName);
     }
-    else if (flav === "mips_asm" && file_name.slice(file_name.length - 4) !== ".asm" && file_name.slice(file_name.length - 4) !== ".txt" ) {
-        alert("Invalid file name: " + file_name);
+    else if (flav === "mips_asm" && fileName.slice(fileName.length - 4) !== ".asm" && fileName.slice(fileName.length - 4) !== ".txt" ) {
+        alert("Invalid file name: " + fileName);
     }
-    else if (flav === "mips_mml" && file_name.slice(file_name.length - 4) !== ".txt" ) {
-        alert("Invalid file name: " + file_name);
+    else if (flav === "mips_mml" && fileName.slice(fileName.length - 4) !== ".txt" ) {
+        alert("Invalid file name: " + fileName);
     }
-    else if (flav !== "mips" && file_name.slice(file_name.length - 4) !== ".asm"){
-        alert("Invalid file name: " + file_name);
+    else if (flav !== "mips" && fileName.slice(fileName.length - 4) !== ".asm"){
+        alert("Invalid file name: " + fileName);
     }
     else {
-        data = null;
-        if (file_name.slice(file_name.length - 4) === ".asm"){
+        let data = null;
+        if (fileName.slice(fileName.length - 4) === ".asm"){
             data = document.getElementById("id_code").value;
         }
         else{
             data = document.getElementsByName("bit_code")[0].value;
         }
-        const file_blob = new Blob([data], {type: 'text/plain'});
+        const fileBlob = new Blob([data], {type: 'text/plain'});
         if (window.navigator.msSaveOrOpenBlob) {
-            window.navigator.msSaveOrOpenBlob(file_blob, file);
+            window.navigator.msSaveOrOpenBlob(fileBlob, file);
         }
         else {
             const anchor = document.createElement('a'),
-            url = URL.createObjectURL(file_blob);
+            url = URL.createObjectURL(fileBlob);
             anchor.href = url;
-            anchor.download = file_name;
+            anchor.download = fileName;
             document.body.appendChild(anchor);
             anchor.click();
             document.body.removeChild(anchor);
@@ -303,9 +303,9 @@ function Savecode()
 }
 
 async function SubmitForm(demo_on = false, pause = false){
-    if ((demo_on) && (pause==false)) {
+    if ((demo_on) && (pause === false)) {
         await slowCall();
-    } else if (demo_on==true && pause==true) {
+    } else if (demo_on === true && pause === true) {
         debugger;
     }
 
@@ -397,7 +397,7 @@ function parseIntegerBase(val, base){
 
 function AddMem()
 {
-    mem_data = document.getElementsByName("mem_data")[0].value;
+    let memData = document.getElementsByName("mem_data")[0].value;
     let loc = document.getElementById("memText").value;
     const val = document.getElementById("valueText").value;
     let repeat = document.getElementById("repeatText").value;
@@ -438,22 +438,22 @@ function AddMem()
     else {
         repeat = 0;
     }
-    let current_html = document.getElementById("memory-table").innerHTML;
-    let add_html = "";
+    let currentHtml = document.getElementById("memory-table").innerHTML;
+    let addHtml = "";
     for (let i = 0; i < repeat; i++) {
-        if (current_html.indexOf('name="' + loc + '"') !== -1) {
-            const find_value = current_html.indexOf('value="', current_html.indexOf('name="' + loc + '"'));
-            const find_end = current_html.indexOf('"', find_value);
-            current_html = current_html.substring(0, find_value + 7) + val.toString() + current_html.substring(find_end);
-            const location_index = mem_data.indexOf(loc + ":");
-            const comma_index = mem_data.indexOf(",", location_index);
-            mem_data = mem_data.substring(0, location_index + loc.length + 1) + val + mem_data.substring(comma_index);
+        if (currentHtml.indexOf('name="' + loc + '"') !== -1) {
+            const find_value = currentHtml.indexOf('value="', currentHtml.indexOf('name="' + loc + '"'));
+            const find_end = currentHtml.indexOf('"', find_value);
+            currentHtml = currentHtml.substring(0, find_value + 7) + val.toString() + currentHtml.substring(find_end);
+            const location_index = memData.indexOf(loc + ":");
+            const comma_index = memData.indexOf(",", location_index);
+            memData = memData.substring(0, location_index + loc.length + 1) + val + memData.substring(comma_index);
         }
         else {
-            add_html += "<tr><td id='mem-loc' style='height:5px'>" + loc + "</td>";
-            add_html += "<td id='contents' style='height:5px'>";
-            add_html += "<input id='mem-cont' name='" + loc + "' value='" + val.toString() + "' size ='5' readonly='readonly' style='background-color:#eff;'></td></tr>";
-            mem_data += loc + ":" + val + ", ";
+            addHtml += "<tr><td id='mem-loc' style='height:5px'>" + loc + "</td>";
+            addHtml += "<td id='contents' style='height:5px'>";
+            addHtml += "<input id='mem-cont' name='" + loc + "' value='" + val.toString() + "' size ='5' readonly='readonly' style='background-color:#eff;'></td></tr>";
+            memData += loc + ":" + val + ", ";
         }
         let location = null;
         if (flav !== "mips_asm" && flav !== "mips_mml") {
@@ -464,8 +464,8 @@ function AddMem()
         }
         loc = location.toString(16).toUpperCase();
     }
-    document.getElementById("memory-table").innerHTML = current_html + add_html;
-    document.getElementsByName("mem_data")[0].value = mem_data;
+    document.getElementById("memory-table").innerHTML = currentHtml + addHtml;
+    document.getElementsByName("mem_data")[0].value = memData;
 
     // reset the values
     document.getElementById("memText").value = "";
@@ -485,23 +485,23 @@ async function slowCall() {
   const result = await resolveAfter1HalfSeconds();
 }
 
-function displayHelp(button_type){
+function displayHelp(buttonType){
     let string = "";
-    if (button_type === "clear"){
+    if (buttonType === "clear"){
         string = "Reset register and memory values.";
     }
-    else if (button_type === "step"){
+    else if (buttonType === "step"){
         string = "Execute one instruction at a time.";
     }
-    else if (button_type === "run"){
+    else if (buttonType === "run"){
         string = "Execute all lines of code.";
     }
-    else if (button_type === "demo"){
+    else if (buttonType === "demo"){
         string = "Demo code line by line.";
     }
-    else if (button_type === "save"){
+    else if (buttonType === "save"){
         string = "Save code as a file.";
-    } else if (button_type === "pause"){
+    } else if (buttonType === "pause"){
         string = "Pauses and resets code where demo leaves off from.";
     }
 
