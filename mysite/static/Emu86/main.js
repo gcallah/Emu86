@@ -144,14 +144,14 @@ function selectSample()
 
 function checkForScript()
 {
-    data = document.getElementById("id_code").value;
+    let data = document.getElementById("id_code").value;
     if (data.indexOf("<script>") !== -1){
-        const temp_val = data.split("<script>");
-        data = temp_val.join("");
+        const tempVal = data.split("<script>");
+        data = tempVal.join("");
     }
     if (data.indexOf("</script>") !== -1){
-        const temp_val = data.split("</script>");
-        data = temp_val.join("");
+        const tempVal = data.split("</script>");
+        data = tempVal.join("");
     }
     document.getElementById("id_code").value = data;
 }
@@ -166,8 +166,8 @@ function loadcode()
     else
     {
         sessionStorage.loadonce=1;
-        code = localStorage.Code;
-        if(code!=undefined || code!=null) {
+        const code = localStorage.Code;
+        if(code !== undefined || code !== null) {
             document.getElementById("id_code").value = code;
         }
     }
@@ -179,43 +179,43 @@ function highlightCode(){
     if (lastInstr.indexOf(": Exiting program") !== -1){
         lastInstr = lastInstr.substring(0, lastInstr.indexOf(": Exiting program"));
     }
-    const mips_ip = document.getElementsByName("PC");
-    const intel_ip = document.getElementsByName("EIP");
-    let ip_val = null;
-    let hex_or_dec = null;
+    const mipsIp = document.getElementsByName("PC");
+    const intelIp = document.getElementsByName("EIP");
+    let ipVal = null;
+    let hexOrDec = null;
     const radios = document.getElementsByName("base");
-    for (var index = 0; index < radios.length; index++) {
+    for (let index = 0; index < radios.length; index++) {
         if (radios[index].checked) {
-            hex_or_dec = radios[index].value;
+            hexOrDec = radios[index].value;
             break;
         }
     }
-    if (mips_ip.length !== 0){
-        if (hex_or_dec === "hex") {
-            ip_val = parseInt(mips_ip[0].value, 16)/4;
+    if (mipsIp.length !== 0){
+        if (hexOrDec === "hex") {
+            ipVal = parseInt(mipsIp[0].value, 16)/4;
         }
         else {
-            ip_val = parseInt(mips_ip[0].value)/4;
+            ipVal = parseInt(mipsIp[0].value)/4;
         }
     }
-    else if (intel_ip.length !== 0) {
-        if (hex_or_dec === "hex") {
-            ip_val = parseInt(intel_ip[0].value, 16);
+    else if (intelIp.length !== 0) {
+        if (hexOrDec === "hex") {
+            ipVal = parseInt(intelIp[0].value, 16);
         }
         else {
-            ip_val = parseInt(intel_ip[0].value);
+            ipVal = parseInt(intelIp[0].value);
         }
     }
-    if (instr && ip_val) {
+    if (instr && ipVal) {
         const input = document.getElementById("id_code");
         let countCode = 0;
         let countRepeats = 0;
         const codeArray = input.value.split("\n");
         let textArea = true;
         if (instr.value !== "") {
-            for (var index = 0; index < codeArray.length; index++) {
+            for (let index = 0; index < codeArray.length; index++) {
                 const string = codeArray[index].trim();
-                if (countCode === ip_val){
+                if (countCode === ipVal){
                     break;
                 }
                 if (string === ".data"){
@@ -302,6 +302,18 @@ function Savecode()
     }
 }
 
+function resolveAfter1HalfSeconds() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve('resolved');
+      }, 3000);
+    });
+}
+
+async function slowCall() {
+    await resolveAfter1HalfSeconds();
+}
+
 async function SubmitForm(demo_on = false, pause = false){
     if ((demo_on) && (pause === false)) {
         await slowCall();
@@ -366,10 +378,10 @@ function pauseButton(){
 function convert(name,value)
 {
     let message= `Binary value of ${name}: `;
-    const hex_or_dec = document.getElementsByName("base")[0].value;
+    const hexOrDec = document.getElementsByName("base")[0].value;
     let value1 = null;
 
-    if (hex_or_dec === "hex"){
+    if (hexOrDec === "hex"){
         value1=(parseInt(value, 16));
     }
     else{
@@ -442,12 +454,12 @@ function AddMem()
     let addHtml = "";
     for (let i = 0; i < repeat; i++) {
         if (currentHtml.indexOf('name="' + loc + '"') !== -1) {
-            const find_value = currentHtml.indexOf('value="', currentHtml.indexOf('name="' + loc + '"'));
-            const find_end = currentHtml.indexOf('"', find_value);
-            currentHtml = currentHtml.substring(0, find_value + 7) + val.toString() + currentHtml.substring(find_end);
-            const location_index = memData.indexOf(loc + ":");
-            const comma_index = memData.indexOf(",", location_index);
-            memData = memData.substring(0, location_index + loc.length + 1) + val + memData.substring(comma_index);
+            const findValue = currentHtml.indexOf('value="', currentHtml.indexOf('name="' + loc + '"'));
+            const findEnd = currentHtml.indexOf('"', findValue);
+            currentHtml = currentHtml.substring(0, findValue + 7) + val.toString() + currentHtml.substring(findEnd);
+            const locationIndex = memData.indexOf(loc + ":");
+            const commaIndex = memData.indexOf(",", locationIndex);
+            memData = memData.substring(0, locationIndex + loc.length + 1) + val + memData.substring(commaIndex);
         }
         else {
             addHtml += "<tr><td id='mem-loc' style='height:5px'>" + loc + "</td>";
@@ -471,18 +483,6 @@ function AddMem()
     document.getElementById("memText").value = "";
     document.getElementById("valueText").value = "";
     document.getElementById("repeatText").value = "1";
-}
-
-function resolveAfter1HalfSeconds() {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve('resolved');
-    }, 3000);
-  });
-}
-
-async function slowCall() {
-  const result = await resolveAfter1HalfSeconds();
 }
 
 function displayHelp(buttonType){
