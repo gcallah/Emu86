@@ -202,31 +202,31 @@ def main_page(request):
 
             hex_conversion(vm)
             render_data = {'form': form,
-                            HEADER: site_hdr,
-                            'last_instr': last_instr,
-                            'error': error,
-                            'unwritable': vm.unwritable,
-                            'debug': vm.debug,
-                            NXT_KEY: vm.nxt_key,
-                            'registers': vm.registers,
-                            'memory': vm.memory,
-                            'stack': vm.stack,
-                            'symbols': vm.symbols,
-                            'cstack': vm.c_stack,
-                            'flags': vm.flags,
-                            'flavor': vm.flavor,
-                            DATA_INIT: vm.data_init,
-                            'base': vm.base,
-                            'sample': sample,
-                            'start_ip': vm.start_ip,
-                            'bit_code': bit_code,
-                            'button_type': button,
-                            'changes': vm.changes,
-                            'stack_change': vm.stack_change
-                            }
+                           HEADER: site_hdr,
+                           'last_instr': last_instr,
+                           'error': error,
+                           'unwritable': vm.unwritable,
+                           'debug': vm.debug,
+                           NXT_KEY: vm.nxt_key,
+                           'registers': vm.registers,
+                           'memory': vm.memory,
+                           'stack': vm.stack,
+                           'symbols': vm.symbols,
+                           'cstack': vm.c_stack,
+                           'flags': vm.flags,
+                           'flavor': vm.flavor,
+                           DATA_INIT: vm.data_init,
+                           'base': vm.base,
+                           'sample': sample,
+                           'start_ip': vm.start_ip,
+                           'bit_code': bit_code,
+                           'button_type': button,
+                           'changes': vm.changes,
+                           'stack_change': vm.stack_change
+                           }
             if lang in MIPS:
                 r_reg, f_reg = processRegisters(vm.registers)
-                render_data['r_registers'] =  r_reg
+                render_data['r_registers'] = r_reg
                 render_data['f_registers'] = f_reg
                 render_data['curr_reg'] = curr_reg
             return render(request, 'main.html', render_data)
