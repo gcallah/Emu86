@@ -193,7 +193,7 @@ def main_page(request):
                 # wasm does not have registers so it should not be calling
                 # hex_conversion(wasm_machine)
                 # r_reg, f_reg = processRegisters(wasm_machine.registers)
-                return render(request, 'main.html',
+                return render(request, 'wasm.html',
                               {'form': form,
                                HEADER: site_hdr,
                                'last_instr': "",
@@ -280,23 +280,24 @@ def main_page(request):
                                })
 
         form = MainForm(request.POST)
+        vm = None
         if 'flavor' in request.POST:
+            intel_machine.flavor = None
+            mips_machine.flavor = None
+            riscv_machine.flavor = None
             language = request.POST['flavor']
             if language in INTEL:
                 intel_machine.flavor = language
                 intel_machine.base = base
-                mips_machine.flavor = None
-                riscv_machine.flavor = None
+                vm = intel_machine
             if language in MIPS:
-                intel_machine.flavor = None
                 mips_machine.flavor = language
                 mips_machine.base = base
-                riscv_machine.flavor = None
+                vm = mips_machine
             if language in RISCV:
-                intel_machine.flavor = None
-                mips_machine.flavor = None
                 riscv_machine.flavor = language
                 riscv_machine.base = base
+                vm = riscv_machine
         sample = request.POST['sample']
         button = request.POST['button_type']
         if button == CLEAR:
@@ -317,50 +318,19 @@ def main_page(request):
                     key = int(request.POST.get(NXT_KEY, 0))
                 except Exception:
                     key = 0
-                if intel_machine.flavor is not None:
-                    add_debug("Getting next key", intel_machine)
-                    intel_machine.nxt_key = key
-                if mips_machine.flavor is not None:
-                    add_debug("Getting next key", mips_machine)
-                    mips_machine.nxt_key = key
-                if riscv_machine.flavor is not None:
-                    add_debug("Getting next key", riscv_machine)
-                    riscv_machine.nxt_key = key
+                add_debug("Getting next key", vm)
+                vm.nxt_key = key
 
-            if intel_machine.flavor is not None:
-                get_reg_contents(intel_machine.registers, request)
-                get_mem_contents(intel_machine.memory, request)
-                get_stack_contents(intel_machine.stack, request)
-                get_flag_contents(intel_machine.flags, request)
-                intel_machine.data_init = request.POST[DATA_INIT]
-                intel_machine.start_ip = int(request.POST['start_ip'])
-            if mips_machine.flavor is not None:
-                get_reg_contents(mips_machine.registers, request)
-                get_mem_contents(mips_machine.memory, request)
-                get_stack_contents(mips_machine.stack, request)
-                get_flag_contents(mips_machine.flags, request)
-                mips_machine.data_init = request.POST[DATA_INIT]
-                mips_machine.start_ip = int(request.POST['start_ip'])
-            if riscv_machine.flavor is not None:
-                get_reg_contents(riscv_machine.registers, request)
-                get_mem_contents(riscv_machine.memory, request)
-                get_stack_contents(riscv_machine.stack, request)
-                get_flag_contents(riscv_machine.flags, request)
-                riscv_machine.data_init = request.POST[DATA_INIT]
-                riscv_machine.start_ip = int(request.POST['start_ip'])
+            get_reg_contents(vm.registers, request)
+            get_mem_contents(vm.memory, request)
+            get_stack_contents(vm.stack, request)
+            get_flag_contents(vm.flags, request)
+            vm.data_init = request.POST[DATA_INIT]
+            vm.start_ip = int(request.POST['start_ip'])
 
-            if intel_machine.flavor in INTEL:
-                (last_instr, error, bit_code) = assemble(request.POST[CODE],
-                                                         intel_machine.flavor,
-                                                         intel_machine, step)
-            if mips_machine.flavor in MIPS:
-                (last_instr, error, bit_code) = assemble(request.POST[CODE],
-                                                         mips_machine.flavor,
-                                                         mips_machine, step)
-            if riscv_machine.flavor in RISCV:
-                (last_instr, error, bit_code) = assemble(request.POST[CODE],
-                                                         riscv_machine.flavor,
-                                                         riscv_machine, step)
+            (last_instr, error, bit_code) = assemble(request.POST[CODE],
+                                                     vm.flavor,
+                                                     vm, step)
     if button == DEMO:
         if (last_instr == "Reached end of executable code." or
                 last_instr.find("Exiting program") != -1):
@@ -370,99 +340,47 @@ def main_page(request):
     else:
         button = ""
 
-    if mips_machine.flavor in MIPS:
-        mips_machine.order_mem()
-        site_hdr += ": " + MIPS[mips_machine.flavor] + " "
-        site_hdr += mips_machine.base.upper()
-        hex_conversion(mips_machine)
-        r_reg, f_reg = processRegisters(mips_machine.registers)
+    vm.order_mem()
+    hex_conversion(vm)
+    render_data = {'form': form,
+                   'last_instr': last_instr,
+                   'error': error,
+                   'unwritable': vm.unwritable,
+                   'debug': vm.debug,
+                   NXT_KEY: vm.nxt_key,
+                   'registers': vm.registers,
+                   'memory': vm.memory,
+                   'stack': vm.stack,
+                   'symbols': vm.symbols,
+                   'cstack': vm.c_stack,
+                   'flags': vm.flags,
+                   'flavor': vm.flavor,
+                   DATA_INIT: vm.data_init,
+                   'base': vm.base,
+                   'sample': sample,
+                   'start_ip': vm.start_ip,
+                   'bit_code': bit_code,
+                   'button_type': button,
+                   'changes': vm.changes,
+                   'stack_change': vm.stack_change}
+    if vm.flavor in MIPS:
+        site_hdr += ": " + MIPS[vm.flavor] + " "
+        site_hdr += vm.base.upper()
+        r_reg, f_reg = processRegisters(vm.registers)
         curr_reg = getCurrRegister(request.POST)
-        return render(request, 'main.html',
-                      {'form': form,
-                       HEADER: site_hdr,
-                       'last_instr': last_instr,
-                       'error': error,
-                       'unwritable': mips_machine.unwritable,
-                       'debug': mips_machine.debug,
-                       NXT_KEY: mips_machine.nxt_key,
-                       'registers': mips_machine.registers,
-                       'r_registers': r_reg,
-                       'f_registers': f_reg,
-                       'memory': mips_machine.memory,
-                       'stack': mips_machine.stack,
-                       'symbols': mips_machine.symbols,
-                       'cstack': mips_machine.c_stack,
-                       'flags': mips_machine.flags,
-                       'flavor': mips_machine.flavor,
-                       DATA_INIT: mips_machine.data_init,
-                       'base': mips_machine.base,
-                       'sample': sample,
-                       'start_ip': mips_machine.start_ip,
-                       'bit_code': bit_code,
-                       'button_type': button,
-                       'changes': mips_machine.changes,
-                       'stack_change': mips_machine.stack_change,
-                       'curr_reg': curr_reg
-                       })
-    if intel_machine.flavor in INTEL:
-        intel_machine.order_mem()
-        site_hdr += ": " + INTEL[intel_machine.flavor] + " "
-        site_hdr += intel_machine.base.upper()
-        hex_conversion(intel_machine)
-        return render(request, 'main.html',
-                      {'form': form,
-                       HEADER: site_hdr,
-                       'last_instr': last_instr,
-                       'error': error,
-                       'unwritable': intel_machine.unwritable,
-                       'debug': intel_machine.debug,
-                       NXT_KEY: intel_machine.nxt_key,
-                       'registers': intel_machine.registers,
-                       'memory': intel_machine.memory,
-                       'stack': intel_machine.stack,
-                       'floatingStack': intel_machine.fp_stack_registers,
-                       'symbols': intel_machine.symbols,
-                       'cstack': intel_machine.c_stack,
-                       'flags': intel_machine.flags,
-                       'flavor': intel_machine.flavor,
-                       DATA_INIT: intel_machine.data_init,
-                       'base': intel_machine.base,
-                       'sample': sample,
-                       'start_ip': intel_machine.start_ip,
-                       'bit_code': bit_code,
-                       'button_type': button,
-                       'changes': intel_machine.changes,
-                       'stack_change': intel_machine.stack_change
-                       })
+        render_data['r_registers'] = r_reg
+        render_data['f_registers'] = f_reg
+        render_data[HEADER] = site_hdr
+        render_data['curr_reg'] = curr_reg
+    if vm.flavor in INTEL:
+        site_hdr += ": " + INTEL[vm.flavor] + " "
+        site_hdr += vm.base.upper()
+        render_data[HEADER] = site_hdr
     if riscv_machine.flavor in RISCV:
-        riscv_machine.order_mem()
-        site_hdr += ": " + RISCV[riscv_machine.flavor] + " "
-        site_hdr += riscv_machine.base.upper()
-        hex_conversion(riscv_machine)
-        return render(request, 'main.html',
-                      {'form': form,
-                       HEADER: site_hdr,
-                       'last_instr': last_instr,
-                       'error': error,
-                       'unwritable': riscv_machine.unwritable,
-                       'debug': riscv_machine.debug,
-                       NXT_KEY: riscv_machine.nxt_key,
-                       'registers': riscv_machine.registers,
-                       'memory': riscv_machine.memory,
-                       'stack': riscv_machine.stack,
-                       'symbols': riscv_machine.symbols,
-                       'cstack': riscv_machine.c_stack,
-                       'flags': riscv_machine.flags,
-                       'flavor': riscv_machine.flavor,
-                       DATA_INIT: riscv_machine.data_init,
-                       'base': riscv_machine.base,
-                       'sample': sample,
-                       'start_ip': riscv_machine.start_ip,
-                       'bit_code': bit_code,
-                       'button_type': button,
-                       'changes': riscv_machine.changes,
-                       'stack_change': riscv_machine.stack_change
-                       })
+        site_hdr += ": " + RISCV[vm.flavor] + " "
+        site_hdr += vm.base.upper()
+        render_data[HEADER] = site_hdr
+    return render(request, 'main.html', render_data)
 
 
 def is_hex_form(request):
@@ -474,11 +392,11 @@ def is_hex_form(request):
 def get_reg_contents(registers, request):
     hex_term = is_hex_form(request)
     for reg in registers:
-        if reg != 'FRA' and reg != 'FRB'and reg != 'FRT':
-            if reg[0] == 'F' and type(registers[reg]) is str:
-                if 'x' in str(registers[reg]):
-                    registers[reg] = hex_to_float(registers[reg])
-                else:
+        if reg[0] == 'F' and type(registers[reg]) is str:
+            if 'x' in str(registers[reg]):
+                registers[reg] = hex_to_float(registers[reg])
+            else:
+                if hex_term:
                     if int(str(reg[1:])) % 2 == 1:
                         temp = registers[reg]
                         temp = (64 - len(temp)) * "0" + temp
@@ -486,13 +404,13 @@ def get_reg_contents(registers, request):
                         return
                     else:
                         registers[reg] = hex(int(registers[reg], 2))
-            else:
-                if hex_term:
-                    registers[reg] = int(request.POST[reg], 16)
                 else:
-                    registers[reg] = request.POST[reg]
+                    registers[reg] = float(request.POST[reg])
         else:
-            registers[reg] = request.POST[reg]
+            if hex_term:
+                registers[reg] = int(request.POST[reg], 16)
+            else:
+                registers[reg] = int(request.POST[reg])
 
 
 def get_flag_contents(flags, request):
