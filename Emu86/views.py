@@ -124,7 +124,7 @@ def getCurrRegister(post_body):
 def main_page(request):
     last_instr = ""
     error = ""
-    sample = ""
+    sample = "none"
     bit_code = ""
     button = ""
 
@@ -140,53 +140,38 @@ def main_page(request):
         wasm_machine.re_init()
         form = MainForm()
     else:
+        vm = None
         base = request.POST['base']
         if 'language' in request.POST:
             intel_machine.re_init()
             mips_machine.re_init()
             riscv_machine.re_init()
+            wasm_machine.re_init()
+            intel_machine.flavor = None
+            riscv_machine.flavor = None
+            mips_machine.flavor = None
+            wasm_machine.flavor = None
             form = MainForm()
             lang = request.POST['language']
             curr_reg = getCurrRegister(request.POST)
             if lang in MIPS:
-                intel_machine.flavor = None
-                riscv_machine.flavor = None
                 mips_machine.flavor = lang
                 mips_machine.base = base
                 site_hdr += ": " + MIPS[lang] + " " + mips_machine.base.upper()
-                hex_conversion(mips_machine)
-                r_reg, f_reg = processRegisters(mips_machine.registers)
-                return render(request, 'main.html',
-                              {'form': form,
-                               HEADER: site_hdr,
-                               'last_instr': "",
-                               'error': "",
-                               'unwritable': mips_machine.unwritable,
-                               'debug': mips_machine.debug,
-                               NXT_KEY: mips_machine.nxt_key,
-                               'registers': mips_machine.registers,
-                               'r_registers': r_reg,
-                               'f_registers': f_reg,
-                               'memory': mips_machine.memory,
-                               'stack': mips_machine.stack,
-                               'symbols': mips_machine.symbols,
-                               'cstack': mips_machine.c_stack,
-                               'flags': mips_machine.flags,
-                               'flavor': mips_machine.flavor,
-                               'data_init': mips_machine.data_init,
-                               'base': mips_machine.base,
-                               'sample': 'none',
-                               'start_ip': mips_machine.start_ip,
-                               'bit_code': "",
-                               'button_type': "",
-                               'changes': [],
-                               'stack_change': "",
-                               'curr_reg': curr_reg
-                               })
+                vm = mips_machine
+            if lang in INTEL:
+                intel_machine.base = base
+                intel_machine.flavor = lang
+                site_hdr += ": " + INTEL[lang] + " "
+                site_hdr += intel_machine.base.upper()
+                vm = intel_machine
+            if lang in RISCV:
+                riscv_machine.flavor = lang
+                riscv_machine.base = base
+                site_hdr += ": " + RISCV[lang] + " "
+                site_hdr += riscv_machine.base.upper()
+                vm = riscv_machine
             if lang in WASM:
-                intel_machine.flavor = None
-                riscv_machine.flavor = None
-                mips_machine.flavor = None
                 wasm_machine.flavor = lang
                 wasm_machine.base = base
                 site_hdr += ": " + WASM[lang] + " " + wasm_machine.base.upper()
@@ -214,70 +199,37 @@ def main_page(request):
                                'changes': [],
                                'stack_change': "",
                                })
-            if lang in INTEL:
-                mips_machine.flavor = None
-                riscv_machine.flavor = None
-                intel_machine.base = base
-                intel_machine.flavor = lang
-                site_hdr += ": " + INTEL[lang] + " "
-                site_hdr += intel_machine.base.upper()
-                hex_conversion(intel_machine)
-                return render(request, 'main.html',
-                              {'form': form,
-                               HEADER: site_hdr,
-                               'last_instr': "",
-                               'error': "",
-                               'unwritable': intel_machine.unwritable,
-                               'debug': intel_machine.debug,
-                               NXT_KEY: intel_machine.nxt_key,
-                               'registers': intel_machine.registers,
-                               'memory': intel_machine.memory,
-                               'stack': intel_machine.stack,
-                               'symbols': intel_machine.symbols,
-                               'cstack': intel_machine.c_stack,
-                               'flags': intel_machine.flags,
-                               'flavor': intel_machine.flavor,
-                               DATA_INIT: intel_machine.data_init,
-                               'base': intel_machine.base,
-                               'sample': 'none',
-                               'start_ip': intel_machine.start_ip,
-                               'bit_code': "",
-                               'button_type': "",
-                               'changes': [],
-                               'stack_change': ""
-                               })
-            if lang in RISCV:
-                mips_machine.flavor = None
-                intel_machine.flavor = None
-                riscv_machine.flavor = lang
-                riscv_machine.base = base
-                site_hdr += ": " + RISCV[lang] + " "
-                site_hdr += riscv_machine.base.upper()
-                hex_conversion(riscv_machine)
-                return render(request, 'main.html',
-                              {'form': form,
-                               HEADER: site_hdr,
-                               'last_instr': "",
-                               'error': "",
-                               'unwritable': riscv_machine.unwritable,
-                               'debug': riscv_machine.debug,
-                               NXT_KEY: riscv_machine.nxt_key,
-                               'registers': riscv_machine.registers,
-                               'memory': riscv_machine.memory,
-                               'stack': riscv_machine.stack,
-                               'symbols': riscv_machine.symbols,
-                               'cstack': riscv_machine.c_stack,
-                               'flags': riscv_machine.flags,
-                               'flavor': riscv_machine.flavor,
-                               'data_init': riscv_machine.data_init,
-                               'base': riscv_machine.base,
-                               'sample': 'none',
-                               'start_ip': riscv_machine.start_ip,
-                               'bit_code': "",
-                               'button_type': "",
-                               'changes': [],
-                               'stack_change': ""
-                               })
+
+            hex_conversion(vm)
+            render_data = {'form': form,
+                            HEADER: site_hdr,
+                            'last_instr': last_instr,
+                            'error': error,
+                            'unwritable': vm.unwritable,
+                            'debug': vm.debug,
+                            NXT_KEY: vm.nxt_key,
+                            'registers': vm.registers,
+                            'memory': vm.memory,
+                            'stack': vm.stack,
+                            'symbols': vm.symbols,
+                            'cstack': vm.c_stack,
+                            'flags': vm.flags,
+                            'flavor': vm.flavor,
+                            DATA_INIT: vm.data_init,
+                            'base': vm.base,
+                            'sample': sample,
+                            'start_ip': vm.start_ip,
+                            'bit_code': bit_code,
+                            'button_type': button,
+                            'changes': vm.changes,
+                            'stack_change': vm.stack_change
+                            }
+            if lang in MIPS:
+                r_reg, f_reg = processRegisters(vm.registers)
+                render_data['r_registers'] =  r_reg
+                render_data['f_registers'] = f_reg
+                render_data['curr_reg'] = curr_reg
+            return render(request, 'main.html', render_data)
 
         form = MainForm(request.POST)
         vm = None
