@@ -229,6 +229,8 @@ def main_page(request):
                 render_data['r_registers'] = r_reg
                 render_data['f_registers'] = f_reg
                 render_data['curr_reg'] = curr_reg
+            if lang in INTEL:
+                render_data['floatingStack'] = vm.fp_stack_registers
             return render(request, 'main.html', render_data)
 
         form = MainForm(request.POST)
@@ -328,6 +330,7 @@ def main_page(request):
         site_hdr += ": " + INTEL[vm.flavor] + " "
         site_hdr += vm.base.upper()
         render_data[HEADER] = site_hdr
+        render_data['floatingStack'] = vm.fp_stack_registers
     if riscv_machine.flavor in RISCV:
         site_hdr += ": " + RISCV[vm.flavor] + " "
         site_hdr += vm.base.upper()
