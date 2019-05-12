@@ -8,7 +8,7 @@ from assembler.tokens import Instruction, MAX_FLOAT
 # from .arithmetic import checkflag
 # from assembler.virtual_machine import intel_machine
 from .fp_conversions import add, sub, mul, div, fabs, chs
-
+import math
 
 def convert_hex_to_decimal(fhex):
     """
@@ -334,3 +334,20 @@ class FDivP(Instruction):
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, div)
         vm.pop_from_Float_Stack()
+
+
+class FSqrt(Instruction):
+    """
+    0 op - computes the square root of the source value in the ST(0) register and stores the result in ST(0)
+        <instr>
+             FSQRT
+        </instr>
+        <syntax>
+            FSQRT
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        if len(ops) == 0:
+             top_value = vm.pop_from_Float_Stack()
+             sqrt = math.sqrt(top_value)
+             vm.push_to_Float_Stack(sqrt)
