@@ -7,6 +7,6 @@
 ; Add 0x9E to value in F7
 ; Store total to sum
 .text
-    mov F7, [number]
-    add F7, 0x9E
-    mov [sum], F7
+    FLD F7, [number]
+    fadd F7, 0x9E
+    FLD [sum], F7
