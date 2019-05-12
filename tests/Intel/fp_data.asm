@@ -6,9 +6,9 @@
 
 ; Storing values into memory using register arithmetic
 .text
-    mov F7, 0x6
-    mov [F7], [x+0x2]
-    mov [F7+0x2], [y+0x3]
-    mov [F6], [z]
-    mov [F7-0x5], [y+0x2]
-    mov [-0x5+F7], [y+0x2]
+    FLD F7, 0x6
+    FLD [F7], [x+0x2]
+    FLD [F7+0x2], [y+0x3]
+    FLD [F6], [z]
+    FLD [F7-0x5], [y+0x2]
+    FLD [-0x5+F7], [y+0x2]

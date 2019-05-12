@@ -5,5 +5,5 @@
 
 ; Calculate area of rectangle
 .text
-    mov F7, [long]
-    imul F6, [wide]
+    FLD F7, [long]
+    FMUL F6, [wide]
