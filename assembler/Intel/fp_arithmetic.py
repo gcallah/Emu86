@@ -10,6 +10,7 @@ from assembler.tokens import Instruction, MAX_FLOAT
 from .fp_conversions import add, sub, mul, div, fabs, chs
 import math
 
+
 def convert_hex_to_decimal(fhex):
     """
     :param fhex: floating point hexadecimal number in str format
@@ -338,7 +339,8 @@ class FDivP(Instruction):
 
 class FSqrt(Instruction):
     """
-    0 op - computes the square root of the source value in the ST(0) register and stores the result in ST(0)
+    0 op - computes the square root of the source value in the ST(0)
+    register and stores the result in ST(0)
         <instr>
              FSQRT
         </instr>
@@ -348,6 +350,6 @@ class FSqrt(Instruction):
     """
     def fhook(self, ops, vm):
         if len(ops) == 0:
-             top_value = vm.pop_from_Float_Stack()
-             sqrt = math.sqrt(top_value)
-             vm.push_to_Float_Stack(sqrt)
+            top_value = vm.pop_from_Float_Stack()
+            sqrt = math.sqrt(top_value)
+            vm.push_to_Float_Stack(sqrt)
