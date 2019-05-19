@@ -104,13 +104,13 @@ def getRegisters(registers, keys, type):
     return(retArray)
 
 
-def processRegisters(machineRegisters):
+def processRegisters(vm):
     r, f = [], []
-    if (len(machineRegisters) > 35):
-        r = getRegisters(machineRegisters,
-                         list(machineRegisters.keys())[:35], 'R')
-        f = getRegisters(machineRegisters,
-                         list(machineRegisters.keys())[35:], 'F')
+    if (len(vm.registers) > 35):
+        r = getRegisters(vm.registers,
+                         list(vm.registers.keys())[:35], 'R')
+        f = getRegisters(vm.registers,
+                         list(vm.registers.keys())[35:], 'F')
     return(r, f)
 
 
@@ -225,12 +225,20 @@ def main_page(request):
                            'stack_change': vm.stack_change
                            }
             if lang in MIPS:
-                r_reg, f_reg = processRegisters(vm.registers)
-                render_data['r_registers'] = r_reg
-                render_data['f_registers'] = f_reg
+                r_reg, f_reg = processRegisters(vm)
+                render_data['int_registers'] = r_reg
+                render_data['float_registers'] = f_reg
                 render_data['curr_reg'] = curr_reg
             if lang in INTEL:
-                render_data['floatingStack'] = vm.fp_stack_registers
+                int_array = []
+                float_array = []
+                for key in vm.registers:
+                    int_array.append((key, vm.registers[key]))
+                for key in vm.fp_stack_registers:
+                    float_array.append((key, vm.fp_stack_registers[key]))
+                render_data['int_registers'] = int_array
+                render_data['float_registers'] = float_array
+                render_data['curr_reg'] = curr_reg
             return render(request, 'main.html', render_data)
 
         form = MainForm(request.POST)
@@ -320,17 +328,26 @@ def main_page(request):
     if vm.flavor in MIPS:
         site_hdr += ": " + MIPS[vm.flavor] + " "
         site_hdr += vm.base.upper()
-        r_reg, f_reg = processRegisters(vm.registers)
+        r_reg, f_reg = processRegisters(vm)
         curr_reg = getCurrRegister(request.POST)
-        render_data['r_registers'] = r_reg
-        render_data['f_registers'] = f_reg
+        render_data['int_registers'] = r_reg
+        render_data['float_registers'] = f_reg
         render_data[HEADER] = site_hdr
         render_data['curr_reg'] = curr_reg
     if vm.flavor in INTEL:
         site_hdr += ": " + INTEL[vm.flavor] + " "
         site_hdr += vm.base.upper()
         render_data[HEADER] = site_hdr
-        render_data['floatingStack'] = vm.fp_stack_registers
+        curr_reg = getCurrRegister(request.POST)
+        render_data['curr_reg'] = curr_reg
+        int_array = []
+        float_array = []
+        for key in vm.registers:
+            int_array.append((key, vm.registers[key]))
+        for key in vm.fp_stack_registers:
+            float_array.append((key, vm.fp_stack_registers[key]))
+        render_data['int_registers'] = int_array
+        render_data['float_registers'] = float_array
     if riscv_machine.flavor in RISCV:
         site_hdr += ": " + RISCV[vm.flavor] + " "
         site_hdr += vm.base.upper()
