@@ -16,6 +16,8 @@
                 <input type="hidden" name="flavor" value="att">
             {% elif flavor == "mips_asm" %}
                 <input type="hidden" name="flavor" value="mips_asm">
+            {% elif flavor == "riscv" %}
+                <input type="hidden" name="flavor" value="riscv">
             {% elif flavor == "mips_mml" %}
                 <input type="hidden" name="flavor" value="mips_mml">
             {% elif flavor == "wasm" %}
@@ -39,9 +41,9 @@
             {% if data_init == "on" %}
                 <br>
                 Set a memory location: <input type="text" id="memText">
-                <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <br>&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;
                 Value:&ensp;&ensp;&ensp;<input type="text" id="valueText">
-                <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <br>&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;
                 Repeat:&ensp;&ensp;<input type="text" id="repeatText" value="1">
                 <input type="button" id="setMem" value="Set" onclick="AddMem()">
                 <br> <br>
@@ -150,9 +152,14 @@
                     {% else %}
                         <option value="power_fp">Raise a floating point to a power</option>
                     {% endif %}
+                    {% if sample == "addTwo_fp" %}
+                        <option value="addTwo_fp" selected>Add two floating point numbers</option>
+                    {% else %}
+                        <option value="addTwo_fp">Add two floating point numbers</option>
+                    {% endif %}
                 {% endif %}
             </select>
-            {% if registers.items|length >= 67%}
+            {% if flavor == "intel" or flavor == "mips_asm" or flavor == "mips_mml" %}
                 <button type="button" onclick="switchReg()" id="viewReg"></button>
             {% endif %}
             <br>
@@ -228,7 +235,7 @@
                     </td>
 
 
-                        <td id = "float-cell">
+                        <!-- <td id = "float-cell">
 
                             <table id="stack-table">
                               <th>
@@ -266,10 +273,10 @@
                                 {% endfor %}
                             </table>
 
-                        </td>
+                        </td> -->
 
                     <td id="registers-cell">
-                        {% if registers.items|length < 67 %}
+                        {% if registers.items|length < 67 and flavor != 'intel' %}
                             <table id="registers-table">
                             <tr>
                                 <th>
@@ -420,8 +427,8 @@
                                 {% endif %}
                             </tr>
                             <tr>
-                            {% for reg, cont in r_registers %}
-                                {% if registers|length > 10 %}
+                            {% for reg, cont in int_registers %}
+                                {% if int_registers|length > 10 %}
                                     {% if reg == "R9" %}
                                         <td id="register"></td><td id="contents"></td></tr><tr class="R">
                                     {% elif reg == "R10" or reg == "R11" %}
@@ -487,7 +494,7 @@
                             {% endfor %}
                             </tr>
                             <tr>
-                            {% for reg, cont in f_registers %}
+                            {% for reg, cont in float_registers %}
                                 {% if registers|length > 10 %}
                                     {% if reg == "F9" %}
                                         <td id="register"></td><td id="contents"></td></tr><tr class ="F">
@@ -723,50 +730,6 @@
                 </tr>
 
             </table>
-            <!-- <table style="margin-top:-355px;margin-left:360px;">
-                <tr>
-                    <th id="FloatStack">
-                        <br>
-                            Floating Point Registers Stack:
-                        <br>
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        <table id="stack-table">
-                            {% for reg, cont in floatingStack.items %}
-                                <tr>
-                                    <td id="mem-loc" style="height:5px">
-                                        {{ reg }}
-                                    </td>
-                                    <td id="contents" style="height:5px">
-                                        {% if data_init == "on" %}
-                                            <input
-                                                id="mem-cont"
-                                                value="{{ cont }}"
-                                                name="{{ reg }}"
-                                                size="14"
-                                            >
-                                        {% else %}
-                                            <input
-                                                id="mem-cont"
-                                                value="{{ cont }}"
-                                                name="{{ reg }}"
-                                                size="14"
-                                                readonly="readonly"
-                                                style="background-color:#eff;"
-                                            >
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                    </td>
-
-                </tr>
-
-            </table> -->
         </form>
         <br>
 
@@ -807,6 +770,7 @@
             SubmitForm(true, true);
         }
         var elem = document.getElementById("viewReg");
+        const flavor = document.getElementsByName('flavor')[0].value;
         if (document.getElementsByName('curr_reg')[0].value == "R" || document.getElementsByName('curr_reg')[0].value == "") {
             document.querySelectorAll('.F').forEach(function(button) {
                 button.style.display = "none";
@@ -814,7 +778,7 @@
             document.querySelectorAll('.R').forEach(function(button) {
                 button.style.display = "table-row";
             });
-            elem.innerHTML = "View F Registers";
+            elem.innerHTML = "View Float Registers";
         } else if (document.getElementsByName('curr_reg')[0].value == "F") {
             document.querySelectorAll('.R').forEach(function(button) {
                 button.style.display = "none";
@@ -822,12 +786,12 @@
             document.querySelectorAll('.F').forEach(function(button) {
                 button.style.display = "table-row";
             });
-            elem.innerHTML = "View R Registers";
+            elem.innerHTML = "View Integer Registers";
         }
-
 
         function switchReg() {
             var elem = document.getElementById("viewReg");
+            var flavor = document.getElementsByName("flavor")[0].value;
             if (document.querySelectorAll('.R')[0].style.display == "none") {
                 document.getElementsByName('curr_reg')[0].value = "R";
 
@@ -840,7 +804,7 @@
                 document.querySelectorAll('.P').forEach(function(button) {
                     button.style.display = "table-row";
                 });
-                elem.innerHTML = "View F Registers";
+                elem.innerHTML = "View Float Registers";
             } else {
                 document.getElementsByName('curr_reg')[0].value = "F";
 
@@ -853,7 +817,7 @@
                 document.querySelectorAll('.P').forEach(function(button) {
                     button.style.display = "table-row";
                 });
-                elem.innerHTML = "View R Registers";
+                elem.innerHTML = "View Integer Registers";
             }
         }
     </script>

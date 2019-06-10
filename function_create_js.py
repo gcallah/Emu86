@@ -24,7 +24,8 @@ intel_function_names = {
 fp_function_names = {
     "fp_area.asm": "area_fp",
     "fp_data.asm": "data_fp",
-    "fp_power.asm": "power_fp"
+    "fp_power.asm": "power_fp",
+    "sum_test_fp.asm": "addTwo_fp"
 }
 
 

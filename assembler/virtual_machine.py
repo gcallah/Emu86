@@ -160,6 +160,9 @@ class IntelMachine(VirtualMachine):
                         ('ZF', 0),
                     ])
 
+    def is_FP_stack_empty(self):
+        return self.float_stack_top == FLOAT_STACK_LIMIT
+
     def push_to_Float_Stack(self, val):
         next_register = self.get_next_register()
         self.fp_stack_registers["R"+str(next_register)] = val
@@ -172,7 +175,8 @@ class IntelMachine(VirtualMachine):
         return "R" + str((self.float_stack_top + k) % FLOAT_STACK_LIMIT)
 
     def pop_from_Float_Stack(self):
-        curr_value_float_stack_top = self.fp_stack_registers[self.get_register_at_float_stack_top()]
+        reg_f_stack_top = self.get_register_at_float_stack_top()
+        curr_value_float_stack_top = self.fp_stack_registers[reg_f_stack_top]
         self.fp_stack_registers["R" + str(self.float_stack_top)] = 0.0
         self.float_stack_top = (self.float_stack_top + 1) % FLOAT_STACK_LIMIT
         self.refresh_FP_Stack()

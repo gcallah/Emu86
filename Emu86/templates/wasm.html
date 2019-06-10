@@ -1,0 +1,333 @@
+{% extends "ebase.html" %}
+
+{% block content %}
+
+    <div class="module">
+        <form id="codeForm" action="{% url 'Emu86:main_page' %}" method="post">
+            <br>
+            <input type="hidden" name="nxt_key">
+            <input type="hidden" name="unwritable">
+            <input type="hidden" name="flavor" value="wasm">
+
+            {% if data_init == "on" %}
+                <input type="hidden" name="data_init" value="on">
+            {% else %}
+                <input type="hidden" name="data_init" value="off">
+            {% endif %}
+
+            <input type="hidden" name="start_ip" value="{{ start_ip }}" >
+            <input type="hidden" name="button_type" value="{{ button_type }}" >
+            <input type="hidden" name="mem_data" value="">
+            <input type="hidden" name="base" value="{{ base }}">
+
+            {% if data_init == "on" %}
+                <br>
+                Set a memory location: <input type="text" id="memText">
+                <br>&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;
+                Value:&ensp;&ensp;&ensp;<input type="text" id="valueText">
+                <br>&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;
+                Repeat:&ensp;&ensp;<input type="text" id="repeatText" value="1">
+                <input type="button" id="setMem" value="Set" onclick="AddMem()">
+                <br> <br>
+            {% endif %}
+            Sample programs:
+            <select id="sample" name="sample" onchange="selectSample()">
+                {% if sample == "none" %}
+                    <option value="none" selected></option>
+                {% else %}
+                    <option value="none"></option>
+                {% endif %}
+                {% if sample == "addTwo" %}
+                    <option value="addTwo" selected>Add two numbers</option>
+                {% else %}
+                    <option value="addTwo">Add two numbers</option>
+                {% endif %}
+                <!-- {% if sample == "arithExpr" %}
+                    <option value="arithExpr" selected>Arithmetic expression</option>
+                {% else %}
+                    <option value="arithExpr">Arithmetic expression</option>
+                {% endif %}
+                {% if sample == "arithShift" %}
+                    <option value="arithShift" selected>Arithmetic shift</option>
+                {% else %}
+                    <option value="arithShift">Arithmetic shift</option>
+                {% endif %}
+                {% if sample == "array" %}
+                    <option value="array" selected>Declare an array</option>
+                {% else %}
+                    <option value="array">Declare an array</option>
+                {% endif %}
+                {% if sample == "area" %}
+                    <option value="area" selected>Area of a rectangle</option>
+                {% else %}
+                    <option value="area">Area of a rectangle</option>
+                {% endif %}
+                {% if sample == "loop" %}
+                    <option value="loop" selected>A simple loop</option>
+                {% else %}
+                    <option value="loop">A simple loop</option>
+                {% endif %}
+                {% if sample == "log" %}
+                    <option value="log" selected>Calculate log (base 2) of a number</option>
+                {% else %}
+                    <option value="log">Calculate log (base 2) of a number</option>
+                {% endif %}
+                {% if sample == "avg" %}
+                    <option value="avg" selected>Calculate average of an array</option>
+                {% else %}
+                    <option value="avg">Calculate average of an array</option>
+                {% endif %}
+                {% if sample == "celFah" %}
+                    <option value="celFah" selected>Convert from Celsius to Fahrenheit</option>
+                {% else %}
+                    <option value="celFah">Convert from Celsius to Fahrenheit</option>
+                {% endif %}
+                {% if sample == "modify" %}
+                    <option value="modify" selected>Modify an array</option>
+                {% else %}
+                    <option value="modify">Modify an array</option>
+                {% endif %}
+                {% if sample == "sqrt" %}
+                    <option value="sqrt" selected>Square root of a number</option>
+                {% else %}
+                    <option value="sqrt">Square root of a number</option>
+                {% endif %}
+                {% if sample == "power" %}
+                    <option value="power" selected>Raise a number to a power</option>
+                {% else %}
+                    <option value="power">Raise a number to a power</option>
+                {% endif %}
+                {% if sample == "data" %}
+                    <option value="data" selected>Use the data section</option>
+                {% else %}
+                    <option value="data">Use the data section</option>
+                {% endif %} -->
+                   
+            </select>
+          
+            <br>
+            <table>
+                <tr colspan = "3">
+                    <td id="form-cell">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+
+                            <input type="button" name="clear"
+                                value="Reinitialize"
+                                title="Clear the contents of memory and the stack."
+                                id="clear-button"
+                                onclick="clearButton()"
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
+                            <input type="button" name="run"
+                                value="Run Code"
+                                title="Execute all lines of code"
+                                id="run-button"
+                                onclick="runButton()"
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
+                            <input type="button" name="step"
+                                value="Step Code"
+                                title="Execute one instruction at a time."
+                                id="step-button"
+                                onclick="stepButton()"
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
+                            <input type="button" name="save"
+                                value="Save Code"
+                                id="save-button"
+                                title="Saves the code "
+                                onclick="Savecode()"
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
+                            <input type="button" name="demo"
+                                value="Demo Code"
+                                title="Demo code line by line."
+                                id="demo-button"
+                                onclick="demoButton()"
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}>
+                            <input type="button" name="pause"
+                                value="Pause Code"
+                                title="Pauses code."
+                                id="pause-button"
+                                onclick="pauseButton()"
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()">
+                            <br>
+                            <div class="help-pop">
+                                <span class="help-text" id="help-desc">
+                                </span>
+                            </div>
+                            <br>
+                    </td>  
+                    <td>
+                        <table id="registers-table">
+                            <tr>
+                                <th>
+                                    <br>
+                                    Global Symbols:
+                                    <br>
+                                </th>
+                                <th></th>
+                                <th>
+                                    <br>
+                                    Local Symbols:
+                                    <br>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <th id="MemStack">
+                                    <br>
+                                    Memory Used:
+                                    <br>
+                                </th>
+                                <th id="MemStack">
+                                    <br>
+                                        Stack:
+                                    <br>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                <div style="height:500px;overflow:auto;">
+                                    <table id="memory-table">
+                                        {% for addr, cont in memory.items %}
+                                            <script>
+                                                document.getElementsByName("mem_data")[0].value += "{{ addr }}:{{ cont }}, ";
+                                            </script>
+                                            <tr>
+                                                <td id="mem-loc" style="height:5px">
+                                                    {{ addr }}
+                                                </td>
+                                                <td id="contents" style="height:5px">
+                                                    <input
+                                                        id="mem-cont"
+                                                        value="{{ cont }}"
+                                                        name="{{ addr }}"
+                                                        size="5"
+                                                        readonly="readonly"
+                                                        style="background-color:#eff;"
+                                                    >
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                                </td>
+                                <td>
+                                    <div style="height:500px;overflow:auto;">
+                                    <table id="stack-table">
+                                        {% for addr, cont in stack.items %}
+                                            <tr>
+                                                <td id="mem-loc" style="height:5px">
+                                                    {{ addr }}
+                                                </td>
+                                                <td id="contents" style="height:5px">
+                                                    {% if data_init == "on" %}
+                                                        <input
+                                                            id="mem-cont"
+                                                            value="{{ cont }}"
+                                                            name="{{ addr }}"
+                                                            size="5"
+                                                        >
+                                                    {% else %}
+                                                        <input
+                                                            id="mem-cont"
+                                                            value="{{ cont }}"
+                                                            name="{{ addr }}"
+                                                            size="5"
+                                                            readonly="readonly"
+                                                            style="background-color:#eff;"
+                                                        >
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <br>
+            Last Instruction Executed:
+             <input type="text" name="last_instr" max_length="64"
+                size="64" readonly="readonly" value="{{ last_instr }}">
+            <br>
+            <br>
+            Error Message (if any):
+
+            <input type="text" name="error" max_length="64"
+                size="64" readonly="readonly" value="{{ error }}"
+                id="error">
+            <script>
+                highlightCode();
+            </script>
+            <br>
+            <br>
+        </form>
+        <br>
+
+        {% if "development" in header %}
+            <br>
+            Debug Information:
+            <br>
+
+
+            <textarea rows="12" cols="60" readonly="readonly">
+                {{ debug }}
+            </textarea>
+        {% endif %}
+    </div>
+
+    <script>
+
+    var sortedElement = document.getElementById('sample');
+    var tmpAry = new Array();
+    for (var i=0;i<sortedElement.options.length;i++) {
+        tmpAry[i] = new Array();
+        tmpAry[i][0] = sortedElement.options[i].text;
+        tmpAry[i][1] = sortedElement.options[i].value;
+    }
+    tmpAry.sort();
+    while (sortedElement.options.length > 0) {
+        sortedElement.options[0] = null;
+    }
+    for (var i=0;i<tmpAry.length;i++) {
+        var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+        sortedElement.options[i] = op;
+    }
+
+        if (document.getElementsByName("button_type")[0].value == "demo"){
+            SubmitForm(true);
+        }
+        if (document.getElementsByName("button_type")[0].value == "pause") {
+            SubmitForm(true, true);
+        }
+    </script>
+
+{% endblock content %}

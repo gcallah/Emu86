@@ -8,12 +8,12 @@ sys.path.append(".") # noqa
 import random
 
 import operator as opfunc
-import functools
+# import functools
 
 from unittest import TestCase, main
 
 from assembler.tokens import MAX_INT, MIN_INT, BITS
-from assembler.virtual_machine import wasm_machine, STACK_TOP, STACK_BOTTOM
+from assembler.virtual_machine import wasm_machine  # STACK_TOP, STACK_BOTTOM
 from assembler.assemble import assemble
 
 
@@ -43,7 +43,8 @@ class AssembleTestCase(TestCase):
             wasm_machine.base = "dec"
             assemble(instr, 'wasm', wasm_machine)
             sp = wasm_machine.get_sp()
-            self.assertEqual(wasm_machine.stack[hex(sp).split('x')[-1].upper()], correct)
+            position = hex(sp).split('x')[-1].upper()
+            self.assertEqual(wasm_machine.stack[position], correct)
 
     def two_op_test(self, operator, instr,
                     low1=MIN_TEST, high1=MAX_TEST,
@@ -61,7 +62,8 @@ class AssembleTestCase(TestCase):
             wasm_machine.base = "dec"
             assemble(instr, 'wasm', wasm_machine)
             sp = wasm_machine.get_sp()
-            self.assertEqual(wasm_machine.stack[hex(sp).split('x')[-1].upper()], correct)
+            position = hex(sp).split('x')[-1].upper()
+            self.assertEqual(wasm_machine.stack[position], correct)
 
     def two_op_test_unsigned(self, operator, instr,
                              low1=MIN_TEST, high1=MAX_TEST,
@@ -79,7 +81,8 @@ class AssembleTestCase(TestCase):
             wasm_machine.base = "dec"
             assemble(instr, 'wasm', wasm_machine)
             sp = wasm_machine.get_sp()
-            self.assertEqual(wasm_machine.stack[hex(sp).split('x')[-1].upper()], correct)
+            position = hex(sp).split('x')[-1].upper()
+            self.assertEqual(wasm_machine.stack[position], correct)
 
     def test_add(self):
         self.two_op_test(opfunc.add, "i32.add")
@@ -101,7 +104,7 @@ class AssembleTestCase(TestCase):
 
     def test_rem_u(self):
         self.two_op_test_unsigned(opfunc.mod, "i32.rem_u")
-    
+
     def test_and(self):
         self.two_op_test(opfunc.and_, "i32.and")
 
@@ -112,10 +115,10 @@ class AssembleTestCase(TestCase):
         self.two_op_test(opfunc.xor, "i32.xor")
 
     def test_shl(self):
-        self.two_op_test(opfunc.lshift, "i32.shl", 
+        self.two_op_test(opfunc.lshift, "i32.shl",
                          low1=MIN_MUL, high1=MAX_MUL,
                          low2=0, high2=MAX_SHIFT)
-    
+
     def test_shr_s(self):
         self.two_op_test(opfunc.rshift, "i32.shr_s",
                          low1=MIN_MUL, high1=MAX_MUL,
@@ -125,7 +128,7 @@ class AssembleTestCase(TestCase):
         self.two_op_test_unsigned(opfunc.rshift, "i32.shr_u",
                                   low1=MIN_MUL, high1=MAX_MUL,
                                   low2=0, high2=MAX_SHIFT)
-    
+
     def test_rotl(self):
         def calc_correct_rotl(a, b):
             a_bin = bin(a)[2:]
@@ -134,7 +137,7 @@ class AssembleTestCase(TestCase):
                 diff = 32 - len(a_bin)
             for i in range(0, diff):
                 a_bin = "0" + a_bin
-            b = b % 32 # only for i32
+            b = b % 32  # only for i32
             result = a_bin[b:] + a_bin[:b]
             return int(result, 2)
         self.two_op_test_unsigned(calc_correct_rotl, "i32.rotl")
@@ -147,7 +150,7 @@ class AssembleTestCase(TestCase):
                 diff = 32 - len(a_bin)
             for i in range(0, diff):
                 a_bin = "0" + a_bin
-            b = b % 32 # only for i32
+            b = b % 32  # only for i32
             result = a_bin[-b:] + a_bin[:len(a_bin)-b]
             return int(result, 2)
         self.two_op_test_unsigned(calc_correct_rotr, "i32.rotr")
@@ -163,7 +166,7 @@ class AssembleTestCase(TestCase):
                     break
             return result
         self.one_op_test(calc_correct_clz, "i32.clz")
-        
+
     def test_ctz(self):
         def calc_correct_ctz(a):
             a_bin = bin(a)[2:]
@@ -193,6 +196,7 @@ class AssembleTestCase(TestCase):
             else:
                 return False
         self.one_op_test(calc_correct_eqz, "i32.eqz")
+
 
 if __name__ == '__main__':
     main()

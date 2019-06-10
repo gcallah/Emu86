@@ -10,7 +10,7 @@ key_words = {
     # data types
     'i32': DataType('i32'),
 
-    # arithmetic 
+    # arithmetic
     'i32.add': Add('.add'),
     'i32.sub': Sub('.sub'),
     'i32.mul': Mul('.mul'),

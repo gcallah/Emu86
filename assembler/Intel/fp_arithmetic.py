@@ -3,11 +3,12 @@ fp_arithmetic.py: arithmetic floating point instructions.
 """
 
 # import operator as opfunc
-from assembler.errors import check_num_args
-from assembler.tokens import Instruction, MAX_FLOAT, MIN_FLOAT, Register
+from assembler.errors import check_num_args, DivisionZero
+from assembler.tokens import Instruction, MAX_FLOAT
 # from .arithmetic import checkflag
 # from assembler.virtual_machine import intel_machine
 from .fp_conversions import add, sub, mul, div, fabs, chs
+import math
 
 
 def convert_hex_to_decimal(fhex):
@@ -97,56 +98,6 @@ def dec_convert(val):
     return val
 
 
-def floating_point_addition(num1, num2):
-    """
-    :param num1: floating point hexadecimal number in str format
-    :param num2: floating point hexadecimal number in str format
-    :return: hexadecimal equivalent of addition of num1 and num2 in str format
-    Eg:- 'a2.e' + '3f.b' -> 'e2.9'
-    """
-    flag1, flag2 = (num1[0] == '-'), (num2[0] == '-')
-    if flag1 and flag2:
-        return '-' + floating_point_addition(num1[1:], num2[1:])
-    elif flag1:
-        return floating_point_subtraction(num2, num1[1:])
-    elif flag2:
-        return floating_point_subtraction(num1, num2[1:])
-    elif not flag1 and not flag2:
-        num1_dec = convert_hex_to_decimal(num1)
-        num2_dec = convert_hex_to_decimal(num2)
-        res = num1_dec + num2_dec
-        hex_equi = convert_dec_to_hex(res)
-        if '.' not in hex_equi:
-            hex_equi += '.0'
-        return hex_equi
-
-
-def floating_point_subtraction(num1, num2):
-    """
-    :param num1: floating point hexadecimal number in str format
-    :param num2: floating point hexadecimal number in str format
-    :return: hexadecimal equivalent of subtraction
-     of num1 and num2 in str format
-    Eg:- 'a2.e' - '3f.b' -> '63.3'
-    """
-    flag1, flag2 = (num1[0] == '-'), (num2[0] == '-')
-    if flag1 and flag2:
-        return floating_point_subtraction(num2[1:], num1[1:])
-    elif flag1:
-        return '-' + floating_point_addition(num1[1:], num2)
-    elif flag2:
-        return floating_point_addition(num1, num2[1:])
-    else:
-        num1_dec = convert_hex_to_decimal(num1)
-        num2_dec = convert_hex_to_decimal(num2)
-        res = num1_dec - num2_dec
-        hex_equi = convert_dec_to_hex(res)
-        if '.' not in hex_equi:
-            hex_equi += '.0'
-        return hex_equi
-
-
-
 def checkflag(val, vm):
     if(val > MAX_FLOAT):
         vm.flags['CF'] = 1
@@ -165,8 +116,9 @@ def two_op_arith(ops, vm, instr, operator):
     offset1, offset2 = [int(x.get_nm()[-1]) for x in ops]
     first_reg = vm.get_float_stack_register_at_offset(offset1)
     second_reg = vm.get_float_stack_register_at_offset(offset2)
-    r1, r2 = vm.fp_stack_registers[first_reg], vm.fp_stack_registers[second_reg]
-    vm.fp_stack_registers[first_reg] = operator(r1,r2)
+    r1 = vm.fp_stack_registers[first_reg]
+    r2 = vm.fp_stack_registers[second_reg]
+    vm.fp_stack_registers[first_reg] = checkflag(operator(r1, r2), vm)
     # r1.set_val(
     #     checkflag(operator(r1.get_val(),
     #                        r2.get_val()), vm))
@@ -179,9 +131,12 @@ def one_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 1)
-    val_float_stack_top = vm.pop_from_Float_Stack()
-    vm.push_to_Float_Stack(operator(val_float_stack_top,ops[0].get_val()))
-
+    if operator.__name__ == 'div' and ops[0].get_val() == 0.0:
+        raise DivisionZero()
+    else:
+        val_float_stack_top = vm.pop_from_Float_Stack()
+        op_val = operator(val_float_stack_top, ops[0].get_val())
+        vm.push_to_Float_Stack(checkflag(op_val, vm))
 
 
 class FAdd(Instruction):
@@ -199,15 +154,18 @@ class FAdd(Instruction):
     """
     def fhook(self, ops, vm):
         if len(ops) == 1:
-            one_op_arith(ops,vm,self.name,add)
+            one_op_arith(ops, vm, self.name, add)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, add)
 
 
 class FaddP(Instruction):
     """
-        1 op - adds val to stack top ST(0) and stores value at ST(0) and then pops stack
-        2 ops - sets sum  of floating stack ST(i) and floating stack  ST(j) to floating stack ST(i) and then pops stack
+        1 op - adds val to stack top ST(0)
+        and stores value at ST(0) and then pops stack
+        2 ops - sets sum  of floating stack ST(i)
+        and floating stack  ST(j) to floating stack ST(i)
+        and then pops stack
             <instr>
                  FADDP
             </instr>
@@ -239,14 +197,15 @@ class FSub(Instruction):
     """
     def fhook(self, ops, vm):
         if len(ops) == 1:
-            one_op_arith(ops,vm,self.name,sub)
+            one_op_arith(ops, vm, self.name, sub)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, sub)
 
 
 class FSubP(Instruction):
     """
-    1 op - subtracts val from stack top ST(0) and stores value at ST(0) and then pops the stack
+    1 op - subtracts val from stack top ST(0)
+    and stores value at ST(0) and then pops the stack
     2 ops - sets difference  of floating stack ST(i) and floating stack
     ST(j) to floating stack ST(i) and then pops the stack
         <instr>
@@ -259,7 +218,7 @@ class FSubP(Instruction):
     """
     def fhook(self, ops, vm):
         if len(ops) == 1:
-            one_op_arith(ops,vm,self.name,sub)
+            one_op_arith(ops, vm, self.name, sub)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, sub)
         vm.pop_from_Float_Stack()
@@ -280,14 +239,15 @@ class FMul(Instruction):
     """
     def fhook(self, ops, vm):
         if len(ops) == 1:
-            one_op_arith(ops,vm,self.name,mul)
+            one_op_arith(ops, vm, self.name, mul)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, mul)
 
 
 class FMulP(Instruction):
     """
-    1 op - multiplies val with stack top ST(0) and stores value at ST(0) and then pops the stack
+    1 op - multiplies val with stack top ST(0)
+    and stores value at ST(0) and then pops the stack
     2 ops - sets product of floating stack ST(i) and floating stack
      ST(j) to floating stack ST(i) and then pops the stack
         <instr>
@@ -300,10 +260,11 @@ class FMulP(Instruction):
     """
     def fhook(self, ops, vm):
         if len(ops) == 1:
-            one_op_arith(ops,vm,self.name,mul)
+            one_op_arith(ops, vm, self.name, mul)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, mul)
         vm.pop_from_Float_Stack()
+
 
 class FAbs(Instruction):
     """
@@ -349,6 +310,46 @@ class FDiv(Instruction):
     """
     def fhook(self, ops, vm):
         if len(ops) == 1:
-            one_op_arith(ops,vm,self.name,div)
+            one_op_arith(ops, vm, self.name, div)
         elif len(ops) == 2:
             two_op_arith(ops, vm, self.name, div)
+
+
+class FDivP(Instruction):
+    """
+    1 op - divides stack top ST(0) with val
+    and stores the result at ST(0) and pops the stack
+    2 ops - sets the result of dividing floating stack ST(i) by floating stack
+     ST(j) to floating stack ST(i) and pops the stack
+        <instr>
+             FDIVP
+        </instr>
+        <syntax>
+            FDIVP val
+            FDIVP ST(i), ST(j)
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        if len(ops) == 1:
+            one_op_arith(ops, vm, self.name, div)
+        elif len(ops) == 2:
+            two_op_arith(ops, vm, self.name, div)
+        vm.pop_from_Float_Stack()
+
+
+class FSqrt(Instruction):
+    """
+    0 op - computes the square root of the source value in the ST(0)
+    register and stores the result in ST(0)
+        <instr>
+             FSQRT
+        </instr>
+        <syntax>
+            FSQRT
+        </syntax>
+    """
+    def fhook(self, ops, vm):
+        if len(ops) == 0:
+            top_value = vm.pop_from_Float_Stack()
+            sqrt = math.sqrt(top_value)
+            vm.push_to_Float_Stack(sqrt)

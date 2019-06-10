@@ -1,5 +1,6 @@
 from __future__ import print_function
 # from assembler.virtual_machine import intel_machine
+from assembler.errors import DivisionZero
 from collections import namedtuple
 from fractions import Fraction
 import struct
@@ -380,4 +381,7 @@ def div(val1, val2):
     """There is a faster way to do division.  Its called
    division by reciprocal approximation.  It takes about the same
    time as a fl. pt. multiply.  """
-    return mul(val1, 1 / val2)
+    if val2 == 0.0:
+        raise DivisionZero()
+    else:
+        return mul(val1, 1 / val2)
