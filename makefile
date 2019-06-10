@@ -47,7 +47,7 @@ FORCE:
 
 # update our submodules:
 util: $(submods)
-	git submodule update
+	git submodule foreach --recursive git submodule update --init
 
 # this rule builds the menu for the static server:
 navbar: util
