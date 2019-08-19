@@ -170,7 +170,7 @@ class IntelMachine(VirtualMachine):
 
     def is_FP_stack_empty(self):
         return self.float_stack_bottom == -1
-    
+
     def is_FP_stack_full(self):
         return self.float_stack_bottom == FLOAT_STACK_LIMIT - 1
 

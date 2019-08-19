@@ -208,7 +208,8 @@ def create_js_files():
     js_file_hex.close()
 
     js_file_fp = open("mysite/static/Emu86/sample_functions_fp.js", "w")
-    file_code = function_directory_fp(fp_function_names, ["tests/Intel/", "tests/MIPS_ASM/"])
+    file_code = function_directory_fp(fp_function_names,
+                                      ["tests/Intel/", "tests/MIPS_ASM/"])
     file_code += function_directory_fp(intel_function_names, intel_directory)
     js_file_fp.write(file_code)
     js_file_fp.close()

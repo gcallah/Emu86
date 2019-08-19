@@ -174,11 +174,12 @@ class TestPrograms(TestCase):
         self.run_intel_test_code("tests/Intel/fp_area.asm")
         self.assertAlmostEqual(intel_machine.registers["ST0"], 16.6 * 128.4)
         self.assertEqual(intel_machine.registers["ST1"], 16.6)
-    
+
     def test_fp_cel_to_fah(self):
         self.run_intel_test_code("tests/Intel/fp_cel_to_fah.asm")
-        self.assertAlmostEqual(intel_machine.registers["ST0"], 35.4 * 9 / 5 + 32)
-        self.assertEqual(intel_machine.memory["1"], 35.4 * 9 / 5 + 32)
+        fah_val = 35.4 * 9 / 5 + 32
+        self.assertAlmostEqual(intel_machine.registers["ST0"], fah_val)
+        self.assertEqual(intel_machine.memory["1"], fah_val)
 
 
 if __name__ == '__main__':

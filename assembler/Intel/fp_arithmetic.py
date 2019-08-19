@@ -2,7 +2,6 @@
 fp_arithmetic.py: arithmetic floating point instructions.
 """
 
-import operator as opfunc
 from assembler.errors import check_num_args, DivisionZero, InvalidOperand
 from assembler.tokens import Instruction, MAX_FLOAT
 # from .arithmetic import checkflag
@@ -129,6 +128,7 @@ def two_op_arith(ops, vm, instr, operator):
     #     checkflag(operator(r1.get_val(),
     #                        r2.get_val()), vm))
 
+
 def pop_arith(ops, vm, instr, operator):
     check_num_args(instr, ops, 2)
     reg_one, reg_two = [int(x.get_nm()[-1]) for x in ops]
@@ -145,6 +145,7 @@ def pop_arith(ops, vm, instr, operator):
     # r1.set_val(
     #     checkflag(operator(r1.get_val(),
     #                        r2.get_val()), vm))
+
 
 def one_op_arith(ops, vm, instr, operator):
     """

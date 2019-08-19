@@ -2,7 +2,7 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args, StackFull
-from assembler.tokens import Instruction, Register, FloatTok
+from assembler.tokens import Instruction, Register
 
 
 class Fld(Instruction):

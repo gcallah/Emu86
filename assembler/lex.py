@@ -271,7 +271,8 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         # Floating Points
         elif re.match(fp_match, word) is not None:
             # default is float (single precision) if user doesnt say
-            if data_type != ".float" and data_type != ".double" and data_type != "REAL4" and data_type != "REAL8":
+            if (data_type != ".float" and data_type != ".double" and
+                    data_type != "REAL4" and data_type != "REAL8"):
                 data_type = ".float"
             if vm.base == "dec":
                 # TODO: Screen shot to give me the

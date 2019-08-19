@@ -54,7 +54,7 @@ class AssembleTestCase(TestCase):
                 correct = operator(a, b)
                 intel_machine.registers["ST0"] = a
                 intel_machine.registers["ST1"] = b
-                assemble (instr + " st0, st1", 'intel', intel_machine)
+                assemble(instr + " st0, st1", 'intel', intel_machine)
                 self.assertAlmostEqual(intel_machine.registers["ST0"], correct)
             else:
                 correct = operator(a, b)
