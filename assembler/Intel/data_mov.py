@@ -1,7 +1,7 @@
 """
 data_mov.py: data movement instructions.
 """
-from assembler.errors import check_num_args
+from assembler.errors import check_num_args, StackFull
 from assembler.tokens import Instruction, Register, FloatTok
 
 
@@ -14,13 +14,36 @@ class Fld(Instruction):
             fld con
         </syntax>
         <descr>
-            pushes value onto stack
+            loads value onto stack
         </descr>
     """
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
-        if isinstance(ops[0], FloatTok):
-            vm.push_to_Float_Stack(ops[0].get_val())
+        if vm.is_FP_stack_full():
+            raise StackFull()
+        # if isinstance(ops[0], FloatTok):
+        #     vm.push_to_Float_Stack(ops[0].get_val())
+        vm.push_to_Float_Stack(ops[0].get_val())
+        print(vm.registers)
+
+
+class Fst(Instruction):
+    """
+        <instr>
+             fst
+        </instr>
+        <syntax>
+            fst con
+        </syntax>
+        <descr>
+            stores value from top of stack
+        </descr>
+    """
+    def fhook(self, ops, vm):
+        check_num_args(self.get_nm(), ops, 1)
+        if vm.is_FP_stack_full():
+            raise StackFull()
+        ops[0].set_val(vm.registers['ST0'])
 
 
 class Mov(Instruction):

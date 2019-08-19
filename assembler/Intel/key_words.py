@@ -6,7 +6,7 @@ from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
 from .control_flow import Jg, Jge, Jl, Jle
 
 
-from .data_mov import Mov, Pop, Push, Lea, Fld
+from .data_mov import Mov, Pop, Push, Lea, Fld, Fst
 from .data_mov_att import Movb, Movw, Movl
 from .interrupts import Interrupt
 from assembler.tokens import DataType, ConstantSign, DupTok
@@ -42,6 +42,7 @@ instructions = {
         'POP': Pop('POP'),
         'LEA': Lea('LEA'),
         'FLD': Fld('FLD'),
+        'FST': Fst('FST'),
         # arithmetic and logic:
         'ADD': Add('ADD'),
         'SUB': Sub('SUB'),

@@ -232,10 +232,15 @@ def main_page(request):
             if lang in INTEL:
                 int_array = []
                 float_array = []
+                # for key in vm.registers:
+                #     int_array.append((key, vm.registers[key]))
+                # for key in vm.fp_stack_registers:
+                #     float_array.append((key, vm.fp_stack_registers[key]))
                 for key in vm.registers:
-                    int_array.append((key, vm.registers[key]))
-                for key in vm.fp_stack_registers:
-                    float_array.append((key, vm.fp_stack_registers[key]))
+                    if key[:2] == "ST":
+                        float_array.append((key, vm.registers[key]))
+                    else:
+                        int_array.append((key, vm.registers[key]))
                 render_data['int_registers'] = int_array
                 render_data['float_registers'] = float_array
                 render_data['curr_reg'] = curr_reg
@@ -342,12 +347,18 @@ def main_page(request):
         render_data['curr_reg'] = curr_reg
         int_array = []
         float_array = []
+        # for key in vm.registers:
+        #     int_array.append((key, vm.registers[key]))
+        # for key in vm.fp_stack_registers:
+        #     float_array.append((key, vm.fp_stack_registers[key]))
         for key in vm.registers:
-            int_array.append((key, vm.registers[key]))
-        for key in vm.fp_stack_registers:
-            float_array.append((key, vm.fp_stack_registers[key]))
+            if key[:2] == "ST":
+                float_array.append((key, vm.registers[key]))
+            else:
+                int_array.append((key, vm.registers[key]))
         render_data['int_registers'] = int_array
         render_data['float_registers'] = float_array
+        print(float_array)
     if riscv_machine.flavor in RISCV:
         site_hdr += ": " + RISCV[vm.flavor] + " "
         site_hdr += vm.base.upper()
@@ -378,6 +389,8 @@ def get_reg_contents(registers, request):
                         registers[reg] = hex(int(registers[reg], 2))
                 else:
                     registers[reg] = float(request.POST[reg])
+        elif reg[:2] == 'ST':
+            registers[reg] = float(registers[reg])
         else:
             if hex_term:
                 registers[reg] = int(request.POST[reg], 16)

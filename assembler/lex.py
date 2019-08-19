@@ -112,10 +112,10 @@ def generate_float_stack_dict(vm, flavor):
     """
     registers = {}
 
-    for i in range(8):
-        registers['ST'+str(i)] = NewSymbol('ST'+str(i))
-    # for reg in vm.fp_stack_registers:
-        # registers[reg] = Register(reg, vm)
+    # for i in range(8):
+    #     registers['ST'+str(i)] = NewSymbol('ST'+str(i))
+    for reg in vm.fp_stack_registers:
+        registers[reg] = Register(reg, vm)
 
     return registers
 
@@ -149,7 +149,7 @@ def make_language_keys(vm, flavor):
         from .Intel.key_words import instructions
         language_keys.update(instructions)
         if flavor == "intel":
-            language_keys.update(generate_float_stack_dict(vm, flavor))
+            # language_keys.update(generate_float_stack_dict(vm, flavor))
             from .Intel.key_words import intel_key_words
             language_keys.update(intel_key_words)
         else:
@@ -271,7 +271,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         # Floating Points
         elif re.match(fp_match, word) is not None:
             # default is float (single precision) if user doesnt say
-            if data_type != ".float" and data_type != ".double":
+            if data_type != ".float" and data_type != ".double" and data_type != "REAL4" and data_type != "REAL8":
                 data_type = ".float"
             if vm.base == "dec":
                 # TODO: Screen shot to give me the

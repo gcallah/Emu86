@@ -44,6 +44,7 @@ NOT_EVEN_REGISTER = "Invalid odd-numbered register: "
 NOT_CORRECT_BITS = "Instruction expected integer of max length 20 bits"
 TOO_PRECISE = "Floating point number has too many decimal places: "
 INVALID_STRING = "The String Provided is Invalid"
+STACK_FULL = "Cannot push another element, stack is full"
 
 INT_MAX = (2**31)-1
 INT_MIN = -(2**31)
@@ -248,6 +249,11 @@ class IncorrectImmLength(Error):
 class TooPrecise(Error):
     def __init__(self, offender):
         self.msg = TOO_PRECISE + offender
+
+
+class StackFull(Error):
+    def __init__(self):
+        self.msg = STACK_FULL
 
 
 def check_num_args(instr, ops, correct_num, type_ins=0):

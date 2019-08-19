@@ -132,7 +132,32 @@
                         <option value="dataAccess">Accessing data in memory</option>
                     {% endif %}
                 {% endif %}
-                {% if flavor == "mips_asm" or flavor == "intel" %}
+                {% if flavor == "intel" and base == "dec" %}
+                    {% if sample == "area_fp" %}
+                        <option value="area_fp" selected>Area of a rectangle
+                        using floating point</option>
+                    {% else %}
+                        <option value="area_fp">Area of a rectangle
+                        using floating point</option>
+                    {% endif %}
+                    {% if sample == "data_fp" %}
+                        <option value="data_fp" selected>Accessing data in memory
+                        for floating point</option>
+                    {% else %}
+                        <option value="data_fp">Accessing data in memory
+                        for floating point</option>
+                    {% endif %}
+                    {% if sample == "power_fp" %}
+                        <option value="power_fp" selected>Raise a floating point to a power</option>
+                    {% else %}
+                        <option value="power_fp">Raise a floating point to a power</option>
+                    {% endif %}
+                    {% if sample == "addTwo_fp" %}
+                        <option value="addTwo_fp" selected>Add two floating point numbers</option>
+                    {% else %}
+                        <option value="addTwo_fp">Add two floating point numbers</option>
+                    {% endif %}
+                {% elif flavor == "mips_asm" %}
                     {% if sample == "area_fp" %}
                         <option value="area_fp" selected>Area of a rectangle
                         using floating point</option>
@@ -276,7 +301,7 @@
                         </td> -->
 
                     <td id="registers-cell">
-                        {% if registers.items|length < 67 and flavor != 'intel' %}
+                        {% if flavor != 'mips_asm' and flavor != 'mips_mml' and flavor != 'intel' %}
                             <table id="registers-table">
                             <tr>
                                 <th>
@@ -411,7 +436,7 @@
                                 <th>
                                     Contents
                                 </th>
-                                {% if registers|length > 10 %}
+                                {% if int_registers|length > 10 %}
                                     <th>
                                     Registers
                                     </th>
@@ -495,7 +520,7 @@
                             </tr>
                             <tr>
                             {% for reg, cont in float_registers %}
-                                {% if registers|length > 10 %}
+                                {% if float_registers|length > 10 %}
                                     {% if reg == "F9" %}
                                         <td id="register"></td><td id="contents"></td></tr><tr class ="F">
                                     {% elif reg == "F10" or reg == "F11" %}

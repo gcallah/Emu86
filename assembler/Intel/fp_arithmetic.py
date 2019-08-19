@@ -2,8 +2,8 @@
 fp_arithmetic.py: arithmetic floating point instructions.
 """
 
-# import operator as opfunc
-from assembler.errors import check_num_args, DivisionZero
+import operator as opfunc
+from assembler.errors import check_num_args, DivisionZero, InvalidOperand
 from assembler.tokens import Instruction, MAX_FLOAT
 # from .arithmetic import checkflag
 # from assembler.virtual_machine import intel_machine
@@ -113,17 +113,38 @@ def two_op_arith(ops, vm, instr, operator):
             +, -, *, etc.
     """
     check_num_args(instr, ops, 2)
-    offset1, offset2 = [int(x.get_nm()[-1]) for x in ops]
-    first_reg = vm.get_float_stack_register_at_offset(offset1)
-    second_reg = vm.get_float_stack_register_at_offset(offset2)
-    r1 = vm.fp_stack_registers[first_reg]
-    r2 = vm.fp_stack_registers[second_reg]
-    vm.fp_stack_registers[first_reg] = checkflag(operator(r1, r2), vm)
+    reg_one, reg_two = [int(x.get_nm()[-1]) for x in ops]
+    # first_reg = vm.get_float_stack_register_at_offset(offset1)
+    # second_reg = vm.get_float_stack_register_at_offset(offset2)
+    # r1 = vm.fp_stack_registers[first_reg]
+    # r2 = vm.fp_stack_registers[second_reg]
+    # vm.fp_stack_registers[first_reg] = checkflag(operator(r1, r2), vm)
+    if reg_one != 0 and reg_two != 0:
+        print(reg_one, reg_two)
+        raise InvalidOperand('Neither registers are ST0')
+    r1 = vm.registers[f'ST{reg_one}']
+    r2 = vm.registers[f'ST{reg_two}']
+    vm.registers[f'ST{reg_one}'] = checkflag(operator(r1, r2), vm)
     # r1.set_val(
     #     checkflag(operator(r1.get_val(),
     #                        r2.get_val()), vm))
-    # vm.changes.add(r1)
 
+def pop_arith(ops, vm, instr, operator):
+    check_num_args(instr, ops, 2)
+    reg_one, reg_two = [int(x.get_nm()[-1]) for x in ops]
+    # first_reg = vm.get_float_stack_register_at_offset(offset1)
+    # second_reg = vm.get_float_stack_register_at_offset(offset2)
+    # r1 = vm.fp_stack_registers[first_reg]
+    # r2 = vm.fp_stack_registers[second_reg]
+    # vm.fp_stack_registers[first_reg] = checkflag(operator(r1, r2), vm)
+    if reg_two != 0:
+        raise InvalidOperand(f'ST{reg_two}')
+    r1 = vm.registers[f'ST{reg_one}']
+    r2 = vm.registers[f'ST{reg_two}']
+    vm.registers[f'ST{reg_one}'] = checkflag(float(operator(r1, r2)), vm)
+    # r1.set_val(
+    #     checkflag(operator(r1.get_val(),
+    #                        r2.get_val()), vm))
 
 def one_op_arith(ops, vm, instr, operator):
     """
@@ -134,9 +155,7 @@ def one_op_arith(ops, vm, instr, operator):
     if operator.__name__ == 'div' and ops[0].get_val() == 0.0:
         raise DivisionZero()
     else:
-        val_float_stack_top = vm.pop_from_Float_Stack()
-        op_val = operator(val_float_stack_top, ops[0].get_val())
-        vm.push_to_Float_Stack(checkflag(op_val, vm))
+        vm.registers["ST0"] = operator(vm.registers["ST0"], ops[0].get_val())
 
 
 class FAdd(Instruction):

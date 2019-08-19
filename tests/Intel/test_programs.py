@@ -127,6 +127,13 @@ class TestPrograms(TestCase):
         self.run_intel_test_code("tests/Intel/area.asm")
         self.assertEqual(intel_machine.registers["EAX"], 945)
 
+    def test_celsius_conversion(self):
+        self.run_intel_test_code("tests/Intel/cel_to_fah.asm")
+        self.assertEqual(intel_machine.registers["EAX"], 95)
+        self.assertEqual(intel_machine.memory["1"], 95)
+        self.assertEqual(intel_machine.registers["EDX"], 2)
+        self.assertEqual(intel_machine.registers["EBX"], 5)
+
     def test_log(self):
         self.run_intel_test_code("tests/Intel/log.asm")
         self.assertEqual(intel_machine.registers["EAX"], 1024)
@@ -157,6 +164,21 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.registers["EDX"], 3331)
         self.assertEqual(intel_machine.registers["ECX"], 100)
         self.assertEqual(intel_machine.registers["EBX"], 100)
+
+    def test_fp_sum(self):
+        self.run_intel_test_code("tests/Intel/fp_sum_test.asm")
+        self.assertEqual(intel_machine.registers["ST0"], 16.6 + 128.4)
+        self.assertEqual(intel_machine.registers["ST1"], 16.6)
+
+    def test_fp_area(self):
+        self.run_intel_test_code("tests/Intel/fp_area.asm")
+        self.assertAlmostEqual(intel_machine.registers["ST0"], 16.6 * 128.4)
+        self.assertEqual(intel_machine.registers["ST1"], 16.6)
+    
+    def test_fp_cel_to_fah(self):
+        self.run_intel_test_code("tests/Intel/fp_cel_to_fah.asm")
+        self.assertAlmostEqual(intel_machine.registers["ST0"], 35.4 * 9 / 5 + 32)
+        self.assertEqual(intel_machine.memory["1"], 35.4 * 9 / 5 + 32)
 
 
 if __name__ == '__main__':

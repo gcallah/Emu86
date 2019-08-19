@@ -1,9 +1,10 @@
 ; Declare length and width
 .data
-    long DW 0x40600000
-    wide DW 0x1B
+    long REAL4 16.6
+    wide REAL4 128.4
 
 ; Calculate area of rectangle
 .text
-    FLD F7, [long]
-    FMUL F6, [wide]
+    FLD [long]
+    FLD [wide]
+    FMUL ST0, ST1

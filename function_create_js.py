@@ -25,7 +25,7 @@ fp_function_names = {
     "fp_area.asm": "area_fp",
     "fp_data.asm": "data_fp",
     "fp_power.asm": "power_fp",
-    "sum_test_fp.asm": "addTwo_fp"
+    "fp_sum_test.asm": "addTwo_fp"
 }
 
 
@@ -157,12 +157,12 @@ def function_directory_fp(func_dict, directory_lst):
         function_code += "\n\tlet codeString = '';"
         for dire in directory_lst:
             sample_test = open(dire + file_name, "r")
-            # if count == 0:
-            #     function_code += "\n\tif (flavor == 'intel'){\n"
-            # elif count == 1:
-            #     function_code += "\n\telse if (flavor == 'mips_asm'){\n"
+            if count == 0:
+                function_code += "\n\tif (flavor === 'intel'){"
+            elif count == 1:
+                function_code += "\n\telse if (flavor == 'mips_asm'){"
 
-            function_code += "\n\tcodeString += "
+            function_code += "\n\t\tcodeString += "
             function_code += repr(sample_test.read())
             # if count == 1:
             #     function_code += repr(sample_test.read())
@@ -181,7 +181,7 @@ def function_directory_fp(func_dict, directory_lst):
                 function_code += repr(sample_conv)
             '''
             sample_test.close()
-            function_code += ";\n\t"
+            function_code += ";\n\t}"
             count += 1
         function_code += "\n\tdocument.getElementById('id_code')"
         function_code += ".value = codeString;\n}"
@@ -208,8 +208,8 @@ def create_js_files():
     js_file_hex.close()
 
     js_file_fp = open("mysite/static/Emu86/sample_functions_fp.js", "w")
-    file_code = function_directory_fp(fp_function_names, ["tests/MIPS_ASM/"])
-    # file_code += function_directory_fp(intel_function_names, intel_directory)
+    file_code = function_directory_fp(fp_function_names, ["tests/Intel/", "tests/MIPS_ASM/"])
+    file_code += function_directory_fp(intel_function_names, intel_directory)
     js_file_fp.write(file_code)
     js_file_fp.close()
 

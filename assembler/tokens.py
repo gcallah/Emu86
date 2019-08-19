@@ -328,14 +328,15 @@ class Register(Location):
         isFloat = False
         if name[:2].upper() == 'ST':
             isFloat = True
-        if isFloat:
-            self.registers = vm.fp_stack_registers
-        # if FLOAT ==True:
+        # if isFloat:
         #     self.registers = vm.fp_stack_registers
-        #     #self.val = self.registers[self.name]
-        #     print("registers changed")
-        else:
-            self.registers = vm.registers
+        # # if FLOAT ==True:
+        # #     self.registers = vm.fp_stack_registers
+        # #     #self.val = self.registers[self.name]
+        # #     print("registers changed")
+        # else:
+        #     self.registers = vm.registers
+        self.registers = vm.registers
         self.val = self.registers[self.name]
         self.writable = True
         self.multiplier = 1

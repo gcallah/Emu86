@@ -123,18 +123,18 @@ class VirtualMachine:
 class IntelMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
-        self.fp_stack_registers = OrderedDict(
-                    [
-                        ('R7', 0.0),
-                        ('R6', 0.0),
-                        ('R5', 0.0),
-                        ('R4', 0.0),
-                        ('R3', 0.0),
-                        ('R2', 0.0),
-                        ('R1', 0.0),
-                        ('R0', 0.0),
-                    ])
-        self.float_stack_top = FLOAT_STACK_LIMIT
+        # self.fp_stack_registers = OrderedDict(
+        #             [
+        #                 ('ST7', 0.0),
+        #                 ('ST6', 0.0),
+        #                 ('ST5', 0.0),
+        #                 ('ST4', 0.0),
+        #                 ('ST3', 0.0),
+        #                 ('ST2', 0.0),
+        #                 ('ST1', 0.0),
+        #                 ('ST0', 0.0),
+        #             ])
+        self.float_stack_bottom = -1
 
         self.registers = OrderedDict(
                     [
@@ -147,6 +147,14 @@ class IntelMachine(VirtualMachine):
                         (STACK_PTR_INTEL, STACK_TOP),
                         ('EBP', 0),
                         (INSTR_PTR_INTEL, 0),
+                        ('ST0', 0.0),
+                        ('ST1', 0.0),
+                        ('ST2', 0.0),
+                        ('ST3', 0.0),
+                        ('ST4', 0.0),
+                        ('ST5', 0.0),
+                        ('ST6', 0.0),
+                        ('ST7', 0.0),
                     ])
 
         self.unwritable = [INSTR_PTR_INTEL, STACK_PTR_INTEL]
@@ -161,41 +169,54 @@ class IntelMachine(VirtualMachine):
                     ])
 
     def is_FP_stack_empty(self):
-        return self.float_stack_top == FLOAT_STACK_LIMIT
+        return self.float_stack_bottom == -1
+    
+    def is_FP_stack_full(self):
+        return self.float_stack_bottom == FLOAT_STACK_LIMIT - 1
 
     def push_to_Float_Stack(self, val):
-        next_register = self.get_next_register()
-        self.fp_stack_registers["R"+str(next_register)] = val
+        if self.float_stack_bottom == -1:
+            self.registers["ST0"] = val
+        else:
+            for i in range(self.float_stack_bottom + 1, 0, -1):
+                self.registers[f'ST{i}'] = self.registers[f'ST{i - 1}']
+            self.registers["ST0"] = val
+        self.float_stack_bottom += 1
+        # next_register = self.get_next_register()
+        # self.registers["ST"+str(next_register)] = val
         self.refresh_FP_Stack()
 
     def get_register_at_float_stack_top(self):
-        return "R"+str(self.float_stack_top)
+        return "ST"+str(self.float_stack_top)
 
     def get_float_stack_register_at_offset(self, k):
-        return "R" + str((self.float_stack_top + k) % FLOAT_STACK_LIMIT)
+        return "ST" + str((self.float_stack_top + k) % FLOAT_STACK_LIMIT)
 
     def pop_from_Float_Stack(self):
-        reg_f_stack_top = self.get_register_at_float_stack_top()
-        curr_value_float_stack_top = self.fp_stack_registers[reg_f_stack_top]
-        self.fp_stack_registers["R" + str(self.float_stack_top)] = 0.0
-        self.float_stack_top = (self.float_stack_top + 1) % FLOAT_STACK_LIMIT
+        curr_value_float_stack_top = self.registers['ST0']
+        for i in range(0, self.float_stack_bottom):
+            self.registers[f'ST{i}'] = self.registers[f'ST{i + 1}']
+        self.registers[f'ST{self.float_stack_bottom}'] = 0.0
+        self.float_stack_bottom -= 1
+        # reg_f_stack_top = self.get_register_at_float_stack_top()
+        # curr_value_float_stack_top = self.fp_stack_registers[reg_f_stack_top]
+        # self.registers["ST" + str(self.float_stack_top)] = 0.0
+        # self.float_stack_top = (self.float_stack_top + 1) % FLOAT_STACK_LIMIT
         self.refresh_FP_Stack()
         return curr_value_float_stack_top
 
     def refresh_FP_Stack(self):
-        for i in range(8):
-            self.changes.add('R'+str(i))
+        for i in range(FLOAT_STACK_LIMIT):
+            self.changes.add('ST'+str(i))
 
     def get_next_register(self):
-        self.float_stack_top = (self.float_stack_top - 1)
-        if self.float_stack_top == -1:
-            self.float_stack_top = FLOAT_STACK_LIMIT - 1
+        self.float_stack_top = (self.float_stack_top - 1) % FLOAT_STACK_LIMIT
         return self.float_stack_top
 
     def reset_FP_Stack(self):
-        self.float_stack_top = FLOAT_STACK_LIMIT
-        for i in range(len(self.fp_stack_registers)):
-            self.fp_stack_registers["R"+str(i)] = 0.0
+        self.float_stack_bottom = -1
+        for i in range(FLOAT_STACK_LIMIT):
+            self.registers["ST"+str(i)] = 0.0
 
     def re_init(self):
         super().re_init()

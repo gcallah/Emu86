@@ -46,21 +46,17 @@ class AssembleTestCase(TestCase):
         for i in range(0, NUM_TESTS):
             a = random.randint(low1, high1)
             b = random.randint(low2, high2)
-        # if op_type == FLOAT:
-        #     if first_val == FLOAT:
-        #         a = float(random.uniform(MIN_MUL, MAX_MUL))
-        #     if second_val == FLOAT:
-        #         b = float(random.uniform(MIN_MUL, MAX_MUL))
-        #     correct = operator(a, b)
-        #     intel_machine.registers["EAX"] = a
-        #     intel_machine.registers["FRB"] = b
-        #     code = instr + " fra, frb"
-        #     self.assertAlmostEqual(intel_machine.registers["FRA"], correct)
-        #     """assert abs(intel_machine.registers["FRT"]-correct) < 0.00001,
-        #     str(intel_machine.registers["FRT"]) + " does not equal "
-        #     + str(correct)"""
-        # else:
-            if op_type != FLOAT:
+            if op_type == FLOAT:
+                if first_val == FLOAT:
+                    a = float(random.uniform(MIN_MUL, MAX_MUL))
+                if second_val == FLOAT:
+                    b = float(random.uniform(MIN_MUL, MAX_MUL))
+                correct = operator(a, b)
+                intel_machine.registers["ST0"] = a
+                intel_machine.registers["ST1"] = b
+                assemble (instr + " st0, st1", 'intel', intel_machine)
+                self.assertAlmostEqual(intel_machine.registers["ST0"], correct)
+            else:
                 correct = operator(a, b)
                 intel_machine.registers["EAX"] = a
                 intel_machine.registers["EBX"] = b
