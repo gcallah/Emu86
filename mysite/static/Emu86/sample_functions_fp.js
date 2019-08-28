@@ -1,4 +1,4 @@
-function area_fp(flavor) {
+function area_fp(flavor){
 	let codeString = '';
 	if (flavor === 'intel'){
 		codeString += '; Declare length and width\n.data\n    long REAL4 16.6\n    wide REAL4 128.4\n\n; Calculate area of rectangle\n.text\n    FLD [long]\n    FLD [wide]\n    FMUL ST0, ST1\n';
@@ -8,7 +8,7 @@ function area_fp(flavor) {
 	}
 	document.getElementById('id_code').value = codeString;
 }
-function data_fp(flavor) {
+function data_fp(flavor){
 	let codeString = '';
 	if (flavor === 'intel'){
 		codeString += '; Declare arrays\n.data\n    x DB 0x3f99999a, 0x2, 0x40600000, 0x4, 0x5\n    y DW 0x2, 0x36, 0x3fb33333, 0x8\n    z DD 0xA DUP (0x32)\n\n; Storing values into memory using register arithmetic\n.text\n    FLD F7, 0x6\n    FLD [F7], [x+0x2]\n    FLD [F7+0x2], [y+0x3]\n    FLD [F6], [z]\n    FLD [F7-0x5], [y+0x2]\n    FLD [-0x5+F7], [y+0x2]\n';
@@ -18,7 +18,7 @@ function data_fp(flavor) {
 	}
 	document.getElementById('id_code').value = codeString;
 }
-function power_fp(flavor) {
+function power_fp(flavor){
 	let codeString = '';
 	if (flavor === 'intel'){
 		codeString += '; In F7, we put the number to raise to the power we put in F5.\n      mov F7, 0x40600000\n      mov F5, 0x3fb33333\n      call power\n      mov F4, 0x0\n      int 0x20\n\npower: mov F6, F7\nloop: imul F7, F6\n      dec F5\n      cmp F5, 0x1\n      jne loop\n      ret\n';
@@ -28,7 +28,7 @@ function power_fp(flavor) {
 	}
 	document.getElementById('id_code').value = codeString;
 }
-function addTwo_fp(flavor) {
+function addTwo_fp(flavor){
 	let codeString = '';
 	if (flavor === 'intel'){
 		codeString += '; Declare addends\n.data\n    numOne REAL4 16.6\n    numTwo REAL4 128.4\n\n; Store addends in ST0 and ST1\n; Add and store result in ST0\n.text\n    FLD [numOne]\n    FLD [numTwo]\n    FADD ST0, ST1\n';
@@ -38,7 +38,7 @@ function addTwo_fp(flavor) {
 	}
 	document.getElementById('id_code').value = codeString;
 }
-function keyInterrupt(flavor) {
+function keyInterrupt(flavor){
 	let codeString = '';
 	if (flavor === 'intel'){
 		codeString += '; Asking for key input\nINT 22\nMOV EBX, EAX\nMOV ECX, 0\nMOV ESI, 0\n\n; Move input to memory location esi\n; Ask for key input again\nL1: MOV [ESI], EAX\nMOV EAX, 0\nINT 22\nINC ECX\nCMP EBX,EAX\nINC ESI\nJNE L1\n\n; Ask for key input \nL2: MOV EAX, 0\nINT 22\nDEC ECX\nCMP ECX, 1\nJNE L2\n\nMOV EAX, 0\nINT 22\nMOV EBX, EAX\n\n; Move input to memory location esi\n; Ask for key input again\nL3: MOV [ESI], EAX\nINC ESI\nMOV EAX, 0\nINT 22\nCMP EBX, EAX\nJNE L3\n';
@@ -48,7 +48,7 @@ function keyInterrupt(flavor) {
 	}
 	document.getElementById('id_code').value = codeString;
 }
-function dataAccess(flavor) {
+function dataAccess(flavor){
 	let codeString = '';
 	if (flavor === 'intel'){
 		codeString += '; Declare arrays\n.data\n    x DB 1, 2, 3, 4, 5\n    y DW 2, 54, 32, 8\n    z DD 10 DUP (50)\n\n; Storing values into memory using register arithmetic\n.text\n    mov eax, 6\n    mov [eax], [x+2]\n    mov [eax+2], [y+3]\n    mov [ebx], [z]\n    mov [eax-5], [y+2]\n    mov [-5+eax], [y+2]';

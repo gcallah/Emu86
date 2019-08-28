@@ -151,10 +151,9 @@ def sample_dir(func_dict, directory_lst, base):
 def function_directory_fp(func_dict, directory_lst):
     file_code = ""
     for file_name in func_dict:
-        function_code = ""
         count = 0
-        function_code += "function " + func_dict[file_name] + "(flavor) {"
-        function_code += "\n\tlet codeString = '';"
+        function_code = f"function {func_dict[file_name]}(flavor)"
+        function_code += "{\n\tlet codeString = '';"
         for dire in directory_lst:
             sample_test = open(dire + file_name, "r")
             if count == 0:

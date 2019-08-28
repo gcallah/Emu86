@@ -3,6 +3,7 @@
  * Edited by Cindy
  */
 
+
 function AlertError()
 {
     let raised=document.getElementById("error");
@@ -159,12 +160,10 @@ function checkForScript()
 {
     let data = document.getElementById("id_code").value;
     if (data.indexOf("<script>") !== -1){
-        const tempVal = data.split("<script>");
-        data = tempVal.join("");
+        data = data.replace("<script>", "");
     }
     if (data.indexOf("</script>") !== -1){
-        const tempVal = data.split("</script>");
-        data = tempVal.join("");
+        data = data.replace("</script>", "");
     }
     document.getElementById("id_code").value = data;
 }
@@ -259,6 +258,22 @@ function highlightCode(){
     }
 }
 
+function validName(flavor, fileName){
+    const fileExt = {
+        "mips_asm": [".asm", ".txt"],
+        "mips_mml": [".txt"],
+        "mips": [".asm"]
+    }
+
+    if (fileName.length < 5){
+        return false
+    }
+    else if(flavor in Object.keys(fileExt) && !(fileName.slice(fileName.length - 4) in fileExt[flavor])){
+        return false
+    }
+    return true
+}
+
 function Savecode()
 {
     const flav = document.getElementsByName("flavor")[0].value;
@@ -278,16 +293,7 @@ function Savecode()
     else if (fileName === ""){
         alert("Invalid file name");
     }
-    else if (fileName.length < 5){
-        alert("Invalid file name: " + fileName);
-    }
-    else if (flav === "mips_asm" && fileName.slice(fileName.length - 4) !== ".asm" && fileName.slice(fileName.length - 4) !== ".txt" ) {
-        alert("Invalid file name: " + fileName);
-    }
-    else if (flav === "mips_mml" && fileName.slice(fileName.length - 4) !== ".txt" ) {
-        alert("Invalid file name: " + fileName);
-    }
-    else if (flav !== "mips" && fileName.slice(fileName.length - 4) !== ".asm"){
+    else if (!validName(flav, fileName)){
         alert("Invalid file name: " + fileName);
     }
     else {
@@ -499,28 +505,18 @@ function AddMem()
 }
 
 function displayHelp(buttonType){
-    let string = "";
-    if (buttonType === "clear"){
-        string = "Reset register and memory values.";
-    }
-    else if (buttonType === "step"){
-        string = "Execute one instruction at a time.";
-    }
-    else if (buttonType === "run"){
-        string = "Execute all lines of code.";
-    }
-    else if (buttonType === "demo"){
-        string = "Demo code line by line.";
-    }
-    else if (buttonType === "save"){
-        string = "Save code as a file.";
-    } else if (buttonType === "pause"){
-        string = "Pauses and resets code where demo leaves off from.";
+    const messages = {
+        clear: "Reset register and memory values.",
+        step: "Execute one instruction at a time.",
+        run: "Execute all lines of code.",
+        demo: "Demo code line by line.",
+        save: "Save code as a file.",
+        pause: "Pauses and resets code where demo leaves off from."
     }
 
     const spanNode = document.getElementById("help-desc");
     spanNode.classList.toggle("show");
-    spanNode.textContent = string;
+    spanNode.textContent = messages[buttonType];
 }
 
 function hideHelp(){

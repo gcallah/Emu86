@@ -7,21 +7,12 @@
             <br>
             <input type="hidden" name="nxt_key">
             <input type="hidden" name="unwritable">
-            {% if curr_reg != None%}
+            {% if curr_reg != None %}
                 <input type="hidden" name="curr_reg" value="{{ curr_reg }}">
             {% endif %}
-            {% if flavor == "intel" %}
-                <input type="hidden" name="flavor" value="intel">
-            {% elif flavor == "att" %}
-                <input type="hidden" name="flavor" value="att">
-            {% elif flavor == "mips_asm" %}
-                <input type="hidden" name="flavor" value="mips_asm">
-            {% elif flavor == "riscv" %}
-                <input type="hidden" name="flavor" value="riscv">
-            {% elif flavor == "mips_mml" %}
-                <input type="hidden" name="flavor" value="mips_mml">
-            {% elif flavor == "wasm" %}
-                <input type="hidden" name="flavor" value="wasm">
+           
+            {% if flavor %}
+                <input type="hidden" name="flavor" value="{{ flavor }}">
             {% else %}
                 <input type="hidden" name="flavor">
             {% endif %}
@@ -184,7 +175,7 @@
                     {% endif %}
                 {% endif %}
             </select>
-            {% if flavor == "intel" or flavor == "mips_asm" or flavor == "mips_mml" %}
+            {% if flavor == "intel" or flavor == "att" or flavor == "mips_asm" or flavor == "mips_mml" %}
                 <button type="button" onclick="switchReg()" id="viewReg"></button>
             {% endif %}
             <br>
@@ -259,49 +250,8 @@
                             <br>
                     </td>
 
-
-                        <!-- <td id = "float-cell">
-
-                            <table id="stack-table">
-                              <th>
-                                  Floating Point Registers
-                              </th>
-                              <th>
-                                  Contents
-                              </th>
-                                {% for reg, cont in floatingStack.items %}
-                                    <tr>
-                                        <td id="mem-loc" style="height:5px">
-                                            {{ reg }}
-                                        </td>
-
-                                        <td id="contents" style="height:5px">
-                                            {% if data_init == "on" %}
-                                                <input
-                                                    id="mem-cont"
-                                                    value="{{ cont }}"
-                                                    name="{{ reg }}"
-                                                    size="14"
-                                                >
-                                            {% else %}
-                                                <input
-                                                    id="mem-cont"
-                                                    value="{{ cont }}"
-                                                    name="{{ reg }}"
-                                                    size="14"
-                                                    readonly="readonly"
-                                                    style="background-color:#eff;"
-                                                >
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-
-                        </td> -->
-
                     <td id="registers-cell">
-                        {% if flavor != 'mips_asm' and flavor != 'mips_mml' and flavor != 'intel' %}
+                        {% if flavor != 'mips_asm' and flavor != 'mips_mml' and flavor != 'intel' and flavor != 'att'%}
                             <table id="registers-table">
                             <tr>
                                 <th>
