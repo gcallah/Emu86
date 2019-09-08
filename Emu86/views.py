@@ -155,21 +155,13 @@ def main_page(request):
             lang = request.POST['language']
             curr_reg = getCurrRegister(request.POST)
             if lang in MIPS:
-                mips_machine.flavor = lang
-                mips_machine.base = base
-                site_hdr += ": " + MIPS[lang] + " " + mips_machine.base.upper()
+                site_hdr += f": {MIPS[lang]} {base.upper()}"
                 vm = mips_machine
             if lang in INTEL:
-                intel_machine.base = base
-                intel_machine.flavor = lang
-                site_hdr += ": " + INTEL[lang] + " "
-                site_hdr += intel_machine.base.upper()
+                site_hdr += f": {INTEL[lang]} {base.upper()}"
                 vm = intel_machine
             if lang in RISCV:
-                riscv_machine.flavor = lang
-                riscv_machine.base = base
-                site_hdr += ": " + RISCV[lang] + " "
-                site_hdr += riscv_machine.base.upper()
+                site_hdr += f": {RISCV[lang]} {base.upper()}"
                 vm = riscv_machine
             if lang in WASM:
                 wasm_machine.flavor = lang
@@ -200,6 +192,8 @@ def main_page(request):
                                'stack_change': "",
                                })
 
+            vm.base = base
+            vm.flavor = lang
             hex_conversion(vm)
             render_data = {'form': form,
                            HEADER: site_hdr,
