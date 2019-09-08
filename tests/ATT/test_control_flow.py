@@ -15,6 +15,9 @@ NUM_TESTS = 100
 NO_OP = "mov %eax, %eax\n"
 TEST_LABEL = "test_label"
 
+intel_machine.base = "dec"
+intel_machine.flavor = "att"
+
 
 class TestControlFlow(TestCase):
 
@@ -25,10 +28,9 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
-            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
-            assemble("jmp test_label", 'att', intel_machine)
+            assemble("jmp test_label", intel_machine)
             self.assertEqual(intel_machine.get_ip(), label_addr)
 
     def test_je(self):
@@ -37,12 +39,11 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
-            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             zero_flag = random.getrandbits(1)
             intel_machine.flags["ZF"] = zero_flag
-            assemble("je test_label", 'att', intel_machine)
+            assemble("je test_label", intel_machine)
             if(zero_flag):
                 self.assertEqual(intel_machine.get_ip(), label_addr)
             else:
@@ -54,12 +55,11 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
-            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             zero_flag = random.getrandbits(1)
             intel_machine.flags["ZF"] = zero_flag
-            assemble("jne test_label", 'att', intel_machine)
+            assemble("jne test_label", intel_machine)
             if(not zero_flag):
                 self.assertEqual(intel_machine.get_ip(), label_addr)
             else:
@@ -71,14 +71,13 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
-            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
             zero_flag = random.getrandbits(1)
             intel_machine.flags["SF"] = sign_flag
             intel_machine.flags["ZF"] = zero_flag
-            assemble("jg test_label", 'att', intel_machine)
+            assemble("jg test_label", intel_machine)
             if((not zero_flag) and (not sign_flag)):
                 self.assertEqual(intel_machine.get_ip(), label_addr)
             else:
@@ -90,12 +89,11 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
-            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
             intel_machine.flags["SF"] = sign_flag
-            assemble("jge test_label", 'att', intel_machine)
+            assemble("jge test_label", intel_machine)
             if(not sign_flag):
                 self.assertEqual(intel_machine.get_ip(), label_addr)
             else:
@@ -107,12 +105,11 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
-            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
             intel_machine.flags["SF"] = sign_flag
-            assemble("jl test_label", 'att', intel_machine)
+            assemble("jl test_label", intel_machine)
             if(sign_flag):
                 self.assertEqual(intel_machine.get_ip(), label_addr)
             else:
@@ -124,14 +121,13 @@ class TestControlFlow(TestCase):
         """
         for i in range(NUM_TESTS):
             intel_machine.re_init()
-            intel_machine.base = "dec"
             label_addr = random.randint(FIRST_INST_ADDRESS, MAX_INSTRUCTIONS)
             intel_machine.labels["test_label"] = label_addr
             sign_flag = random.getrandbits(1)
             zero_flag = random.getrandbits(1)
             intel_machine.flags["SF"] = sign_flag
             intel_machine.flags["ZF"] = zero_flag
-            assemble("jle test_label", 'att', intel_machine)
+            assemble("jle test_label", intel_machine)
             if(zero_flag or sign_flag):
                 self.assertEqual(intel_machine.get_ip(), label_addr)
             else:

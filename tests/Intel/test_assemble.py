@@ -33,6 +33,9 @@ REGISTER_SIZE = BITS
 INT = 0
 FLOAT = 1
 
+intel_machine.base = "dec"
+intel_machine.flavor = "intel"
+
 
 class AssembleTestCase(TestCase):
 
@@ -54,14 +57,13 @@ class AssembleTestCase(TestCase):
                 correct = operator(a, b)
                 intel_machine.registers["ST0"] = a
                 intel_machine.registers["ST1"] = b
-                assemble(instr + " st0, st1", 'intel', intel_machine)
+                assemble(instr + " st0, st1", intel_machine)
                 self.assertAlmostEqual(intel_machine.registers["ST0"], correct)
             else:
                 correct = operator(a, b)
                 intel_machine.registers["EAX"] = a
                 intel_machine.registers["EBX"] = b
-                intel_machine.base = "dec"
-                assemble(instr + " eax, ebx", 'intel', intel_machine)
+                assemble(instr + " eax, ebx", intel_machine)
 
                 self.assertEqual(intel_machine.registers["EAX"], correct)
 
@@ -126,7 +128,6 @@ class AssembleTestCase(TestCase):
         do not replace the contents of the register,
         but rather place it another register"""
         for i in range(NUM_TESTS):  # changeback to num_tests
-            intel_machine.base = "dec"
             if op_type == FLOAT:
                 a = float(random.uniform(MIN_MUL, MAX_MUL))
                 intel_machine.registers["FRB"] = a  # source float register
@@ -140,8 +141,9 @@ class AssembleTestCase(TestCase):
                      #since the new value is in the destination register,
                      #compare correct to FRT
                 else:"""
-                assemble(instr + ' frb', 'intel', intel_machine)
-                self.assertEqual(intel_machine.registers["FRB"], correct)
+                # needs to be corrected to not use frb
+                # assemble(instr + ' frb', intel_machine)
+                # self.assertEqual(intel_machine.registers["FRB"], correct)
                 # since the new value has not been replaced
                 # (in source register), compare FRB to correct
 
@@ -149,7 +151,7 @@ class AssembleTestCase(TestCase):
                 a = random.randint(MIN_TEST, MAX_TEST)
                 intel_machine.registers["EAX"] = a
                 correct = operator(a)
-                assemble(instr + " eax", 'intel', intel_machine)
+                assemble(instr + " eax", intel_machine)
                 self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_not(self):
@@ -185,11 +187,10 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct_stack[i] = a
             intel_machine.registers["EAX"] = a
-            intel_machine.base = "dec"
-            assemble("push eax", 'intel', intel_machine)
+            assemble("push eax", intel_machine)
 
         for i in range(STACK_BOTTOM, STACK_TOP+1):
-            assemble("pop ebx", 'intel', intel_machine)
+            assemble("pop ebx", intel_machine)
             self.assertEqual(intel_machine.registers["EBX"], correct_stack[i])
 
     ##################
@@ -201,8 +202,7 @@ class AssembleTestCase(TestCase):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct = a
             intel_machine.registers["EAX"] = a
-            intel_machine.base = "dec"
-            assemble("mov eax, " + str(a), 'intel', intel_machine)
+            assemble("mov eax, " + str(a), intel_machine)
             self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_idiv(self):
@@ -217,8 +217,7 @@ class AssembleTestCase(TestCase):
             intel_machine.registers["EAX"] = a
             intel_machine.registers["EDX"] = d
             intel_machine.registers["EBX"] = b
-            intel_machine.base = "dec"
-            assemble("idiv ebx", 'intel', intel_machine)
+            assemble("idiv ebx", intel_machine)
             self.assertEqual(intel_machine.registers["EAX"],
                              correct_quotient)
             self.assertEqual(intel_machine.registers["EDX"],
@@ -229,8 +228,7 @@ class AssembleTestCase(TestCase):
         intel_machine.registers["EBX"] = 1
         intel_machine.flags["ZF"] = 0
         intel_machine.flags["SF"] = 0
-        intel_machine.base = "dec"
-        assemble("cmp eax, ebx", 'intel', intel_machine)
+        assemble("cmp eax, ebx", intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 1)
         self.assertEqual(intel_machine.flags["SF"], 0)
 
@@ -239,8 +237,7 @@ class AssembleTestCase(TestCase):
         intel_machine.registers["EBX"] = 1
         intel_machine.flags["ZF"] = 0
         intel_machine.flags["SF"] = 0
-        intel_machine.base = "dec"
-        assemble("cmp eax, ebx", 'intel', intel_machine)
+        assemble("cmp eax, ebx", intel_machine)
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
 

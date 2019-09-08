@@ -41,8 +41,9 @@ class TestPrograms(TestCase):
     def run_intel_test_code(self, filnm):
         intel_machine.re_init()
         intel_machine.base = "dec"
+        intel_machine.flavor = "intel"
         test_code = self.read_test_code(filnm)
-        assemble(test_code, 'intel', intel_machine)
+        assemble(test_code, intel_machine)
 
     def test_loop(self):
         self.run_intel_test_code("tests/Intel/loop.asm")

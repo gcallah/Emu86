@@ -74,7 +74,7 @@ def b_to_f(value):
     return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
 
-def generate_reg_dict(vm, flavor):
+def generate_reg_dict(vm):
     """
     Generates a dictionary
     Keys: register name
@@ -88,16 +88,16 @@ def generate_reg_dict(vm, flavor):
         A dictionary of (registers, register tokens)
     """
     registers = {}
-    if flavor != 'wasm':
+    if vm.flavor != 'wasm':
         for reg in vm.registers:
-            if flavor == "att":
+            if vm.flavor == "att":
                 registers["%" + reg] = Register(reg, vm)
             else:
                 registers[reg] = Register(reg, vm)
     return registers
 
 
-def generate_float_stack_dict(vm, flavor):
+def generate_float_stack_dict(vm):
     """
     Generates a dictionary
     Keys: register name
@@ -105,7 +105,6 @@ def generate_float_stack_dict(vm, flavor):
 
     Args:
         vm: Virtual machine
-        flavor: Flavor
 
     Returns:
         A dictionary of (registers, register tokens)
@@ -120,7 +119,7 @@ def generate_float_stack_dict(vm, flavor):
     return registers
 
 
-def make_language_keys(vm, flavor):
+def make_language_keys(vm):
     """
     Creates a dictionary of key terms
 
@@ -134,21 +133,21 @@ def make_language_keys(vm, flavor):
     language_keys = {}
     language_keys.update(keywords_to_tokens)
 
-    language_keys.update(generate_reg_dict(vm, flavor))
-    if flavor == "mips_asm" or flavor == "mips_mml":
+    language_keys.update(generate_reg_dict(vm))
+    if vm.flavor == "mips_asm" or vm.flavor == "mips_mml":
         from .MIPS.key_words import key_words
         language_keys.update(key_words)
         return language_keys
-    elif flavor == "riscv":
+    elif vm.flavor == "riscv":
         from .RISCV.key_words import key_words
         language_keys.update(key_words)
-    elif flavor == 'wasm':
+    elif vm.flavor == 'wasm':
         from .WASM.key_words import key_words
         language_keys.update(key_words)
     else:
         from .Intel.key_words import instructions
         language_keys.update(instructions)
-        if flavor == "intel":
+        if vm.flavor == "intel":
             # language_keys.update(generate_float_stack_dict(vm, flavor))
             from .Intel.key_words import intel_key_words
             language_keys.update(intel_key_words)
@@ -172,7 +171,7 @@ def clean_list(lst):
         lst.remove("")
 
 
-def split_code(code, flavor):
+def split_code(code, vm):
     """
     Splits code on regular expressions and on separators
 
@@ -196,7 +195,7 @@ def split_code(code, flavor):
                 splitter = character
                 break
             # splitter specifically for AT&T
-            elif (flavor == "att" and
+            elif (vm.flavor == "att" and
                   words[index] != "$" and
                   character == "$"):
                 splitter = "$"
@@ -217,7 +216,7 @@ def split_code(code, flavor):
     return words
 
 
-def sep_line(code, i, flavor, data_sec, vm, language_keys):
+def sep_line(code, i, data_sec, vm, language_keys):
     """
     Returns a list of tokens created
 
@@ -225,7 +224,6 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         code: Line of code
         i: Line number of code
            Needed for determining label location
-        flavor: AT&T or MIPS
         data_sec: Boolean, determines if we are in the data section
                   Needed to differentiate between label and symbol
         vm: Virtual machine
@@ -237,7 +235,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         text of the code.
     """
     analysis = []
-    words = split_code(code, flavor)
+    words = split_code(code, vm)
     # for i in range(len(words)):  #fixes parsing error with negative floats
     #     if words[i]=='-':
     #         words[i+1]='-'+words[i+1]
@@ -256,13 +254,13 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
             analysis.append(StringTok(word))
         # label / symbol:
         elif re.match(label_match, word) is not None:
-            if flavor == "intel":
+            if vm.flavor == "intel":
                 vm.labels[word[:-1]] = i
             else:
                 if data_sec:
                     analysis.append(NewSymbol(word[:-1], vm))
                 else:
-                    if flavor == "mips_asm" or flavor == "riscv":
+                    if vm.flavor == "mips_asm" or vm.flavor == "riscv":
                         vm.labels[word[:-1]] = i * 4
                     else:
                         vm.labels[word[:-1]] = i
@@ -291,7 +289,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
         else:
             if vm.base == "dec":
                 try:
-                    if flavor == "att":
+                    if vm.flavor == "att":
                         analysis.append(IntegerTok(int(word), False))
                     else:
                         analysis.append(IntegerTok(int(word)))
@@ -301,7 +299,7 @@ def sep_line(code, i, flavor, data_sec, vm, language_keys):
                     raise InvalidArgument(word)
             else:
                 try:
-                    if flavor == "att":
+                    if vm.flavor == "att":
                         analysis.append(IntegerTok(int(word, 16), False))
                     else:
                         analysis.append(IntegerTok(int(word, 16)))
@@ -320,7 +318,6 @@ def sep_line_mml(code, i, vm, language_keys):
         code: Line of code
         i: Line number of code
            Needed for determining label location
-        flavor: AT&T or MIPS
         data_sec: Boolean, determines if we are in the data section
                   Needed to differentiate between label and symbol
         vm: Virtual machine
@@ -332,7 +329,7 @@ def sep_line_mml(code, i, vm, language_keys):
         text of the code.
     """
     analysis = []
-    words = split_code(code, vm.flavor)
+    words = split_code(code, vm)
 
     for word in words:
         # keyword
@@ -357,7 +354,6 @@ def sep_line_wasm(code, i, vm, language_keys):
         code: Line of code
         i: Line number of code
            Needed for determining label location
-        flavor: AT&T or MIPS
         data_sec: Boolean, determines if we are in the data section
                   Needed to differentiate between label and symbol
         vm: Virtual machine
@@ -369,7 +365,7 @@ def sep_line_wasm(code, i, vm, language_keys):
         text of the code.
     """
     analysis = []
-    words = split_code(code, vm.flavor)
+    words = split_code(code, vm)
 
     for word in words:
         # keyword
@@ -389,13 +385,12 @@ def sep_line_wasm(code, i, vm, language_keys):
     return (analysis, code)
 
 
-def lex(code, flavor, vm):
+def lex(code, vm):
     """
     Lexical phase: tokenizes the code.
 
     Args:
         code: The code to lexically analyze.
-        flavor: Coding language
         vm: virtual machine
 
     Returns:
@@ -427,13 +422,13 @@ def lex(code, flavor, vm):
     # now perform lexical analysis
     for line in pre_processed_lines:
         # create language-specific dictionary:
-        language_keys = make_language_keys(vm, flavor)
-        if flavor == "mips_mml":
+        language_keys = make_language_keys(vm)
+        if vm.flavor == "mips_mml":
             tok_lines.append(sep_line_mml(line, i, vm, language_keys))
-        elif flavor == "wasm":
+        elif vm.flavor == "wasm":
             tok_lines.append(sep_line_wasm(line, i, vm, language_keys))
         else:
-            tok_lines.append(sep_line(line, i, flavor, data_sec,
+            tok_lines.append(sep_line(line, i, data_sec,
                                       vm, language_keys))
         if line == ".data":
             add_to_ip = False

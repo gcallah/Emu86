@@ -64,8 +64,8 @@ def minus_token(token_line, pos):
         raise InvalidArgument("-")
 
 
-def register_token(token_line, pos, flavor, vm):
-    if flavor == "intel" or flavor == "att":
+def register_token(token_line, pos, vm):
+    if vm.flavor == "intel" or vm.flavor == "att":
 
         return (token_line[pos], pos + 1)
     elif (pos + 1 < len(token_line) and
@@ -79,7 +79,7 @@ def register_token(token_line, pos, flavor, vm):
         return (token_line[pos], pos + 1)
 
 
-def number_token(token_line, pos, flavor, vm):
+def number_token(token_line, pos, vm):
     """
     If token seen is an integer, determine by flavor whether
     to return the integer token or return an address token
@@ -87,20 +87,19 @@ def number_token(token_line, pos, flavor, vm):
     Args:
         token_line: Line of code
         pos: Position where integer token is seen
-        flavor: Assembly language
         vm: Virtual machine
 
     Returns:
         Integer or address token, next positon to look at
     """
-    if flavor == "intel":
+    if vm.flavor == "intel":
 
         return (token_line[pos], pos + 1)
     elif (pos + 1 < len(token_line) and
           isinstance(token_line[pos + 1], OpenParen)):
         reg = None
         disp = None
-        if flavor == "att":
+        if vm.flavor == "att":
             reg, disp, pos = get_address_att(token_line, pos + 2, vm,
                                              token_line[pos].get_val())
         else:
@@ -111,14 +110,14 @@ def number_token(token_line, pos, flavor, vm):
                                reg.get_multiplier()), pos)
         else:
             return (Address(hex(disp).split('x')[-1].upper(), vm), pos)
-    elif flavor == "att" and token_line[pos].con is False:
+    elif vm.flavor == "att" and token_line[pos].con is False:
         mem_val = token_line[pos].get_val()
         return (Address(hex(mem_val).split('x')[-1].upper(), vm), pos + 1)
     else:
         return (token_line[pos], pos + 1)
 
 
-def symbol_token(token_line, pos, flavor, vm):
+def symbol_token(token_line, pos, vm):
     """
     If token seen is a symbol, determine by flavor whether
     to return the symbol token or return an address token
@@ -126,13 +125,12 @@ def symbol_token(token_line, pos, flavor, vm):
     Args:
         token_line: Line of code
         pos: Position where integer token is seen
-        flavor: Assembly language
         vm: Virtual machine
 
     Returns:
         Symbol or address token, next positon to look at
     """
-    if flavor != "mips_asm":
+    if vm.flavor != "mips_asm":
         return (Symbol(token_line[pos].get_nm(), vm), pos + 1)
     elif (pos + 1 < len(token_line) and
           isinstance(token_line[pos + 1], OpenParen)):
@@ -355,14 +353,13 @@ def get_values(token_line, data_type, pos, values_list):
             raise InvalidDataVal(token_line[pos].get_nm())
 
 
-def parse_data_token(token_line, vm, flavor, mem_loc):
+def parse_data_token(token_line, vm, mem_loc):
     """
     Parses data tokens, assigns each value to a memory location
 
     Args:
         token_line: List of data tokens
         vm: Virtual machine
-        flavor: Coding language
         mem_loc: Starting memory storage location
 
     Returns:
@@ -385,7 +382,7 @@ def parse_data_token(token_line, vm, flavor, mem_loc):
     for value in data_vals:
         if vm.get_data_init() == "on":
             vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
-        if flavor == "mips_asm" or flavor == "riscv":
+        if vm.flavor == "mips_asm" or vm.flavor == "riscv":
             mem_loc += 4
         else:
             mem_loc += 1
@@ -614,7 +611,7 @@ def get_address_mips(token_line, pos, vm, disp=0):
         raise InvalidMemLoc(token_line[pos].get_nm())
 
 
-def get_address_location(token_line, pos, flavor, vm):
+def get_address_location(token_line, pos, vm):
     """
     Retrieves address at current position in code
     Retrieves address by coding language
@@ -622,7 +619,6 @@ def get_address_location(token_line, pos, flavor, vm):
     Args:
         token_line: List of the tokenized instruction
         pos: Beginning pos of list
-        flavor: Coding language
         vm: Virtual machine
 
     Returns:
@@ -631,9 +627,9 @@ def get_address_location(token_line, pos, flavor, vm):
     """
     reg = None
     disp = 0
-    if flavor == "intel":
+    if vm.flavor == "intel":
         reg, disp, pos = get_address_intel(token_line, pos, vm)
-    elif flavor == "att":
+    elif vm.flavor == "att":
         reg, disp, pos = get_address_att(token_line, pos, vm)
     else:
         reg, disp, pos = get_address_mips(token_line, pos, vm)
@@ -674,14 +670,13 @@ def check_constant(token_line, pos):
         raise InvalidArgument("$")
 
 
-def get_op(token_line, pos, flavor, vm):
+def get_op(token_line, pos, vm):
     """
     Retrieves operand of instruction
 
     Args:
         token_line: List of the tokenized instruction
         pos: Beginning pos of list
-        flavor: Coding language
         vm: Virtual machine
 
     Returns:
@@ -692,7 +687,7 @@ def get_op(token_line, pos, flavor, vm):
 
 # Register
     elif isinstance(token_line[pos], Register):
-        return register_token(token_line, pos, flavor, vm)
+        return register_token(token_line, pos, vm)
 
 # Floating Point Token
     elif isinstance(token_line[pos], FloatTok):
@@ -700,56 +695,55 @@ def get_op(token_line, pos, flavor, vm):
 
 # Constant Token
     elif isinstance(token_line[pos], ConstantSign):
-        if flavor == "att" and check_constant(token_line, pos):
-            return get_op(token_line, pos + 1, flavor, vm)
+        if vm.flavor == "att" and check_constant(token_line, pos):
+            return get_op(token_line, pos + 1, vm)
         else:
             raise InvalidArgument("$")
 
 # Minus Token
     elif isinstance(token_line[pos], MinusTok):
         minus_token(token_line, pos)
-        return get_op(token_line, pos + 1, flavor, vm)
+        return get_op(token_line, pos + 1, vm)
 
 # Integer Token
     elif isinstance(token_line[pos], IntegerTok):
-        return number_token(token_line, pos, flavor, vm)
+        return number_token(token_line, pos, vm)
 
 # Symbol/Label Token
     elif isinstance(token_line[pos], NewSymbol):
-        if flavor == "wasm":
+        if vm.flavor == "wasm":
             return token_line[pos], pos + 1
         else:
             if token_line[pos].get_nm() in vm.labels:
                 return (Label(token_line[pos].get_nm(), vm), pos + 1)
             elif token_line[pos].get_nm() in vm.symbols:
-                return symbol_token(token_line, pos, flavor, vm)
-            elif flavor == 'intel' and token_line[pos].get_nm()[:2] == "ST":
+                return symbol_token(token_line, pos, vm)
+            elif vm.flavor == 'intel' and token_line[pos].get_nm()[:2] == "ST":
                 return token_line[pos], pos + 1
             else:
                 raise UnknownName(token_line[pos].get_nm())
 
 # Address Token
-    elif is_start_address(token_line, pos, flavor):
-        return get_address_location(token_line, pos + 1, flavor, vm)
+    elif is_start_address(token_line, pos, vm.flavor):
+        return get_address_location(token_line, pos + 1, vm)
     else:
         raise InvalidArgument(token_line[pos].get_nm())
 
 
-def get_op_list(token_line, pos, flavor, vm, op_lst):
+def get_op_list(token_line, pos, vm, op_lst):
     """
     Returns a list of ops
 
     Args:
         token_line: Line of code
         pos: Starting position to retrieve op
-        flavor: Coding language
         vm: Virtual machine
         op_lst: List of ops
 
     Returns:
         A list of ops, next position
     """
-    op, pos = get_op(token_line, pos, flavor, vm)
+    op, pos = get_op(token_line, pos, vm)
     op_lst.append(op)
     if pos >= len(token_line):
         return op_lst, pos
@@ -757,7 +751,7 @@ def get_op_list(token_line, pos, flavor, vm, op_lst):
 
         next_op = token_line[pos]
         if isinstance(next_op, Comma):
-            return get_op_list(token_line, pos + 1, flavor, vm, op_lst)
+            return get_op_list(token_line, pos + 1, vm, op_lst)
         else:
             raise MissingComma()
 
@@ -781,13 +775,12 @@ def get_pc(token_line, pos):
         return token_line[pos]
 
 
-def parse_exec_unit(token_line, flavor, vm):
+def parse_exec_unit(token_line, vm):
     """
     Parses instruction
 
     Args:
         token_line: Tokenized instruction
-        flavor: Coding language
         vm: Virtual machine
 
     Returns:
@@ -798,7 +791,8 @@ def parse_exec_unit(token_line, flavor, vm):
     token_instruction = []
     op_lst = []
     # retrieve PC counter
-    if flavor == "mips_asm" or flavor == "mips_mml" or flavor == "riscv":
+    if (vm.flavor == "mips_asm" or vm.flavor == "mips_mml" or
+            vm.flavor == "riscv"):
         token_instruction.append(get_pc(token_line, pos))
         pos += 1
 
@@ -810,10 +804,10 @@ def parse_exec_unit(token_line, flavor, vm):
 
     # retrieve ops
     if pos < len(token_line):
-        op_lst, pos = get_op_list(token_line, pos, flavor, vm, op_lst)
+        op_lst, pos = get_op_list(token_line, pos, vm, op_lst)
     token_instruction.extend(op_lst)
     # switch ops if flavor is AT&T
-    if flavor == 'att' and len(token_instruction) > 2:
+    if vm.flavor == 'att' and len(token_instruction) > 2:
         switch_vals = token_instruction[1], token_instruction[2]
         token_instruction[1] = switch_vals[1]
         token_instruction[2] = switch_vals[0]
@@ -821,13 +815,12 @@ def parse_exec_unit(token_line, flavor, vm):
     return token_instruction
 
 
-def parse(tok_lines, flavor, vm):
+def parse(tok_lines, vm):
     """
     Parses the analysis obtained from lexical analysis
 
     Args:
         tok_lines: Lines containing each line of code
-        flavor: Coding language
         vm: Virtual machine
 
     Returns:
@@ -853,14 +846,14 @@ def parse(tok_lines, flavor, vm):
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
 
-            mem_loc = parse_data_token(tokens[0], vm, flavor, mem_loc)
+            mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
             vm.set_data_init("off")
-            parsed_unit = parse_exec_unit(tokens[0], flavor, vm)
+            parsed_unit = parse_exec_unit(tokens[0], vm)
             token_instrs.append((parsed_unit, tokens[1]))
-            if (flavor == "mips_asm" or
-                flavor == "mips_mml" or
-                    flavor == "riscv") and ip_init is None:
+            if (vm.flavor == "mips_asm" or
+                vm.flavor == "mips_mml" or
+                    vm.flavor == "riscv") and ip_init is None:
                 ip_init = token_instrs[0][TOKENS][0].get_val()
                 vm.start_ip = ip_init
     return token_instrs

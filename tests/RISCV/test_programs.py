@@ -23,8 +23,9 @@ class TestPrograms(TestCase):
     def run_riscv_test_code(self, filnm):
         riscv_machine.re_init()
         riscv_machine.base = "hex"
+        riscv_machine.flavor = "riscv"
         test_code = self.read_test_code("tests/RISCV/" + filnm)
-        assemble(test_code, 'riscv', riscv_machine)
+        assemble(test_code, riscv_machine)
 
     def test_celsius_conversion(self):
         self.run_riscv_test_code("cel_to_fah.asm")

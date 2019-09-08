@@ -119,7 +119,6 @@ def two_op_arith(ops, vm, instr, operator):
     # r2 = vm.fp_stack_registers[second_reg]
     # vm.fp_stack_registers[first_reg] = checkflag(operator(r1, r2), vm)
     if reg_one != 0 and reg_two != 0:
-        print(reg_one, reg_two)
         raise InvalidOperand('Neither registers are ST0')
     r1 = vm.registers[f'ST{reg_one}']
     r2 = vm.registers[f'ST{reg_two}']

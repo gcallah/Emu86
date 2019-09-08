@@ -18,8 +18,9 @@ class TestPrograms(TestCase):
     def run_wasm_test_code(self, filnm):
         wasm_machine.re_init()
         wasm_machine.base = "dec"
+        wasm_machine.flavor = "wasm"
         test_code = self.read_test_code(filnm)
-        assemble(test_code, 'wasm', wasm_machine)
+        assemble(test_code, wasm_machine)
 
     def test_sum_calculation(self):
         self.run_wasm_test_code("tests/WASM/sum_test.asm")

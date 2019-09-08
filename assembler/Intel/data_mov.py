@@ -24,7 +24,6 @@ class Fld(Instruction):
         # if isinstance(ops[0], FloatTok):
         #     vm.push_to_Float_Stack(ops[0].get_val())
         vm.push_to_Float_Stack(ops[0].get_val())
-        print(vm.registers)
 
 
 class Fst(Instruction):
