@@ -293,7 +293,6 @@ def main_page(request):
             vm.start_ip = int(request.POST['start_ip'])
 
             (last_instr, error, bit_code) = assemble(request.POST[CODE],
-                                                     vm.flavor,
                                                      vm, step)
     if button == DEMO:
         if (last_instr == "Reached end of executable code." or

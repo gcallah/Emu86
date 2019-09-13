@@ -182,9 +182,7 @@ class IntelMachine(VirtualMachine):
                 self.registers[f'ST{i}'] = self.registers[f'ST{i - 1}']
             self.registers["ST0"] = val
         self.float_stack_bottom += 1
-        # next_register = self.get_next_register()
-        # self.registers["ST"+str(next_register)] = val
-        self.refresh_FP_Stack()
+        self.changes.add('ST0')
 
     def get_register_at_float_stack_top(self):
         return "ST"+str(self.float_stack_top)
@@ -198,16 +196,7 @@ class IntelMachine(VirtualMachine):
             self.registers[f'ST{i}'] = self.registers[f'ST{i + 1}']
         self.registers[f'ST{self.float_stack_bottom}'] = 0.0
         self.float_stack_bottom -= 1
-        # reg_f_stack_top = self.get_register_at_float_stack_top()
-        # curr_value_float_stack_top = self.fp_stack_registers[reg_f_stack_top]
-        # self.registers["ST" + str(self.float_stack_top)] = 0.0
-        # self.float_stack_top = (self.float_stack_top + 1) % FLOAT_STACK_LIMIT
-        self.refresh_FP_Stack()
         return curr_value_float_stack_top
-
-    def refresh_FP_Stack(self):
-        for i in range(FLOAT_STACK_LIMIT):
-            self.changes.add('ST'+str(i))
 
     def get_next_register(self):
         self.float_stack_top = (self.float_stack_top - 1) % FLOAT_STACK_LIMIT

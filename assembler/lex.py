@@ -82,7 +82,6 @@ def generate_reg_dict(vm):
 
     Args:
         vm: Virtual machine
-        flavor: Flavor
 
     Returns:
         A dictionary of (registers, register tokens)
@@ -125,7 +124,6 @@ def make_language_keys(vm):
 
     Args:
         vm: Virtual machine
-        flavor: Assembly language
 
     Returns:
         A dictionary of key terms with associated tokens
