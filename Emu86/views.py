@@ -225,6 +225,8 @@ def main_page(request):
                                'stack': wasm_machine.stack,
                                'symbols': wasm_machine.symbols,
                                'cstack': wasm_machine.c_stack,
+                               'globals': wasm_machine.globals,
+                               'locals': wasm_machine.locals,
                                'flavor': wasm_machine.flavor,
                                'data_init': wasm_machine.data_init,
                                'base': wasm_machine.base,
@@ -250,16 +252,20 @@ def main_page(request):
             intel_machine.flavor = None
             mips_machine.flavor = None
             riscv_machine.flavor = None
+            wasm_machine.flavor = None
             language = request.POST['flavor']
             if language in INTEL:
                 vm = intel_machine
                 site_hdr += f": {INTEL[language]} {base.upper()}"
-            if language in MIPS:
+            elif language in MIPS:
                 vm = mips_machine
                 site_hdr += f": {MIPS[language]} {base.upper()}"
-            if language in RISCV:
+            elif language in RISCV:
                 vm = riscv_machine
                 site_hdr += f": {RISCV[language]} {base.upper()}"
+            else:
+                vm = wasm_machine
+                site_hdr += f": {WASM[language]} {base.upper()}"
             vm.flavor = language
             vm.base = base
         sample = request.POST['sample']
@@ -268,14 +274,17 @@ def main_page(request):
             intel_machine.re_init()
             mips_machine.re_init()
             riscv_machine.re_init()
+            wasm_machine.re_init()
         else:
             intel_machine.changes_init()
             mips_machine.changes_init()
             riscv_machine.changes_init()
+            wasm_machine.changes_init()
             step = (button == STEP) or (button == DEMO)
             intel_machine.nxt_key = 0
             mips_machine.nxt_key = 0
             riscv_machine.nxt_key = 0
+            wasm_machine.nxt_key = 0
             if step:
                 key = 0
                 try:
@@ -285,10 +294,13 @@ def main_page(request):
                 add_debug("Getting next key", vm)
                 vm.nxt_key = key
 
-            get_reg_contents(vm.registers, request)
+            if vm.flavor != 'wasm':
+                get_reg_contents(vm.registers, request)
+                get_flag_contents(vm.flags, request)
+            else:
+                get_symbol_contents(vm, request)
             get_mem_contents(vm.memory, request)
             get_stack_contents(vm.stack, request)
-            get_flag_contents(vm.flags, request)
             vm.data_init = request.POST[DATA_INIT]
             vm.start_ip = int(request.POST['start_ip'])
 
@@ -305,6 +317,30 @@ def main_page(request):
 
     vm.order_mem()
     hex_conversion(vm)
+    if vm.flavor == 'wasm':
+        return render(request, 'wasm.html',
+                      {'form': form,
+                       HEADER: site_hdr,
+                       'last_instr': "",
+                       'error': "",
+                       'debug': wasm_machine.debug,
+                       NXT_KEY: wasm_machine.nxt_key,
+                       'memory': wasm_machine.memory,
+                       'stack': wasm_machine.stack,
+                       'symbols': wasm_machine.symbols,
+                       'cstack': wasm_machine.c_stack,
+                       'globals': wasm_machine.globals,
+                       'locals': wasm_machine.locals,
+                       'flavor': wasm_machine.flavor,
+                       'data_init': wasm_machine.data_init,
+                       'base': wasm_machine.base,
+                       'sample': 'none',
+                       'start_ip': wasm_machine.start_ip,
+                       'bit_code': "",
+                       'button_type': "",
+                       'changes': [],
+                       'stack_change': "",
+                       })
     render_data = create_render_data(request, vm, form, site_hdr, last_instr,
                                      error, sample, bit_code, button)
     return render(request, 'main.html', render_data)
@@ -370,7 +406,7 @@ def get_stack_contents(stack, request):
         if hex_term:
             stack[loc] = int(request.POST[str(loc)], 16)
         else:
-            stack[loc] = request.POST[str(loc)]
+            stack[loc] = int(request.POST[str(loc)])
 
 
 def convert_reg_contents(registers):
@@ -409,6 +445,32 @@ def convert_stack_contents(stack):
             stack[loc] = "-" + hex_list[1]
         else:
             stack[loc] = hex_list[1]
+
+
+def get_symbol_contents(vm, request):
+    hex_term = is_hex_form(request)
+    global_data = request.POST["global_data"]
+    local_data = request.POST["local_data"]
+    if global_data != "":
+        global_data = global_data.split(", ")
+        for key_val in global_data:
+            if key_val != "":
+                key_mem, val_mem = key_val.split(":")[0], key_val.split(":")[1]
+                if '.' not in val_mem:
+                    if hex_term:
+                        vm.globals[key_mem] = int(val_mem, 16)
+                    else:
+                        vm.globals[key_mem] = int(val_mem)
+    if local_data != "":
+        local_data = local_data.split(", ")
+        for key_val in local_data:
+            if key_val != "":
+                key_mem, val_mem = key_val.split(":")[0], key_val.split(":")[1]
+                if '.' not in val_mem:
+                    if hex_term:
+                        vm.locals[key_mem] = int(val_mem, 16)
+                    else:
+                        vm.locals[key_mem] = int(val_mem)
 
 
 def hex_conversion(vm):

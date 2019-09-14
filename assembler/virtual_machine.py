@@ -483,6 +483,8 @@ class WASMMachine(VirtualMachine):
         self.symbols_init()
         self.labels_init()
         self.cstack_init()
+        self.locals_init()
+        self.globals_init()
         self.stack_change = ""
         self.next_stack_change = ""
 

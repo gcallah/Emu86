@@ -18,6 +18,8 @@
             <input type="hidden" name="start_ip" value="{{ start_ip }}" >
             <input type="hidden" name="button_type" value="{{ button_type }}" >
             <input type="hidden" name="mem_data" value="">
+            <input type="hidden" name="global_data" value="">
+            <input type="hidden" name="local_data" value="">
             <input type="hidden" name="base" value="{{ base }}">
 
             {% if data_init == "on" %}
@@ -184,13 +186,65 @@
                                     Global Symbols:
                                     <br>
                                 </th>
-                                <th></th>
                                 <th>
                                     <br>
                                     Local Symbols:
                                     <br>
                                 </th>
-                                <th></th>
+                            </tr>
+                            <tr>
+                                <td>
+                                <div style="height:500px;overflow:auto;">
+                                    <table id="memory-table">
+                                        {% for key, val in globals.items %}
+                                            <script>
+                                                document.getElementsByName("global_data")[0].value += "{{ key }}:{{ val }}, ";
+                                            </script>
+                                            <tr>
+                                                <td id="mem-loc" style="height:5px">
+                                                    {{ key }}
+                                                </td>
+                                                <td id="contents" style="height:5px">
+                                                    <input
+                                                        id="mem-cont"
+                                                        value="{{ val }}"
+                                                        name="{{ addr }}"
+                                                        size="5"
+                                                        readonly="readonly"
+                                                        style="background-color:#eff;"
+                                                    >
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                                </td>
+                                <td>
+                                <div style="height:500px;overflow:auto;">
+                                    <table id="memory-table">
+                                        {% for key, val in locals.items %}
+                                            <script>
+                                                document.getElementsByName("local_data")[0].value += "{{ key }}:{{ val }}, ";
+                                            </script>
+                                            <tr>
+                                                <td id="mem-loc" style="height:5px">
+                                                    {{ key }}
+                                                </td>
+                                                <td id="contents" style="height:5px">
+                                                    <input
+                                                        id="mem-cont"
+                                                        value="{{ val }}"
+                                                        name="{{ addr }}"
+                                                        size="5"
+                                                        readonly="readonly"
+                                                        style="background-color:#eff;"
+                                                    >
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                                </td>
                             </tr>
                         </table>
                     </td>

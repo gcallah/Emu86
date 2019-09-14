@@ -24,7 +24,7 @@ class TestPrograms(TestCase):
 
     def test_sum_calculation(self):
         self.run_wasm_test_code("tests/WASM/sum_test.asm")
-        self.assertEqual(wasm_machine.globals['number'].get_val(), -105)
+        self.assertEqual(wasm_machine.globals['number'], -105)
         self.assertEqual(wasm_machine.stack['100'],  53)
 
 

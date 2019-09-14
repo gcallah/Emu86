@@ -17,11 +17,11 @@ class Global_get(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
         if isinstance(ops[0], NewSymbol):
-            try:
+            if ops[0].get_nm() in vm.globals:
                 stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
-                vm.stack[stack_loc] = vm.globals[ops[0].get_nm()].get_val()
+                vm.stack[stack_loc] = vm.globals[ops[0].get_nm()]
                 vm.inc_sp()
-            except Exception:
+            else:
                 raise InvalidArgument(ops[0].get_nm())
         else:
             raise InvalidArgument(ops[0].get_nm())
@@ -42,12 +42,12 @@ class Global_set(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
         if isinstance(ops[0], NewSymbol):
-            try:
+            if ops[0].get_nm() in vm.globals:
                 vm.dec_sp()
                 stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
-                vm.globals[ops[0].get_nm()].set_val(vm.stack[stack_loc])
+                vm.globals[ops[0].get_nm()] = vm.stack[stack_loc]
                 vm.stack[stack_loc] = 0
-            except Exception:
+            else:
                 raise InvalidArgument(ops[0].get_nm())
         else:
             raise InvalidArgument(ops[0].get_nm())
@@ -68,11 +68,11 @@ class Local_get(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
         if isinstance(ops[0], NewSymbol):
-            try:
+            if ops[0].get_nm() in vm.locals:
                 stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
-                vm.stack[stack_loc] = vm.locals[ops[0].get_nm()].get_val()
+                vm.stack[stack_loc] = vm.locals[ops[0].get_nm()]
                 vm.inc_sp()
-            except Exception:
+            else:
                 raise InvalidArgument(ops[0].get_nm())
         else:
             raise InvalidArgument(ops[0].get_nm())
@@ -93,11 +93,11 @@ class Local_set(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
         if isinstance(ops[0], NewSymbol):
-            try:
+            if ops[0].get_nm() in vm.locals:
                 vm.dec_sp()
                 stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
-                vm.locals[ops[0].get_nm()].set_val(vm.stack[stack_loc])
-            except Exception:
+                vm.locals[ops[0].get_nm()] = vm.stack[stack_loc]
+            else:
                 raise InvalidArgument(ops[0].get_nm())
         else:
             raise InvalidArgument(ops[0].get_nm())
@@ -118,10 +118,7 @@ class Store_global(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
         if isinstance(ops[0], NewSymbol):
-            try:
-                vm.globals[ops[0].get_nm()] = ops[0]
-            except Exception:
-                raise InvalidArgument(ops[0].get_nm())
+            vm.globals[ops[0].get_nm()] = ops[0].get_val()
         else:
             raise InvalidArgument(ops[0].get_nm())
 
@@ -141,10 +138,7 @@ class Store_local(Instruction):
     def fhook(self, ops, vm):
         check_num_args(self.get_nm(), ops, 1)
         if isinstance(ops[0], NewSymbol):
-            try:
-                vm.locals[ops[0].get_nm()] = ops[0]
-            except Exception:
-                raise InvalidArgument(ops[0].get_nm())
+            vm.locals[ops[0].get_nm()] = ops[0].get_val()
         else:
             raise InvalidArgument(ops[0].get_nm())
 

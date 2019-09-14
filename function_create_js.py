@@ -109,7 +109,6 @@ def sample_dir(func_dict, directory_lst, base):
             function_code += "_hex"
         function_code += "(flavor) {\n\tlet codeString = '';"
         for dire in directory_lst:
-            sample_test = open(dire + file_name, "r")
             if count == 0:
                 function_code += "\n\tif (flavor === 'intel'){\n"
             elif count == 1:
@@ -118,12 +117,16 @@ def sample_dir(func_dict, directory_lst, base):
                 function_code += "\n\telse if (flavor === 'mips_asm'){\n"
             elif count == 3:
                 function_code += "\n\telse if (flavor === 'mips_mml'){\n"
+            elif count == 4:
+                function_code += "\n\telse if (flavor === 'riscv'){\n"
             else:
+                if file_name != "sum_test.asm":
+                    break
                 function_code += "\n\telse{\n"
-
+            sample_test = open(dire + file_name, "r")
             function_code += "\t\tcodeString += "
-            if ((base == DEC and (count == 0 or count == 1)) or
-                    base == HEX and count != 0 and count != 1 or
+            if ((base == DEC and (count == 0 or count == 1 or count == 5)) or
+                    base == HEX and count != 0 and count != 1 and count != 5 or
                     count == 3):
                 function_code += repr(sample_test.read())
             else:
@@ -138,6 +141,8 @@ def sample_dir(func_dict, directory_lst, base):
                             sample_conv += convert_line_hex_to_dec(line)
                         else:
                             sample_conv += convert_line_dec_to_hex(line)
+                if count == 5:
+                    print("hm")
                 function_code += repr(sample_conv)
             sample_test.close()
             function_code += ";\n\t}"
@@ -193,7 +198,7 @@ def create_js_files():
     js_file_dec = open("mysite/static/Emu86/sample_functions.js", "w")
     file_code = sample_dir(function_names, intel_directory +
                            ["tests/MIPS_ASM/", "tests/MIPS_MML/",
-                            "tests/RISCV/"], DEC)
+                            "tests/RISCV/", "tests/WASM/"], DEC)
     file_code += sample_dir(intel_function_names, intel_directory, DEC)
     js_file_dec.write(file_code)
     js_file_dec.close()
@@ -201,7 +206,7 @@ def create_js_files():
     js_file_hex = open("mysite/static/Emu86/sample_functions_hex.js", "w")
     file_code = sample_dir(function_names, intel_directory +
                            ["tests/MIPS_ASM/", "tests/MIPS_MML/",
-                            "tests/RISCV/"], HEX)
+                            "tests/RISCV/", "tests/WASM/"], HEX)
     file_code += sample_dir(intel_function_names, intel_directory, HEX)
     js_file_hex.write(file_code)
     js_file_hex.close()
