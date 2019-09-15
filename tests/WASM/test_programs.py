@@ -27,6 +27,12 @@ class TestPrograms(TestCase):
         self.assertEqual(wasm_machine.globals['number'], -105)
         self.assertEqual(wasm_machine.stack['100'],  53)
 
+    def test_area(self):
+        self.run_wasm_test_code("tests/WASM/area.asm")
+        self.assertEqual(wasm_machine.locals["area"], 945)
+        self.assertEqual(wasm_machine.locals["length"], 35)
+        self.assertEqual(wasm_machine.locals["width"], 27)
+
 
 if __name__ == '__main__':
     main()

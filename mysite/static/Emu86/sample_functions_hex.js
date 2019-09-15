@@ -16,7 +16,7 @@ function addTwo_hex(flavor) {
 		codeString += '; Declare number and sum.\n.data\n    number: .word -0x69\n    sum: .word 0\n\n; Store first number to X8\n; Add 158 to value in X8\n; Store total to sum\n.text\n    0x40000 LW X8, 0(X28)\t\t\n    0x40004 ADDI X8, X8, 0x9E\t\n    0x40008 SW X8, 4(X28)\n';
 	}
 	else{
-		codeString += 'i0x20.const -0x69\nglobal number\nglobal.set number\ni0x20.const 0x9E\nglobal.get number\ni0x20.add';
+		codeString += 'i0x20.const -0x69\nglobal number\nglobal.set number\ni0x20.const 0x9E\ni0x20.add';
 	}
 	document.getElementById('id_code').value = codeString;
 }
@@ -55,6 +55,9 @@ function area_hex(flavor) {
 	}
 	else if (flavor === 'riscv'){
 		codeString += '; Declare length and width\n.data\n    long: .word 0x23\n    wide: .word 0x1B\n\n; Calculate area of rectangle\n.text\n    0x40000 LW X8, 0(X28)\n    0x40004 LW X9, 4(X28)\n    0x40008 MUL X10, X8, X9\n';
+	}
+	else{
+		codeString += 'i0x20.const 0x23\nlocal length\nlocal.set length\ni0x20.const 0x1B\nlocal width\nlocal.set width\nlocal.get length\nlocal.get width\ni0x20.mul\nlocal area\nlocal.set area';
 	}
 	document.getElementById('id_code').value = codeString;
 }

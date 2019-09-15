@@ -44,6 +44,7 @@ class AssembleTestCase(TestCase):
             wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
             wasm_machine.inc_sp()
             assemble(instr, wasm_machine)
+            wasm_machine.dec_sp()
             sp = wasm_machine.get_sp()
             position = hex(sp).split('x')[-1].upper()
             self.assertEqual(wasm_machine.stack[position], correct)
@@ -62,8 +63,8 @@ class AssembleTestCase(TestCase):
             wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
             wasm_machine.inc_sp()
             assemble(instr, wasm_machine)
-            sp = wasm_machine.get_sp()
-            position = hex(sp).split('x')[-1].upper()
+            wasm_machine.dec_sp()
+            position = hex(wasm_machine.get_sp()).split('x')[-1].upper()
             self.assertEqual(wasm_machine.stack[position], correct)
 
     def two_op_test_unsigned(self, operator, instr,
@@ -80,6 +81,7 @@ class AssembleTestCase(TestCase):
             wasm_machine.stack[hex(sp).split('x')[-1].upper()] = a
             wasm_machine.inc_sp()
             assemble(instr, wasm_machine)
+            wasm_machine.dec_sp()
             sp = wasm_machine.get_sp()
             position = hex(sp).split('x')[-1].upper()
             self.assertEqual(wasm_machine.stack[position], correct)

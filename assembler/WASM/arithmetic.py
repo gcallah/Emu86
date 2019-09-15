@@ -7,18 +7,18 @@ from assembler.errors import DivisionZero
 from assembler.tokens import Instruction, MAX_INT
 
 
-def get_operator_one(vm):
-    vm.dec_sp()
-    val_one = vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]
+def get_stack_operand(vm):
+    position = hex(vm.get_sp()).split('x')[-1].upper()
+    val_one = vm.stack[position]
+    vm.stack[position] = 0
     return val_one
 
 
-def get_both_operators(vm):
-    val_one = get_operator_one(vm)
-    vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = 0
+def get_stack_operands(vm):
     vm.dec_sp()
-    val_two = vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]
-    vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = 0
+    val_one = get_stack_operand(vm)
+    vm.dec_sp()
+    val_two = get_stack_operand(vm)
     return val_one, val_two
 
 
@@ -27,9 +27,11 @@ def two_op_arith(ops, vm, instr, operator):
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    val_one, val_two = get_both_operators(vm)
+    val_one, val_two = get_stack_operands(vm)
+    # vm.dec_sp()
     position = hex(vm.get_sp()).split('x')[-1].upper()
     vm.stack[position] = operator(val_one, val_two)
+    vm.inc_sp()
 
 
 def check_overflow(val, vm):
@@ -130,12 +132,13 @@ class Div_U(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one, val_two = get_both_operators(vm)
+        val_one, val_two = get_stack_operands(vm)
         if val_two == 0:
             raise DivisionZero()
         result = opfunc.floordiv(abs(val_one), abs(val_two))
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()
 
 
 class Rem_S(Instruction):
@@ -171,10 +174,11 @@ class Rem_U(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one, val_two = get_both_operators(vm)
+        val_one, val_two = get_stack_operands(vm)
         result = opfunc.mod(abs(val_one), abs(val_two))
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()
 
 
 class And(Instruction):
@@ -246,11 +250,12 @@ class Shl(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one, val_two = get_both_operators(vm)
+        val_one, val_two = get_stack_operands(vm)
         val_two = val_two % 32  # only for i32
         result = opfunc.lshift(val_one, val_two)
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()
 
 
 class Shr_S(Instruction):
@@ -268,10 +273,11 @@ class Shr_S(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one, val_two = get_both_operators(vm)
+        val_one, val_two = get_stack_operands(vm)
         val_two = val_two % 32  # only for i32
         result = opfunc.rshift(val_one, val_two)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()
 
 
 class Shr_U(Instruction):
@@ -289,13 +295,14 @@ class Shr_U(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one, val_two = get_both_operators(vm)
+        val_one, val_two = get_stack_operands(vm)
         val_one_abs = abs(val_one)
         val_two_abs = abs(val_two)
         val_two_abs = val_two_abs % 32  # only for i32
         result = opfunc.rshift(val_one_abs, val_two_abs)
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()
 
 
 class Rotl(Instruction):
@@ -313,7 +320,7 @@ class Rotl(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one, val_two = get_both_operators(vm)
+        val_one, val_two = get_stack_operands(vm)
         val_one = abs(val_one)
         val_two = abs(val_two)
         val_one_bin = bin(val_one)[2:]
@@ -325,6 +332,7 @@ class Rotl(Instruction):
         val_two = val_two % 32  # only for i32
         result = val_one_bin[val_two:] + val_one_bin[:val_two]
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
+        vm.inc_sp()
 
 
 class Rotr(Instruction):
@@ -342,7 +350,7 @@ class Rotr(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one, val_two = get_both_operators(vm)
+        val_one, val_two = get_stack_operands(vm)
         val_one = abs(val_one)
         val_two = abs(val_two)
         val_one_bin = bin(val_one)[2:]
@@ -356,6 +364,7 @@ class Rotr(Instruction):
         second_part = val_one_bin[: len(val_one_bin) - val_two]
         result = first_part + second_part
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
+        vm.inc_sp()
 
 
 class Clz(Instruction):
@@ -372,7 +381,8 @@ class Clz(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one = get_operator_one(vm)
+        vm.dec_sp()
+        val_one = get_stack_operand(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
         for i in val_one_bin:
@@ -381,6 +391,7 @@ class Clz(Instruction):
             else:
                 break
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()
 
 
 class Ctz(Instruction):
@@ -397,7 +408,8 @@ class Ctz(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one = get_operator_one(vm)
+        vm.dec_sp()
+        val_one = get_stack_operand(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
         for i in val_one_bin[::-1]:
@@ -406,6 +418,7 @@ class Ctz(Instruction):
             else:
                 break
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()
 
 
 class Popcnt(Instruction):
@@ -423,13 +436,15 @@ class Popcnt(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one = get_operator_one(vm)
+        vm.dec_sp()
+        val_one = get_stack_operand(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
         for i in val_one_bin:
             if i == "1":
                 result += 1
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()
 
 
 class Eqz(Instruction):
@@ -446,8 +461,10 @@ class Eqz(Instruction):
         </descr>
     """
     def fhook(self, ops, vm):
-        val_one = get_operator_one(vm)
+        vm.dec_sp()
+        val_one = get_stack_operand(vm)
         result = False
         if val_one == 0:
             result = True
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
+        vm.inc_sp()

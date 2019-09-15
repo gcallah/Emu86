@@ -16,7 +16,7 @@ function addTwo(flavor) {
 		codeString += '; Declare number and sum.\n.data\n    number: .word -105\n    sum: .word 0\n\n; Store first number to X8\n; Add 158 to value in X8\n; Store total to sum\n.text\n    262144 LW X8, 0(X28)\t\t\n    262148 ADDI X8, X8, 158\t\n    262152 SW X8, 4(X28)\n';
 	}
 	else{
-		codeString += 'i32.const -105\nglobal number\nglobal.set number\ni32.const 158\nglobal.get number\ni32.add';
+		codeString += 'i32.const -105\nglobal number\nglobal.set number\ni32.const 158\ni32.add';
 	}
 	document.getElementById('id_code').value = codeString;
 }
@@ -55,6 +55,9 @@ function area(flavor) {
 	}
 	else if (flavor === 'riscv'){
 		codeString += '; Declare length and width\n.data\n    long: .word 35\n    wide: .word 27\n\n; Calculate area of rectangle\n.text\n    262144 LW X8, 0(X28)\n    262148 LW X9, 4(X28)\n    262152 MUL X10, X8, X9\n';
+	}
+	else{
+		codeString += 'i32.const 35\nlocal length\nlocal.set length\ni32.const 27\nlocal width\nlocal.set width\nlocal.get length\nlocal.get width\ni32.mul\nlocal area\nlocal.set area';
 	}
 	document.getElementById('id_code').value = codeString;
 }

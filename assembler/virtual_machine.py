@@ -487,6 +487,7 @@ class WASMMachine(VirtualMachine):
         self.globals_init()
         self.stack_change = ""
         self.next_stack_change = ""
+        self.stack_ptr = STACK_BOTTOM
 
     def locals_init(self):
         self.locals.clear()

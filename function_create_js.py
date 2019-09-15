@@ -120,7 +120,7 @@ def sample_dir(func_dict, directory_lst, base):
             elif count == 4:
                 function_code += "\n\telse if (flavor === 'riscv'){\n"
             else:
-                if file_name != "sum_test.asm":
+                if file_name != "sum_test.asm" and file_name != 'area.asm':
                     break
                 function_code += "\n\telse{\n"
             sample_test = open(dire + file_name, "r")
@@ -141,8 +141,6 @@ def sample_dir(func_dict, directory_lst, base):
                             sample_conv += convert_line_hex_to_dec(line)
                         else:
                             sample_conv += convert_line_dec_to_hex(line)
-                if count == 5:
-                    print("hm")
                 function_code += repr(sample_conv)
             sample_test.close()
             function_code += ";\n\t}"

@@ -46,7 +46,7 @@ class Global_set(Instruction):
                 vm.dec_sp()
                 stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
                 vm.globals[ops[0].get_nm()] = vm.stack[stack_loc]
-                vm.stack[stack_loc] = 0
+                vm.inc_sp()
             else:
                 raise InvalidArgument(ops[0].get_nm())
         else:
@@ -97,6 +97,7 @@ class Local_set(Instruction):
                 vm.dec_sp()
                 stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
                 vm.locals[ops[0].get_nm()] = vm.stack[stack_loc]
+                vm.inc_sp()
             else:
                 raise InvalidArgument(ops[0].get_nm())
         else:
