@@ -204,14 +204,23 @@
                                                 <td id="mem-loc" style="height:5px">
                                                     {{ key }}
                                                 </td>
+                                                {% if "GLOBALVAR"|add:key in changes %}
+                                                    <td id="contents" style="background-color:#FFFF00; height:5px">
+                                                 {% else %}
                                                 <td id="contents" style="height:5px">
+                                                {% endif %}
+                                                <!-- <td id="contents" style="height:5px"> -->
                                                     <input
                                                         id="mem-cont"
                                                         value="{{ val }}"
                                                         name="{{ addr }}"
                                                         size="5"
                                                         readonly="readonly"
-                                                        style="background-color:#eff;"
+                                                        {% if "GLOBALVAR"|add:key in changes %}
+                                                            style="background-color:#FFFF00;"
+                                                        {% else %}
+                                                            style="background-color:#eff;"
+                                                        {% endif %}
                                                     >
                                                 </td>
                                             </tr>
@@ -230,14 +239,23 @@
                                                 <td id="mem-loc" style="height:5px">
                                                     {{ key }}
                                                 </td>
+                                                {% if "LOCALVAR"|add:key in changes %}
+                                                    <td id="contents" style="background-color:#FFFF00; height:5px">
+                                                 {% else %}
                                                 <td id="contents" style="height:5px">
+                                                {% endif %}
+                                                <!-- <td id="contents" style="height:5px"> -->
                                                     <input
                                                         id="mem-cont"
                                                         value="{{ val }}"
                                                         name="{{ addr }}"
                                                         size="5"
                                                         readonly="readonly"
-                                                        style="background-color:#eff;"
+                                                        {% if "LOCALVAR"|add:key in changes %}
+                                                            style="background-color:#FFFF00;"
+                                                        {% else %}
+                                                            style="background-color:#eff;"
+                                                        {% endif %}
                                                     >
                                                 </td>
                                             </tr>

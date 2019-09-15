@@ -338,7 +338,7 @@ def main_page(request):
                        'start_ip': wasm_machine.start_ip,
                        'bit_code': "",
                        'button_type': "",
-                       'changes': [],
+                       'changes': wasm_machine.changes,
                        'stack_change': "",
                        })
     render_data = create_render_data(request, vm, form, site_hdr, last_instr,

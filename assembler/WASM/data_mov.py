@@ -47,6 +47,7 @@ class Global_set(Instruction):
                 stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
                 vm.globals[ops[0].get_nm()] = vm.stack[stack_loc]
                 vm.inc_sp()
+                vm.changes.add(f'GLOBALVAR{ops[0].get_nm()}')
             else:
                 raise InvalidArgument(ops[0].get_nm())
         else:
@@ -98,6 +99,7 @@ class Local_set(Instruction):
                 stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
                 vm.locals[ops[0].get_nm()] = vm.stack[stack_loc]
                 vm.inc_sp()
+                vm.changes.add(f'LOCALVAR{ops[0].get_nm()}')
             else:
                 raise InvalidArgument(ops[0].get_nm())
         else:
@@ -120,6 +122,7 @@ class Store_global(Instruction):
         check_num_args(self.get_nm(), ops, 1)
         if isinstance(ops[0], NewSymbol):
             vm.globals[ops[0].get_nm()] = ops[0].get_val()
+            vm.changes.add(f'GLOBALVAR{ops[0].get_nm()}')
         else:
             raise InvalidArgument(ops[0].get_nm())
 
@@ -140,6 +143,7 @@ class Store_local(Instruction):
         check_num_args(self.get_nm(), ops, 1)
         if isinstance(ops[0], NewSymbol):
             vm.locals[ops[0].get_nm()] = ops[0].get_val()
+            vm.changes.add(f'LOCALVAR{ops[0].get_nm()}')
         else:
             raise InvalidArgument(ops[0].get_nm())
 
