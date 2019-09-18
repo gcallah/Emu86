@@ -24,7 +24,7 @@ class IntelKernel(Kernel):
             result = {'name': 'return_value', 'text': intel_machine.registers}
             self.send_response(self.iopub_socket, 'result', result)
         else:
-            self.send_response(self.iopub_socket, 'result', "error")
+            self.send_response(self.iopub_socket, 'result', error)
         return {'status': 'ok',
                 'execution_count': self.execution_count,
                 'payload': [],
