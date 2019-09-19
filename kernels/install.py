@@ -1,19 +1,29 @@
-from jupyter_client.kernelspecapp import InstallKernelSpec, RemoveKernelSpec
+import json
+import os
+import sys
+
+from IPython.utils.tempdir import TemporaryDirectory
+from jupyter_client.kernelspec import KernelSpecManager
 
 
-class InstallIntelKernel(InstallKernelSpec):
-    version = 1.0
-    kernel_name = "intel_kernel"
-    description = "Install Intel kernel"
+kernel_name = "intel"
+kernel_json = {
+    "argv": [sys.executable, "-m", kernel_name+"_kernel",
+             "-f", "{connection_file}"],
+    "display_name": kernel_name.capitalize()
+}
 
-    def parse_command_line(self, argv):
-        super(InstallKernelSpec, self).parse_command_line(argv)
+
+def install_kernel(user=True, prefix=None):
+    with TemporaryDirectory() as tempdir:
+        os.chmod(tempdir, 0o755)  # Starts off as 700, not user readable
+        with open(os.path.join(tempdir, "kernel.json"), "w") as f:
+            json.dump(kernel_json, f, sort_keys=True)
+        print("Installing", kernel_name, "kernel...")
+        KernelSpecManager().install_kernel_spec(tempdir, kernel_name, user,
+                                                replace=True, prefix=prefix)
+        print(kernel_name.capitalize(), "kernel installation complete")
 
 
-class UninstallIntelKernel(RemoveKernelSpec):
-    version = 1.0
-    kernel_name = "intel_kernel"
-    description = "Uninstall Intel kernel"
-
-    def parse_command_line(self, argv):
-        super(RemoveKernelSpec, self).parse_command_line(argv)
+if __name__ == '__main__':
+    install_kernel()
