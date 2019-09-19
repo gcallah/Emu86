@@ -14,7 +14,7 @@ kernel_json = {
 }
 
 
-def install_kernel(user=True, prefix=None):
+def install_intel_kernel(user=True, prefix=None):
     with TemporaryDirectory() as tempdir:
         os.chmod(tempdir, 0o755)  # Starts off as 700, not user readable
         with open(os.path.join(tempdir, "kernel.json"), "w") as f:
@@ -26,4 +26,4 @@ def install_kernel(user=True, prefix=None):
 
 
 if __name__ == '__main__':
-    install_kernel()
+    install_intel_kernel()
