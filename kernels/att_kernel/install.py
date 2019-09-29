@@ -6,15 +6,15 @@ from IPython.utils.tempdir import TemporaryDirectory
 from jupyter_client.kernelspec import KernelSpecManager
 
 
-kernel_name = "intel"
+kernel_name = "att"
 kernel_json = {
-    "argv": [sys.executable, "-m", kernel_name+"_kernel",
+    "argv": [sys.executable, "-m", kernel_name + "_kernel",
              "-f", "{connection_file}"],
     "display_name": kernel_name.capitalize()
 }
 
 
-def install_intel_kernel(user=True, prefix=None):
+def install_kernel(user=True, prefix=None):
     with TemporaryDirectory() as tempdir:
         os.chmod(tempdir, 0o755)  # Starts off as 700, not user readable
         with open(os.path.join(tempdir, "kernel.json"), "w") as f:
@@ -26,4 +26,4 @@ def install_intel_kernel(user=True, prefix=None):
 
 
 if __name__ == '__main__':
-    install_intel_kernel()
+    install_kernel()

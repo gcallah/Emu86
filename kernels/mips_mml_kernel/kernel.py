@@ -1,36 +1,36 @@
 from ipykernel.kernelbase import Kernel
-from assembler.virtual_machine import IntelMachine
+from assembler.virtual_machine import MIPSMachine
 from assembler.assemble import assemble
 
 
-class IntelKernel(Kernel):
-    implementation = 'intel_kernel'
+class Mips_mmlKernel(Kernel):
+    implementation = 'mips_mml_kernel'
     implementation_version = '1.0'
-    language = 'intel'
+    language = 'mips_mml'
     language_version = '1.0'
     language_info = {
-        'name': 'intel',
-        'mimetype': 'intel',
+        'name': 'mips_mml',
+        'mimetype': 'mips_mml',
         'file_extension': 'x86',
     }
-    banner = "Intel kernel - run intel assembly language"
-    intel_machine = None
+    banner = "Mips_mml kernel - run mips_mml assembly language"
+    vm_machine = None
 
     def do_execute(self, code, silent, store_history=True,
                    user_expressions=None, allow_stdin=False):
 
         if not silent:
-            if not self.intel_machine:
-                self.intel_machine = IntelMachine()
-                self.intel_machine.base = 'dec'
-                self.intel_machine.flavor = 'intel'
-            (last_instr, error, bit_code) = assemble(code, self.intel_machine)
+            if not self.vm_machine:
+                self.vm_machine = MIPSMachine()
+                self.vm_machine.base = 'hex'
+                self.vm_machine.flavor = 'mips_mml'
+            (last_instr, error, bit_code) = assemble(code, self.vm_machine)
 
             if error == "":
-                intel_machine_info = {'name': 'intel_machine_info'}
-                intel_machine_info['text'] = str(self.intel_machine.registers)
+                vm_machine_info = {'name': 'mips_mml_machine_info'}
+                vm_machine_info['text'] = str(self.vm_machine.registers)
                 self.send_response(self.iopub_socket,
-                                   'stream', intel_machine_info)
+                                   'stream', vm_machine_info)
             else:
                 error_msg = {'name': 'error_msg', 'text': error}
                 self.send_response(self.iopub_socket, 'stream', error_msg)
