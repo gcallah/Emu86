@@ -281,6 +281,9 @@ class Address(Location):
     def set_val(self, val):
         self.mem[self.name] = val
 
+    def get_mem_addr(self):
+        return self.name
+
 
 class RegAddress(Address):
     def __init__(self, name, vm, displacement=0, multiplier=1, val=0):
@@ -291,6 +294,7 @@ class RegAddress(Address):
 
     def get_mem_addr(self):
         # right now, memory addresses are strings. eeh!
+        print(self.multiplier, self.displacement)
         address = hex(int(self.regs[self.name]) *
                       self.multiplier).split('x')[-1].upper()
         disp = 0
@@ -319,7 +323,9 @@ class RegAddress(Address):
 
     def set_val(self, val):
         mem_addr = self.get_mem_addr()
-        self.mem[mem_addr] = val
+        self.mem[str(mem_addr)] = val
+        print(mem_addr)
+        print('YO', self.mem)
 
 
 class Register(Location):

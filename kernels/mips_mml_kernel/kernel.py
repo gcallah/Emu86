@@ -28,7 +28,18 @@ class Mips_mmlKernel(Kernel):
 
             if error == "":
                 vm_machine_info = {'name': 'mips_mml_machine_info'}
-                vm_machine_info['text'] = str(self.vm_machine.registers)
+                output = "Registers Changes: /n"
+                for reg in self.vm_machine.registers:
+                    if reg in self.vm_machine.changes:
+                        output += f'{reg}: {self.vm_machine.registers[reg]}/n'
+
+                output = "Memory Changes: /n"
+                for chng in self.vm_machine.changes:
+                    if "MEM" in chng:
+                        loc = chng.strip("MEM")
+                        output += f'{loc}: {self.vm_machine.memory[loc]}/n'
+
+                vm_machine_info['text'] = output
                 self.send_response(self.iopub_socket,
                                    'stream', vm_machine_info)
             else:

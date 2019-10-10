@@ -2,7 +2,7 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args, StackFull
-from assembler.tokens import Instruction, Register
+from assembler.tokens import Instruction, Register, Address
 
 
 class Fld(Instruction):
@@ -66,6 +66,8 @@ class Mov(Instruction):
         ops[0].set_val(ops[1].get_val())
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
+        elif isinstance(ops[0], Address):
+            vm.changes.add(f'MEM{ops[0].get_mem_addr()}')
 
 
 class Pop(Instruction):

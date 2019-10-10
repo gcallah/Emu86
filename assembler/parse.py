@@ -546,7 +546,9 @@ def get_address_intel(token_line, pos, vm):
         raise InvalidMemLoc("")
     reg = None
     disp = 0
+    print(pos)
     reg, disp, pos = get_expr_intel(token_line, pos, vm, reg)
+    print(reg, disp, pos)
     if pos >= len(token_line):
         raise MissingCloseBrack()
     elif isinstance(token_line[pos], CloseBracket):

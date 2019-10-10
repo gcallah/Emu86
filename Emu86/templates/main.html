@@ -625,14 +625,22 @@
                                     <td id="mem-loc" style="height:5px">
                                         {{ addr }}
                                     </td>
-                                    <td id="contents" style="height:5px">
+                                    {% if "MEM"|add:addr in changes %}
+                                        <td id="contents" style="background-color:#FFFF00; height:5px">
+                                    {% else %}
+                                        <td id="contents" style="height:5px">
+                                    {% endif %}
                                         <input
                                             id="mem-cont"
                                             value="{{ cont }}"
                                             name="{{ addr }}"
                                             size="5"
                                             readonly="readonly"
-                                            style="background-color:#eff;"
+                                            {% if "MEM"|add:addr in changes %}
+                                                style="background-color:#FFFF00;"
+                                            {% else %}
+                                                style="background-color:#eff;"
+                                            {% endif %}
                                         >
                                     </td>
                                 </tr>
