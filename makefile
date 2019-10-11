@@ -10,6 +10,7 @@ MIPS_DIR = $(SDIR)/MIPS
 RISCV_DIR = $(SDIR)/RISCV
 WASM_DIR = $(SDIR)/WASM
 EMUDIR = Emu86
+REPO = emu86
 ODIR = $(EMUDIR)/templates
 MUDIR = myutils
 MODELS_DIR = models
@@ -74,8 +75,18 @@ website: $(INCS) $(HTML_FILES) help
 	git pull origin master
 	git push origin master
 
-container: $(DOCKER_DIR)/Dockerfile  $(DOCKER_DIR)/requirements.txt
-	docker build -t emu86 docker
+# dev container has dev tools
+dev_container: $(DOCKER_DIR)/Dockerfile $(DOCKER_DIR)/requirements.txt $(DOCKER_DIR)/requirements-dev.txt
+	docker build -t gcallah/$(REPO)-dev docker
+
+# prod container has only what's needed to run
+prod_container: $(DOCKER_DIR)/Deployable $(DOCKER_DIR)/requirements.txt
+	docker system prune -f
+	docker build -t gcallah/$(REPO) docker --no-cache --build-arg repo=$(REPO) -f $(DOCKER_DIR)/Deployable
+
+# deploy prod container
+deploy_container:
+	docker push gcallah/$(REPO):latest
 
 lint: $(patsubst %.py,%.pylint,$(PYTHONFILES)) $(patsubst %.js,%.eslint,$(JSFILES))
 
