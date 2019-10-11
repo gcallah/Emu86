@@ -19,4 +19,7 @@ do
 
     MAIN_CONTENT=$(cat main_template.txt | sed -e "s/NAME/${NAME}/g")
     echo ${MAIN_CONTENT} > ${languages[$index]}_kernel/__main__.py
+
+    INIT_CONTENT=$(cat init_template.txt)
+    echo ${INIT_CONTENT} > ${languages[$index]}_kernel/__init__.py
 done
