@@ -19,9 +19,19 @@ env:
 
 script:
     - make tests
+    - python setup.py sdist
 
 after_success:
    - cd /home/travis/build/gcallah/Emu86; ./deploy.sh
+
+deploy:
+  provider: pypi
+  user: __token__
+  password:
+    secure: pypi-AgEIcHlwaS5vcmcCJGJkMWI4MDZlLWZhNzYtNDAzYS05Zjg1LWY1NjQzNGRhNjQzOAACNnsicGVybWlzc2lvbnMiOiB7InByb2plY3RzIjogWyJlbXU4NiJdfSwgInZlcnNpb24iOiAxfQAABiCEItWZICaxU_6V5YswU17-nDk41KPe6DdyHeQGEeA31Q
+  on:
+    branch: master
+    condition: $TRAVIS_COMMIT_MESSAGE == "pypi release v"*
 
 notifications:
   slack: emu86:PJWVpwvXaU6dpB2VeD6UuBzf
