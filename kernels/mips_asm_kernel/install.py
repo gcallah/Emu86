@@ -8,7 +8,7 @@ from jupyter_client.kernelspec import KernelSpecManager
 
 kernel_name = "mips_asm"
 kernel_json = {
-    "argv": [sys.executable, "-m", kernel_name + "_kernel",
+    "argv": [sys.executable, "-m", "kernels." + kernel_name + "_kernel",
              "-f", "{connection_file}"],
     "display_name": kernel_name.capitalize()
 }
