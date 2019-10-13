@@ -254,18 +254,76 @@ class MIPSMachine(VirtualMachine):
         super().__init__()
         self.unwritable = [INSTR_PTR_MIPS, 'R0', 'F0', 'F29',
                            STACK_PTR_MIPS, 'HI', 'LO']
-        rRegisterList = ['R0', 'R12', 'R24', 'R1', 'R13', 'R25','R2', 'R14', 'R26', 'R3', 'R15', 'R27','R4', 'R16', 'R28', 'R5', 'R17', 'R29','R6', 'R18', 'R30', 'R7', 'R19', 'R31', 'R8', 'R20', 'R9', 'R21', 'HI', 'R10', 'R22', 'R22', 'LO', 'R11', 'R23']
-        fRegisterList = ['F0','F12','F24','F1','F13','F25','F2','F14','F26','F3','F15','F27','F4','F16','F28','F5','F17','F29','F6','F18','F30','F7','F19','F31','F8','F20','F9','F21','F10','F22','F11','F23']
-
-        registerList = []
-
-        for rRegister in rRegisterList:
-            registerList.append((rRegister, 0))
-        registerList.append((INSTR_PTR_MIPS, 0))
-        for rRegister in fRegisterList:
-            registerList.append((rRegister, 0))
-
-        self.registers = OrderedDict(list)
+        self.registers = OrderedDict(
+                    [
+                        ('R0', 0),
+                        ('R12', 0),
+                        ('R24', 0),
+                        ('R1', 0),
+                        ('R13', 0),
+                        ('R25', 0),
+                        ('R2', 0),
+                        ('R14', 0),
+                        ('R26', 0),
+                        ('R3', 0),
+                        ('R15', 0),
+                        ('R27', 0),
+                        ('R4', 0),
+                        ('R16', 0),
+                        ('R28', 0),
+                        ('R5', 0),
+                        ('R17', 0),
+                        ('R29', 0),
+                        ('R6', 0),
+                        ('R18', 0),
+                        ('R30', 0),
+                        ('R7', 0),
+                        ('R19', 0),
+                        ('R31', 0),
+                        ('R8', 0),
+                        ('R20', 0),
+                        ('R9', 0),
+                        ('R21', 0),
+                        ('HI', 0),
+                        ('R10', 0),
+                        ('R22', 0),
+                        ('LO', 0),
+                        ('R11', 0),
+                        ('R23', 0),
+                        (INSTR_PTR_MIPS, 0),
+                        ('F0', 0),
+                        ('F12', 0),
+                        ('F24', 0),
+                        ('F1', 0),
+                        ('F13', 0),
+                        ('F25', 0),
+                        ('F2', 0),
+                        ('F14', 0),
+                        ('F26', 0),
+                        ('F3', 0),
+                        ('F15', 0),
+                        ('F27', 0),
+                        ('F4', 0),
+                        ('F16', 0),
+                        ('F28', 0),
+                        ('F5', 0),
+                        ('F17', 0),
+                        ('F29', 0),
+                        ('F6', 0),
+                        ('F18', 0),
+                        ('F30', 0),
+                        ('F7', 0),
+                        ('F19', 0),
+                        ('F31', 0),
+                        ('F8', 0),
+                        ('F20', 0),
+                        ('F9', 0),
+                        ('F21', 0),
+                        ('F10', 0),
+                        ('F22', 0),
+                        ('F11', 0),
+                        ('F23', 0)
+                    ])
 
         self.flags = OrderedDict(
                     [
