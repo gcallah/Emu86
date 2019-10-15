@@ -33,7 +33,7 @@ class RiscvKernel(Kernel):
                     if reg in self.vm_machine.changes:
                         output += f'{reg}: {self.vm_machine.registers[reg]}/n'
 
-                output = "Memory Changes: /n"
+                output += "Memory Changes: /n"
                 for chng in self.vm_machine.changes:
                     if "MEM" in chng:
                         loc = chng.strip("MEM")
