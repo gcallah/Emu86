@@ -151,6 +151,11 @@ getBin = lambda x: x > 0 and str(bin(x))[2:] or "-" + str(bin(x))[3:] # noqa
 
 
 def f_to_b64(value):
+    """
+
+    :param value: float
+    :return: binary 64 conversion of value in string format
+    """
     if (value == 0):
         return "0"*64
     val = struct.unpack('q', struct.pack('d', value))[0]
@@ -158,6 +163,11 @@ def f_to_b64(value):
 
 
 def b_to_f64(value):
+    """
+
+    :param value: binary value in string format
+    :return: float 64 of binary number
+    """
     if (value == "0"*64):
         return 0.0
     hx = hex(int(value, 2))
