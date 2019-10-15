@@ -69,6 +69,11 @@ def convert_dec_to_hex(fdec):
 
 
 def convert_after_point_dec_to_binary(dec):
+    """
+    :param dec: decimal fraction number in string format
+    :return: binary equivalent of dec in str format
+    Eg : 0.9 -> '11100110011001100110011001100110'
+    """
     a = float(dec)
     binary = ''
     while a > 0.0:
@@ -80,6 +85,11 @@ def convert_after_point_dec_to_binary(dec):
 
 
 def convert_grouped_binary_to_hex(binary):
+    """
+
+    :param binary: group of 4 binary number in string format
+    :return hexadecimal equivalent of binary number in string format:
+    """
     mapping = {}
     for i in range(10):
         mapping[i] = str(i)
@@ -90,7 +100,9 @@ def convert_grouped_binary_to_hex(binary):
     hexequi = mapping[integer]
     return hexequi
 
-
+"""
+dec_convert method is not being used 
+"""
 def dec_convert(val):
     while val > 1:
         val = val / 10
@@ -98,6 +110,15 @@ def dec_convert(val):
 
 
 def checkflag(val, vm):
+    """
+
+    :param val: float
+    :param vm:
+    :return: val in float
+
+    if overflow happens in that case it sets carry flag to one
+
+    """
     if(val > MAX_FLOAT):
         vm.flags['CF'] = 1
         val = val - MAX_FLOAT+1
