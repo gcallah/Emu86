@@ -76,7 +76,7 @@ website: $(INCS) $(HTML_FILES) help
 	git push origin master
 
 # dev container has dev tools
-dev_container: $(DOCKER_DIR)/Dockerfile $(DOCKER_DIR)/requirements.txt $(DOCKER_DIR)/requirements-dev.txt
+dev_container: $(DOCKER_DIR)/Dockerfile $(DOCKER_DIR)/requirements.txt
 	docker build -t gcallah/$(REPO)-dev docker
 
 # prod container has only what's needed to run
