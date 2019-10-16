@@ -235,6 +235,14 @@ def binaryAdd(bin1, bin2):
 
 
 def binarySubtract(val1, val2):
+    """
+
+    :param val1: binary representation of int value in String format
+    :param val2: binary representation of int value in String format
+    :return: binary value in string format
+
+
+    """
     difference = [0 for x in val1 if x != '.']
     bin1 = [int(x) for x in val1 if x != '.']
     bin2 = [int(x) for x in val2 if x != '.']
@@ -284,7 +292,7 @@ def chs(val):
     IEEE.change_sign()
     return float(IEEE)
 
-
+# performing addition of 2  numbers
 def add(val1, val2):
     val1, val2 = float(val1), float(val2)
 
@@ -332,7 +340,7 @@ def sub(val1, val2):  # subtraction is the same as addition, (x-y) = (x+(-y))
     val2 = val2 * -1
     return add(val1, val2)
 
-
+# performing  multiplication of two binary numbers
 def binaryMultiply(bin1, bin2):
     bin1 = bin1.strip(".")
     bin2 = bin2.strip(".")
