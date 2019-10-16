@@ -1,2 +1,8 @@
 Django==2.2.6
 django-extensions==2.2.3
+setuptools
+coverage
+django-autofixture
+selenium
+urllib3
+flake8

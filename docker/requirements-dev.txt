@@ -1,6 +1,0 @@
-setuptools
-coverage
-django-autofixture
-selenium
-urllib3
-flake8
