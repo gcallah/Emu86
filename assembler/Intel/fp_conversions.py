@@ -9,6 +9,12 @@ DEFAULT_SIZE = (11, 52)
 
 
 def trunc_round(n, k):
+    """
+    :param n: int
+    :param k: int
+    :return: int after
+    trunc_round(49,2) -> 3
+    """
     rshift = n.bit_length() - 1 - k
     if rshift >= 0:
         n >>= (rshift)
@@ -18,6 +24,12 @@ def trunc_round(n, k):
 
 
 def more_bin_digits(n, k):
+    """
+
+    :param n: int
+    :param k: int
+    :return: boolean
+    """
     return bool(n >> k)
 
 
