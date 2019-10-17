@@ -27,21 +27,25 @@ class NAMEKernel(Kernel):
             (last_instr, error, bit_code) = assemble(code, self.vm_machine)
 
             if error == "":
-                vm_machine_info = {'name': 'FLAVOR_machine_info'}
-                output = "Registers Changes: /n"
+                vm_machine_info = {}
+                reg_changes = []
+                mem_changes = []
+                output = "Changes: <br />"
                 for reg in self.vm_machine.registers:
                     if reg in self.vm_machine.changes:
-                        output += f'{reg}: {self.vm_machine.registers[reg]}/n'
+                        reg_changes.append((reg, self.vm_machine.registers[reg]))
 
-                output += "Memory Changes: /n"
                 for chng in self.vm_machine.changes:
                     if "MEM" in chng:
                         loc = chng.strip("MEM")
-                        output += f'{loc}: {self.vm_machine.memory[loc]}/n'
+                        mem_changes.append((loc, self.vm_machine.memory[loc]))
 
-                vm_machine_info['text'] = output
+                output += self.construct_table(reg_changes, mem_changes)
+                vm_machine_info['data'] = {
+                    'text/html': output
+                }
                 self.send_response(self.iopub_socket,
-                                   'stream', vm_machine_info)
+                                   'display_data', vm_machine_info)
             else:
                 error_msg = {'name': 'error_msg', 'text': error}
                 self.send_response(self.iopub_socket, 'stream', error_msg)
@@ -51,3 +55,26 @@ class NAMEKernel(Kernel):
                 'payload': [],
                 'user_expressions': {}
                 }
+
+    def construct_table(self, reg_changes, mem_changes):
+        output = '<table><tr><th>Register</th><th>Register Value</th>'
+        output += '<th>Memory Location</th><th>Memory Value</th></tr>'
+        index = 0
+        while index < max(len(reg_changes), len(mem_changes)):
+            row = '<tr>'
+            empty_cells = '<td></td><td></td>'
+            if index >= len(reg_changes):
+                row += empty_cells
+            else:
+                reg_name, reg_val = reg_changes[index]
+                row += f'<td>{reg_name}</td><td>{reg_val}</td>'
+            if index >= len(mem_changes):
+                row += empty_cells
+            else:
+                mem_loc, mem_val = mem_changes[index]
+                row += f'<td>{mem_loc}</td><td>{mem_val}</td>'
+            row += "</tr>"
+            output += row
+            index += 1
+        output += "</table>"
+        return output
