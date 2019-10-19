@@ -33,7 +33,8 @@ class RiscvKernel(Kernel):
                 output = "Changes: <br />"
                 for reg in self.vm_machine.registers:
                     if reg in self.vm_machine.changes:
-                        reg_changes.append((reg, self.vm_machine.registers[reg]))
+                        reg_val = self.vm_machine.registers[reg]
+                        reg_changes.append((reg, reg_val))
 
                 for chng in self.vm_machine.changes:
                     if "MEM" in chng:
@@ -57,24 +58,14 @@ class RiscvKernel(Kernel):
                 }
 
     def construct_table(self, reg_changes, mem_changes):
-        output = '<table><tr><th>Register</th><th>Register Value</th>'
-        output += '<th>Memory Location</th><th>Memory Value</th></tr>'
-        index = 0
-        while index < max(len(reg_changes), len(mem_changes)):
-            row = '<tr>'
-            empty_cells = '<td></td><td></td>'
-            if index >= len(reg_changes):
-                row += empty_cells
-            else:
-                reg_name, reg_val = reg_changes[index]
-                row += f'<td>{reg_name}</td><td>{reg_val}</td>'
-            if index >= len(mem_changes):
-                row += empty_cells
-            else:
-                mem_loc, mem_val = mem_changes[index]
-                row += f'<td>{mem_loc}</td><td>{mem_val}</td>'
-            row += "</tr>"
-            output += row
-            index += 1
+        output = '<table><tr><th>Type</th><th>Identifier</th><th>Value</th>'
+        for reg_name, reg_val in reg_changes:
+            output += f'''<tr><td>Register</td><td>{reg_name}</td>
+            <td>{reg_val}</td></tr>'''
+        for mem_loc, mem_val in mem_changes:
+            output += f'''<tr><td>Memory</td><td>{mem_loc}</td>
+            <td>{mem_val}</td></tr>'''
+        output += "</table>"
+        return output
         output += "</table>"
         return output

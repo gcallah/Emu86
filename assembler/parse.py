@@ -845,7 +845,7 @@ def parse(tok_lines, vm):
             else:
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
-
+            vm.set_data_init("on")
             mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
             vm.set_data_init("off")
