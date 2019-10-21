@@ -12,7 +12,7 @@ before_install:
    - openssl aes-256-cbc -K $encrypted_509cf6f5306c_key -iv $encrypted_509cf6f5306c_iv -in id_rsa.enc -out ~/.ssh/id_rsa -d
 
 install:
-    - pip install -r docker/requirements.txt
+    - pip install -r docker/requirements-dev.txt
 
 env:
     - PYTHONPATH=/home/travis/build/gcallah/Emu86

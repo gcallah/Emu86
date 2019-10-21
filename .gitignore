@@ -4,7 +4,7 @@
 ansible/
 .*swp
 *.log
-*.txt
+# *.txt - Breaks docker
 __pycache__/
 *.DS_Store
 node_modules
