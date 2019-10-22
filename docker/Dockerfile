@@ -5,7 +5,6 @@ COPY requirements-dev.txt /requirements-dev.txt
 
 RUN pip install --upgrade pip
 
-RUN pip install -r requirements.txt
 RUN pip install -r requirements-dev.txt
 
 WORKDIR /home/Emu86/
