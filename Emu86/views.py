@@ -165,6 +165,12 @@ def create_render_data(request, vm, form, site_hdr, last_instr, error,
         render_data['curr_reg'] = curr_reg
     return render_data
 
+def machine_reinit():
+
+    intel_machine.re_init()
+    mips_machine.re_init()
+    riscv_machine.re_init()
+    wasm_machine.re_init()
 
 def main_page(request):
     last_instr = ""
@@ -179,19 +185,13 @@ def main_page(request):
                 mips_machine.flavor is None and
                 riscv_machine.flavor is None):
             return render(request, 'main_error.html', {HEADER: site_hdr})
-        intel_machine.re_init()
-        mips_machine.re_init()
-        riscv_machine.re_init()
-        wasm_machine.re_init()
+        machine_reinit()
         form = MainForm()
     else:
         vm = None
         base = request.POST['base']
         if 'language' in request.POST:
-            intel_machine.re_init()
-            mips_machine.re_init()
-            riscv_machine.re_init()
-            wasm_machine.re_init()
+            machine_reinit()
             intel_machine.flavor = None
             riscv_machine.flavor = None
             mips_machine.flavor = None
@@ -271,10 +271,7 @@ def main_page(request):
         sample = request.POST['sample']
         button = request.POST['button_type']
         if button == CLEAR:
-            intel_machine.re_init()
-            mips_machine.re_init()
-            riscv_machine.re_init()
-            wasm_machine.re_init()
+            machine_reinit()
         else:
             intel_machine.changes_init()
             mips_machine.changes_init()
