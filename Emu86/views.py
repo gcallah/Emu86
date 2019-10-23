@@ -165,12 +165,20 @@ def create_render_data(request, vm, form, site_hdr, last_instr, error,
         render_data['curr_reg'] = curr_reg
     return render_data
 
-def machine_reinit():
+def machine_reinit(wasm_machine_init_status = True):
 
     intel_machine.re_init()
     mips_machine.re_init()
     riscv_machine.re_init()
-    wasm_machine.re_init()
+    if wasm_machine_init_status:
+        wasm_machine.re_init()
+
+def machine_flavor_reset(wasm_machine_flavor_status = True):
+    intel_machine.flavor = None
+    riscv_machine.flavor = None
+    mips_machine.flavor = None
+    if wasm_machine_flavor_status:
+        wasm_machine.flavor = None
 
 def main_page(request):
     last_instr = ""
@@ -192,10 +200,7 @@ def main_page(request):
         base = request.POST['base']
         if 'language' in request.POST:
             machine_reinit()
-            intel_machine.flavor = None
-            riscv_machine.flavor = None
-            mips_machine.flavor = None
-            wasm_machine.flavor = None
+            machine_flavor_reset()
             form = MainForm()
             lang = request.POST['language']
             if lang in MIPS:
@@ -249,10 +254,7 @@ def main_page(request):
         form = MainForm(request.POST)
         vm = None
         if 'flavor' in request.POST:
-            intel_machine.flavor = None
-            mips_machine.flavor = None
-            riscv_machine.flavor = None
-            wasm_machine.flavor = None
+            machine_flavor_reset()
             language = request.POST['flavor']
             if language in INTEL:
                 vm = intel_machine
@@ -478,23 +480,15 @@ def hex_conversion(vm):
 
 
 def help(request):
-    intel_machine.re_init()
-    mips_machine.re_init()
-    riscv_machine.re_init()
-    intel_machine.flavor = None
-    mips_machine.flavor = None
-    riscv_machine.flavor = None
+    machine_reinit(False)
+    machine_flavor_reset(False)
     site_hdr = get_hdr()
     return render(request, 'help.html', {HEADER: site_hdr})
 
 
 def feedback(request):
-    intel_machine.re_init()
-    mips_machine.re_init()
-    riscv_machine.re_init()
-    intel_machine.flavor = None
-    mips_machine.flavor = None
-    riscv_machine.flavor = None
+    machine_reinit(False)
+    machine_flavor_reset(False)
     site_hdr = get_hdr()
     email_list = AdminEmail.objects.all()
     comma_del_emails = ""
