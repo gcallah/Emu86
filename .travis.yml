@@ -13,6 +13,7 @@ before_install:
 
 install:
     - pip install -r docker/requirements-dev.txt
+    - flake8 .
 
 env:
     - PYTHONPATH=/home/travis/build/gcallah/Emu86
