@@ -382,7 +382,6 @@ def parse_data_token(token_line, vm, mem_loc):
     for value in data_vals:
         if vm.get_data_init() == "on":
             vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
-            print("hi")
         if vm.flavor == "mips_asm" or vm.flavor == "riscv":
             mem_loc += 4
         else:
