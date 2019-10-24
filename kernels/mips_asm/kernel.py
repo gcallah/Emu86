@@ -24,7 +24,10 @@ class Mips_asmKernel(Kernel):
                 self.vm_machine = MIPSMachine()
                 self.vm_machine.base = 'hex'
                 self.vm_machine.flavor = 'mips_asm'
-            (last_instr, error, bit_code) = assemble(code, self.vm_machine)
+            
+            self.vm_machine.changes_init()
+            (last_instr, error, bit_code) = assemble(code, self.vm_machine,
+                                                     web=False)
 
             if error == "":
                 vm_machine_info = {}

@@ -290,7 +290,7 @@ def exec(tok_lines, vm, last_instr):
         return (False, last_instr, err.msg)
 
 
-def assemble(code, vm, step=False):
+def assemble(code, vm, step=False, web=True):
 
     """
         Assembles and runs code.
@@ -325,7 +325,7 @@ def assemble(code, vm, step=False):
     # break the code into tokens:
     try:
         tok_lines = lex(code, vm)
-        tok_lines = parse(tok_lines, vm)
+        tok_lines = parse(tok_lines, vm, web)
 
     except Error as err:
         return (last_instr, err.msg, bit_code)

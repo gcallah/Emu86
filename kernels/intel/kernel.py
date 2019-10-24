@@ -24,7 +24,10 @@ class IntelKernel(Kernel):
                 self.vm_machine = IntelMachine()
                 self.vm_machine.base = 'dec'
                 self.vm_machine.flavor = 'intel'
-            (last_instr, error, bit_code) = assemble(code, self.vm_machine)
+            
+            self.vm_machine.changes_init()
+            (last_instr, error, bit_code) = assemble(code, self.vm_machine,
+                                                     web=False)
 
             if error == "":
                 vm_machine_info = {}

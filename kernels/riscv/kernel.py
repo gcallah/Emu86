@@ -24,7 +24,10 @@ class RiscvKernel(Kernel):
                 self.vm_machine = RISCVMachine()
                 self.vm_machine.base = 'hex'
                 self.vm_machine.flavor = 'riscv'
-            (last_instr, error, bit_code) = assemble(code, self.vm_machine)
+            
+            self.vm_machine.changes_init()
+            (last_instr, error, bit_code) = assemble(code, self.vm_machine,
+                                                     web=False)
 
             if error == "":
                 vm_machine_info = {}

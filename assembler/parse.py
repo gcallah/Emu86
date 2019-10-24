@@ -382,6 +382,7 @@ def parse_data_token(token_line, vm, mem_loc):
     for value in data_vals:
         if vm.get_data_init() == "on":
             vm.memory[hex(mem_loc).split('x')[-1].upper()] = value
+            print("hi")
         if vm.flavor == "mips_asm" or vm.flavor == "riscv":
             mem_loc += 4
         else:
@@ -815,13 +816,15 @@ def parse_exec_unit(token_line, vm):
     return token_instruction
 
 
-def parse(tok_lines, vm):
+def parse(tok_lines, vm, web):
     """
     Parses the analysis obtained from lexical analysis
 
     Args:
         tok_lines: Lines containing each line of code
         vm: Virtual machine
+        web: Boolean indicating whether source is from the website
+             or from kernel
 
     Returns:
         A list of parsed instructions
@@ -845,7 +848,8 @@ def parse(tok_lines, vm):
             else:
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
-            vm.set_data_init("on")
+            if not web:
+                vm.set_data_init("on")
             mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
             vm.set_data_init("off")
