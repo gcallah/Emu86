@@ -28,7 +28,7 @@ deploy:
   provider: pypi
   user: __token__
   password:
-    secure: pypi-AgEIcHlwaS5vcmcCJGJkMWI4MDZlLWZhNzYtNDAzYS05Zjg1LWY1NjQzNGRhNjQzOAACNnsicGVybWlzc2lvbnMiOiB7InByb2plY3RzIjogWyJlbXU4NiJdfSwgInZlcnNpb24iOiAxfQAABiCEItWZICaxU_6V5YswU17-nDk41KPe6DdyHeQGEeA31Q
+    secure: $pypi_key
   on:
     branch: master
     condition: $TRAVIS_COMMIT_MESSAGE == "pypi release v"*
