@@ -4,7 +4,8 @@ arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfunc
 from .argument_check import check_reg_only, check_immediate_three
-from assembler.errors import check_num_args, DivisionZero, InvalidArgument
+from assembler.errors import check_num_args, DivisionZero, InvalidArgument, InvalidConVal
+
 from assembler.tokens import Instruction, MAX_INT, Register
 
 
@@ -287,3 +288,31 @@ class Mflo(Instruction):
         ops[0].set_val(vm.registers['LO'])
         vm.changes.add(ops[0].get_nm())
         return ''
+
+class BTR(Instruction):
+    """
+    <instr>
+        btr
+    </instr>
+    <syntax>
+        btr reg, reg
+        btr reg, const
+    </syntax>
+    """
+
+    def fhook(self, ops, vmachine):
+        check_num_args(self.name, ops, 2)
+        if not isinstance(ops[0], Register):
+            raise InvalidArgument(ops[-1].get_nm())
+
+        #checking if constant is of size 7
+        if ops[1].get_val().bit_length() >= 9:
+            raise InvalidConVal(ops[1].get_nm())
+        ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 0))
+
+def set_bit(v, index, x):
+    mask = 1 << index   # Compute mask, an integer with just bit 'index' set.
+    v &= ~mask          # Clear the bit indicated by the mask (if x is False)
+    if x:
+        v |= mask         # If x was True, set the bit indicated by the mask.
+    return v
