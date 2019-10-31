@@ -849,6 +849,7 @@ def parse(tok_lines, vm, web):
         if parse_data:
             if not web:
                 vm.set_data_init("on")
+                vm.re_init()
             mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
             vm.set_data_init("off")

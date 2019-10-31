@@ -41,6 +41,8 @@ class Cmpf(Instruction):
             vm.flags['SF'] = 1
         else:
             vm.flags['SF'] = 0
+        vm.changes.add('FLAGZF')
+        vm.changes.add('FLAGSF')
 
 
 class Jmp(Instruction):
