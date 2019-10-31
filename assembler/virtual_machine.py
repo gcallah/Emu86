@@ -22,6 +22,9 @@ STACK_PTR_INTEL = "ESP"
 STACK_PTR_MIPS = "R29"
 STACK_PTR_RISCV = "X2"
 
+# Why are these the right values?
+MIPS_START_IP = 2147484032
+RISC_START_IP = 470351872
 
 class VirtualMachine:
     """
