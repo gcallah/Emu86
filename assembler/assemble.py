@@ -8,14 +8,13 @@ from .parse import add_debug, parse
 from .lex import lex
 from .MIPS.control_flow import Jal, Jr
 from .MIPS.key_words import op_func_codes
-from .virtual_machine import MIPS_START_IP, RISC_START_IP
+from .virtual_machine import MIPS_START_IP, RISC_START_IP, DIV_4_ASMS
 
 # from .RISCV.control_flow import  Jr, Jal
 
 MAX_INSTRUCTIONS = 1000  # prevent infinite loops!
 
 JMP_STR = "A jump instruction."
-
 
 INSTR_INTEL = 0
 OPS_INTEL = 1
@@ -245,11 +244,10 @@ def exec(tok_lines, vm, last_instr):
         curr_instr = None
         source = None
         last_instr = None
-        if (vm.flavor == "mips_asm" or vm.flavor == "mips_mml" or
-                vm.flavor == "riscv"):
-            if ip // 4 >= len(tok_lines):
-                raise InvalidInstruction("Past end of code.")
-            (curr_instr, source) = tok_lines[ip // 4]
+        if ip // vm.get_ip_div() >= len(tok_lines):
+            raise InvalidInstruction("Past end of code.")
+        (curr_instr, source) = tok_lines[ip // vm.get_ip_div()]
+        if vm.flavor in DIV_4_ASMS:
             if vm.get_ip() != curr_instr[PC_MIPS].get_val():
                 raise InvalidArgument(hex(curr_instr[PC_MIPS].get_val()))
             vm.inc_ip()
@@ -265,10 +263,6 @@ def exec(tok_lines, vm, last_instr):
     #     last_instr = curr_instr[INSTR_RISCV].f(curr_instr[OPS_RISCV:], vm)
 
         else:
-            if ip >= len(tok_lines):
-                raise InvalidInstruction("Past end of code.")
-
-            (curr_instr, source) = tok_lines[ip]
             vm.inc_ip()
             last_instr = curr_instr[INSTR_INTEL].f(curr_instr[OPS_INTEL:], vm)
         if vm.flavor != 'wasm':
@@ -294,11 +288,9 @@ def exec(tok_lines, vm, last_instr):
 
 def step_code(tok_lines, vm, error, last_instr, bit_code):
     if vm.get_ip() == 0:
-        vm.set_ip(vm.start_ip)
-    ip = vm.get_ip() - vm.start_ip
-    if (vm.flavor == "mips_asm" or vm.flavor == "mips_mml" or
-            vm.flavor == "riscv"):
-        ip = ip // 4
+        vm.set_ip(vm.get_start_ip())
+    ip = (vm.get_ip() - vm.get_start_ip()) // vm.get_ip_div()
+
     if ip < len(tok_lines):
         (success, last_instr, error) = exec(tok_lines, vm,
                                             last_instr)
@@ -313,35 +305,25 @@ def step_code(tok_lines, vm, error, last_instr, bit_code):
 def run_code(tok_lines, vm, error, last_instr, bit_code):
     count = 0
     add_debug("Setting ip to 0", vm)
-    vm.set_ip(vm.start_ip)   # instruction pointer reset for 'run'
-    if (vm.flavor == "mips_asm" or vm.flavor == "mips_mml" or
-            vm.flavor == "riscv"):
-        while ((vm.get_ip() - vm.start_ip) // 4 < len(tok_lines) and
-               count < MAX_INSTRUCTIONS):
-            (success, last_instr, error) = exec(tok_lines, vm,
-                                                last_instr)
-            if not success:
-                break;
-            count += 1
-    else:
-        while (vm.get_ip() < len(tok_lines) and
-               count < MAX_INSTRUCTIONS):
-            (success, last_instr, error) = exec(tok_lines, vm,
-                                                last_instr)
-            if not success:
-                break;
-            count += 1
+    vm.set_ip(vm.get_start_ip())   # instruction pointer reset for 'run'
+
+    while ((vm.get_ip() - vm.get_start_ip()) // vm.get_ip_div()
+           < len(tok_lines)
+           and count < MAX_INSTRUCTIONS):
+        (success, last_instr, error) = exec(tok_lines, vm,
+                                            last_instr)
+        if not success:
+            break
+        count += 1
 
     if count >= MAX_INSTRUCTIONS:
         error = ("Possible infinite loop detected: "
-                 + "instructions run has exceeded "
-                 + str(MAX_INSTRUCTIONS))
+                 + "instructions run has exceeded " + str(MAX_INSTRUCTIONS))
 
     return (last_instr, error, bit_code)
 
 
 def assemble(code, vm, step=False, web=True):
-
     """
         Assembles and runs code.
         Args:
@@ -361,7 +343,6 @@ def assemble(code, vm, step=False, web=True):
     bit_code = ''
     count = 0
     if vm.flavor != 'wasm' and vm.next_stack_change != "":
-
         vm.stack_change = vm.next_stack_change
         vm.next_stack_change = ""
         if len(vm.c_stack) != 0 and not isinstance(vm.c_stack[-1], int):
