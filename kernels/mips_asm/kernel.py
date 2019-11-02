@@ -16,21 +16,42 @@ class Mips_asmKernel(Kernel):
     banner = "Mips_asm kernel - run mips_asm assembly language"
     vm_machine = None
 
-    def has_one_data(self, code):
+    def has_one_data_first(self, code):
+        data_first = -1
+        text_first = -1
+        data_seg = False
+        text_seg = True
         lines = code.split("\n")
         data_seg_count = 0
-        for line in lines:
-            if line == '':
-                continue
-            if line[0] == ';':
-                continue
-            else:
-                if line[:5] == ".data":
-                    data_seg_count += 1
+        for index in range(len(lines)):
+            line = lines[index]
+            if line.find(';') > -1:
+                line = line[:line.find(';')]
 
+            line = line.strip()
+            if len(line) == 0:
+                continue
+
+            if line[:5] == ".data":
+                data_seg = True
+                text_seg = False
+                data_seg_count += 1
+                continue
+            elif line[:5] == ".text":
+                data_seg = False
+                text_seg = True
+                continue
+            if data_seg and data_first == -1:
+                data_first = index
+            elif text_seg and text_first == -1:
+                text_first = index
+
+        errors = []
+        if data_first > text_first:
+            errors.append("Data segment is after text segment.")
         if data_seg_count > 1:
-            return False
-        return True
+            errors.append("Code has more than one data segment.")
+        return "\n".join(errors)
 
     def parse_changes(self):
         reg_changes = []
@@ -76,15 +97,15 @@ class Mips_asmKernel(Kernel):
 
             self.vm_machine.changes_init()
 
-            if not self.has_one_data(code):
+            data_check_errors = self.has_one_data_first(code)
+            if data_check_errors:
                 error_msg = {'name': 'error_msg',
-                             'text': 'Code has more than one data segment.'}
+                             'text': data_check_errors}
                 self.send_response(self.iopub_socket, 'stream', error_msg)
 
             else:
                 (last_instr, error, bit_code) = assemble(code, self.vm_machine,
                                                          web=False)
-
                 if error == "":
                     vm_machine_info = {}
                     reg_info, mem_info, flag_info = self.parse_changes()
