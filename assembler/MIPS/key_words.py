@@ -1,6 +1,6 @@
 from .arithmetic import Add, Sub, Addi, Mult, Div
 from .arithmetic import Andf, Andi, Orf, Ori, Xor, Nor, Sll, Srl
-from .arithmetic import Mflo, Mfhi, BTR
+from .arithmetic import Mflo, Mfhi
 from .data_mov import Load, Store
 from .control_flow import Slt, Slti, Beq, Bne, Jmp, Jal, Jr
 from .interrupts import Syscall
@@ -36,7 +36,7 @@ key_words = {
     'NOR': Nor('NOR'),
     'SLL': Sll('SLL'),
     'SRL': Srl('SRL'),
-    'BTR': BTR('BTR'),
+
 
     # control
     'SLT': Slt('SLT'),
