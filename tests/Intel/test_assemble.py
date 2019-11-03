@@ -241,6 +241,29 @@ class AssembleTestCase(TestCase):
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
 
+    def test_btr(self):
+        intel_machine.registers["EAX"] = 8
+        intel_machine.registers["EBX"] = 3
+        assemble("btr eax, ebx", intel_machine)
+        self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
+
+    def test_bts(self):
+        intel_machine.registers["EAX"] = 0
+        intel_machine.registers["EBX"] = 3
+        assemble("bts eax, ebx", intel_machine)
+        self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
+
+    def test_bsf(self):
+        intel_machine.registers["EAX"] = 0
+        intel_machine.registers["EBX"] = 8
+        assemble("bsf eax, ebx", intel_machine)
+        self.assertAlmostEqual(intel_machine.registers["EAX"], 3)
+
+    def test_bsr(self):
+        intel_machine.registers["EAX"] = 0
+        intel_machine.registers["EBX"] = 10
+        assemble("bsr eax, ebx", intel_machine)
+        self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
 
 if __name__ == '__main__':
     main()

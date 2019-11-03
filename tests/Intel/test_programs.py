@@ -182,20 +182,5 @@ class TestPrograms(TestCase):
         self.assertAlmostEqual(intel_machine.registers["ST0"], fah_val)
         self.assertEqual(intel_machine.memory["1"], fah_val)
 
-    def test_btr(self):
-        self.run_intel_test_code("tests/Intel/btr.asm")
-        self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
-
-    def test_bts(self):
-        self.run_intel_test_code("tests/Intel/bts.asm")
-        self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
-
-    def test_bsf(self):
-        self.run_intel_test_code("tests/Intel/bsf.asm")
-        self.assertAlmostEqual(intel_machine.registers["EAX"], 3)
-
-    def test_bsr(self):
-        self.run_intel_test_code("tests/Intel/bsr.asm")
-        self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
 if __name__ == '__main__':
     main()
