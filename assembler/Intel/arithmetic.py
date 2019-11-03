@@ -262,7 +262,6 @@ class BTR(Instruction):
     def fhook(self, ops, vmachine):
         check_num_args(self.name, ops, 2)
 
-        #checking if constant is of size 7
         if ops[1].get_val().bit_length() >= 9:
             raise InvalidConVal(ops[1].get_nm())
         ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 0))
@@ -288,7 +287,6 @@ class BTS(Instruction):
     def fhook(self, ops, vmachine):
         check_num_args(self.name, ops, 2)
 
-        #checking if constant is of size 7
         if ops[1].get_val().bit_length() >= 9:
             raise InvalidConVal(ops[1].get_nm())
         ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 1))
@@ -321,6 +319,36 @@ class BSF(Instruction):
             vmachine.flags["ZF"] = 0
             binStr = str(bin(num))[2:]
             for index in range(len(binStr)):
+                if binStr[index] == '1':
+                    break
+            ops[1].set_val(index)
+
+class BSR(Instruction):
+    """
+    <instr>
+        bsr
+    </instr>
+    <syntax>
+        bsr reg, reg
+        bsr reg, mem
+    </syntax>
+    """
+
+    def fhook(self, ops, vmachine):
+        check_num_args(self.name, ops, 2)
+
+        if ops[1].get_val().bit_length() <= 32:
+            raise InvalidConVal(ops[1].get_nm())
+
+        if ops[0].get_val().bit_length() <= 32:
+            raise InvalidConVal(ops[0].get_nm())
+        num = ops[1].get_val()
+        if num == 0:
+            vmachine.flags["ZF"] = 1
+        else:
+            vmachine.flags["ZF"] = 0
+            binStr = str(bin(num))[2:]
+            for index in reversed(range(len(binStr))):
                 if binStr[index] == '1':
                     break
             ops[1].set_val(index)
