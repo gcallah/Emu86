@@ -839,6 +839,9 @@ def parse(tok_lines, vm, web):
             if tokens[0][TOKENS].get_nm() == "data":
                 parse_data = True
                 parse_text = False
+                if not web:
+                    vm.set_data_init("on")
+                    vm.re_init()
                 continue
             elif tokens[0][TOKENS].get_nm() == "text":
                 parse_text = True
@@ -847,8 +850,6 @@ def parse(tok_lines, vm, web):
             else:
                 raise InvalidSection(tokens[0][TOKENS].get_nm())
         if parse_data:
-            if not web:
-                vm.set_data_init("on")
             mem_loc = parse_data_token(tokens[0], vm, mem_loc)
         elif parse_text:
             vm.set_data_init("off")

@@ -22,6 +22,12 @@ STACK_PTR_INTEL = "ESP"
 STACK_PTR_MIPS = "R29"
 STACK_PTR_RISCV = "X2"
 
+# Why are these the right values?
+MIPS_START_IP = 2147484032
+RISC_START_IP = 470351872
+
+DIV_4_ASMS = ["mips_asm", "mips_mml", "riscv"]
+
 
 class VirtualMachine:
     """
@@ -52,6 +58,7 @@ class VirtualMachine:
         self.flavor = None
         self.data_init = "on"
         self.start_ip = 0
+        self.ip_div = 1
         self.changes = set()
         self.base = None
         self.stack_change = ""
@@ -63,6 +70,12 @@ class VirtualMachine:
                 + "Memory: " + str(self.memory) + "\n"
                 + "Stack: " + str(self.stack) + "\n"
                 + "Labels: " + str(self.labels))
+
+    def get_ip_div(self):
+        return self.ip_div
+
+    def get_start_ip(self):
+        return self.start_ip
 
     def re_init(self):
         self.nxt_key = 0
@@ -123,17 +136,7 @@ class VirtualMachine:
 class IntelMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
-        # self.fp_stack_registers = OrderedDict(
-        #             [
-        #                 ('ST7', 0.0),
-        #                 ('ST6', 0.0),
-        #                 ('ST5', 0.0),
-        #                 ('ST4', 0.0),
-        #                 ('ST3', 0.0),
-        #                 ('ST2', 0.0),
-        #                 ('ST1', 0.0),
-        #                 ('ST0', 0.0),
-        #             ])
+
         self.float_stack_bottom = -1
 
         self.registers = OrderedDict(
@@ -250,8 +253,14 @@ class IntelMachine(VirtualMachine):
 
 
 class MIPSMachine(VirtualMachine):
+    """
+    Create a VM for running MIPS assembler.
+    Why isn't flavor set here?
+    """
     def __init__(self):
         super().__init__()
+        self.ip_div = 4
+        self.init_ip = MIPS_START_IP
         self.unwritable = [INSTR_PTR_MIPS, 'R0', 'F0', 'F29',
                            STACK_PTR_MIPS, 'HI', 'LO']
         self.registers = OrderedDict(
@@ -377,6 +386,8 @@ class RISCVMachine(VirtualMachine):
 
     def __init__(self):
         super().__init__()
+        self.ip_div = 4
+        self.init_ip = RISC_START_IP
         self.unwritable = [INSTR_PTR_RISCV, 'X0', STACK_PTR_RISCV]
         self.registers = OrderedDict(
                         [
