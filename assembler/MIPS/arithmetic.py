@@ -288,4 +288,3 @@ class Mflo(Instruction):
         ops[0].set_val(vm.registers['LO'])
         vm.changes.add(ops[0].get_nm())
         return ''
-

@@ -165,7 +165,8 @@ def create_render_data(request, vm, form, site_hdr, last_instr, error,
         render_data['curr_reg'] = curr_reg
     return render_data
 
-def machine_reinit(wasm_machine_init_status = True):
+
+def machine_reinit(wasm_machine_init_status=True):
 
     intel_machine.re_init()
     mips_machine.re_init()
@@ -173,12 +174,14 @@ def machine_reinit(wasm_machine_init_status = True):
     if wasm_machine_init_status:
         wasm_machine.re_init()
 
-def machine_flavor_reset(wasm_machine_flavor_status = True):
+
+def machine_flavor_reset(wasm_machine_flavor_status=True):
     intel_machine.flavor = None
     riscv_machine.flavor = None
     mips_machine.flavor = None
     if wasm_machine_flavor_status:
         wasm_machine.flavor = None
+
 
 def main_page(request):
     last_instr = ""

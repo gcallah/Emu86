@@ -100,9 +100,12 @@ def convert_grouped_binary_to_hex(binary):
     hexequi = mapping[integer]
     return hexequi
 
+
 """
-dec_convert method is not being used 
+dec_convert method is not being used
 """
+
+
 def dec_convert(val):
     while val > 1:
         val = val / 10
@@ -298,6 +301,7 @@ class FMulP(Instruction):
             FMULP ST(i), ST(j)
         </syntax>
     """
+
     def fhook(self, ops, vm):
         if len(ops) == 1:
             one_op_arith(ops, vm, self.name, mul)

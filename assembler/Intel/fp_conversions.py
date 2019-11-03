@@ -292,6 +292,7 @@ def chs(val):
     IEEE.change_sign()
     return float(IEEE)
 
+
 # performing addition of 2  numbers
 def add(val1, val2):
     val1, val2 = float(val1), float(val2)
@@ -339,6 +340,7 @@ def add(val1, val2):
 def sub(val1, val2):  # subtraction is the same as addition, (x-y) = (x+(-y))
     val2 = val2 * -1
     return add(val1, val2)
+
 
 # performing  multiplication of two binary numbers
 def binaryMultiply(bin1, bin2):

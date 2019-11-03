@@ -341,7 +341,6 @@ def assemble(code, vm, step=False, web=True):
     last_instr = ''
     error = ''
     bit_code = ''
-    count = 0
     if vm.flavor != 'wasm' and vm.next_stack_change != "":
         vm.stack_change = vm.next_stack_change
         vm.next_stack_change = ""

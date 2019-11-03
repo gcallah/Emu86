@@ -4,7 +4,7 @@ arithmetic.py: arithmetic and logic instructions.
 
 import operator as opfunc
 
-from assembler.errors import DivisionZero, check_num_args, InvalidConVal, InvalidArgument
+from assembler.errors import DivisionZero, check_num_args, InvalidConVal
 from assembler.tokens import Instruction, MAX_INT
 from assembler.ops_check import one_op_arith
 
@@ -248,6 +248,7 @@ class Idiv(Instruction):
         vm.changes.add('EDX')
         return ''
 
+
 class BTR(Instruction):
     """
     <instr>
@@ -266,12 +267,14 @@ class BTR(Instruction):
             raise InvalidConVal(ops[1].get_nm())
         ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 0))
 
+
 def set_bit(v, index, x):
     mask = 1 << index   # Compute mask, an integer with just bit 'index' set.
     v &= ~mask          # Clear the bit indicated by the mask (if x is False)
     if x:
         v |= mask         # If x was True, set the bit indicated by the mask.
     return v
+
 
 class BTS(Instruction):
     """
@@ -321,6 +324,7 @@ class BSF(Instruction):
                     break
             print('index', index)
             ops[0].set_val(index)
+
 
 class BSR(Instruction):
     """

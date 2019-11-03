@@ -182,5 +182,6 @@ class TestPrograms(TestCase):
         self.assertAlmostEqual(intel_machine.registers["ST0"], fah_val)
         self.assertEqual(intel_machine.memory["1"], fah_val)
 
+
 if __name__ == '__main__':
     main()

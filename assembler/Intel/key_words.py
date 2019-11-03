@@ -58,9 +58,9 @@ instructions = {
         'DEC': Dec('DEC'),
         'NEG': Neg('NEG'),
         'BTR': BTR('BTR'),
-        'BTS':BTS('BTS'),
-        'BSF':BSF('BSF'),
-        'BSR':BSR('BSR'),
+        'BTS': BTS('BTS'),
+        'BSF': BSF('BSF'),
+        'BSR': BSR('BSR'),
         # floating point
         'FADD': FAdd('FADD'),
         'FSUB': FSub('FSUB'),

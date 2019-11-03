@@ -265,5 +265,6 @@ class AssembleTestCase(TestCase):
         assemble("bsr eax, ebx", intel_machine)
         self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
 
+
 if __name__ == '__main__':
     main()
