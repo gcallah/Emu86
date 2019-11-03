@@ -186,6 +186,9 @@ class TestPrograms(TestCase):
         self.run_intel_test_code("tests/Intel/btr.asm")
         self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
 
+    def test_bts(self):
+        self.run_intel_test_code("tests/Intel/bts.asm")
+        self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
 
 if __name__ == '__main__':
     main()
