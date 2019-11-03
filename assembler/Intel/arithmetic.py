@@ -340,8 +340,13 @@ class BSR(Instruction):
             vmachine.flags["ZF"] = 1
         else:
             vmachine.flags["ZF"] = 0
-            binStr = str(bin(num))[2:].zfill(16)
+            if ops[1].get_val().bit_length() <= 16:
+                bit_size = 16
+            else:
+                bit_size = 32
+            binStr = str(bin(num))[2:].zfill(bit_size)
             for index in range(len(binStr)):
                 if binStr[index] == '1':
                     break
+            index = bit_size - index
             ops[0].set_val(index)
