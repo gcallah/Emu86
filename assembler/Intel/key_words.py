@@ -1,5 +1,5 @@
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
-from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg, BTR
+from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg, BTR, BTS
 from .fp_arithmetic import FAdd, FSub, FDiv, FMul
 from .fp_arithmetic import FAbs, FChs, FaddP, FSubP, FMulP, FDivP, FSqrt
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
@@ -58,6 +58,7 @@ instructions = {
         'DEC': Dec('DEC'),
         'NEG': Neg('NEG'),
         'BTR': BTR('BTR'),
+        'BTS':BTS('BTS'),
         # floating point
         'FADD': FAdd('FADD'),
         'FSUB': FSub('FSUB'),

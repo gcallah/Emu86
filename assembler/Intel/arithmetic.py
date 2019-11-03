@@ -274,4 +274,23 @@ def set_bit(v, index, x):
         v |= mask         # If x was True, set the bit indicated by the mask.
     return v
 
+class BTS(Instruction):
+    """
+    <instr>
+        bts
+    </instr>
+    <syntax>
+        bts reg, reg
+        bts reg, const
+    </syntax>
+    """
+
+    def fhook(self, ops, vmachine):
+        check_num_args(self.name, ops, 2)
+
+        #checking if constant is of size 7
+        if ops[1].get_val().bit_length() >= 9:
+            raise InvalidConVal(ops[1].get_nm())
+        ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 1))
+
 
