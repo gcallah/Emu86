@@ -305,23 +305,22 @@ class BSF(Instruction):
 
     def fhook(self, ops, vmachine):
         check_num_args(self.name, ops, 2)
-
-        #checking if constant is of size
-        if ops[1].get_val().bit_length() <= 32:
-            raise InvalidConVal(ops[1].get_nm())
-
-        if ops[0].get_val().bit_length() <= 32:
-            raise InvalidConVal(ops[0].get_nm())
         num = ops[1].get_val()
+
         if num == 0:
             vmachine.flags["ZF"] = 1
         else:
             vmachine.flags["ZF"] = 0
-            binStr = str(bin(num))[2:]
-            for index in range(len(binStr)):
-                if binStr[index] == '1':
+            if ops[1].get_val().bit_length() <= 16:
+                bit_size = 16
+            else:
+                bit_size = 32
+            bin_str = str(bin(num))[2:].zfill(bit_size)[::-1]
+            for index in range(len(bin_str)):
+                if bin_str[index] == '1':
                     break
-            ops[1].set_val(index)
+            print('index', index)
+            ops[0].set_val(index)
 
 class BSR(Instruction):
     """
@@ -336,19 +335,13 @@ class BSR(Instruction):
 
     def fhook(self, ops, vmachine):
         check_num_args(self.name, ops, 2)
-
-        if ops[1].get_val().bit_length() <= 32:
-            raise InvalidConVal(ops[1].get_nm())
-
-        if ops[0].get_val().bit_length() <= 32:
-            raise InvalidConVal(ops[0].get_nm())
         num = ops[1].get_val()
         if num == 0:
             vmachine.flags["ZF"] = 1
         else:
             vmachine.flags["ZF"] = 0
-            binStr = str(bin(num))[2:]
-            for index in reversed(range(len(binStr))):
+            binStr = str(bin(num))[2:].zfill(16)
+            for index in range(len(binStr)):
                 if binStr[index] == '1':
                     break
-            ops[1].set_val(index)
+            ops[0].set_val(index)
