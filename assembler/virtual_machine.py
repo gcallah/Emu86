@@ -485,7 +485,7 @@ class RISCVMachine(VirtualMachine):
         return int(self.registers[STACK_PTR_RISCV])
 
     def bit_code_needed(self):
-        return True
+        return False
 
 
 class WASMMachine(VirtualMachine):
