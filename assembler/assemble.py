@@ -8,7 +8,7 @@ from .parse import add_debug, parse
 from .lex import lex
 from .MIPS.control_flow import Jal, Jr
 from .MIPS.key_words import op_func_codes
-from .virtual_machine import MIPS_START_IP, RISC_START_IP, DIV_4_ASMS
+from .virtual_machine import DIV_4_ASMS
 
 # from .RISCV.control_flow import  Jr, Jal
 
@@ -362,7 +362,7 @@ def assemble(code, vm, step=False, web=True):
         return (last_instr, err.msg, bit_code)
 
     try:
-        if vm.flavor == "mips_asm" or vm.flavor == "mips_mml":
+        if vm.bit_code_needed():
             for curr_instr, source in tok_lines:
                 bit_code += create_bit_instr(curr_instr)
         if step:
@@ -372,8 +372,5 @@ def assemble(code, vm, step=False, web=True):
 
     except ExitProg as ep:
         last_instr = ep.msg.split(":")[0] + ": Exiting program"
-        if vm.flavor == "mips_asm" or vm.flavor == "mips_mml":
-            vm.set_ip(MIPS_START_IP)
-        elif vm.flavor == "riscv":
-            vm.set_ip(RISC_START_IP)
+        vm.set_int_ip()
     return (last_instr, error, bit_code)

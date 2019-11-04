@@ -23,8 +23,8 @@ STACK_PTR_MIPS = "R29"
 STACK_PTR_RISCV = "X2"
 
 # Why are these the right values?
-MIPS_START_IP = 2147484032
-RISC_START_IP = 470351872
+MIPS_INTERRUPT_IP = 2147484032
+RISC_INTERRUPT_IP = 470351872
 
 DIV_4_ASMS = ["mips_asm", "mips_mml", "riscv"]
 
@@ -227,6 +227,9 @@ class IntelMachine(VirtualMachine):
     def set_ip(self, val):
         self.registers[INSTR_PTR_INTEL] = val
 
+    def set_int_ip(self):
+        pass
+
     def get_ip(self):
         return int(self.registers[INSTR_PTR_INTEL])
 
@@ -251,6 +254,9 @@ class IntelMachine(VirtualMachine):
     def get_sp(self):
         return int(self.registers[STACK_PTR_INTEL])
 
+    def bit_code_needed(self):
+        return False
+
 
 class MIPSMachine(VirtualMachine):
     """
@@ -260,7 +266,6 @@ class MIPSMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
         self.ip_div = 4
-        self.init_ip = MIPS_START_IP
         self.unwritable = [INSTR_PTR_MIPS, 'R0', 'F0', 'F29',
                            STACK_PTR_MIPS, 'HI', 'LO']
         self.registers = OrderedDict(
@@ -356,6 +361,9 @@ class MIPSMachine(VirtualMachine):
     def set_ip(self, val):
         self.registers[INSTR_PTR_MIPS] = val
 
+    def set_int_ip(self):
+        self.set_ip(MIPS_INTERRUPT_IP)
+
     def get_ip(self):
         return int(self.registers[INSTR_PTR_MIPS])
 
@@ -380,6 +388,9 @@ class MIPSMachine(VirtualMachine):
     def get_sp(self):
         return int(self.registers[STACK_PTR_MIPS])
 
+    def bit_code_needed(self):
+        return True
+
 
 class RISCVMachine(VirtualMachine):
     # make sure to account for the lack of HI and LO in display
@@ -387,7 +398,6 @@ class RISCVMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
         self.ip_div = 4
-        self.init_ip = RISC_START_IP
         self.unwritable = [INSTR_PTR_RISCV, 'X0', STACK_PTR_RISCV]
         self.registers = OrderedDict(
                         [
@@ -447,6 +457,9 @@ class RISCVMachine(VirtualMachine):
     def set_ip(self, val):
         self.registers[INSTR_PTR_RISCV] = val
 
+    def set_int_ip(self):
+        self.set_ip(RISC_INTERRUPT_IP)
+
     def get_ip(self):
         return int(self.registers[INSTR_PTR_RISCV])
 
@@ -470,6 +483,9 @@ class RISCVMachine(VirtualMachine):
 
     def get_sp(self):
         return int(self.registers[STACK_PTR_RISCV])
+
+    def bit_code_needed(self):
+        return True
 
 
 class WASMMachine(VirtualMachine):
@@ -541,6 +557,9 @@ class WASMMachine(VirtualMachine):
 
     def get_ip(self):
         return self.ip
+
+    def bit_code_needed(self):
+        return False
 
 
 intel_machine = IntelMachine()
