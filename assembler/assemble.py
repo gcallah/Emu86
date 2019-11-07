@@ -244,27 +244,24 @@ def exec(tok_lines, vm, last_instr):
         curr_instr = None
         source = None
         last_instr = None
+
+        # here call vm.past_last_instr()
         if ip // vm.get_ip_div() >= len(tok_lines):
             raise InvalidInstruction("Past end of code.")
         (curr_instr, source) = tok_lines[ip // vm.get_ip_div()]
+
+        # next we should call vm.exec_instr()
+        # that method nows how to inc ip, check invalid arg, etc.
         if vm.flavor in DIV_4_ASMS:
             if vm.get_ip() != curr_instr[PC_MIPS].get_val():
                 raise InvalidArgument(hex(curr_instr[PC_MIPS].get_val()))
             vm.inc_ip()
             last_instr = curr_instr[INSTR_MIPS].f(curr_instr[OPS_MIPS:], vm)
-
-    # if flavor == "riscv":
-    #     if ip // 4 >= len(tok_lines):
-    #         raise InvalidInstruction("Past end of code.")
-    #     (curr_instr, source) = tok_lines[ip // 4]
-    #     if vm.get_ip() != curr_instr[PC_RISCV].get_val():
-    #         raise InvalidArgument(hex(curr_instr[PC_RISCV].get_val()))
-    #     vm.inc_ip()
-    #     last_instr = curr_instr[INSTR_RISCV].f(curr_instr[OPS_RISCV:], vm)
-
         else:
             vm.inc_ip()
             last_instr = curr_instr[INSTR_INTEL].f(curr_instr[OPS_INTEL:], vm)
+
+        # call vm.set_next_stack_change()
         if vm.flavor != 'wasm':
             for label in vm.labels:
                 if vm.get_ip() == vm.labels[label]:
@@ -275,6 +272,7 @@ def exec(tok_lines, vm, last_instr):
         # we have hit one of the JUMP instructions: jump to that line.
         add_debug("In FlowBreak", vm)
         dump_flags(vm)
+        # here we call vm.jump_handler()
         if isinstance(curr_instr[INSTR_MIPS], Jal) and vm.flavor != 'riscv':
             vm.registers["R31"] = vm.get_ip()
         if isinstance(curr_instr[INSTR_MIPS], Jr) and vm.flavor != 'riscv':
