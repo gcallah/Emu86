@@ -4,7 +4,8 @@ Our x86 virtual machine representation.
 
 from collections import OrderedDict
 
-from .errors import StackOverflow, StackUnderflow
+from .errors import StackOverflow, StackUnderflow, InvalidArgument
+from .MIPS.control_flow import Jal, Jr
 
 MEM_DIGITS = 2
 
@@ -26,7 +27,7 @@ STACK_PTR_RISCV = "X2"
 MIPS_INTERRUPT_IP = 2147484032
 RISC_INTERRUPT_IP = 470351872
 
-DIV_4_ASMS = ["mips_asm", "mips_mml", "riscv"]
+INSTR_MIPS = 1
 
 
 class VirtualMachine:
@@ -76,6 +77,18 @@ class VirtualMachine:
 
     def get_start_ip(self):
         return self.start_ip
+
+    def get_ip(self):
+        pass
+
+    def set_ip(self):
+        pass
+
+    def past_last_instr(self, token_lines):
+        curr_ip = self.get_ip() - self.start_ip
+        if curr_ip // self.get_ip_div() >= len(token_lines):
+            return True
+        return False
 
     def re_init(self):
         self.nxt_key = 0
@@ -132,6 +145,33 @@ class VirtualMachine:
     def set_data_init(self, on_or_off):
         self.data_init = on_or_off
 
+    def jump_to_label(self, label, source, jal=False):
+        if label in self.labels:
+            ip = self.labels[label]
+            self.set_ip(ip + self.start_ip)
+            self.next_stack_change = label
+            return (True, source, "")
+        else:
+            try:
+                ip = int(label)
+                if jal:
+                    ip = ip >> 2
+                self.set_ip(ip)
+                return (True, source, "")
+            except Exception:
+                return (False, source, f"Invalid label: {label}")
+
+    def jump_handler(self, brk, source, instr_line):
+        pass
+
+    def exec_instr(self, instr_line):
+        pass
+
+    def set_next_stack_change(self):
+        for label in self.labels:
+            if self.get_ip() == self.labels[label]:
+                self.next_stack_change = label
+
 
 class IntelMachine(VirtualMachine):
     def __init__(self):
@@ -170,6 +210,8 @@ class IntelMachine(VirtualMachine):
                         ('SF', 0),
                         ('ZF', 0),
                     ])
+        self.instr = 0
+        self.ops = 1
 
     def is_FP_stack_empty(self):
         return self.float_stack_bottom == -1
@@ -256,6 +298,13 @@ class IntelMachine(VirtualMachine):
 
     def bit_code_needed(self):
         return False
+
+    def jump_handler(self, brk, source, instr_line=None):
+        return self.jump_to_label(brk.label, source, True)
+
+    def exec_instr(self, instr_line):
+        self.inc_ip()
+        return instr_line[self.instr].f(instr_line[self.ops:], self)
 
 
 class MIPSMachine(VirtualMachine):
@@ -344,6 +393,10 @@ class MIPSMachine(VirtualMachine):
                         ('COND', 0),
                     ])
 
+        self.pc = 0
+        self.instr = 1
+        self.ops = 2
+
     def re_init(self):
         super().re_init()
         self.registers[STACK_PTR_MIPS] = STACK_TOP
@@ -390,6 +443,19 @@ class MIPSMachine(VirtualMachine):
 
     def bit_code_needed(self):
         return True
+
+    def jump_handler(self, brk, source, instr_line):
+        if isinstance(instr_line[INSTR_MIPS], Jal):
+            self.registers["R31"] = self.get_ip()
+        if isinstance(instr_line[INSTR_MIPS], Jr):
+            return self.jump_to_label(brk.label, source)
+        return self.jump_to_label(brk.label, source, True)
+
+    def exec_instr(self, instr_line):
+        if self.get_ip() != instr_line[self.pc].get_val():
+            raise InvalidArgument(hex(instr_line[self.pc].get_val()))
+        self.inc_ip()
+        return instr_line[self.instr].f(instr_line[self.ops:], self)
 
 
 class RISCVMachine(VirtualMachine):
@@ -487,6 +553,12 @@ class RISCVMachine(VirtualMachine):
     def bit_code_needed(self):
         return False
 
+    def exec_instr(self, instr_line):
+        if self.get_ip() != instr_line[self.pc].get_val():
+            raise InvalidArgument(hex(instr_line[self.pc].get_val()))
+        self.inc_ip()
+        return instr_line[self.instr].f(instr_line[self.ops:], self)
+
 
 class WASMMachine(VirtualMachine):
     def __init__(self):
@@ -499,6 +571,9 @@ class WASMMachine(VirtualMachine):
 
         self.stack_ptr = STACK_BOTTOM
         self.ip = 0
+
+        self.instr = 0
+        self.ops = 1
 
     def re_init(self):
         self.nxt_key = 0
@@ -560,6 +635,13 @@ class WASMMachine(VirtualMachine):
 
     def bit_code_needed(self):
         return False
+
+    def exec_instr(self, instr_line):
+        self.inc_ip()
+        return instr_line[self.instr].f(instr_line[self.ops:], self)
+
+    def set_next_stack_change(self):
+        pass
 
 
 intel_machine = IntelMachine()

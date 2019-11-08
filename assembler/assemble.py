@@ -3,12 +3,10 @@ assemble.py
 Executes assembly code typed in.
 """
 from .flowbreak import FlowBreak
-from .errors import Error, InvalidInstruction, InvalidArgument, ExitProg
+from .errors import Error, InvalidInstruction, ExitProg
 from .parse import add_debug, parse
 from .lex import lex
-from .MIPS.control_flow import Jal, Jr
 from .MIPS.key_words import op_func_codes
-from .virtual_machine import DIV_4_ASMS
 
 # from .RISCV.control_flow import  Jr, Jal
 
@@ -27,23 +25,6 @@ OPS_MIPS = 2
 def dump_flags(vm):
     for flag, val in vm.flags.items():
         add_debug("Flag = " + flag + "; val = " + str(val), vm)
-
-
-def jump_to_label(label, source, vm, jal=False):
-    if label in vm.labels:
-        ip = vm.labels[label]  # set i to line num of label
-        vm.set_ip(ip + vm.start_ip)
-        vm.next_stack_change = label
-        return (True, source, "")
-    else:
-        try:
-            ip = int(label)
-            if jal:
-                ip = ip >> 2
-            vm.set_ip(ip)
-            return (True, source, "")
-        except Exception:
-            return (False, source, "Invalid label: " + label)
 
 
 def create_bit_negative(value, bits):
@@ -245,39 +226,21 @@ def exec(tok_lines, vm, last_instr):
         source = None
         last_instr = None
 
-        # here call vm.past_last_instr()
-        if ip // vm.get_ip_div() >= len(tok_lines):
+        if vm.past_last_instr():
             raise InvalidInstruction("Past end of code.")
         (curr_instr, source) = tok_lines[ip // vm.get_ip_div()]
 
-        # next we should call vm.exec_instr()
-        # that method nows how to inc ip, check invalid arg, etc.
-        if vm.flavor in DIV_4_ASMS:
-            if vm.get_ip() != curr_instr[PC_MIPS].get_val():
-                raise InvalidArgument(hex(curr_instr[PC_MIPS].get_val()))
-            vm.inc_ip()
-            last_instr = curr_instr[INSTR_MIPS].f(curr_instr[OPS_MIPS:], vm)
-        else:
-            vm.inc_ip()
-            last_instr = curr_instr[INSTR_INTEL].f(curr_instr[OPS_INTEL:], vm)
+        last_instr = vm.exec_instr(curr_instr)
 
-        # call vm.set_next_stack_change()
-        if vm.flavor != 'wasm':
-            for label in vm.labels:
-                if vm.get_ip() == vm.labels[label]:
-                    vm.next_stack_change = label
+        vm.set_next_stack_change()
+
         return (True, source, "")
 
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
         add_debug("In FlowBreak", vm)
         dump_flags(vm)
-        # here we call vm.jump_handler()
-        if isinstance(curr_instr[INSTR_MIPS], Jal) and vm.flavor != 'riscv':
-            vm.registers["R31"] = vm.get_ip()
-        if isinstance(curr_instr[INSTR_MIPS], Jr) and vm.flavor != 'riscv':
-            return jump_to_label(brk.label, source, vm)
-        return jump_to_label(brk.label, source, vm, True)
+        return vm.jump_handler(brk, source, curr_instr)
     except ExitProg:
         raise ExitProg(source)
     except Error as err:
