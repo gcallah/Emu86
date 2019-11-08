@@ -23,6 +23,8 @@ class IntelKernel(Kernel):
         text_seg = True
         lines = code.split("\n")
         data_seg_count = 0
+        data_seg_found = False
+        text_seg_found = False
         for index in range(len(lines)):
             line = lines[index]
             if line.find(';') > -1:
@@ -36,16 +38,20 @@ class IntelKernel(Kernel):
                 data_seg = True
                 text_seg = False
                 data_seg_count += 1
+                data_seg_found = True
                 continue
             elif line[:5] == ".text":
                 data_seg = False
                 text_seg = True
+                text_seg_found = True
                 continue
             if data_seg and data_first == -1:
                 data_first = index
             elif text_seg and text_first == -1:
                 text_first = index
 
+        if data_seg_found and not text_seg_found:
+            return ""
         errors = []
         if data_first > text_first:
             errors.append("Data segment is after text segment.")
