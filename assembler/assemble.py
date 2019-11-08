@@ -226,7 +226,7 @@ def exec(tok_lines, vm, last_instr):
         source = None
         last_instr = None
 
-        if vm.past_last_instr():
+        if vm.past_last_instr(tok_lines):
             raise InvalidInstruction("Past end of code.")
         (curr_instr, source) = tok_lines[ip // vm.get_ip_div()]
 
