@@ -506,6 +506,10 @@ class RISCVMachine(VirtualMachine):
                         ('COND', 0),
                     ])
 
+        self.pc = 0
+        self.instr = 1
+        self.ops = 2
+
     def re_init(self):
         super().re_init()
         self.registers[STACK_PTR_RISCV] = STACK_TOP
