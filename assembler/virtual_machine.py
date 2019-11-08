@@ -563,6 +563,9 @@ class RISCVMachine(VirtualMachine):
         self.inc_ip()
         return instr_line[self.instr].f(instr_line[self.ops:], self)
 
+    def jump_handler(self, brk, source, instr_line):
+        return self.jump_to_label(brk.label, source, True)
+
 
 class WASMMachine(VirtualMachine):
     def __init__(self):
