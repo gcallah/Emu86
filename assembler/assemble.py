@@ -250,9 +250,8 @@ def exec(tok_lines, vm, last_instr):
 def step_code(tok_lines, vm, error, last_instr, bit_code):
     if vm.get_ip() == 0:
         vm.set_ip(vm.get_start_ip())
-    ip = (vm.get_ip() - vm.get_start_ip()) // vm.get_ip_div()
 
-    if ip < len(tok_lines):
+    if not vm.past_last_instr(tok_lines):
         (success, last_instr, error) = exec(tok_lines, vm,
                                             last_instr)
     else:
@@ -268,9 +267,7 @@ def run_code(tok_lines, vm, error, last_instr, bit_code):
     add_debug("Setting ip to 0", vm)
     vm.set_ip(vm.get_start_ip())   # instruction pointer reset for 'run'
 
-    while ((vm.get_ip() - vm.get_start_ip()) // vm.get_ip_div()
-           < len(tok_lines)
-           and count < MAX_INSTRUCTIONS):
+    while not vm.past_last_instr(tok_lines) and count < MAX_INSTRUCTIONS:
         (success, last_instr, error) = exec(tok_lines, vm,
                                             last_instr)
         if not success:
