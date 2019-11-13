@@ -5,7 +5,8 @@ arithmetic.py: arithmetic and logic instructions.
 import operator as opfunc
 
 from assembler.errors import DivisionZero, check_num_args, InvalidConVal
-from assembler.tokens import Instruction, MAX_INT
+from assembler.errors import InvalidOperand
+from assembler.tokens import Instruction, MAX_INT, Register
 from assembler.ops_check import one_op_arith
 
 
@@ -261,8 +262,10 @@ class BTR(Instruction):
     """
 
     def fhook(self, ops, vmachine):
-        check_num_args(self.name, ops, 2)
 
+        check_num_args(self.name, ops, 2)
+        if not isinstance(ops[0], Register):
+            raise InvalidOperand('Operand 1 is not of type Register')
         if ops[1].get_val().bit_length() >= 9:
             raise InvalidConVal(ops[1].get_nm())
         ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 0))
@@ -289,7 +292,8 @@ class BTS(Instruction):
 
     def fhook(self, ops, vmachine):
         check_num_args(self.name, ops, 2)
-
+        if not isinstance(ops[0], Register):
+            raise InvalidOperand('Operand 1 is not of type Register')
         if ops[1].get_val().bit_length() >= 9:
             raise InvalidConVal(ops[1].get_nm())
         ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 1))
@@ -308,6 +312,8 @@ class BSF(Instruction):
 
     def fhook(self, ops, vmachine):
         check_num_args(self.name, ops, 2)
+        if not isinstance(ops[0], Register):
+            raise InvalidOperand('Operand 1 is not of type Register')
         num = ops[1].get_val()
 
         if num == 0:
@@ -322,7 +328,6 @@ class BSF(Instruction):
             for index in range(len(bin_str)):
                 if bin_str[index] == '1':
                     break
-            print('index', index)
             ops[0].set_val(index)
 
 
@@ -339,6 +344,8 @@ class BSR(Instruction):
 
     def fhook(self, ops, vmachine):
         check_num_args(self.name, ops, 2)
+        if not isinstance(ops[0], Register):
+            raise InvalidOperand('Operand 1 is not of type Register')
         num = ops[1].get_val()
         if num == 0:
             vmachine.flags["ZF"] = 1
