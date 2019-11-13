@@ -80,35 +80,11 @@ class AssembleTestCase(TestCase):
                 self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def set_bit_operation(self, v, index, x):
-        mask = 1 << index  # Compute mask, an integer with just bit 'index' set.
-        v &= ~mask  # Clear the bit indicated by the mask (if x is False)
+        mask = 1 << index
+        v &= ~mask
         if x:
-            v |= mask  # If x was True, set the bit indicated by the mask.
+            v |= mask
         return v
-
-    def two_bit_test(self, operator, instr, low1=MIN_TEST, high1=MAX_TEST,
-                    low2=MIN_TEST, high2=MAX_TEST, op_type=INT,
-                    first_val=INT, second_val=INT):
-        for i in range(0, NUM_TESTS):
-            a = random.randint(low1, high1)
-            b = random.randint(low2, high2)
-            if op_type == FLOAT:
-                if first_val == FLOAT:
-                    a = float(random.uniform(MIN_MUL, MAX_MUL))
-                if second_val == FLOAT:
-                    b = float(random.uniform(MIN_MUL, MAX_MUL))
-                correct = operator(a, b)
-                intel_machine.registers["ST0"] = a
-                intel_machine.registers["ST1"] = b
-                assemble(instr + " st0, st1", intel_machine)
-                self.assertAlmostEqual(intel_machine.registers["ST0"], correct)
-            else:
-                correct = operator(a, b)
-                intel_machine.registers["EAX"] = a
-                intel_machine.registers["EBX"] = b
-                assemble(instr + " eax, ebx", intel_machine)
-
-                self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def test_convert_hex_to_decimal(self):
         self.assertEqual(convert_hex_to_decimal('a2.4c'), 162.296875)
@@ -290,14 +266,16 @@ class AssembleTestCase(TestCase):
         # intel_machine.registers["EBX"] = 3
         # assemble("btr eax, ebx", intel_machine)
         # self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
-        self.two_op_test(operator=None, instr="btr", op_type=BIT_WISE,low1=0, high1=512, low2=0, high2=8)
+        self.two_op_test(operator=None, instr="btr", op_type=BIT_WISE,
+                         low1=0, high1=512, low2=0, high2=8)
 
     def test_bts(self):
         # intel_machine.registers["EAX"] = 0
         # intel_machine.registers["EBX"] = 3
         # assemble("bts eax, ebx", intel_machine)
         # self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
-        self.two_op_test(operator=None, instr="bts", op_type=BIT_WISE, low1=0, high1=512, low2=0, high2=8)
+        self.two_op_test(operator=None, instr="bts", op_type=BIT_WISE,
+                         low1=0, high1=512, low2=0, high2=8)
 
     def test_bsf(self):
         intel_machine.registers["EAX"] = 0
