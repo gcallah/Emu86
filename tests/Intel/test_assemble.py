@@ -77,7 +77,6 @@ class AssembleTestCase(TestCase):
                 intel_machine.registers["EAX"] = a
                 intel_machine.registers["EBX"] = b
                 assemble(instr + " eax, ebx", intel_machine)
-
                 self.assertEqual(intel_machine.registers["EAX"], correct)
 
     def set_bit_operation(self, v, index, x):
@@ -291,14 +290,14 @@ class AssembleTestCase(TestCase):
         # intel_machine.registers["EBX"] = 3
         # assemble("btr eax, ebx", intel_machine)
         # self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
-
-        self.two_op_test(operator=None, instr="btr", op_type=BIT_WISE)
+        self.two_op_test(operator=None, instr="btr", op_type=BIT_WISE,low1=0, high1=512, low2=0, high2=8)
 
     def test_bts(self):
-        intel_machine.registers["EAX"] = 0
-        intel_machine.registers["EBX"] = 3
-        assemble("bts eax, ebx", intel_machine)
-        self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
+        # intel_machine.registers["EAX"] = 0
+        # intel_machine.registers["EBX"] = 3
+        # assemble("bts eax, ebx", intel_machine)
+        # self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
+        self.two_op_test(operator=None, instr="bts", op_type=BIT_WISE, low1=0, high1=512, low2=0, high2=8)
 
     def test_bsf(self):
         intel_machine.registers["EAX"] = 0
