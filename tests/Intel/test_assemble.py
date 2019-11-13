@@ -32,7 +32,7 @@ REGISTER_SIZE = BITS
 
 INT = 0
 FLOAT = 1
-
+BIT_WISE = 3
 intel_machine.base = "dec"
 intel_machine.flavor = "intel"
 
@@ -44,6 +44,50 @@ class AssembleTestCase(TestCase):
     #####################
 
     def two_op_test(self, operator, instr, low1=MIN_TEST, high1=MAX_TEST,
+                    low2=MIN_TEST, high2=MAX_TEST, op_type=INT,
+                    first_val=INT, second_val=INT):
+        for i in range(0, NUM_TESTS):
+            a = random.randint(low1, high1)
+            b = random.randint(low2, high2)
+            if op_type == FLOAT:
+                if first_val == FLOAT:
+                    a = float(random.uniform(MIN_MUL, MAX_MUL))
+                if second_val == FLOAT:
+                    b = float(random.uniform(MIN_MUL, MAX_MUL))
+                correct = operator(a, b)
+                intel_machine.registers["ST0"] = a
+                intel_machine.registers["ST1"] = b
+                assemble(instr + " st0, st1", intel_machine)
+                self.assertAlmostEqual(intel_machine.registers["ST0"], correct)
+            elif op_type == BIT_WISE:
+                a = abs(a)
+                b = abs(b)
+                if instr == 'btr':
+                    correct = self.set_bit_operation(a, b, 0)
+
+                elif instr == 'bts':
+                    correct = self.set_bit_operation(a, b, 1)
+
+                intel_machine.registers["EAX"] = a
+                intel_machine.registers["EBX"] = b
+                assemble(instr + " eax, ebx", intel_machine)
+                self.assertAlmostEqual(intel_machine.registers["EAX"], correct)
+            else:
+                correct = operator(a, b)
+                intel_machine.registers["EAX"] = a
+                intel_machine.registers["EBX"] = b
+                assemble(instr + " eax, ebx", intel_machine)
+
+                self.assertEqual(intel_machine.registers["EAX"], correct)
+
+    def set_bit_operation(self, v, index, x):
+        mask = 1 << index  # Compute mask, an integer with just bit 'index' set.
+        v &= ~mask  # Clear the bit indicated by the mask (if x is False)
+        if x:
+            v |= mask  # If x was True, set the bit indicated by the mask.
+        return v
+
+    def two_bit_test(self, operator, instr, low1=MIN_TEST, high1=MAX_TEST,
                     low2=MIN_TEST, high2=MAX_TEST, op_type=INT,
                     first_val=INT, second_val=INT):
         for i in range(0, NUM_TESTS):
@@ -241,29 +285,32 @@ class AssembleTestCase(TestCase):
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
 
-    # def test_btr(self):
-    #     intel_machine.registers["EAX"] = 8
-    #     intel_machine.registers["EBX"] = 3
-    #     assemble("btr eax, ebx", intel_machine)
-    #     self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
+    def test_btr(self):
 
-    # def test_bts(self):
-    #     intel_machine.registers["EAX"] = 0
-    #     intel_machine.registers["EBX"] = 3
-    #     assemble("bts eax, ebx", intel_machine)
-    #     self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
+        # intel_machine.registers["EAX"] = 8
+        # intel_machine.registers["EBX"] = 3
+        # assemble("btr eax, ebx", intel_machine)
+        # self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
 
-    # def test_bsf(self):
-    #     intel_machine.registers["EAX"] = 0
-    #     intel_machine.registers["EBX"] = 8
-    #     assemble("bsf eax, ebx", intel_machine)
-    #     self.assertAlmostEqual(intel_machine.registers["EAX"], 3)
+        self.two_op_test(operator=None, instr="btr", op_type=BIT_WISE)
 
-    # def test_bsr(self):
-    #     intel_machine.registers["EAX"] = 0
-    #     intel_machine.registers["EBX"] = 10
-    #     assemble("bsr eax, ebx", intel_machine)
-    #     self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
+    def test_bts(self):
+        intel_machine.registers["EAX"] = 0
+        intel_machine.registers["EBX"] = 3
+        assemble("bts eax, ebx", intel_machine)
+        self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
+
+    def test_bsf(self):
+        intel_machine.registers["EAX"] = 0
+        intel_machine.registers["EBX"] = 8
+        assemble("bsf eax, ebx", intel_machine)
+        self.assertAlmostEqual(intel_machine.registers["EAX"], 3)
+
+    def test_bsr(self):
+        intel_machine.registers["EAX"] = 0
+        intel_machine.registers["EBX"] = 10
+        assemble("bsr eax, ebx", intel_machine)
+        self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
 
 
 if __name__ == '__main__':
