@@ -143,6 +143,9 @@ db:
 tests: FORCE
 	./all_tests.sh
 
+test_docker:
+	docker build -t gcallah/$(REPO) .
+
 dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	-git commit -a
 	git push origin master

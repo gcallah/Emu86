@@ -19,6 +19,7 @@ env:
 
 script:
     - make tests
+    - make test_docker
 
 after_success:
    - cd /home/travis/build/gcallah/Emu86; ./deploy.sh
