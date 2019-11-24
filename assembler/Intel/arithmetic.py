@@ -268,7 +268,7 @@ class BTR(Instruction):
         if ops[1].get_val(line_num).bit_length() >= 9:
             raise InvalidConVal(ops[1].get_nm(), line_num)
         ops[0].set_val(set_bit(ops[0].get_val(line_num),
-                               ops[1].get_val(line_num), 0))
+                               ops[1].get_val(line_num), 0), line_num)
 
 
 def set_bit(v, index, x):
@@ -297,7 +297,7 @@ class BTS(Instruction):
         if ops[1].get_val(line_num).bit_length() >= 9:
             raise InvalidConVal(ops[1].get_nm(), line_num)
         ops[0].set_val(set_bit(ops[0].get_val(line_num),
-                               ops[1].get_val(line_num), 1))
+                               ops[1].get_val(line_num), 1), line_num)
 
 
 class BSF(Instruction):
@@ -329,7 +329,7 @@ class BSF(Instruction):
             for index in range(len(bin_str)):
                 if bin_str[index] == '1':
                     break
-            ops[0].set_val(index)
+            ops[0].set_val(index, line_num)
 
 
 class BSR(Instruction):
@@ -361,4 +361,4 @@ class BSR(Instruction):
                 if binStr[index] == '1':
                     break
             index = bit_size - index
-            ops[0].set_val(index)
+            ops[0].set_val(index, line_num)
