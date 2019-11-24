@@ -5,9 +5,8 @@ fp_arithmetic.py: arithmetic and logic instructions.
 import operator as opfunc
 
 from assembler.errors import check_num_args, TooBigForSingle, DivisionZero
-from assembler.errors import NotEvenRegister
 from assembler.tokens import Instruction, MAX_INT
-from .argument_check import check_reg_only
+from .argument_check import check_reg_only, check_even_register
 
 # for floating point to binary and back
 import struct
@@ -20,27 +19,22 @@ def check_overflow(val, vm):
     return val
 
 
-# check for even register
-def checkEven(register):
-    if int(register.get_nm()[1:]) % 2 != 0:
-        raise NotEvenRegister(register.__str__()[1:])
-
-
-def three_op_arith_reg(ops, vm, instr, operator):
+def three_op_arith_reg(ops, vm, instr, operator, line_num):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 3, type_ins=1)
-    check_reg_only(instr, ops)
+    check_num_args(instr, ops, 3, line_num, type_ins=1)
+    check_reg_only(instr, ops, line_num)
 
     # go through the register ops and make sure that they're even numbered
     for op in ops:
-        checkEven(op)
+        check_even_register(op, line_num)
 
-    ops[0].set_val(operator(ops[1].get_val(), ops[2].get_val()))
-    # check_overflow(operator(ops[1].get_val(),
-    #                    ops[2].get_val()),
+    ops[0].set_val(operator(ops[1].get_val(line_num),
+                   ops[2].get_val(line_num)), line_num)
+    # check_overflow(operator(ops[1].get_val(line_num),
+    #                    ops[2].get_val(line_num)),
     #                    vm))
     vm.changes.add(ops[0].get_nm())
 
@@ -70,8 +64,8 @@ class Adds(Instruction):
         </syntax>
     """
     # ops is a list of operands (reg, reg, reg)
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.add)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.add, line_num)
 
 
 # 'SUB.S': Subs('SUB.S'),
@@ -84,8 +78,8 @@ class Subs(Instruction):
             SUB.S reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.sub)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.sub, line_num)
 
 
 # 'MULT.S': Mults('MULT.S'),
@@ -98,18 +92,18 @@ class Mults(Instruction):
             MULT.S reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3, type_ins=1)
-        check_reg_only(self.name, ops)
-        a = ops[1].get_val()
-        b = ops[2].get_val()
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 3, line_num, type_ins=1)
+        check_reg_only(self.name, ops, line_num)
+        a = ops[1].get_val(line_num)
+        b = ops[2].get_val(line_num)
         result = a * b
         # this is the single version of mult for floats
         # so we don't want to be bigger than max single
         if (result > 2 ** 22):
-            raise TooBigForSingle(str(result))
+            raise TooBigForSingle(str(result), line_num)
 
-        ops[0].set_val(result)
+        ops[0].set_val(result, line_num)
         vm.changes.add(ops[0].get_nm())
         return ''
 
@@ -124,18 +118,18 @@ class Divs(Instruction):
             DIVS reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3, type_ins=1)
-        check_reg_only(self.name, ops)
-        if ops[2].get_val() == 0:
-            raise DivisionZero()
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 3, line_num, type_ins=1)
+        check_reg_only(self.name, ops, line_num)
+        if ops[2].get_val(line_num) == 0:
+            raise DivisionZero(line_num)
 
-        result = ops[1].get_val() / ops[2].get_val()
+        result = ops[1].get_val(line_num) / ops[2].get_val(line_num)
         # this is the single version of div for floats
         # so we don't want to be bigger than max single
         if (result > 2 ** 22):
-            raise TooBigForSingle(str(result))
-        ops[0].set_val(result)
+            raise TooBigForSingle(str(result), line_num)
+        ops[0].set_val(result, line_num)
         vm.changes.add(ops[0].get_nm())
         return ''
 
@@ -174,13 +168,13 @@ def b_to_f64(value):
     return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
 
-def three_op_double_arith_reg(ops, vm, instr, operator):
+def three_op_double_arith_reg(ops, vm, instr, operator, line_num):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 3, type_ins=1)
-    check_reg_only(instr, ops)
+    check_num_args(instr, ops, 3, line_num, type_ins=1)
+    check_reg_only(instr, ops, line_num)
 
     is_a_neg = False
     is_b_neg = False
@@ -239,7 +233,7 @@ def three_op_double_arith_reg(ops, vm, instr, operator):
     reg_number = int(ops[0].get_nm()[1:])
     curr_reg = "F" + str(reg_number + 0)
     next_reg = "F" + str(reg_number + 1)
-    ops[0].set_val(res_first_32)
+    ops[0].set_val(res_first_32, line_num)
     vm.registers[next_reg] = res_last_32
 
     vm.changes.add(ops[0].get_nm())
@@ -257,8 +251,8 @@ class Addd(Instruction):
         </syntax>
     """
     # ops is a list of operands (reg, reg, reg)
-    def fhook(self, ops, vm):
-        three_op_double_arith_reg(ops, vm, self.name, opfunc.add)
+    def fhook(self, ops, vm, line_num):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.add, line_num)
 
 
 class Subd(Instruction):
@@ -271,8 +265,8 @@ class Subd(Instruction):
         </syntax>
     """
     # ops is a list of operands (reg, reg, reg)
-    def fhook(self, ops, vm):
-        three_op_double_arith_reg(ops, vm, self.name, opfunc.sub)
+    def fhook(self, ops, vm, line_num):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.sub, line_num)
 
 
 class Multd(Instruction):
@@ -285,8 +279,8 @@ class Multd(Instruction):
         </syntax>
     """
     # ops is a list of operands (reg, reg, reg)
-    def fhook(self, ops, vm):
-        three_op_double_arith_reg(ops, vm, self.name, opfunc.mul)
+    def fhook(self, ops, vm, line_num):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.mul, line_num)
 
 
 class Divd(Instruction):
@@ -299,5 +293,5 @@ class Divd(Instruction):
         </syntax>
     """
     # ops is a list of operands (reg, reg, reg)
-    def fhook(self, ops, vm):
-        three_op_double_arith_reg(ops, vm, self.name, opfunc.truediv)
+    def fhook(self, ops, vm, line_num):
+        three_op_double_arith_reg(ops, vm, self.name, opfunc.truediv, line_num)

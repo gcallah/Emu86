@@ -19,6 +19,6 @@ class Syscall(Instruction):
         </descr>
     """
 
-    def fhook(self, ops, vm):
-        check_num_args("SYSCALL", ops, 0)
+    def fhook(self, ops, vm, line_num):
+        check_num_args("SYSCALL", ops, 0, line_num)
         raise ExitProg(self.get_nm())
