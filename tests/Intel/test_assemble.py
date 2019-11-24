@@ -69,6 +69,8 @@ class AssembleTestCase(TestCase):
                     correct = self.set_bit_operation(a, b, 1)
                 elif instr == 'bsf':
                     correct, zero_flag = self.bit_scan_operation(b)
+                elif instr == 'bsr':
+                    correct, zero_flag = self.bit_scan_operation(b, False)
                 intel_machine.registers["EAX"] = a
                 intel_machine.registers["EBX"] = b
                 assemble(instr + " eax, ebx", intel_machine)
@@ -90,7 +92,7 @@ class AssembleTestCase(TestCase):
             v |= mask
         return v
 
-    def bit_scan_operation(self, num):
+    def bit_scan_operation(self, num, bsf = True):
 
 
         if num == 0:
@@ -103,7 +105,11 @@ class AssembleTestCase(TestCase):
                 bit_size = 16
             else:
                 bit_size = 32
-            bin_str = str(bin(num))[2:].zfill(bit_size)[::-1]
+            if bsf == True:
+                bin_str = str(bin(num))[2:].zfill(bit_size)[::-1]
+            else:
+                bin_str = str(bin(num))[2:].zfill(bit_size)
+
             for index in range(len(bin_str)):
                 if bin_str[index] == '1':
                     break
