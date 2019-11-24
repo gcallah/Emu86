@@ -71,10 +71,11 @@ class AssembleTestCase(TestCase):
                     correct, zero_flag = self.bit_scan_operation(b)
                 elif instr == 'bsr':
                     correct, zero_flag = self.bit_scan_operation(b, False)
+
                 intel_machine.registers["EAX"] = a
                 intel_machine.registers["EBX"] = b
                 assemble(instr + " eax, ebx", intel_machine)
-                if instr == 'bsf':
+                if instr in ['bsf', 'bsr']:
                     self.assertAlmostEqual(intel_machine.flags["ZF"], zero_flag)
 
                 self.assertAlmostEqual(intel_machine.registers["EAX"], correct)
@@ -93,8 +94,6 @@ class AssembleTestCase(TestCase):
         return v
 
     def bit_scan_operation(self, num, bsf = True):
-
-
         if num == 0:
             zero_flag = 1
             return 0, zero_flag
@@ -113,6 +112,8 @@ class AssembleTestCase(TestCase):
             for index in range(len(bin_str)):
                 if bin_str[index] == '1':
                     break
+            if not bsf:
+                index = bit_size - index
             return index, zero_flag
 
 
@@ -318,10 +319,12 @@ class AssembleTestCase(TestCase):
                          low1=0, high1=512, low2=2**16, high2=2**31)
 
     def test_bsr(self):
-        intel_machine.registers["EAX"] = 0
-        intel_machine.registers["EBX"] = 10
-        assemble("bsr eax, ebx", intel_machine)
-        self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
+        # intel_machine.registers["EAX"] = 0
+        # intel_machine.registers["EBX"] = 10
+        # assemble("bsr eax, ebx", intel_machine)
+        # self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
+        self.two_op_test(operator=None, instr='bsr', op_type=BIT_WISE,
+                         low1=0, high1=512, low2=2**16, high2=2**31)
 
 
 if __name__ == '__main__':
