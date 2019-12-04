@@ -62,3 +62,6 @@ NextDWord:
     call PutDDec
     _PutStr Msg3
     _Exit 0
+
+Sieve ENDP
+    END Sieve
