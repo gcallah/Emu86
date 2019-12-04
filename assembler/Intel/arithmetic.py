@@ -386,3 +386,29 @@ class BT(Instruction):
         print(binary_num[index])
         vmachine.flags["CF"] = binary_num[index]
 
+class BTC(Instruction):
+    """
+    <instr>
+        bt
+    </instr>
+    <syntax>
+        bt reg, reg
+        bt reg, const
+    </syntax>
+    """
+
+    def fhook(self, ops, vmachine, line_num):
+        check_num_args(self.name, ops, 2, line_num)
+        if not isinstance(ops[0], Register):
+            raise InvalidOperand('Operand 1 is not of type Register', line_num)
+        if ops[1].get_val(line_num).bit_length() != 8:
+            raise InvalidOperand('Operand 2 should be of size 8 bit')
+
+        binary_num = bin(ops[0].get_val(line_num))
+        index = len(binary_num) - ops[1].get_val(line_num)
+        print(binary_num[index])
+        if binary_num[index] == '1':
+            complement = '0'
+        else:
+            complement = '1'
+        vmachine.flags["CF"] = complement
