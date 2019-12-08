@@ -2,8 +2,8 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args, InvalidArgument
-from assembler.errors import NotEvenRegister
 from assembler.tokens import Instruction, Register, RegAddress
+from .argument_check import check_even_register
 
 # for floating point to binary and back
 import struct
@@ -30,12 +30,6 @@ def b_to_f64(value):
     return struct.unpack("d", struct.pack("q", int(hx, 16)))[0]
 
 
-# check for even register
-def checkEven(register):
-    if int(register.get_nm()[1:]) % 2 != 0:
-        raise NotEvenRegister(register.__str__()[1:])
-
-
 class Loadc(Instruction):
     """
         <instr>
@@ -49,19 +43,20 @@ class Loadc(Instruction):
             Copies the value of op2 to the location mentioned in op1.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 2)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.get_nm(), ops, 2, line_num)
         if isinstance(ops[0], Register):
-            checkEven(ops[0])
+            check_even_register(ops[0], line_num)
             if isinstance(ops[1], RegAddress):
-                # if (float(ops[1].get_val()) > float(2 ** 22)):
-                #     raise TooBigForSingle(str(float(ops[1].get_val())))
-                ops[0].set_val(float(ops[1].get_val()))
+                # if (float(ops[1].get_val(line_num)) > float(2 ** 22)):
+                #     raise TooBigForSingle(
+                #     str(float(ops[1].get_val(line_num))))
+                ops[0].set_val(float(ops[1].get_val(line_num)), line_num)
                 vm.changes.add(ops[0].get_nm())
             else:
-                raise InvalidArgument(ops[1].get_nm())
+                raise InvalidArgument(ops[1].get_nm(), line_num)
         else:
-            raise InvalidArgument(ops[0].get_nm())
+            raise InvalidArgument(ops[0].get_nm(), line_num)
 
 
 class Storec(Instruction):
@@ -77,18 +72,19 @@ class Storec(Instruction):
             Copies the value of op2 to the location mentioned in op1.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 2)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.get_nm(), ops, 2, line_num)
         if isinstance(ops[0], Register):
-            checkEven(ops[0])
+            check_even_register(ops[0], line_num)
             if isinstance(ops[1], RegAddress):
-                # if (float(ops[0].get_val()) > float(2 ** 22)):
-                #     raise TooBigForSingle(str(float(ops[0].get_val())))
-                ops[1].set_val(float(ops[0].get_val()))
+                # if (float(ops[0].get_val(line_num)) > float(2 ** 22)):
+                #     raise TooBigForSingle(
+                #     str(float(ops[0].get_val(line_num))))
+                ops[1].set_val(float(ops[0].get_val(line_num)), line_num)
             else:
-                InvalidArgument(ops[1].get_nm())
+                InvalidArgument(ops[1].get_nm(), line_num)
         else:
-            raise InvalidArgument(ops[0].get_nm())
+            raise InvalidArgument(ops[0].get_nm(), line_num)
 
 
 class LoadDouble(Instruction):
@@ -104,12 +100,12 @@ class LoadDouble(Instruction):
             Copies the value of op2 to the location mentioned in op1.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 2, type_ins=1)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.get_nm(), ops, 2, line_num, type_ins=1)
         if isinstance(ops[0], Register):
-            checkEven(ops[0])
+            check_even_register(ops[0], line_num)
             if isinstance(ops[1], RegAddress):
-                bin_string = f_to_b64(ops[1].get_val())
+                bin_string = f_to_b64(ops[1].get_val(line_num))
                 # split the string into two
                 first_half = bin_string[:32]
                 second_half = bin_string[32:]
@@ -118,14 +114,14 @@ class LoadDouble(Instruction):
                 reg_number = int(ops[0].get_nm()[1:])
                 next_reg = "F" + str(reg_number + 1)
 
-                ops[0].set_val(first_half)
+                ops[0].set_val(first_half, line_num)
                 vm.registers[next_reg] = second_half
                 vm.changes.add(ops[0].get_nm())
                 vm.changes.add(next_reg)
             else:
-                raise InvalidArgument(ops[1].get_nm())
+                raise InvalidArgument(ops[1].get_nm(), line_num)
         else:
-            raise InvalidArgument(ops[0].get_nm())
+            raise InvalidArgument(ops[0].get_nm(), line_num)
 
 
 class StoreDouble(Instruction):
@@ -141,10 +137,10 @@ class StoreDouble(Instruction):
             Copies the value of op2 to the location mentioned in op1.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 2, type_ins=1)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.get_nm(), ops, 2, line_num, type_ins=1)
         if isinstance(ops[0], Register):
-            checkEven(ops[0])
+            check_even_register(ops[0], line_num)
             if isinstance(ops[1], RegAddress):
                 reg_number = int(ops[0].get_nm()[1:])
                 curr_reg = "F" + str(reg_number + 0)
@@ -153,11 +149,11 @@ class StoreDouble(Instruction):
                 second_half = vm.registers[next_reg]
                 full_b = first_half + second_half
                 v = b_to_f64(full_b)
-                ops[1].set_val(v)
+                ops[1].set_val(v, line_num)
 
                 # deprecated code below
                 # print(ops[0])
-                # first_half = ops[0].get_val()
+                # first_half = ops[0].get_val(line_num)
                 # reg_name = "F" + str(int(ops[0].get_nm()[1:]))
                 # second_half = vm.registers[reg_name]
                 # full_b = first_half + second_half
@@ -165,6 +161,6 @@ class StoreDouble(Instruction):
                 # v = b_to_f64(full_b)
                 # ops[1].set_val(v)
             else:
-                InvalidArgument(ops[1].get_nm())
+                InvalidArgument(ops[1].get_nm(), line_num)
         else:
-            raise InvalidArgument(ops[0].get_nm())
+            raise InvalidArgument(ops[0].get_nm(), line_num)

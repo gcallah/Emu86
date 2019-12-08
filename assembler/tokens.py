@@ -73,7 +73,7 @@ class Token:
     def set_val(self, val):
         raise NotSettable(str(self))
 
-    def get_val(self):
+    def get_val(self, line_num=None):
         return self.value
 
     def get_nm(self):
@@ -134,11 +134,11 @@ class Instruction(Token):
     def __str__(self):
         return str(self.name)
 
-    def f(self, ops, vmachine):
-        return self.fhook(ops, vmachine)
+    def f(self, ops, vmachine, line_number):
+        return self.fhook(ops, vmachine, line_number)
 
     @abstractmethod
-    def fhook(self, ops, vmachine):
+    def fhook(self, ops, vmachine, line_number):
         pass
 
 
@@ -161,7 +161,7 @@ class IntegerTok(Operand):
     def __str__(self):
         return str(self.value)
 
-    def get_val(self):
+    def get_val(self, line_num):
         return self.value
 
     def negate_val(self):
@@ -208,7 +208,7 @@ class FloatTok(Operand):
     # or a hexadecimal string ('0x41433333')
     # we need to be able to reconcile the actual value of it
     # if it's a hex string (IEEE 754)
-    def get_val(self):
+    def get_val(self, line_num):
         if type(self.value) is float:
             return self.value
 
@@ -270,7 +270,7 @@ class Address(Location):
     def __str__(self):
         return "[" + str(self.name) + "]"
 
-    def get_val(self):
+    def get_val(self, line_num):
         if self.name in self.mem:
             if "." in str(self.mem[self.name]):
                 return float(self.mem[self.name])
@@ -278,10 +278,10 @@ class Address(Location):
         else:
             return 0
 
-    def set_val(self, val):
+    def set_val(self, val, line_num):
         self.mem[self.name] = val
 
-    def get_mem_addr(self):
+    def get_mem_addr(self, line_num):
         return self.name
 
 
@@ -292,7 +292,7 @@ class RegAddress(Address):
         self.displacement = displacement
         self.multiplier = multiplier
 
-    def get_mem_addr(self):
+    def get_mem_addr(self, line_num):
         # right now, memory addresses are strings. eeh!
         address = hex(int(self.regs[self.name]) *
                       self.multiplier).split('x')[-1].upper()
@@ -300,28 +300,29 @@ class RegAddress(Address):
         if isinstance(self.displacement, list):
             for disp_item in self.displacement:
                 if isinstance(disp_item, Register):
-                    disp += disp_item.get_val() * disp_item.get_multiplier()
+                    disp += disp_item.get_val(line_num) * \
+                            disp_item.get_multiplier()
                 else:
                     disp += disp_item
         elif isinstance(self.displacement, Register):
-            disp = self.displacement.get_val()
+            disp = self.displacement.get_val(line_num)
         elif self.displacement != 0:
             disp = self.displacement
         addr_val = int(self.regs[self.name]) * self.multiplier + disp
         if addr_val < 0:
-            raise InvalidMemLoc(str(addr_val))
+            raise InvalidMemLoc(str(addr_val), line_num)
         address = hex(addr_val).split('x')[-1].upper()
         return address
 
-    def get_val(self):
-        mem_addr = self.get_mem_addr()
+    def get_val(self, line_num):
+        mem_addr = self.get_mem_addr(line_num)
         if mem_addr in self.mem:
             return self.mem[str(mem_addr)]
         else:
             return 0
 
-    def set_val(self, val):
-        mem_addr = self.get_mem_addr()
+    def set_val(self, val, line_num):
+        mem_addr = self.get_mem_addr(line_num)
         self.mem[str(mem_addr)] = val
 
 
@@ -349,16 +350,16 @@ class Register(Location):
     def __str__(self):
         return str(self.name)
 
-    def get_val(self):
+    def get_val(self, line_num):
         if self.name[:2].upper() == "ST" or self.name[0].upper() == "F":
             return float(self.registers[self.name])
         return int(self.registers[self.name])
 
-    def set_val(self, val):
+    def set_val(self, val, line_num):
         if self.writable:
             self.registers[self.name] = val
         else:
-            raise RegUnwritable(self.name)
+            raise RegUnwritable(self.name, line_num)
 
     def get_multiplier(self):
         return self.multiplier
@@ -382,7 +383,7 @@ class Label(Location):
         if self.name not in self.labels and val != 0:
             self.labels[self.name] = val
 
-    def get_val(self):
+    def get_val(self, line_num):
         if self.name not in self.labels:
             raise UnknownLabel(self.name)
         else:
@@ -397,7 +398,7 @@ class NewSymbol(Token):
         super().__init__(name)
         self.val = 0
 
-    def get_val(self):
+    def get_val(self, line_num):
         return self.val
 
     def set_val(self, value):
@@ -421,7 +422,7 @@ class Symbol(Location):
         self.check_nm()
         self.vm.symbols[self.name] = val
 
-    def get_val(self):
+    def get_val(self, line_num):
         self.check_nm()
         add_debug("Symbol " + self.name + " = "
                   + str(self.vm.symbols[self.name]),

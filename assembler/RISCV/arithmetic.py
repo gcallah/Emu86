@@ -11,57 +11,57 @@ from .argument_check import check_reg_only, check_immediate_three
 from .argument_check import check_immediate_two
 
 
-def three_op_arith_reg(ops, vm, instr, operator):
+def three_op_arith_reg(ops, vm, instr, operator, line_num):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 3)
-    check_reg_only(instr, ops)
-    ops[0].set_val(check_overflow(operator(ops[1].get_val(),
-                   ops[2].get_val()), vm))
+    check_num_args(instr, ops, 3, line_num)
+    check_reg_only(instr, ops, line_num)
+    ops[0].set_val(check_overflow(operator(ops[1].get_val(line_num),
+                   ops[2].get_val(line_num)), vm), line_num)
     vm.changes.add(ops[0].get_nm())
 
 
-def three_op_arith_immediate(ops, vm, instr, operator):
+def three_op_arith_immediate(ops, vm, instr, operator, line_num):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 3)
-    check_immediate_three(instr, ops)
-    ops[0].set_val(check_overflow(operator(ops[1].get_val(),
-                   ops[2].get_val()), vm))
+    check_num_args(instr, ops, 3, line_num)
+    check_immediate_three(instr, ops, line_num)
+    ops[0].set_val(check_overflow(operator(ops[1].get_val(line_num),
+                   ops[2].get_val(line_num)), vm), line_num)
     vm.changes.add(ops[0].get_nm())
 
 
-def get_three_ops(instr, ops):
+def get_three_ops(instr, ops, line_num):
     '''
     Function to grab the values in registers.
     Put in a separate so that we don't have to write out the checks
     all the time.
 
     '''
-    check_num_args(instr, ops, 3)
-    check_reg_only(instr, ops)
+    check_num_args(instr, ops, 3, line_num)
+    check_reg_only(instr, ops, line_num)
     return (ops[0], ops[1], ops[2])
 
 
-def get_three_ops_imm(instr, ops):
+def get_three_ops_imm(instr, ops, line_num):
     '''
     Same concept as the function above.
     '''
-    check_num_args(instr, ops, 3)
-    check_immediate_three(instr, ops)
+    check_num_args(instr, ops, 3, line_num)
+    check_immediate_three(instr, ops, line_num)
     return (ops[0], ops[1], ops[2])
 
 
-def get_two_op_imm(instr, ops):
+def get_two_op_imm(instr, ops, line_num):
     """
     Again, same as above, except for reg, imm format
     """
-    check_num_args(instr, ops, 2)
-    check_immediate_two(instr, ops)
+    check_num_args(instr, ops, 2, line_num)
+    check_immediate_two(instr, ops, line_num)
     return (ops[0], ops[1])
 
 
@@ -85,8 +85,8 @@ class Add(Instruction):
             ADD reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.add)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.add, line_num)
 
 
 class Addi(Instruction):
@@ -98,8 +98,8 @@ class Addi(Instruction):
             ADDI reg, reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_immediate(ops, vm, self.name, opfunc.add)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_immediate(ops, vm, self.name, opfunc.add, line_num)
 
 
 class Sub(Instruction):
@@ -111,8 +111,8 @@ class Sub(Instruction):
             SUB reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.sub)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.sub, line_num)
 
 
 class Mul(Instruction):
@@ -124,8 +124,8 @@ class Mul(Instruction):
             MUL reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.mul)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.mul, line_num)
 
 
 class And(Instruction):
@@ -137,8 +137,8 @@ class And(Instruction):
             AND reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.and_)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.and_, line_num)
 
 
 class Andi(Instruction):
@@ -150,8 +150,8 @@ class Andi(Instruction):
             ANDI reg, reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_immediate(ops, vm, self.name, opfunc.and_)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_immediate(ops, vm, self.name, opfunc.and_, line_num)
 
 
 class Or(Instruction):
@@ -163,8 +163,8 @@ class Or(Instruction):
             OR reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.or_)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.or_, line_num)
 
 
 class Ori(Instruction):
@@ -176,8 +176,8 @@ class Ori(Instruction):
             ORI reg, reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_immediate(ops, vm, self.name, opfunc.or_)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_immediate(ops, vm, self.name, opfunc.or_, line_num)
 
 
 class Xor(Instruction):
@@ -189,8 +189,8 @@ class Xor(Instruction):
             XOR reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.xor)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.xor, line_num)
 
 
 class Xori(Instruction):
@@ -202,8 +202,8 @@ class Xori(Instruction):
             XORI reg, reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_immediate(ops, vm, self.name, opfunc.xor)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_immediate(ops, vm, self.name, opfunc.xor, line_num)
 
 
 class Srl(Instruction):
@@ -215,12 +215,12 @@ class Srl(Instruction):
             SRL reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3)
-        check_reg_only(self.name, ops)
-        fixed_op2 = ops[2].get_val() % 32
-        ops[0].set_val(check_overflow(opfunc.rshift(ops[1].get_val(),
-                       fixed_op2), vm))
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 3, line_num)
+        check_reg_only(self.name, ops, line_num)
+        fixed_op2 = ops[2].get_val(line_num) % 32
+        ops[0].set_val(check_overflow(opfunc.rshift(ops[1].get_val(line_num),
+                       fixed_op2), vm), line_num)
         vm.changes.add(ops[0].get_nm())
 
 
@@ -233,8 +233,8 @@ class Srli(Instruction):
             SRLI reg, reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_immediate(ops, vm, self.name, opfunc.rshift)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_immediate(ops, vm, self.name, opfunc.rshift, line_num)
 
 
 class Sll(Instruction):
@@ -246,12 +246,12 @@ class Sll(Instruction):
             SLL reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3)
-        check_reg_only(self.name, ops)
-        fixed_op2 = ops[2].get_val() % 32
-        ops[0].set_val(check_overflow(opfunc.lshift(ops[1].get_val(),
-                       fixed_op2), vm))
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 3, line_num)
+        check_reg_only(self.name, ops, line_num)
+        fixed_op2 = ops[2].get_val(line_num) % 32
+        ops[0].set_val(check_overflow(opfunc.lshift(ops[1].get_val(line_num),
+                       fixed_op2), vm), line_num)
         vm.changes.add(ops[0].get_nm())
 
 
@@ -264,8 +264,8 @@ class Slli(Instruction):
             SLLI reg, reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_immediate(ops, vm, self.name, opfunc.lshift)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_immediate(ops, vm, self.name, opfunc.lshift, line_num)
 
 
 class Slt(Instruction):
@@ -277,12 +277,12 @@ class Slt(Instruction):
             SLT reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
-        if (op2.get_val() - op3.get_val()) < 0:
-            op1.set_val(1)
+    def fhook(self, ops, vm, line_num):
+        (op1, op2, op3) = get_three_ops(self.get_nm(), ops, line_num)
+        if (op2.get_val(line_num) - op3.get_val(line_num)) < 0:
+            op1.set_val(1, line_num)
         else:
-            op1.set_val(0)
+            op1.set_val(0, line_num)
         vm.changes.add(op1.get_nm())
 
 
@@ -295,14 +295,14 @@ class Sltu(Instruction):
             SLTU reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
-        abs_op2 = abs(op2.get_val())
-        abs_op3 = abs(op3.get_val())
+    def fhook(self, ops, vm, line_num):
+        (op1, op2, op3) = get_three_ops(self.get_nm(), ops, line_num)
+        abs_op2 = abs(op2.get_val(line_num))
+        abs_op3 = abs(op3.get_val(line_num))
         if (abs_op2 - abs_op3) < 0:
-            op1.set_val(1)
+            op1.set_val(1, line_num)
         else:
-            op1.set_val(0)
+            op1.set_val(0, line_num)
         vm.changes.add(op1.get_nm())
 
 
@@ -315,12 +315,12 @@ class Slti(Instruction):
             SLTI reg, reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops)
-        if (op2.get_val() - op3.get_val()) < 0:
-            op1.set_val(1)
+    def fhook(self, ops, vm, line_num):
+        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops, line_num)
+        if (op2.get_val(line_num) - op3.get_val(line_num)) < 0:
+            op1.set_val(1, line_num)
         else:
-            op1.set_val(0)
+            op1.set_val(0, line_num)
         vm.changes.add(op1.get_nm())
 
 
@@ -333,14 +333,14 @@ class Sltiu(Instruction):
             SLTU reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops)
-        abs_op2 = abs(op2.get_val())
-        abs_op3 = abs(op3.get_val())
+    def fhook(self, ops, vm, line_num):
+        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops, line_num)
+        abs_op2 = abs(op2.get_val(line_num))
+        abs_op3 = abs(op3.get_val(line_num))
         if (abs_op2 - abs_op3) < 0:
-            op1.set_val(1)
+            op1.set_val(1, line_num)
         else:
-            op1.set_val(0)
+            op1.set_val(0, line_num)
         vm.changes.add(op1.get_nm())
 
 
@@ -353,16 +353,16 @@ class Sra(Instruction):
             SRA reg, reg, reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
-        bin_str_op2 = bin(abs(op2.get_val()))[2:]
-        if op2.get_val() >= 0:
+    def fhook(self, ops, vm, line_num):
+        (op1, op2, op3) = get_three_ops(self.get_nm(), ops, line_num)
+        bin_str_op2 = bin(abs(op2.get_val(line_num)))[2:]
+        if op2.get_val(line_num) >= 0:
             sign = '0'
         else:
             sign = '1'
-        signed_str = sign * op3.get_val()
-        shifted_str = signed_str + bin_str_op2[: - op3.get_val()]
-        op1.set_val(int(shifted_str, 2))
+        signed_str = sign * op3.get_val(line_num)
+        shifted_str = signed_str + bin_str_op2[: - op3.get_val(line_num)]
+        op1.set_val(int(shifted_str, 2), line_num)
         vm.changes.add(op1.get_nm())
 
 
@@ -375,16 +375,16 @@ class Srai(Instruction):
             SRAI reg, reg, imm
         </syntax>
     """
-    def fhook(self, ops, vm):
-        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops)
-        bin_str_op2 = bin(abs(op2.get_val()))[2:]
-        if op2.get_val() >= 0:
+    def fhook(self, ops, vm, line_num):
+        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops, line_num)
+        bin_str_op2 = bin(abs(op2.get_val(line_num)))[2:]
+        if op2.get_val(line_num) >= 0:
             sign = '0'
         else:
             sign = '1'
-        signed_str = sign * op3.get_val()
-        shifted_str = signed_str + bin_str_op2[: - op3.get_val()]
-        op1.set_val(int(shifted_str, 2))
+        signed_str = sign * op3.get_val(line_num)
+        shifted_str = signed_str + bin_str_op2[: - op3.get_val(line_num)]
+        op1.set_val(int(shifted_str, 2), line_num)
         vm.changes.add(op1.get_nm())
 
 
@@ -397,8 +397,8 @@ class Div(Instruction):
         DIV reg, reg, reg
     </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.floordiv)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.floordiv, line_num)
 
 
 class Divu(Instruction):
@@ -410,11 +410,18 @@ class Divu(Instruction):
         DIVU reg, reg, reg
     </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3)
-        check_reg_only(self.name, ops)
-        ops[0].set_val(check_overflow(opfunc.floordiv(
-                       abs(ops[1].get_val()), abs(ops[2].get_val())), vm))
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 3, line_num)
+        check_reg_only(self.name, ops, line_num)
+        ops[0].set_val(
+            check_overflow(
+                opfunc.floordiv(
+                    abs(ops[1].get_val(line_num)),
+                    abs(ops[2].get_val(line_num))
+                ), vm
+            ),
+            line_num
+        )
         vm.changes.add(ops[0].get_nm())
 
 
@@ -427,8 +434,8 @@ class Rem(Instruction):
         REM reg, reg, reg
     </syntax>
     """
-    def fhook(self, ops, vm):
-        three_op_arith_reg(ops, vm, self.name, opfunc.mod)
+    def fhook(self, ops, vm, line_num):
+        three_op_arith_reg(ops, vm, self.name, opfunc.mod, line_num)
 
 
 class Remu(Instruction):
@@ -440,11 +447,17 @@ class Remu(Instruction):
         REMU reg, reg, reg
     </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 3)
-        check_reg_only(self.name, ops)
-        ops[0].set_val(check_overflow(opfunc.mod(
-                       abs(ops[1].get_val()), abs(ops[2].get_val())), vm))
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 3, line_num)
+        check_reg_only(self.name, ops, line_num)
+        ops[0].set_val(
+            check_overflow(
+                opfunc.mod(
+                       abs(ops[1].get_val(line_num)),
+                       abs(ops[2].get_val(line_num))
+                ), vm),
+            line_num
+        )
         vm.changes.add(ops[0].get_nm())
 
 
@@ -461,14 +474,14 @@ class Lui(Instruction):
         That's been shifted left by 12 bits
     </desc>
     """
-    def fhook(self, ops, vm):
-        (op1, op2) = get_two_op_imm(self.get_nm(), ops)
-        if op2.get_val() > 1048576:
-            raise IncorrectImmLength(op2.get_val())
-        # print(op2.get_val())
-        op1.set_val(check_overflow(opfunc.lshift(op2.get_val(),
-                    12), vm))
-        # print(op1.get_val())
+    def fhook(self, ops, vm, line_num):
+        (op1, op2) = get_two_op_imm(self.get_nm(), ops, line_num)
+        if op2.get_val(line_num) > 1048576:
+            raise IncorrectImmLength(op2.get_val(line_num), line_num)
+        # print(op2.get_val(line_num))
+        op1.set_val(check_overflow(opfunc.lshift(op2.get_val(line_num),
+                    12), vm), line_num)
+        # print(op1.get_val(line_num))
         vm.changes.add(op1.get_nm())
 
 

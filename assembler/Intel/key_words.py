@@ -1,5 +1,6 @@
 from .arithmetic import Add, Sub, Imul, Idiv, Inc, Dec, Shl
 from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg, BTR, BTS, BSF, BSR
+from .arithmetic import BT, BTC
 from .fp_arithmetic import FAdd, FSub, FDiv, FMul
 from .fp_arithmetic import FAbs, FChs, FaddP, FSubP, FMulP, FDivP, FSqrt
 from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
@@ -61,6 +62,8 @@ instructions = {
         'BTS': BTS('BTS'),
         'BSF': BSF('BSF'),
         'BSR': BSR('BSR'),
+        'BT': BT('BT'),
+        'BTC': BTC('BTC'),
         # floating point
         'FADD': FAdd('FADD'),
         'FSUB': FSub('FSUB'),

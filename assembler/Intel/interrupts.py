@@ -49,15 +49,15 @@ class Interrupt(Instruction):
         </descr>
     """
 
-    def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 1)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.get_nm(), ops, 1, line_num)
         if type(ops[0]) != IntegerTok:
-            raise InvalidOperand(str(ops[0]))
+            raise InvalidOperand(str(ops[0]), line_num)
         try:
-            interrupt_class = int_vectors[ops[0].get_val()]
+            interrupt_class = int_vectors[ops[0].get_val(line_num)]
             interrupt_handler = interrupt_class[int(vm.registers[EAX])]
         except KeyError:
-            raise UnknownInt(str(ops[0].get_val()) + ": "
-                             + vm.registers[EAX])
+            raise UnknownInt(str(ops[0].get_val(line_num)) + ": "
+                             + vm.registers[EAX], line_num)
         c = interrupt_handler(vm, self.get_nm())
         return str(c)

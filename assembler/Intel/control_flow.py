@@ -27,9 +27,9 @@ class Cmpf(Instruction):
             since Python integer arithmetic never carries or overflows!
         </descr>
     """
-    def fhook(self, ops, vm):
-        (op1, op2) = get_two_ops(self.get_nm(), ops)
-        res = op1.get_val() - op2.get_val()
+    def fhook(self, ops, vm, line_num):
+        (op1, op2) = get_two_ops(self.get_nm(), ops, line_num)
+        res = op1.get_val(line_num) - op2.get_val(line_num)
         # set the proper flags
         # zero flag:
         if res == 0:
@@ -54,8 +54,8 @@ class Jmp(Instruction):
             JMP lbl
         </syntax>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
         raise Jump(target.name)
 
 
@@ -72,8 +72,8 @@ class Je(Instruction):
             Equivalent name: JZ
         </descr>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
         if int(vm.flags['ZF']) == 1:
             raise Jump(target.name)
 
@@ -91,8 +91,8 @@ class Jne(Instruction):
             Equivalent name: JNZ
         </descr>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
         if int(vm.flags['ZF']) == 0:
             raise Jump(target.name)
 
@@ -110,8 +110,8 @@ class Jg(Instruction):
             Equivalent name: JLNE
         </descr>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
         if (int(vm.flags['SF']) == 0 and
                 int(vm.flags['ZF']) == 0):
             raise Jump(target.name)
@@ -129,8 +129,8 @@ class Jge(Instruction):
             Jumps if SF == 0.
         </descr>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
         if int(vm.flags['SF']) == 0:
             raise Jump(target.name)
         return ''
@@ -149,8 +149,8 @@ class Jl(Instruction):
             Equivalent name: JGNE
         </descr>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
         if int(vm.flags['SF']) == 1:
             raise Jump(target.name)
         return ''
@@ -168,8 +168,8 @@ class Jle(Instruction):
             Jumps if SF == 1 or ZF == 1.
         </descr>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
         if (int(vm.flags['SF']) == 1 or
                 int(vm.flags['ZF']) == 1):
             raise Jump(target.name)
@@ -188,11 +188,11 @@ class Call(Instruction):
             Pushes value of EIP to stack and jumps to the internal subroutine.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args("CALL", ops, 1)
-        vm.dec_sp()
+    def fhook(self, ops, vm, line_num):
+        check_num_args("CALL", ops, 1, line_num)
+        vm.dec_sp(line_num)
         vm.stack[hex(vm.get_sp() + 1).split('x')[-1].upper()] = vm.get_ip()
-        target = get_one_op(self.get_nm(), ops)
+        target = get_one_op(self.get_nm(), ops, line_num)
         vm.c_stack.append(vm.get_ip())
         raise Jump(target.name)
 
@@ -210,9 +210,9 @@ class Ret(Instruction):
             the line after the subroutine call.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args("RET", ops, 0)
-        vm.inc_sp()
+    def fhook(self, ops, vm, line_num):
+        check_num_args("RET", ops, 0, line_num)
+        vm.inc_sp(line_num)
         vm.set_ip(int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]))
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
         while not isinstance(vm.c_stack[-1], int):

@@ -11,15 +11,15 @@ from assembler.ops_check import get_one_op
 from .argument_check import check_reg_only, check_immediate_three
 
 
-def get_three_ops(instr, ops):
-    check_num_args(instr, ops, 3)
-    check_reg_only(instr, ops)
+def get_three_ops(instr, ops, line_num):
+    check_num_args(instr, ops, 3, line_num)
+    check_reg_only(instr, ops, line_num)
     return (ops[0], ops[1], ops[2])
 
 
-def get_three_ops_imm(instr, ops):
-    check_num_args(instr, ops, 3)
-    check_immediate_three(instr, ops)
+def get_three_ops_imm(instr, ops, line_num):
+    check_num_args(instr, ops, 3, line_num)
+    check_immediate_three(instr, ops, line_num)
     return (ops[0], ops[1], ops[2])
 
 
@@ -39,13 +39,13 @@ class Slt(Instruction):
             Store the result of SF flag into op1
         </descr>
     """
-    def fhook(self, ops, vm):
-        (op1, op2, op3) = get_three_ops(self.get_nm(), ops)
-        res = op2.get_val() - op3.get_val()
+    def fhook(self, ops, vm, line_num):
+        (op1, op2, op3) = get_three_ops(self.get_nm(), ops, line_num)
+        res = op2.get_val(line_num) - op3.get_val(line_num)
         if res < 0:
-            op1.set_val(1)
+            op1.set_val(1, line_num)
         else:
-            op1.set_val(0)
+            op1.set_val(0, line_num)
         vm.changes.add(op1.get_nm())
 
 
@@ -66,13 +66,13 @@ class Slti(Instruction):
             Store the result of SF flag into op1
         </descr>
     """
-    def fhook(self, ops, vm):
-        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops)
-        res = op2.get_val() - op3.get_val()
+    def fhook(self, ops, vm, line_num):
+        (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops, line_num)
+        res = op2.get_val(line_num) - op3.get_val(line_num)
         if res < 0:
-            op1.set_val(1)
+            op1.set_val(1, line_num)
         else:
-            op1.set_val(0)
+            op1.set_val(0, line_num)
         vm.changes.add(op1.get_nm())
 
 
@@ -86,10 +86,10 @@ class Jmp(Instruction):
             J loc
         </syntax>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
         if isinstance(target, IntegerTok):
-            raise Jump(str(target.get_val()))
+            raise Jump(str(target.get_val(line_num)))
         else:
             raise Jump(target.name)
 
@@ -103,9 +103,9 @@ class Jal(Instruction):
             JAL loc
         </syntax>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
-        raise Jump(str(target.get_val()))
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
+        raise Jump(str(target.get_val(line_num)))
 
 
 class Jr(Instruction):
@@ -117,9 +117,9 @@ class Jr(Instruction):
             Jr reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        target = get_one_op(self.get_nm(), ops)
-        raise Jump(str(target.get_val()))
+    def fhook(self, ops, vm, line_num):
+        target = get_one_op(self.get_nm(), ops, line_num)
+        raise Jump(str(target.get_val(line_num)))
 
 
 class Beq(Instruction):
@@ -134,28 +134,28 @@ class Beq(Instruction):
             Jumps if registers are equal.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args("BEQ", ops, 3)
+    def fhook(self, ops, vm, line_num):
+        check_num_args("BEQ", ops, 3, line_num)
         disp = 0
         if isinstance(ops[2], IntegerTok):
-            disp = ops[2].get_val()
+            disp = ops[2].get_val(line_num)
         else:
-            raise InvalidArgument(ops[0].get_nm())
+            raise InvalidArgument(ops[0].get_nm(), line_num)
         val_one, val_two = (0, 0)
         if isinstance(ops[0], Register):
-            val_one = ops[0].get_val()
+            val_one = ops[0].get_val(line_num)
             if isinstance(ops[1], Register):
-                val_two = ops[1].get_val()
+                val_two = ops[1].get_val(line_num)
             else:
-                InvalidArgument(ops[1].get_nm())
+                InvalidArgument(ops[1].get_nm(), line_num)
         else:
-            InvalidArgument(ops[0].get_nm())
+            InvalidArgument(ops[0].get_nm(), line_num)
         if val_one == val_two:
             current_ip = vm.get_ip()
             if current_ip + disp * 4 >= 0:
                 vm.set_ip(current_ip + disp * 4)
             else:
-                raise OutofBounds()
+                raise OutofBounds(line_num)
 
 
 class Bne(Instruction):
@@ -170,25 +170,25 @@ class Bne(Instruction):
             Jumps if registers are equal.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args("BNE", ops, 3)
+    def fhook(self, ops, vm, line_num):
+        check_num_args("BNE", ops, 3, line_num)
         disp = 0
         if isinstance(ops[2], IntegerTok):
-            disp = ops[2].get_val()
+            disp = ops[2].get_val(line_num)
         else:
-            raise InvalidArgument(ops[0].get_nm())
+            raise InvalidArgument(ops[0].get_nm(), line_num)
         val_one, val_two = (0, 0)
         if isinstance(ops[0], Register):
-            val_one = ops[0].get_val()
+            val_one = ops[0].get_val(line_num)
             if isinstance(ops[1], Register):
-                val_two = ops[1].get_val()
+                val_two = ops[1].get_val(line_num)
             else:
-                InvalidArgument(ops[1].get_nm())
+                InvalidArgument(ops[1].get_nm(), line_num)
         else:
-            InvalidArgument(ops[0].get_nm())
+            InvalidArgument(ops[0].get_nm(), line_num)
         if val_one != val_two:
             current_ip = vm.get_ip()
             if current_ip + disp * 4 >= 0:
                 vm.set_ip(current_ip + disp * 4)
             else:
-                raise OutofBounds()
+                raise OutofBounds(line_num)

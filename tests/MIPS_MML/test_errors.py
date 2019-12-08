@@ -23,6 +23,8 @@ from assembler.errors import INVALID_TOKEN, REG_UNWRITABLE, INT_OUT_OF_RNG
 
 mips_machine.base = "hex"
 mips_machine.flavor = "mips_mml"
+LINE_ONE_MSG = 'Line 1: '
+LINE_TWO_MSG = 'Line 2: '
 
 
 class ErrorTestCase(TestCase):
@@ -30,56 +32,56 @@ class ErrorTestCase(TestCase):
     def test_invalid_instr(self):
         (output, error, bit_code) = assemble("40000 shove_up_reg R8, 1",
                                              mips_machine)
-        self.assertTrue(error.startswith(INVALID_TOKEN))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + INVALID_TOKEN))
 
     def test_invalid_mem_loc(self):
         (output, error, bit_code) = assemble("40000 SW R10, 3(hell)",
                                              mips_machine)
-        self.assertTrue(error.startswith(INVALID_TOKEN))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + INVALID_TOKEN))
 
     def test_invalid_num_args(self):
         (output, error, bit_code) = assemble("40000 ADDI R10, 10, 22, 34",
                                              mips_machine)
-        self.assertTrue(error.startswith(INVALID_NUM_ARGS))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + INVALID_NUM_ARGS))
 
 # we have to clear up symbol handling to make this test work.
 #    def test_unknown_name(self):
 #        (output, error) = assemble("add fred, wilma", vmachine)
-#        self.assertTrue(error.startswith(UNKNOWN_NM))
+#        self.assertTrue(error.startswith(LINE_ONE_MSG + UNKNOWN_NM))
 
     def test_reg_unwritable(self):
         (output, error, bit_code) = assemble("40000 ADDI R0, R8, 10",
                                              mips_machine)
-        self.assertTrue(error.startswith(REG_UNWRITABLE))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + REG_UNWRITABLE))
 
     def test_comma_error(self):
         (output, error, bit_code) = assemble("40000 SUB R8 R8 1",
                                              mips_machine)
-        self.assertTrue(error.startswith(MISSING_COMMA))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + MISSING_COMMA))
 
     def test_token_error(self):
         (output, error, bit_code) = assemble("40000 ORI R10,,,, 1",
                                              mips_machine)
-        self.assertTrue(error.startswith(INVALID_TOKEN))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + INVALID_TOKEN))
 
     def test_data_error(self):
         (output, error, bit_code) = assemble(".data \n  x: .word",
                                              mips_machine)
-        self.assertTrue(error.startswith(INVALID_TOKEN))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + INVALID_TOKEN))
 
     def pc_data_error(self):
         (output, error, bit_code) = assemble("R8, R8, 1", mips_machine)
-        self.assertTrue(error.startswith(INVALID_TOKEN))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + INVALID_TOKEN))
 
     def test_mem_error_less(self):
         (output, error, bit_code) = assemble("40000 SW R10, -3(R28)",
                                              mips_machine)
-        self.assertTrue(error.startswith(INVALID_MEM_LOC))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + INVALID_MEM_LOC))
 
     def test_out_of_range(self):
         (output, error, bit_code) = assemble("40000 ADDI R8, R8, 100000000",
                                              mips_machine)
-        self.assertTrue(error.startswith(INT_OUT_OF_RNG))
+        self.assertTrue(error.startswith(LINE_ONE_MSG + INT_OUT_OF_RNG))
 
 
 if __name__ == '__main__':
