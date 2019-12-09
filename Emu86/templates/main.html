@@ -148,6 +148,11 @@
                     {% else %}
                         <option value="addTwo_fp">Add two floating point numbers</option>
                     {% endif %}
+                    {% if sample == "celFah_fp" %}
+                        <option value="celFah_fp" selected>Convert floating point Celsius to Fahrenheit</option>
+                    {% else %}
+                        <option value="celFah_fp">Convert floating point Celsius to Fahrenheit</option>
+                    {% endif %}
                 {% elif flavor == "mips_asm" %}
                     {% if sample == "area_fp" %}
                         <option value="area_fp" selected>Area of a rectangle
@@ -172,6 +177,11 @@
                         <option value="addTwo_fp" selected>Add two floating point numbers</option>
                     {% else %}
                         <option value="addTwo_fp">Add two floating point numbers</option>
+                    {% endif %}
+                    {% if sample == "celFah_fp" %}
+                        <option value="celFah_fp" selected>Convert floating point Celsius to Fahrenheit</option>
+                    {% else %}
+                        <option value="celFah_fp">Convert floating point Celsius to Fahrenheit</option>
                     {% endif %}
                 {% endif %}
             </select>

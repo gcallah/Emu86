@@ -25,7 +25,8 @@ fp_function_names = {
     "fp_area.asm": "area_fp",
     "fp_data.asm": "data_fp",
     "fp_power.asm": "power_fp",
-    "fp_sum_test.asm": "addTwo_fp"
+    "fp_sum_test.asm": "addTwo_fp",
+    "fp_cel_to_fah.asm": "celFah_fp"
 }
 
 

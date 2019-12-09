@@ -38,6 +38,16 @@ function addTwo_fp(flavor){
 	}
 	document.getElementById('id_code').value = codeString;
 }
+function celFah_fp(flavor){
+	let codeString = '';
+	if (flavor === 'intel'){
+		codeString += '; Declare a Celsius temperature\n; Uninitialized fTemp \n.data\n    cTemp REAL4 35.4\n    fTemp REAL4 0.0\n\n; Convert from Celsius to Fahrenheit\n; Store result in fTemp\n.text\n    fld [cTemp]\n    fmul 9\n    fdiv 5 \n    fadd 32\n    fst [fTemp]';
+	}
+	else if (flavor == 'mips_asm'){
+		codeString += '; Declare a Celsius temperature floating points\n.data\n    cTemp: .double 10.0\n    scale: .double 1.8\n    offsetAdd: .double 32.0\n    fTemp: .double 10.0\n\n; Convert from Celsius to Fahrenheit\n; Store result in fTemp\n.text\n    0x40000 LDC F8, 0(F28)\n    0x40004 LDC F10, 4(F28)\n    0x40008 MULT.D F8, F8, F10\n    0x4000C LDC F12, 8(F28)\n    0x40010 ADD.D F12, F8, F12\n    0x40014 SDC F12, 0xC(F28)';
+	}
+	document.getElementById('id_code').value = codeString;
+}
 function keyInterrupt(flavor){
 	let codeString = '';
 	if (flavor === 'intel'){

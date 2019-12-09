@@ -89,6 +89,9 @@ function selectSample()
         else if (selected === "addTwo_fp") {
             addTwo_fp(flav.value);
         }
+        else if (selected === "celFah_fp") {
+            celFah_fp(flav.value);
+        }
     }
     else if (flav && base === "hex"){
         if (selected === "none"){
@@ -152,7 +155,9 @@ function selectSample()
         else if (selected === "addTwo_fp") {
             addTwo_fp(flav.value);
         }
-
+        else if (selected === "celFah_fp") {
+            celFah_fp(flav.value);
+        }
     }
 }
 
