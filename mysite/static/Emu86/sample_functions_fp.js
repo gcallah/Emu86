@@ -21,7 +21,7 @@ function data_fp(flavor){
 function power_fp(flavor){
 	let codeString = '';
 	if (flavor === 'intel'){
-		codeString += '; In F7, we put the number to raise to the power we put in F5.\n      mov F7, 0x40600000\n      mov F5, 0x3fb33333\n      call power\n      mov F4, 0x0\n      int 0x20\n\npower: mov F6, F7\nloop: imul F7, F6\n      dec F5\n      cmp F5, 0x1\n      jne loop\n      ret\n';
+		codeString += '; In st0, we put the number to raise to the power we put in ebx.\n      fld 14.8\n      mov ebx, 4\n      call power\n      mov eax, 0\n      int 32\n\npower: mov st1, st0\nloop: fmul st0, st1\n      dec ebx\n      cmp ebx, 1\n      jne loop\n      ret\n';
 	}
 	else if (flavor == 'mips_asm'){
 		codeString += '; x is the base, y is the power\n.data\n    x: .float 5.5\n    y: .word 0x3\n\n; In F8, we put the number to raise to the power we put in R9.\n.text\n      0x400000 LWC F8, 0(F28)\n      0x400004 LW R9, 4(R28)\n      0x400008 JAL 0x1000040\n      0x40000C SYSCALL\n\npower: 0x400010 ADD.S F16, F0, F8\nloop: 0x400014 MULT.S F8, F8, F16\n      0x400018 ADDI R9, R9, -1\n      0x40001C ADDI R10, R0, 1\n      0x400020 BNE R9, R10, -4\n      0x400024 JR R31';

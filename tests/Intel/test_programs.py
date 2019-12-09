@@ -182,6 +182,11 @@ class TestPrograms(TestCase):
         self.assertAlmostEqual(intel_machine.registers["ST0"], fah_val)
         self.assertEqual(intel_machine.memory["1"], fah_val)
 
+    def test_fp_power(self):
+        self.run_intel_test_code("tests/Intel/fp_power.asm")
+        float_power_val = 14.8 ** 4
+        self.assertAlmostEqual(intel_machine.registers["ST0"], float_power_val)
+
 
 if __name__ == '__main__':
     main()

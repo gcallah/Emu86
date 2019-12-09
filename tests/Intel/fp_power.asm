@@ -1,13 +1,13 @@
-; In F7, we put the number to raise to the power we put in F5.
-      mov F7, 0x40600000
-      mov F5, 0x3fb33333
+; In st0, we put the number to raise to the power we put in ebx.
+      fld 14.8
+      mov ebx, 4
       call power
-      mov F4, 0x0
-      int 0x20
+      mov eax, 0
+      int 32
 
-power: mov F6, F7
-loop: imul F7, F6
-      dec F5
-      cmp F5, 0x1
+power: mov st1, st0
+loop: fmul st0, st1
+      dec ebx
+      cmp ebx, 1
       jne loop
       ret
