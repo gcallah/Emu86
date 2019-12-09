@@ -140,6 +140,8 @@ db:
 	-git commit $(EMUDIR)/migrations/*.py
 	git push origin master
 
+all_tests: tests test_docker
+
 tests: FORCE
 	./all_tests.sh
 
