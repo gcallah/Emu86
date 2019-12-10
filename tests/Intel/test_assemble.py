@@ -75,11 +75,19 @@ class AssembleTestCase(TestCase):
                     binary_num = bin(a)
                     index = len(binary_num) - b
                     correct = binary_num[index]
+                elif instr == 'btc':
+                    binary_num = bin(a)
+                    index = len(binary_num) - b
+                    #print('index:', index, 'binary_num len:', len(binary_num))
+                    if binary_num[index] == '1':
+                        correct = '0'
+                    else:
+                        correct = '1'
 
                 intel_machine.registers["EAX"] = a
                 intel_machine.registers["EBX"] = b
                 assemble(instr + " eax, ebx", intel_machine)
-                if instr in ['bt']:
+                if instr in ['bt', 'btc']:
                     self.assertAlmostEqual(intel_machine.flags["CF"], correct)
                     return
                 if instr in ['bsf', 'bsr']:
@@ -339,6 +347,13 @@ class AssembleTestCase(TestCase):
         self.two_op_test(operator=None, instr='bt', op_type=BIT_WISE,
                          low1=0, high1=512, low2=0, high2=8)
 
+    def test_btc(self):
+        # intel_machine.registers["EAX"] = 0
+        # intel_machine.registers["EBX"] = 10
+        # assemble("bsr eax, ebx", intel_machine)
+        # self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
+        self.two_op_test(operator=None, instr='btc', op_type=BIT_WISE,
+                         low1=0, high1=512, low2=0, high2=8)
 
 if __name__ == '__main__':
     main()
