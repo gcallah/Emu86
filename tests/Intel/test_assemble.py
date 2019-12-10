@@ -78,7 +78,7 @@ class AssembleTestCase(TestCase):
                 elif instr == 'btc':
                     binary_num = bin(a)
                     index = len(binary_num) - b
-                    # print('index:', index, 'binary_num len:', len(binary_num))
+                    # print('index:', index, 'binary_num len:', len(binary_num)
                     if binary_num[index] == '1':
                         correct = '0'
                     else:
