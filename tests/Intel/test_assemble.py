@@ -78,7 +78,7 @@ class AssembleTestCase(TestCase):
                 elif instr == 'btc':
                     binary_num = bin(a)
                     index = len(binary_num) - b
-                    #print('index:', index, 'binary_num len:', len(binary_num))
+                    # print('index:', index, 'binary_num len:', len(binary_num))
                     if binary_num[index] == '1':
                         correct = '0'
                     else:
@@ -334,6 +334,7 @@ class AssembleTestCase(TestCase):
     def test_btc(self):
         self.two_op_test(operator=None, instr='btc', op_type=BIT_WISE,
                          low1=0, high1=512, low2=0, high2=8)
+
 
 if __name__ == '__main__':
     main()
