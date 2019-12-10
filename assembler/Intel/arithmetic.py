@@ -363,6 +363,7 @@ class BSR(Instruction):
             index = bit_size - index
             ops[0].set_val(index, line_num)
 
+
 class BT(Instruction):
     """
     <instr>
@@ -378,13 +379,14 @@ class BT(Instruction):
         check_num_args(self.name, ops, 2, line_num)
         if not isinstance(ops[0], Register):
             raise InvalidOperand('Operand 1 is not of type Register', line_num)
-        #print('length', ops[1].get_val(line_num).bit_length())
+        # print('length', ops[1].get_val(line_num).bit_length())
         # if ops[1].get_val(line_num).bit_length() < 8:
         #     raise InvalidOperand('Operand 2 should be of size 8 bit')
 
         binary_num = bin(ops[0].get_val(line_num))
         index = len(binary_num) - ops[1].get_val(line_num)
         vmachine.flags["CF"] = binary_num[index]
+
 
 class BTC(Instruction):
     """
