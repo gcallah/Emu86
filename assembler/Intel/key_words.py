@@ -103,6 +103,8 @@ att_key_words = {
         '.BYTE': DataType('DB'),
         '.SHORT': DataType('DW'),
         '.LONG': DataType('DD'),
+        '.FLOAT': DataType('FL'),
+        '.DOUBLE': DataType('DBL'),
 
         # other tokens
         '$': ConstantSign(),
