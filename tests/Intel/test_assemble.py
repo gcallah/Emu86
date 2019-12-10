@@ -316,42 +316,22 @@ class AssembleTestCase(TestCase):
                          low1=0, high1=512, low2=0, high2=8)
 
     def test_bts(self):
-        # intel_machine.registers["EAX"] = 0
-        # intel_machine.registers["EBX"] = 3
-        # assemble("bts eax, ebx", intel_machine)
-        # self.assertAlmostEqual(intel_machine.registers["EAX"], 8)
         self.two_op_test(operator=None, instr="bts", op_type=BIT_WISE,
                          low1=0, high1=512, low2=0, high2=8)
 
     def test_bsf(self):
-        # intel_machine.registers["EAX"] = 0
-        # intel_machine.registers["EBX"] = 8
-        # assemble("bsf eax, ebx", intel_machine)
-        # self.assertAlmostEqual(intel_machine.registers["EAX"], 3)
         self.two_op_test(operator=None, instr='bsf', op_type=BIT_WISE,
                          low1=0, high1=512, low2=2**16, high2=2**31)
 
     def test_bsr(self):
-        # intel_machine.registers["EAX"] = 0
-        # intel_machine.registers["EBX"] = 10
-        # assemble("bsr eax, ebx", intel_machine)
-        # self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
         self.two_op_test(operator=None, instr='bsr', op_type=BIT_WISE,
                          low1=0, high1=512, low2=2**16, high2=2**31)
 
     def test_bt(self):
-        # intel_machine.registers["EAX"] = 0
-        # intel_machine.registers["EBX"] = 10
-        # assemble("bsr eax, ebx", intel_machine)
-        # self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
         self.two_op_test(operator=None, instr='bt', op_type=BIT_WISE,
                          low1=0, high1=512, low2=0, high2=8)
 
     def test_btc(self):
-        # intel_machine.registers["EAX"] = 0
-        # intel_machine.registers["EBX"] = 10
-        # assemble("bsr eax, ebx", intel_machine)
-        # self.assertAlmostEqual(intel_machine.registers["EAX"], 4)
         self.two_op_test(operator=None, instr='btc', op_type=BIT_WISE,
                          low1=0, high1=512, low2=0, high2=8)
 
