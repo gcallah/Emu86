@@ -1,4 +1,0 @@
-from ipykernel.kernelapp import IPKernelApp
-from .kernel import NAMEKernel
-
-IPKernelApp.launch_instance(kernel_class=NAMEKernel)
