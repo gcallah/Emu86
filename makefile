@@ -47,11 +47,11 @@ ASM_PTMLS = $(shell ls $(TDIR)/Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/
 FORCE:
 
 # update our submodules:
-util: $(submods)
-	git submodule foreach --recursive git submodule update --init
+submods: FORCE
+	git submodule update --init
 
 # this rule builds the menu for the static server:
-navbar: util
+navbar: submods
 	$(UDIR)/html_include.awk <$(TEMPLATE_DIR)/navbar.pre >$(TEMPLATE_DIR)/navbar.txt
 	python3 write_sample_programs.py
 
@@ -72,7 +72,7 @@ samples: $(ASM_PTMLS) $(TDIR)
 # build the static website describing the project:
 website: $(INCS) $(HTML_FILES) help
 	-git commit -a 
-	git pull origin master
+	git pull --recurse-submodules origin master
 	git push origin master
 
 # dev container has dev tools
@@ -149,7 +149,6 @@ dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
 prod: $(SRCS) $(OBJ) navbar tests
+	git pull --recurse-submodules origin master
 	-git commit -a
 	git push origin master
-	# we can deploy from travis now, so don't do:
-	# ssh gcallah@ssh.pythonanywhere.com 'cd /home/gcallah/Emu86; /home/gcallah/Emu86/myutils/prod.sh'
