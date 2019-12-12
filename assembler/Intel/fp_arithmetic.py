@@ -130,12 +130,12 @@ def checkflag(val, vm):
     return val
 
 
-def two_op_arith(ops, vm, instr, operator):
+def two_op_arith(ops, vm, instr, operator, line_num):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 2)
+    check_num_args(instr, ops, 2, line_num)
     reg_one, reg_two = [int(x.get_nm()[-1]) for x in ops]
     # first_reg = vm.get_float_stack_register_at_offset(offset1)
     # second_reg = vm.get_float_stack_register_at_offset(offset2)
@@ -143,17 +143,17 @@ def two_op_arith(ops, vm, instr, operator):
     # r2 = vm.fp_stack_registers[second_reg]
     # vm.fp_stack_registers[first_reg] = checkflag(operator(r1, r2), vm)
     if reg_one != 0 and reg_two != 0:
-        raise InvalidOperand('Neither registers are ST0')
+        raise InvalidOperand('Neither registers are ST0', line_num)
     r1 = vm.registers[f'ST{reg_one}']
     r2 = vm.registers[f'ST{reg_two}']
     vm.registers[f'ST{reg_one}'] = checkflag(operator(r1, r2), vm)
     # r1.set_val(
-    #     checkflag(operator(r1.get_val(),
-    #                        r2.get_val()), vm))
+    #     checkflag(operator(r1.get_val(line_num),
+    #                        r2.get_val(line_num)), vm))
 
 
-def pop_arith(ops, vm, instr, operator):
-    check_num_args(instr, ops, 2)
+def pop_arith(ops, vm, instr, operator, line_num):
+    check_num_args(instr, ops, 2, line_num)
     reg_one, reg_two = [int(x.get_nm()[-1]) for x in ops]
     # first_reg = vm.get_float_stack_register_at_offset(offset1)
     # second_reg = vm.get_float_stack_register_at_offset(offset2)
@@ -161,25 +161,26 @@ def pop_arith(ops, vm, instr, operator):
     # r2 = vm.fp_stack_registers[second_reg]
     # vm.fp_stack_registers[first_reg] = checkflag(operator(r1, r2), vm)
     if reg_two != 0:
-        raise InvalidOperand(f'ST{reg_two}')
+        raise InvalidOperand(f'ST{reg_two}', line_num)
     r1 = vm.registers[f'ST{reg_one}']
     r2 = vm.registers[f'ST{reg_two}']
     vm.registers[f'ST{reg_one}'] = checkflag(float(operator(r1, r2)), vm)
     # r1.set_val(
-    #     checkflag(operator(r1.get_val(),
-    #                        r2.get_val()), vm))
+    #     checkflag(operator(r1.get_val(line_num),
+    #                        r2.get_val(line_num)), vm))
 
 
-def one_op_arith(ops, vm, instr, operator):
+def one_op_arith(ops, vm, instr, operator, line_num):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 1)
-    if operator.__name__ == 'div' and ops[0].get_val() == 0.0:
-        raise DivisionZero()
+    check_num_args(instr, ops, 1, line_num)
+    if operator.__name__ == 'div' and ops[0].get_val(line_num) == 0.0:
+        raise DivisionZero(line_num)
     else:
-        vm.registers["ST0"] = operator(vm.registers["ST0"], ops[0].get_val())
+        vm.registers["ST0"] = operator(vm.registers["ST0"],
+                                       ops[0].get_val(line_num))
 
 
 class FAdd(Instruction):
@@ -195,11 +196,11 @@ class FAdd(Instruction):
             FADD ST(i), ST(j)
         </syntax>
     """
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
-            one_op_arith(ops, vm, self.name, add)
+            one_op_arith(ops, vm, self.name, add, line_num)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, add)
+            two_op_arith(ops, vm, self.name, add, line_num)
 
 
 class FaddP(Instruction):
@@ -217,11 +218,11 @@ class FaddP(Instruction):
                 FADDP ST(i), ST(j)
             </syntax>
         """
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
-            one_op_arith(ops, vm, self.name, add)
+            one_op_arith(ops, vm, self.name, add, line_num)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, add)
+            two_op_arith(ops, vm, self.name, add, line_num)
         vm.pop_from_Float_Stack()
 
 
@@ -238,11 +239,11 @@ class FSub(Instruction):
             FSUB ST(i), ST(j)
         </syntax>
     """
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
-            one_op_arith(ops, vm, self.name, sub)
+            one_op_arith(ops, vm, self.name, sub, line_num)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, sub)
+            two_op_arith(ops, vm, self.name, sub, line_num)
 
 
 class FSubP(Instruction):
@@ -259,11 +260,11 @@ class FSubP(Instruction):
             FSUBP ST(i), ST(j)
         </syntax>
     """
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
-            one_op_arith(ops, vm, self.name, sub)
+            one_op_arith(ops, vm, self.name, sub, line_num)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, sub)
+            two_op_arith(ops, vm, self.name, sub, line_num)
         vm.pop_from_Float_Stack()
 
 
@@ -280,11 +281,11 @@ class FMul(Instruction):
             FMUL ST(i), ST(j)
         </syntax>
     """
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
-            one_op_arith(ops, vm, self.name, mul)
+            one_op_arith(ops, vm, self.name, mul, line_num)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, mul)
+            two_op_arith(ops, vm, self.name, mul, line_num)
 
 
 class FMulP(Instruction):
@@ -302,11 +303,11 @@ class FMulP(Instruction):
         </syntax>
     """
 
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
-            one_op_arith(ops, vm, self.name, mul)
+            one_op_arith(ops, vm, self.name, mul, line_num)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, mul)
+            two_op_arith(ops, vm, self.name, mul, line_num)
         vm.pop_from_Float_Stack()
 
 
@@ -321,8 +322,8 @@ class FAbs(Instruction):
             fabs FRT, FRB
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, fabs)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, fabs, line_num)
 
 
 class FChs(Instruction):
@@ -335,8 +336,8 @@ class FChs(Instruction):
             fchs FRT
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, chs)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, chs, line_num)
 
 
 class FDiv(Instruction):
@@ -352,11 +353,11 @@ class FDiv(Instruction):
             FDIV ST(i), ST(j)
         </syntax>
     """
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
-            one_op_arith(ops, vm, self.name, div)
+            one_op_arith(ops, vm, self.name, div, line_num)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, div)
+            two_op_arith(ops, vm, self.name, div, line_num)
 
 
 class FDivP(Instruction):
@@ -373,11 +374,11 @@ class FDivP(Instruction):
             FDIVP ST(i), ST(j)
         </syntax>
     """
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
-            one_op_arith(ops, vm, self.name, div)
+            one_op_arith(ops, vm, self.name, div, line_num)
         elif len(ops) == 2:
-            two_op_arith(ops, vm, self.name, div)
+            two_op_arith(ops, vm, self.name, div, line_num)
         vm.pop_from_Float_Stack()
 
 
@@ -392,7 +393,7 @@ class FSqrt(Instruction):
             FSQRT
         </syntax>
     """
-    def fhook(self, ops, vm):
+    def fhook(self, ops, vm, line_num):
         if len(ops) == 0:
             top_value = vm.pop_from_Float_Stack()
             sqrt = math.sqrt(top_value)

@@ -17,13 +17,13 @@ class Fld(Instruction):
             loads value onto stack
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 1)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.get_nm(), ops, 1, line_num)
         if vm.is_FP_stack_full():
-            raise StackFull()
+            raise StackFull(line_num)
         # if isinstance(ops[0], FloatTok):
-        #     vm.push_to_Float_Stack(ops[0].get_val())
-        vm.push_to_Float_Stack(ops[0].get_val())
+        #     vm.push_to_Float_Stack(ops[0].get_val(line_num))
+        vm.push_to_Float_Stack(ops[0].get_val(line_num))
 
 
 class Fst(Instruction):
@@ -38,11 +38,11 @@ class Fst(Instruction):
             stores value from top of stack
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 1)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.get_nm(), ops, 1, line_num)
         if vm.is_FP_stack_full():
-            raise StackFull()
-        ops[0].set_val(vm.registers['ST0'])
+            raise StackFull(line_num)
+        ops[0].set_val(vm.registers['ST0'], line_num)
 
 
 class Mov(Instruction):
@@ -61,13 +61,13 @@ class Mov(Instruction):
             Copies the value of op2 to the location mentioned in op1.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.get_nm(), ops, 2)
-        ops[0].set_val(ops[1].get_val())
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.get_nm(), ops, 2, line_num)
+        ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
         elif isinstance(ops[0], Address):
-            vm.changes.add(f'MEM{ops[0].get_mem_addr()}')
+            vm.changes.add(f'MEM{ops[0].get_mem_addr(line_num)}')
 
 
 class Pop(Instruction):
@@ -85,11 +85,11 @@ class Pop(Instruction):
             Can move the stack value to a memory location or register.
         </descr>
     """
-    def fhook(self, ops, vm):
-        vm.inc_sp()
-        check_num_args("POP", ops, 1)
+    def fhook(self, ops, vm, line_num):
+        vm.inc_sp(line_num)
+        check_num_args("POP", ops, 1, line_num)
         val = int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()])
-        ops[0].set_val(val)
+        ops[0].set_val(val, line_num)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
 
 
@@ -110,11 +110,11 @@ class Push(Instruction):
             register value, and constant value to the stack.
         </descr>
     """
-    def fhook(self, ops, vm):
-        vm.dec_sp()
-        check_num_args("PUSH", ops, 1)
+    def fhook(self, ops, vm, line_num):
+        vm.dec_sp(line_num)
+        check_num_args("PUSH", ops, 1, line_num)
         vm.stack[hex(vm.get_sp() +
-                     1).split('x')[-1].upper()] = ops[0].get_val()
+                     1).split('x')[-1].upper()] = ops[0].get_val(line_num)
 
 
 class Lea(Instruction):
@@ -125,6 +125,6 @@ class Lea(Instruction):
         <syntax>
         </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args("LEA", ops, 2)
+    def fhook(self, ops, vm, line_num):
+        check_num_args("LEA", ops, 2, line_num)
         # TBD!

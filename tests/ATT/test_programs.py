@@ -178,6 +178,27 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.memory["2"], 24931098)
         self.assertEqual(intel_machine.memory["3"], 10000)
 
+    def test_fp_sum(self):
+        self.run_att_test_code("tests/ATT/fp_sum_test.asm")
+        self.assertEqual(intel_machine.registers["ST0"], 16.6 + 128.4)
+        self.assertEqual(intel_machine.registers["ST1"], 16.6)
+
+    def test_fp_area(self):
+        self.run_att_test_code("tests/ATT/fp_area.asm")
+        self.assertAlmostEqual(intel_machine.registers["ST0"], 16.6 * 128.4)
+        self.assertEqual(intel_machine.registers["ST1"], 16.6)
+
+    def test_fp_cel_to_fah(self):
+        self.run_att_test_code("tests/ATT/fp_cel_to_fah.asm")
+        fah_val = 35.4 * 9 / 5 + 32
+        self.assertAlmostEqual(intel_machine.registers["ST0"], fah_val)
+        self.assertEqual(intel_machine.memory["1"], fah_val)
+
+    def test_fp_power(self):
+        self.run_att_test_code("tests/ATT/fp_power.asm")
+        float_power_val = 14.8 ** 4
+        self.assertAlmostEqual(intel_machine.registers["ST0"], float_power_val)
+
 
 if __name__ == '__main__':
     main()

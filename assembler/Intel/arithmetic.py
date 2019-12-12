@@ -10,15 +10,15 @@ from assembler.tokens import Instruction, MAX_INT, Register
 from assembler.ops_check import one_op_arith
 
 
-def two_op_arith(ops, vm, instr, operator):
+def two_op_arith(ops, vm, instr, line_num, operator):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    check_num_args(instr, ops, 2)
+    check_num_args(instr, ops, 2, line_num)
     ops[0].set_val(
-        checkflag(operator(ops[0].get_val(),
-                           ops[1].get_val()), vm))
+        checkflag(operator(ops[0].get_val(line_num),
+                           ops[1].get_val(line_num)), vm), line_num)
     vm.changes.add(ops[0].get_nm())
 
 
@@ -42,8 +42,8 @@ class Add(Instruction):
             ADD reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.add)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, line_num, opfunc.add)
 
 
 class Sub(Instruction):
@@ -57,8 +57,8 @@ class Sub(Instruction):
             SUB reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.sub)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, line_num, opfunc.sub)
 
 
 class Imul(Instruction):
@@ -72,8 +72,8 @@ class Imul(Instruction):
             IMUL reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.mul)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, line_num, opfunc.mul)
         return ''
 
 
@@ -88,8 +88,8 @@ class Andf(Instruction):
             AND reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.and_)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, line_num, opfunc.and_)
         return ''
 
 
@@ -104,8 +104,8 @@ class Orf(Instruction):
             OR reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.or_)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, line_num, opfunc.or_)
         return ''
 
 
@@ -120,8 +120,8 @@ class Xor(Instruction):
             XOR reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.xor)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, line_num, opfunc.xor)
         return ''
 
 
@@ -136,8 +136,8 @@ class Shl(Instruction):
             SHL reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.lshift)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, line_num, opfunc.lshift)
         return ''
 
 
@@ -152,8 +152,8 @@ class Shr(Instruction):
             SHR reg, con
         </syntax>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.rshift)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, line_num, opfunc.rshift)
 
 
 class Notf(Instruction):
@@ -165,8 +165,8 @@ class Notf(Instruction):
             NOT reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        one_op_arith(ops, vm, self.name, opfunc.inv)
+    def fhook(self, ops, vm, line_num):
+        one_op_arith(ops, vm, self.name, line_num, opfunc.inv)
 
 
 class Inc(Instruction):
@@ -178,9 +178,9 @@ class Inc(Instruction):
             INC reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
-        ops[0].set_val(ops[0].get_val() + 1)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 1, line_num)
+        ops[0].set_val(ops[0].get_val(line_num) + 1, line_num)
         vm.changes.add(ops[0].get_nm())
 
 
@@ -193,9 +193,9 @@ class Dec(Instruction):
             DEC reg
         </syntax>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
-        ops[0].set_val(ops[0].get_val() - 1)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 1, line_num)
+        ops[0].set_val(ops[0].get_val(line_num) - 1, line_num)
         vm.changes.add(ops[0].get_nm())
 
 
@@ -212,8 +212,8 @@ class Neg(Instruction):
            it's two's complement.
         </descr>
     """
-    def fhook(self, ops, vm):
-        one_op_arith(ops, vm, self.name, opfunc.neg)
+    def fhook(self, ops, vm, line_num):
+        one_op_arith(ops, vm, self.name, line_num, opfunc.neg)
         return ''
 
 
@@ -235,16 +235,16 @@ class Idiv(Instruction):
             remainder is placed in EDX.
         </descr>
     """
-    def fhook(self, ops, vm):
-        check_num_args(self.name, ops, 1)
+    def fhook(self, ops, vm, line_num):
+        check_num_args(self.name, ops, 1, line_num)
 
         hireg = int(vm.registers['EDX']) << 32
         lowreg = int(vm.registers['EAX'])
         dividend = hireg + lowreg
-        if ops[0].get_val() == 0:
+        if ops[0].get_val(line_num) == 0:
             raise DivisionZero()
-        vm.registers['EAX'] = dividend // ops[0].get_val()
-        vm.registers['EDX'] = dividend % ops[0].get_val()
+        vm.registers['EAX'] = dividend // ops[0].get_val(line_num)
+        vm.registers['EDX'] = dividend % ops[0].get_val(line_num)
         vm.changes.add('EAX')
         vm.changes.add('EDX')
         return ''
@@ -261,14 +261,14 @@ class BTR(Instruction):
     </syntax>
     """
 
-    def fhook(self, ops, vmachine):
-
-        check_num_args(self.name, ops, 2)
+    def fhook(self, ops, vmachine, line_num):
+        check_num_args(self.name, ops, 2, line_num)
         if not isinstance(ops[0], Register):
-            raise InvalidOperand('Operand 1 is not of type Register')
-        if ops[1].get_val().bit_length() >= 9:
-            raise InvalidConVal(ops[1].get_nm())
-        ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 0))
+            raise InvalidOperand('Operand 1 is not of type Register', line_num)
+        if ops[1].get_val(line_num).bit_length() >= 9:
+            raise InvalidConVal(ops[1].get_nm(), line_num)
+        ops[0].set_val(set_bit(ops[0].get_val(line_num),
+                               ops[1].get_val(line_num), 0), line_num)
 
 
 def set_bit(v, index, x):
@@ -290,13 +290,14 @@ class BTS(Instruction):
     </syntax>
     """
 
-    def fhook(self, ops, vmachine):
-        check_num_args(self.name, ops, 2)
+    def fhook(self, ops, vmachine, line_num):
+        check_num_args(self.name, ops, 2, line_num)
         if not isinstance(ops[0], Register):
-            raise InvalidOperand('Operand 1 is not of type Register')
-        if ops[1].get_val().bit_length() >= 9:
-            raise InvalidConVal(ops[1].get_nm())
-        ops[0].set_val(set_bit(ops[0].get_val(), ops[1].get_val(), 1))
+            raise InvalidOperand('Operand 1 is not of type Register', line_num)
+        if ops[1].get_val(line_num).bit_length() >= 9:
+            raise InvalidConVal(ops[1].get_nm(), line_num)
+        ops[0].set_val(set_bit(ops[0].get_val(line_num),
+                               ops[1].get_val(line_num), 1), line_num)
 
 
 class BSF(Instruction):
@@ -310,17 +311,17 @@ class BSF(Instruction):
     </syntax>
     """
 
-    def fhook(self, ops, vmachine):
-        check_num_args(self.name, ops, 2)
+    def fhook(self, ops, vmachine, line_num):
+        check_num_args(self.name, ops, 2, line_num)
         if not isinstance(ops[0], Register):
-            raise InvalidOperand('Operand 1 is not of type Register')
-        num = ops[1].get_val()
+            raise InvalidOperand('Operand 1 is not of type Register', line_num)
+        num = ops[1].get_val(line_num)
 
         if num == 0:
             vmachine.flags["ZF"] = 1
         else:
             vmachine.flags["ZF"] = 0
-            if ops[1].get_val().bit_length() <= 16:
+            if ops[1].get_val(line_num).bit_length() <= 16:
                 bit_size = 16
             else:
                 bit_size = 32
@@ -328,7 +329,7 @@ class BSF(Instruction):
             for index in range(len(bin_str)):
                 if bin_str[index] == '1':
                     break
-            ops[0].set_val(index)
+            ops[0].set_val(index, line_num)
 
 
 class BSR(Instruction):
@@ -342,16 +343,16 @@ class BSR(Instruction):
     </syntax>
     """
 
-    def fhook(self, ops, vmachine):
-        check_num_args(self.name, ops, 2)
+    def fhook(self, ops, vmachine, line_num):
+        check_num_args(self.name, ops, 2, line_num)
         if not isinstance(ops[0], Register):
-            raise InvalidOperand('Operand 1 is not of type Register')
-        num = ops[1].get_val()
+            raise InvalidOperand('Operand 1 is notof type Register', line_num)
+        num = ops[1].get_val(line_num)
         if num == 0:
             vmachine.flags["ZF"] = 1
         else:
             vmachine.flags["ZF"] = 0
-            if ops[1].get_val().bit_length() <= 16:
+            if ops[1].get_val(line_num).bit_length() <= 16:
                 bit_size = 16
             else:
                 bit_size = 32
@@ -360,4 +361,55 @@ class BSR(Instruction):
                 if binStr[index] == '1':
                     break
             index = bit_size - index
-            ops[0].set_val(index)
+            ops[0].set_val(index, line_num)
+
+
+class BT(Instruction):
+    """
+    <instr>
+        bt
+    </instr>
+    <syntax>
+        bt reg, reg
+        bt reg, const
+    </syntax>
+    """
+
+    def fhook(self, ops, vmachine, line_num):
+        check_num_args(self.name, ops, 2, line_num)
+        if not isinstance(ops[0], Register):
+            raise InvalidOperand('Operand 1 is not of type Register', line_num)
+        # print('length', ops[1].get_val(line_num).bit_length())
+        # if ops[1].get_val(line_num).bit_length() < 8:
+        #     raise InvalidOperand('Operand 2 should be of size 8 bit')
+
+        binary_num = bin(ops[0].get_val(line_num))
+        index = len(binary_num) - ops[1].get_val(line_num)
+        vmachine.flags["CF"] = binary_num[index]
+
+
+class BTC(Instruction):
+    """
+    <instr>
+        bt
+    </instr>
+    <syntax>
+        bt reg, reg
+        bt reg, const
+    </syntax>
+    """
+
+    def fhook(self, ops, vmachine, line_num):
+        check_num_args(self.name, ops, 2, line_num)
+        if not isinstance(ops[0], Register):
+            raise InvalidOperand('Operand 1 is not of type Register', line_num)
+        # if ops[1].get_val(line_num).bit_length() != 8:
+        #     raise InvalidOperand('Operand 2 should be of size 8 bit')
+
+        binary_num = bin(ops[0].get_val(line_num))
+        index = len(binary_num) - ops[1].get_val(line_num)
+        if binary_num[index] == '1':
+            complement = '0'
+        else:
+            complement = '1'
+        vmachine.flags["CF"] = complement

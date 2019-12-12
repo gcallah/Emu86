@@ -140,8 +140,13 @@ db:
 	-git commit $(EMUDIR)/migrations/*.py
 	git push origin master
 
+all_tests: tests test_docker
+
 tests: FORCE
 	./all_tests.sh
+
+test_docker:
+	docker build -t gcallah/$(REPO) docker/
 
 dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
 	-git commit -a

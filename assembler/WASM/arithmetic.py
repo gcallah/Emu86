@@ -14,24 +14,24 @@ def get_stack_operand(vm):
     return val_one
 
 
-def get_stack_operands(vm):
-    vm.dec_sp()
+def get_stack_operands(vm, line_num):
+    vm.dec_sp(line_num)
     val_one = get_stack_operand(vm)
-    vm.dec_sp()
+    vm.dec_sp(line_num)
     val_two = get_stack_operand(vm)
     return val_one, val_two
 
 
-def two_op_arith(ops, vm, instr, operator):
+def two_op_arith(ops, vm, instr, operator, line_num):
     """
         operator: this is the functional version of Python's
             +, -, *, etc.
     """
-    val_one, val_two = get_stack_operands(vm)
-    # vm.dec_sp()
+    val_one, val_two = get_stack_operands(vm, line_num)
+    # vm.dec_sp(line_num)
     position = hex(vm.get_sp()).split('x')[-1].upper()
     vm.stack[position] = operator(val_one, val_two)
-    vm.inc_sp()
+    vm.inc_sp(line_num)
 
 
 def check_overflow(val, vm):
@@ -59,8 +59,8 @@ class Add(Instruction):
             $lhs and $rhs are example variables
         </descr>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.add)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, opfunc.add, line_num)
 
 
 class Sub(Instruction):
@@ -77,8 +77,8 @@ class Sub(Instruction):
             $lhs and $rhs are example variables
         </descr>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.sub)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, opfunc.sub, line_num)
 
 
 class Mul(Instruction):
@@ -95,8 +95,8 @@ class Mul(Instruction):
             $lhs and $rhs are example variables
         </descr>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.mul)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, opfunc.mul, line_num)
 
 
 class Div_S(Instruction):
@@ -113,8 +113,8 @@ class Div_S(Instruction):
             This is the division instruction for signed values.
         </descr>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.floordiv)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, opfunc.floordiv, line_num)
 
 
 class Div_U(Instruction):
@@ -131,14 +131,14 @@ class Div_U(Instruction):
             This is the division instruction for unsigned values.
         </descr>
     """
-    def fhook(self, ops, vm):
-        val_one, val_two = get_stack_operands(vm)
+    def fhook(self, ops, vm, line_num):
+        val_one, val_two = get_stack_operands(vm, line_num)
         if val_two == 0:
-            raise DivisionZero()
+            raise DivisionZero(line_num)
         result = opfunc.floordiv(abs(val_one), abs(val_two))
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Rem_S(Instruction):
@@ -155,8 +155,8 @@ class Rem_S(Instruction):
             This is the remainder instruction for signed values.
         </descr>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.mod)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, opfunc.mod, line_num)
 
 
 class Rem_U(Instruction):
@@ -173,12 +173,12 @@ class Rem_U(Instruction):
             This is the remainder instruction for unsigned values.
         </descr>
     """
-    def fhook(self, ops, vm):
-        val_one, val_two = get_stack_operands(vm)
+    def fhook(self, ops, vm, line_num):
+        val_one, val_two = get_stack_operands(vm, line_num)
         result = opfunc.mod(abs(val_one), abs(val_two))
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class And(Instruction):
@@ -195,8 +195,8 @@ class And(Instruction):
             $lhs and $rhs are example variables
         </descr>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.and_)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, opfunc.and_, line_num)
 
 
 class Or(Instruction):
@@ -213,8 +213,8 @@ class Or(Instruction):
             $lhs and $rhs are example variables
         </descr>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.or_)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, opfunc.or_, line_num)
 
 
 class Xor(Instruction):
@@ -231,8 +231,8 @@ class Xor(Instruction):
             $lhs and $rhs are example variables
         </descr>
     """
-    def fhook(self, ops, vm):
-        two_op_arith(ops, vm, self.name, opfunc.xor)
+    def fhook(self, ops, vm, line_num):
+        two_op_arith(ops, vm, self.name, opfunc.xor, line_num)
 
 
 class Shl(Instruction):
@@ -249,13 +249,13 @@ class Shl(Instruction):
             Integer Shift Left
         </descr>
     """
-    def fhook(self, ops, vm):
-        val_one, val_two = get_stack_operands(vm)
+    def fhook(self, ops, vm, line_num):
+        val_one, val_two = get_stack_operands(vm, line_num)
         val_two = val_two % 32  # only for i32
         result = opfunc.lshift(val_one, val_two)
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Shr_S(Instruction):
@@ -272,12 +272,12 @@ class Shr_S(Instruction):
             Integer Shift Right Signed
         </descr>
     """
-    def fhook(self, ops, vm):
-        val_one, val_two = get_stack_operands(vm)
+    def fhook(self, ops, vm, line_num):
+        val_one, val_two = get_stack_operands(vm, line_num)
         val_two = val_two % 32  # only for i32
         result = opfunc.rshift(val_one, val_two)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Shr_U(Instruction):
@@ -294,15 +294,15 @@ class Shr_U(Instruction):
             Integer Shift Right Unsigned
         </descr>
     """
-    def fhook(self, ops, vm):
-        val_one, val_two = get_stack_operands(vm)
+    def fhook(self, ops, vm, line_num):
+        val_one, val_two = get_stack_operands(vm, line_num)
         val_one_abs = abs(val_one)
         val_two_abs = abs(val_two)
         val_two_abs = val_two_abs % 32  # only for i32
         result = opfunc.rshift(val_one_abs, val_two_abs)
         check_overflow(result, vm)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Rotl(Instruction):
@@ -319,8 +319,8 @@ class Rotl(Instruction):
             Integer Rotate Left
         </descr>
     """
-    def fhook(self, ops, vm):
-        val_one, val_two = get_stack_operands(vm)
+    def fhook(self, ops, vm, line_num):
+        val_one, val_two = get_stack_operands(vm, line_num)
         val_one = abs(val_one)
         val_two = abs(val_two)
         val_one_bin = bin(val_one)[2:]
@@ -332,7 +332,7 @@ class Rotl(Instruction):
         val_two = val_two % 32  # only for i32
         result = val_one_bin[val_two:] + val_one_bin[:val_two]
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Rotr(Instruction):
@@ -349,8 +349,8 @@ class Rotr(Instruction):
             Integer Rotate Right
         </descr>
     """
-    def fhook(self, ops, vm):
-        val_one, val_two = get_stack_operands(vm)
+    def fhook(self, ops, vm, line_num):
+        val_one, val_two = get_stack_operands(vm, line_num)
         val_one = abs(val_one)
         val_two = abs(val_two)
         val_one_bin = bin(val_one)[2:]
@@ -364,7 +364,7 @@ class Rotr(Instruction):
         second_part = val_one_bin[: len(val_one_bin) - val_two]
         result = first_part + second_part
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = int(result, 2)
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Clz(Instruction):
@@ -380,8 +380,8 @@ class Clz(Instruction):
             Integer Count Leading Zeros
         </descr>
     """
-    def fhook(self, ops, vm):
-        vm.dec_sp()
+    def fhook(self, ops, vm, line_num):
+        vm.dec_sp(line_num)
         val_one = get_stack_operand(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
@@ -391,7 +391,7 @@ class Clz(Instruction):
             else:
                 break
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Ctz(Instruction):
@@ -407,8 +407,8 @@ class Ctz(Instruction):
             Integer Count Trailing Zeros
         </descr>
     """
-    def fhook(self, ops, vm):
-        vm.dec_sp()
+    def fhook(self, ops, vm, line_num):
+        vm.dec_sp(line_num)
         val_one = get_stack_operand(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
@@ -418,7 +418,7 @@ class Ctz(Instruction):
             else:
                 break
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Popcnt(Instruction):
@@ -435,8 +435,8 @@ class Popcnt(Instruction):
             returns the number of 1-bits in its operand
         </descr>
     """
-    def fhook(self, ops, vm):
-        vm.dec_sp()
+    def fhook(self, ops, vm, line_num):
+        vm.dec_sp(line_num)
         val_one = get_stack_operand(vm)
         val_one_bin = bin(val_one)[2:]
         result = 0
@@ -444,7 +444,7 @@ class Popcnt(Instruction):
             if i == "1":
                 result += 1
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)
 
 
 class Eqz(Instruction):
@@ -460,11 +460,11 @@ class Eqz(Instruction):
             Integer Equal To Zero
         </descr>
     """
-    def fhook(self, ops, vm):
-        vm.dec_sp()
+    def fhook(self, ops, vm, line_num):
+        vm.dec_sp(line_num)
         val_one = get_stack_operand(vm)
         result = False
         if val_one == 0:
             result = True
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = result
-        vm.inc_sp()
+        vm.inc_sp(line_num)

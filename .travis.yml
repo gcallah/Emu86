@@ -18,7 +18,7 @@ env:
     - PYTHONPATH=/home/travis/build/gcallah/Emu86
 
 script:
-    - make tests
+    - make all_tests
 
 after_success:
    - cd /home/travis/build/gcallah/Emu86; ./deploy.sh

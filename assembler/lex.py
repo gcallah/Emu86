@@ -214,12 +214,13 @@ def split_code(code, vm):
     return words
 
 
-def sep_line(code, i, data_sec, vm, language_keys):
+def sep_line(code, line_num, i, data_sec, vm, language_keys):
     """
     Returns a list of tokens created
 
     Args:
         code: Line of code
+        line_num: Line number of code, including the data section
         i: Line number of code
            Needed for determining label location
         data_sec: Boolean, determines if we are in the data section
@@ -292,9 +293,9 @@ def sep_line(code, i, data_sec, vm, language_keys):
                     else:
                         analysis.append(IntegerTok(int(word)))
                 except IntOutOfRng:
-                    raise IntOutOfRng(word)
+                    raise IntOutOfRng(word, line_num)
                 except Exception:
-                    raise InvalidArgument(word)
+                    raise InvalidArgument(word, line_num)
             else:
                 try:
                     if vm.flavor == "att":
@@ -302,18 +303,19 @@ def sep_line(code, i, data_sec, vm, language_keys):
                     else:
                         analysis.append(IntegerTok(int(word, 16)))
                 except IntOutOfRng:
-                    raise IntOutOfRng(word)
+                    raise IntOutOfRng(word, line_num)
                 except Exception:
-                    raise InvalidArgument(word)
-    return (analysis, code)
+                    raise InvalidArgument(word, line_num)
+    return (analysis, code, line_num)
 
 
-def sep_line_mml(code, i, vm, language_keys):
+def sep_line_mml(code, line_num, i, vm, language_keys):
     """
     Returns a list of tokens created
 
     Args:
         code: Line of code
+        line_num: Line number of code, including the data section
         i: Line number of code
            Needed for determining label location
         data_sec: Boolean, determines if we are in the data section
@@ -338,19 +340,20 @@ def sep_line_mml(code, i, vm, language_keys):
             try:
                 analysis.append(IntegerTok(int(word, 16)))
             except IntOutOfRng:
-                raise IntOutOfRng(word)
+                raise IntOutOfRng(word, line_num)
             except Exception:
-                raise InvalidArgument(word)
-    return (analysis, code)
+                raise InvalidArgument(word, line_num)
+    return (analysis, code, line_num)
 
 
-def sep_line_wasm(code, i, vm, language_keys):
+def sep_line_wasm(code, line_num, i, vm, language_keys):
     """
     Returns a list of tokens created
 
     Args:
         code: Line of code
-        i: Line number of code
+        line_num: Line number of code, including the data section
+        i: Line number of text code
            Needed for determining label location
         data_sec: Boolean, determines if we are in the data section
                   Needed to differentiate between label and symbol
@@ -377,10 +380,10 @@ def sep_line_wasm(code, i, vm, language_keys):
             try:
                 analysis.append(IntegerTok(int(word)))
             except IntOutOfRng:
-                raise IntOutOfRng(word)
+                raise IntOutOfRng(word, line_num)
             except Exception:
-                raise InvalidArgument(word)
-    return (analysis, code)
+                raise InvalidArgument(word, line_num)
+    return (analysis, code, line_num)
 
 
 def lex(code, vm):
@@ -401,7 +404,8 @@ def lex(code, vm):
     i = 0
     add_to_ip = True
     data_sec = False    # used for AT&T version
-    for line in lines:
+    for index in range(len(lines)):
+        line = lines[index]
         # comments:
         comm_start = line.find(";")
         if comm_start > 0:  # -1 means not found
@@ -414,19 +418,22 @@ def lex(code, vm):
         if len(line) == 0:  # blank lines ok; just skip 'em
             continue
 
-        pre_processed_lines.append(line)
+        # index starts at 0, line numbers start at 1
+        pre_processed_lines.append([line, index + 1])
 
     # we've stripped extra whitespace, comments, and labels:
     # now perform lexical analysis
-    for line in pre_processed_lines:
+    for line, line_num in pre_processed_lines:
         # create language-specific dictionary:
         language_keys = make_language_keys(vm)
         if vm.flavor == "mips_mml":
-            tok_lines.append(sep_line_mml(line, i, vm, language_keys))
+            tok_lines.append(sep_line_mml(line, line_num, i,
+                                          vm, language_keys))
         elif vm.flavor == "wasm":
-            tok_lines.append(sep_line_wasm(line, i, vm, language_keys))
+            tok_lines.append(sep_line_wasm(line, line_num, i,
+                                           vm, language_keys))
         else:
-            tok_lines.append(sep_line(line, i, data_sec,
+            tok_lines.append(sep_line(line, line_num, i, data_sec,
                                       vm, language_keys))
         if line == ".data":
             add_to_ip = False

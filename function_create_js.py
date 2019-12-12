@@ -25,7 +25,8 @@ fp_function_names = {
     "fp_area.asm": "area_fp",
     "fp_data.asm": "data_fp",
     "fp_power.asm": "power_fp",
-    "fp_sum_test.asm": "addTwo_fp"
+    "fp_sum_test.asm": "addTwo_fp",
+    "fp_cel_to_fah.asm": "celFah_fp"
 }
 
 
@@ -211,7 +212,8 @@ def create_js_files():
 
     js_file_fp = open("mysite/static/Emu86/sample_functions_fp.js", "w")
     file_code = function_directory_fp(fp_function_names,
-                                      ["tests/Intel/", "tests/MIPS_ASM/"])
+                                      ["tests/Intel/", "tests/ATT/",
+                                       "tests/MIPS_ASM/"])
     file_code += function_directory_fp(intel_function_names, intel_directory)
     js_file_fp.write(file_code)
     js_file_fp.close()

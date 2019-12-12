@@ -6,6 +6,7 @@ from collections import OrderedDict
 
 from .errors import StackOverflow, StackUnderflow, InvalidArgument
 from .MIPS.control_flow import Jal, Jr
+from .MIPS.key_words import op_func_codes
 
 MEM_DIGITS = 2
 
@@ -26,8 +27,6 @@ STACK_PTR_RISCV = "X2"
 # Why are these the right values?
 MIPS_INTERRUPT_IP = 2147484032
 RISC_INTERRUPT_IP = 470351872
-
-INSTR_MIPS = 1
 
 
 class VirtualMachine:
@@ -167,6 +166,9 @@ class VirtualMachine:
     def exec_instr(self, instr_line):
         pass
 
+    def create_bit_instr(self, instr_lst):
+        return ''
+
     def set_next_stack_change(self):
         for label in self.labels:
             if self.get_ip() == self.labels[label]:
@@ -275,36 +277,33 @@ class IntelMachine(VirtualMachine):
     def get_ip(self):
         return int(self.registers[INSTR_PTR_INTEL])
 
-    def inc_sp(self):
+    def inc_sp(self, line_num):
         sp = self.get_sp()
         sp += 1
-        self.set_sp(sp)
+        self.set_sp(sp, line_num)
 
-    def dec_sp(self):
+    def dec_sp(self, line_num):
         sp = self.get_sp()
         sp -= 1
-        self.set_sp(sp)
+        self.set_sp(sp, line_num)
 
-    def set_sp(self, val):
+    def set_sp(self, val, line_num):
         if val < STACK_BOTTOM - 1:
-            raise StackOverflow()
+            raise StackOverflow(line_num)
         if val > STACK_TOP:
-            raise StackUnderflow()
+            raise StackUnderflow(line_num)
 
         self.registers[STACK_PTR_INTEL] = val
 
     def get_sp(self):
         return int(self.registers[STACK_PTR_INTEL])
 
-    def bit_code_needed(self):
-        return False
-
     def jump_handler(self, brk, source, instr_line=None):
         return self.jump_to_label(brk.label, source, True)
 
-    def exec_instr(self, instr_line):
+    def exec_instr(self, instr_line, line_num):
         self.inc_ip()
-        return instr_line[self.instr].f(instr_line[self.ops:], self)
+        return instr_line[self.instr].f(instr_line[self.ops:], self, line_num)
 
 
 class MIPSMachine(VirtualMachine):
@@ -420,42 +419,220 @@ class MIPSMachine(VirtualMachine):
     def get_ip(self):
         return int(self.registers[INSTR_PTR_MIPS])
 
-    def inc_sp(self):
+    def inc_sp(self, line_num):
         sp = self.get_sp()
         sp += 1
-        self.set_sp(sp)
+        self.set_sp(sp, line_num)
 
-    def dec_sp(self):
+    def dec_sp(self, line_num):
         sp = self.get_sp()
         sp -= 1
-        self.set_sp(sp)
+        self.set_sp(sp, line_num)
 
-    def set_sp(self, val):
+    def set_sp(self, val, line_num):
         if val < STACK_BOTTOM - 1:
-            raise StackOverflow()
+            raise StackOverflow(line_num)
         if val > STACK_TOP:
-            raise StackUnderflow()
+            raise StackUnderflow(line_num)
 
         self.registers[STACK_PTR_MIPS] = val
 
     def get_sp(self):
         return int(self.registers[STACK_PTR_MIPS])
 
-    def bit_code_needed(self):
-        return True
+    def create_bit_negative(self, value, bits):
+        """
+        Converts an immediate value into a string of bits
+
+        Args:
+            value: Immediat value
+            bits: Number of bits needed
+
+        Returns:
+            Formatted binary value of immediate
+            in the number of bits inputted
+        """
+        imm_code = bin(value).split('b')[1]
+        imm_code = '0'*(bits - len(imm_code)) + imm_code
+        if value < 0:
+            imm_lst = []
+            for bit in imm_code:
+                imm_lst.append(bit)
+            flip_bit = False
+            place = bits - 1
+            while place >= 0:
+                if not flip_bit and imm_lst[place] == "1":
+                    flip_bit = True
+                elif flip_bit:
+                    if imm_lst[place] == "0":
+                        imm_lst[place] = "1"
+                    else:
+                        imm_lst[place] = "0"
+                place -= 1
+            imm_code = "".join(imm_lst)
+        return imm_code
+
+    def create_bit_r_format(self, instr_lst, op_func, func_code):
+        """
+        Converts an R-format instruction into a string of bits
+
+        Args:
+            instr_lst: Line of code
+
+        Returns:
+            Formatted version of instruction
+        """
+        rs = 0
+        rt = 0
+        shamt = 0
+        rd = 0
+
+        # if instruction has shift value
+        if func_code == "000000" or func_code == "000010":
+            try:
+                rd = int(instr_lst[self.ops].get_nm().split('R')[1])
+                rt = int(instr_lst[self.ops + 1].get_nm().split('R')[1])
+                shamt = instr_lst[self.ops + 2].get_val()
+            except Exception:
+                pass
+
+        # if function does not use rd
+        elif func_code == "011000" or func_code == "011010":
+            try:
+                rs = int(instr_lst[self.ops].get_nm().split('R')[1])
+                rt = int(instr_lst[self.ops + 1].get_nm().split('R')[1])
+            except Exception:
+                pass
+
+        # if function only uses rd
+        elif func_code == "010010" or func_code == "010000":
+            try:
+                rd = int(instr_lst[self.ops].get_nm().split('R')[1])
+            except Exception:
+                pass
+
+        # if function only uses rs
+        elif func_code == "001000":
+            try:
+                rs = int(instr_lst[self.ops].get_nm().split('R')[1])
+            except Exception:
+                pass
+
+        # other arithmetic, logic functions
+        else:
+            try:
+                rs = int(instr_lst[self.ops + 2].get_nm().split('R')[1])
+                rt = int(instr_lst[self.ops + 1].get_nm().split('R')[1])
+                rd = int(instr_lst[self.ops].get_nm().split('R')[1])
+            except Exception:
+                pass
+        # format the rs, rt, rd, shamt values into 5 bits
+        rs = format(rs, '#07b').split('b')[1]
+        rt = format(rt, '#07b').split('b')[1]
+        rd = format(rd, '#07b').split('b')[1]
+        shamt = format(shamt, '#07b').split('b')[1]
+        code_lst = [op_func, rs, rt, rd, shamt, func_code, "\n"]
+        return " ".join(code_lst)
+
+    def create_bit_i_format(self, instr_lst, op_func):
+        """
+        Converts an I-format instruction into a string of bits
+
+        Args:
+            instr_lst: Line of code
+
+        Returns:
+            Formatted version of instruction
+        """
+        imm = 0
+        rs = 0
+        rt = 0
+        # if not data movement instruction
+        if op_func != "100011" and op_func != "101011":
+            try:
+                rs = int(instr_lst[self.ops + 1].get_nm().split('R')[1])
+                rt = int(instr_lst[self.ops].get_nm().split('R')[1])
+                imm = int(instr_lst[self.ops + 2].get_val())
+            except Exception:
+                pass
+
+        # if LW or SW
+        else:
+            try:
+                rs = int(instr_lst[self.ops + 1].get_nm().split('R')[1])
+                rt = int(instr_lst[self.ops].get_nm().split('R')[1])
+                imm = int(instr_lst[self.ops + 1].displacement)
+            except Exception:
+                pass
+
+        # format rs, rt into 5 bits
+        rs = format(rs, '#07b').split('b')[1]
+        rt = format(rt, '#07b').split('b')[1]
+
+        # format imm to 16 bits signed
+        imm_code = self.create_bit_negative(imm, 16)
+        code_lst = [op_func, rs, rt, imm_code, "\n"]
+        return " ".join(code_lst)
+
+    def create_bit_j_format(self, instr_lst, op_func):
+        """
+        Converts an J-format instruction into a string of bits
+
+        Args:
+            instr_lst: Line of code
+
+        Returns:
+            Formatted version of instruction
+        """
+        imm = 0
+        try:
+            imm = int(instr_lst[self.ops].get_val())
+        except Exception:
+            pass
+
+        # format imm into 26 bits signed
+        imm_code = self.create_bit_negative(imm, 26)
+        code_lst = [op_func, imm_code, "\n"]
+        return " ".join(code_lst)
+
+    def create_bit_instr(self, instr_lst):
+        """
+        Converts the instruction into code of bits
+
+        Args:
+            instr_lst: Line of code
+
+        Returns:
+            Formatted version of the instruction in bits
+        """
+        op_func = None
+        func_code = None
+        instr_nm = instr_lst[self.instr].get_nm()
+        try:
+            op_func, func_code = op_func_codes[instr_nm]
+        except Exception:
+            op_func = op_func_codes[instr_lst[self.instr].get_nm()]
+        if func_code is not None:
+            return self.create_bit_r_format(instr_lst, op_func, func_code)
+        else:
+            if instr_nm != "JAL" and instr_nm != "J":
+                return self.create_bit_i_format(instr_lst, op_func)
+            else:
+                return self.create_bit_j_format(instr_lst, op_func)
 
     def jump_handler(self, brk, source, instr_line):
-        if isinstance(instr_line[INSTR_MIPS], Jal):
+        if isinstance(instr_line[self.instr], Jal):
             self.registers["R31"] = self.get_ip()
-        if isinstance(instr_line[INSTR_MIPS], Jr):
+        if isinstance(instr_line[self.instr], Jr):
             return self.jump_to_label(brk.label, source)
         return self.jump_to_label(brk.label, source, True)
 
-    def exec_instr(self, instr_line):
-        if self.get_ip() != instr_line[self.pc].get_val():
-            raise InvalidArgument(hex(instr_line[self.pc].get_val()))
+    def exec_instr(self, instr_line, line_num):
+        if self.get_ip() != instr_line[self.pc].get_val(line_num):
+            raise InvalidArgument(hex(instr_line[self.pc].get_val(line_num)),
+                                  line_num)
         self.inc_ip()
-        return instr_line[self.instr].f(instr_line[self.ops:], self)
+        return instr_line[self.instr].f(instr_line[self.ops:], self, line_num)
 
 
 class RISCVMachine(VirtualMachine):
@@ -533,35 +710,33 @@ class RISCVMachine(VirtualMachine):
     def get_ip(self):
         return int(self.registers[INSTR_PTR_RISCV])
 
-    def inc_sp(self):
+    def inc_sp(self, line_num):
         sp = self.get_sp()
         sp += 1
-        self.set_sp(sp)
+        self.set_sp(sp, line_num)
 
-    def dec_sp(self):
+    def dec_sp(self, line_num):
         sp = self.get_sp()
         sp -= 1
-        self.set_sp(sp)
+        self.set_sp(sp, line_num)
 
-    def set_sp(self, val):
+    def set_sp(self, val, line_num):
         if val < STACK_BOTTOM - 1:
-            raise StackOverflow()
+            raise StackOverflow(line_num)
         if val > STACK_TOP:
-            raise StackUnderflow()
+            raise StackUnderflow(line_num)
 
         self.registers[STACK_PTR_RISCV] = val
 
     def get_sp(self):
         return int(self.registers[STACK_PTR_RISCV])
 
-    def bit_code_needed(self):
-        return False
-
-    def exec_instr(self, instr_line):
-        if self.get_ip() != instr_line[self.pc].get_val():
-            raise InvalidArgument(hex(instr_line[self.pc].get_val()))
+    def exec_instr(self, instr_line, line_num):
+        if self.get_ip() != instr_line[self.pc].get_val(line_num):
+            raise InvalidArgument(hex(instr_line[self.pc].get_val(line_num)),
+                                  line_num)
         self.inc_ip()
-        return instr_line[self.instr].f(instr_line[self.ops:], self)
+        return instr_line[self.instr].f(instr_line[self.ops:], self, line_num)
 
     def jump_handler(self, brk, source, instr_line):
         return self.jump_to_label(brk.label, source, True)
@@ -608,21 +783,21 @@ class WASMMachine(VirtualMachine):
         for i in range(STACK_TOP - 3, STACK_BOTTOM - 1, -4):
             self.stack[hex(i).split('x')[-1].upper()] = 0
 
-    def inc_sp(self):
+    def inc_sp(self, line_num):
         sp = self.get_sp()
         sp += 4
-        self.set_sp(sp)
+        self.set_sp(sp, line_num)
 
-    def dec_sp(self):
+    def dec_sp(self, line_num):
         sp = self.get_sp()
         sp -= 4
-        self.set_sp(sp)
+        self.set_sp(sp, line_num)
 
-    def set_sp(self, val):
+    def set_sp(self, val, line_num):
         if val < STACK_BOTTOM - 1:
-            raise StackOverflow()
+            raise StackOverflow(line_num)
         if val > STACK_TOP:
-            raise StackUnderflow()
+            raise StackUnderflow(line_num)
 
         self.stack_ptr = val
 
@@ -640,12 +815,9 @@ class WASMMachine(VirtualMachine):
     def get_ip(self):
         return self.ip
 
-    def bit_code_needed(self):
-        return False
-
-    def exec_instr(self, instr_line):
+    def exec_instr(self, instr_line, line_num):
         self.inc_ip()
-        return instr_line[self.instr].f(instr_line[self.ops:], self)
+        return instr_line[self.instr].f(instr_line[self.ops:], self, line_num)
 
     def set_next_stack_change(self):
         pass

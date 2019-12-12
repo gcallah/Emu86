@@ -1,3 +1,6 @@
 [submodule "utils"]
 	path = utils
 	url = https://github.com/gcallah/utils.git
+[submodule "Emu86_Comment_Shortcut_Jupyter_Notebook_Extension"]
+	path = Emu86_Comment_Shortcut_Jupyter_Notebook_Extension
+	url = https://github.com/sx563/Emu86_Comment_Shortcut_Jupyter_Notebook_Extension
