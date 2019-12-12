@@ -2,3 +2,6 @@
 	path = utils
 	url = https://github.com/gcallah/utils.git
 
+[submodule "ASM_Comment_Shortcut"]
+	path = ASM_Comment_Shortcut
+	url = https://github.com/sx563/ASM_Comment_Shortcut
