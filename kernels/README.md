@@ -22,7 +22,7 @@ Steps to properly deploy new releases to PYPI:
     - the * represents where you can put the version number and additional information about this new release
     - eg: `pypi release v0.0.1 upload emu86`
 3.  Make sure the version is the same for [setup.py](https://github.com/gcallah/Emu86/blob/master/setup.py) and git commit message and that it also increases from the last PYPI version release (see [PYPI release history](https://pypi.org/project/emu86/#history)) before pushing the git commit 
-## [Emu86 Comment Shortcut Jupyter Notebook Extension](https://github.com/sx563/Emu86_Comment_Shortcut_Jupyter_Notebook_Extension)
+## [ASM_Comment_Shortcut](https://github.com/sx563/ASM_Comment_Shortcut)
 An extension that adds a keyboard shortcut to comment/uncomment one line at a time Emu86 Kernel code in Jupyter Notebook.
 
 
