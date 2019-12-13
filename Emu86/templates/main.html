@@ -123,7 +123,7 @@
                         <option value="dataAccess">Accessing data in memory</option>
                     {% endif %}
                 {% endif %}
-                {% if flavor == "intel" and base == "dec" %}
+                {% if flavor == "intel" or flavor == 'att' and base == "dec" %}
                     {% if sample == "area_fp" %}
                         <option value="area_fp" selected>Area of a rectangle
                         using floating point</option>

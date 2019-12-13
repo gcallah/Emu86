@@ -163,6 +163,8 @@ def function_directory_fp(func_dict, directory_lst):
             if count == 0:
                 function_code += "\n\tif (flavor === 'intel'){"
             elif count == 1:
+                function_code += "\n\telse if (flavor == 'att'){"
+            else:
                 function_code += "\n\telse if (flavor == 'mips_asm'){"
 
             function_code += "\n\t\tcodeString += "
