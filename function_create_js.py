@@ -169,7 +169,7 @@ def function_directory_fp(func_dict, directory_lst):
 
             function_code += "\n\t\tcodeString += "
             function_code += repr(sample_test.read())
-            
+
             sample_test.close()
             function_code += ";\n\t}"
             count += 1
