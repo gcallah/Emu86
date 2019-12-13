@@ -169,22 +169,7 @@ def function_directory_fp(func_dict, directory_lst):
 
             function_code += "\n\t\tcodeString += "
             function_code += repr(sample_test.read())
-            # if count == 1:
-            #     function_code += repr(sample_test.read())
-            # else:
-            #     sample_conv = ""
-            #     for line in sample_test:
-            #         sample_conv += line
-            '''
-                    if line.strip() == "":
-                        sample_conv += line
-                    elif line.strip()[0] == ";":
-                        sample_conv += line
-                    else:
-                        sample_conv += line
-                        sample_conv += convert_line_hex_to_fp(line)
-                function_code += repr(sample_conv)
-            '''
+            
             sample_test.close()
             function_code += ";\n\t}"
             count += 1
