@@ -48,7 +48,7 @@ FORCE:
 
 # update our submodules:
 submods: FORCE
-	git submodule update --init
+	git submodule foreach --recursive git pull origin master
 
 # this rule builds the menu for the static server:
 navbar: submods
