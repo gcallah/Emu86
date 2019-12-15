@@ -23,7 +23,7 @@ Steps to properly deploy new releases to PYPI:
     - eg: `pypi release v0.0.1 upload emu86`
 3.  Make sure the version is the same for [setup.py](https://github.com/gcallah/Emu86/blob/master/setup.py) and git commit message and that it also increases from the last PYPI version release (see [PYPI release history](https://pypi.org/project/emu86/#history)) before pushing the git commit 
 ## [ASM_Comment_Shortcut](https://github.com/sx563/ASM_Comment_Shortcut)
-An extension that adds a keyboard shortcut to comment/uncomment one line at a time Emu86 Kernel code in Jupyter Notebook.
+An extension that adds a keyboard shortcut to comment/uncomment Emu86 Kernel code in Jupyter Notebook.
 
 
 
