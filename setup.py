@@ -5,7 +5,7 @@ with open('Emu86 Kernel PYPI Description.md', 'r') as f:
 
 setup(
     name='emu86',
-    version='0.0.9.3',
+    version='0.0.9.4',
     packages=['kernels', 'kernels/att', 'kernels/intel', 'kernels/riscv',
               'kernels/mips_asm', 'kernels/mips_mml',
               'assembler', 'assembler/Intel', 'assembler/MIPS',
