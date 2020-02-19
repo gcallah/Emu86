@@ -33,7 +33,7 @@ def check_source_val(instr, ops, data_type, line_num):
             if (ops[1].get_val(line_num) >= 2 ** 32 or
                     ops[1].get_val(line_num) <= -(2 ** 32)):
                 raise InvalidConVal(str(ops[1].get_val(line_num)), line_num)
-    elif not isinstance(op[1], Register):
+    elif not isinstance(ops[1], Register):
         raise InvalidArgument("Not a constant or register", line_num)
 
 
