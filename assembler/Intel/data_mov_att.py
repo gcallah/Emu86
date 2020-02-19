@@ -2,8 +2,8 @@
 data_mov_att.py: other data movement instructions for AT&T
 """
 
-from assembler.errors import check_num_args, InvalidConVal
-from assembler.tokens import Instruction, IntegerTok
+from assembler.errors import check_num_args, InvalidConVal, InvalidArgument
+from assembler.tokens import Instruction, IntegerTok, Register
 
 
 def check_constant_val(instr, ops, data_type, line_num):
@@ -20,9 +20,7 @@ def check_constant_val(instr, ops, data_type, line_num):
 
     Raises an Invalid Constant Value error if mismatch found
     """
-    if not isinstance(ops[1], IntegerTok):
-        raise InvalidConVal(ops[1].get_nm(), line_num)
-    else:
+    if isinstance(ops[1], IntegerTok):
         if data_type == "b":
             if (ops[1].get_val(line_num) >= 2 ** 8 or
                     ops[1].get_val(line_num) <= -(2 ** 8)):
@@ -35,6 +33,8 @@ def check_constant_val(instr, ops, data_type, line_num):
             if (ops[1].get_val(line_num) >= 2 ** 32 or
                     ops[1].get_val(line_num) <= -(2 ** 32)):
                 raise InvalidConVal(str(ops[1].get_val(line_num)), line_num)
+    elif not isinstance(op[1], Register):
+        raise InvalidArgument("Not a constant or register", line_num)
 
 
 class Movb(Instruction):
