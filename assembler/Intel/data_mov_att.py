@@ -53,6 +53,8 @@ class Movb(Instruction):
         check_num_args(self.get_nm(), ops, 2, line_num)
         check_source_val(self.get_nm(), ops, 'b', line_num)
         ops[0].set_val(ops[1].get_val(line_num), line_num)
+        if isinstance(ops[0], Register):
+            vm.changes.add(ops[0].get_nm())
 
 
 class Movw(Instruction):
@@ -71,6 +73,8 @@ class Movw(Instruction):
         check_num_args(self.get_nm(), ops, 2, line_num)
         check_source_val(self.get_nm(), ops, 'w', line_num)
         ops[0].set_val(ops[1].get_val(line_num), line_num)
+        if isinstance(ops[0], Register):
+            vm.changes.add(ops[0].get_nm())
 
 
 class Movl(Instruction):
@@ -89,3 +93,5 @@ class Movl(Instruction):
         check_num_args(self.get_nm(), ops, 2, line_num)
         check_source_val(self.get_nm(), ops, 'l', line_num)
         ops[0].set_val(ops[1].get_val(line_num), line_num)
+        if isinstance(ops[0], Register):
+            vm.changes.add(ops[0].get_nm())
