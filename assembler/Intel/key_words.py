@@ -3,7 +3,7 @@ from .arithmetic import Shr, Notf, Andf, Orf, Xor, Neg, BTR, BTS, BSF, BSR
 from .arithmetic import BT, BTC
 from .fp_arithmetic import FAdd, FSub, FDiv, FMul
 from .fp_arithmetic import FAbs, FChs, FaddP, FSubP, FMulP, FDivP, FSqrt
-from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret
+from .control_flow import Cmpf, Je, Jne, Jmp, Call, Ret, Test
 from .control_flow import Jg, Jge, Jl, Jle
 
 
@@ -22,6 +22,7 @@ instructions = {
         'INT': Interrupt('INT'),
         # control flow:
         'CMP': Cmpf('CMP'),
+        'TEST': Test('TEST'),
         'JMP': Jmp('JMP'),
         je.get_nm(): je,
         jne.get_nm(): jne,

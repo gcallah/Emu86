@@ -45,6 +45,40 @@ class Cmpf(Instruction):
         vm.changes.add('FLAGSF')
 
 
+class Test(Instruction):
+    """
+        <instr>
+             test
+        </instr>
+        <syntax>
+            TEST reg, reg
+            TEST reg, mem
+            TEST reg, con
+        </syntax>
+        <descr>
+            Performs bitwise AND on op1 and op2 and sets the SF and ZF flags.
+        </descr>
+    """
+    def fhook(self, ops, vm, line_num):
+        (op1, op2) = get_two_ops(self.get_nm(), ops, line_num)
+        res = op1.get_val(line_num) & op2.get_val(line_num)
+        # set the proper flags
+        # zero flag:
+        if res == 0:
+            vm.flags['ZF'] = 1
+        else:
+            vm.flags['ZF'] = 0
+        # sign flag:
+        if res < 0:
+            vm.flags['SF'] = 1
+        else:
+            vm.flags['SF'] = 0
+        vm.flags['CF'] = 0
+        vm.flags['OF'] = 0
+        vm.changes.add('FLAGZF')
+        vm.changes.add('FLAGSF')
+
+
 class Jmp(Instruction):
     """
         <instr>

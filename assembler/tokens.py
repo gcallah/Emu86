@@ -258,7 +258,7 @@ class Location(Operand):
         self.vm = vm
 
     @abstractmethod
-    def set_val(self, val):
+    def set_val(self, val, line_num):
         pass
 
 
@@ -389,8 +389,8 @@ class Label(Location):
         else:
             return self.labels[self.name]
 
-    def set_val(self, val):
-        raise LabelNotSettable(self.name)
+    def set_val(self, val, line_num):
+        raise LabelNotSettable(self.name, line_num)
 
 
 class NewSymbol(Token):
@@ -401,7 +401,7 @@ class NewSymbol(Token):
     def get_val(self, line_num):
         return self.val
 
-    def set_val(self, value):
+    def set_val(self, value, line_num):
         self.val = value
 
 
@@ -418,7 +418,7 @@ class Symbol(Location):
         if self.name not in self.vm.symbols:
             raise UnknownName(self.name)
 
-    def set_val(self, val):
+    def set_val(self, val, line_num):
         self.check_nm()
         self.vm.symbols[self.name] = val
 
