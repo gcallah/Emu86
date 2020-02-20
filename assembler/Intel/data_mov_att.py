@@ -3,7 +3,7 @@ data_mov_att.py: other data movement instructions for AT&T
 """
 
 from assembler.errors import check_num_args, InvalidConVal, InvalidArgument
-from assembler.tokens import Instruction, IntegerTok, Register
+from assembler.tokens import Instruction, IntegerTok, Register, Address
 
 
 def check_source_val(instr, ops, data_type, line_num):
@@ -20,21 +20,21 @@ def check_source_val(instr, ops, data_type, line_num):
 
     Raises an Invalid Constant Value error if mismatch found
     """
-    if isinstance(ops[1], IntegerTok):
-        if data_type == "b":
-            if (ops[1].get_val(line_num) >= 2 ** 8 or
-                    ops[1].get_val(line_num) <= -(2 ** 8)):
-                raise InvalidConVal(str(ops[1].get_val(line_num)), line_num)
-        elif data_type == "w":
-            if (ops[1].get_val(line_num) >= 2 ** 16 or
-                    ops[1].get_val(line_num) <= -(2 ** 16)):
-                raise InvalidConVal(str(ops[1].get_val(line_num)), line_num)
-        else:
-            if (ops[1].get_val(line_num) >= 2 ** 32 or
-                    ops[1].get_val(line_num) <= -(2 ** 32)):
-                raise InvalidConVal(str(ops[1].get_val(line_num)), line_num)
-    elif not isinstance(ops[1], Register):
-        raise InvalidArgument("Not a constant or register", line_num)
+    if (not isinstance(ops[1], IntegerTok) and not isinstance(ops[1], Register)
+            and not isinstance(ops[1], Address)):
+        raise InvalidArgument("Invalid data", line_num)
+    val = ops[1].get_val(line_num)
+    if data_type == "b":
+        if (val >= 2 ** 8 or val <= -(2 ** 8)):
+            raise InvalidConVal(str(val), line_num)
+    elif data_type == "w":
+        if (val >= 2 ** 16 or
+                ops[1].get_val(line_num) <= -(2 ** 16)):
+            raise InvalidConVal(str(ops[1].get_val(line_num)), line_num)
+    else:
+        if (ops[1].get_val(line_num) >= 2 ** 32 or
+                ops[1].get_val(line_num) <= -(2 ** 32)):
+            raise InvalidConVal(str(ops[1].get_val(line_num)), line_num)
 
 
 class Movb(Instruction):
@@ -55,6 +55,8 @@ class Movb(Instruction):
         ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
+        elif isinstance(ops[0], Address):
+            vm.changes.add(f'MEM{ops[0].get_mem_addr(line_num)}')
 
 
 class Movw(Instruction):
@@ -75,6 +77,8 @@ class Movw(Instruction):
         ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
+        elif isinstance(ops[0], Address):
+            vm.changes.add(f'MEM{ops[0].get_mem_addr(line_num)}')
 
 
 class Movl(Instruction):
@@ -95,3 +99,5 @@ class Movl(Instruction):
         ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
+        elif isinstance(ops[0], Address):
+            vm.changes.add(f'MEM{ops[0].get_mem_addr(line_num)}')
