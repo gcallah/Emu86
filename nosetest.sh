@@ -8,4 +8,4 @@ else
 	export capture="--nocapture"
 fi
 
-nosetests --ignore-files=$ignores --exe --verbose --with-coverage --cover-package=models $capture
+nosetests --ignore-files=$ignores --exe --verbose --with-coverage --cover-package=assembler $capture
