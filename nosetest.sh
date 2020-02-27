@@ -1,6 +1,6 @@
 export user_type="test"
 export test_dir="tests"
-export ignores="(scheduler|sandpile|fashion|bigbox|utils)"
+export ignores="(utils|selenium_tests)"
 
 if [ -z "$1" ]; then
 	export capture=""
@@ -9,3 +9,4 @@ else
 fi
 
 nosetests --ignore-files=$ignores --exe --verbose --with-coverage --cover-package=assembler $capture
+# nosetests --ignore-files=$ignores --exe --collect-only --verbose --with-coverage $capture
