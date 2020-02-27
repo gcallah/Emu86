@@ -1,0 +1,10 @@
+Publicize Tactics for Emu86
+
+Posted in two Facebook groups: Ladies Storm Hackathon and Hackathon Hackers
+I posted pictures and asked members to spread word and try about the application.
+I tried to search for other assembly Facebook groups but they were mostly inactive. 
+
+Worked with Professor Sandoval to improve application to demo for Intro to OS students.
+
+Created a Youtube video -- a tutorial regarding how to navigate and code for the website.
+https://www.youtube.com/watch?v=5v0xxcfmu24&feature=youtu.be
