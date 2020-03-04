@@ -26,15 +26,7 @@ INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 DOCKER_DIR = docker
 PYLINT = flake8
 PYLINTFLAGS = 
-PYTHONFILES = $(shell ls $(EMUDIR)/*.py)
-PYTHONFILES += $(shell ls $(SDIR)/*.py)
-PYTHONFILES += $(INTEL_DIR)/*.py
-PYTHONFILES += $(MIPS_DIR)/*.py
-PYTHONFILES += $(TDIR)/*/*.py
-PYTHONFILES += $(RISCV_DIR)/*.py
-PYTHONFILES += $(WASM_DIR)/*.py
-PYTHONFILES += $(shell ls selenium_tests/*.py)
-PYTHONFILES += *.py
+PYTHONFILES = $(shell find . -type f -name "*.py" -not -path "./utils/*" -not -path "./Emu86/migrations/*" -not -path "./mysite/*")
 
 ESLINT = npx eslint
 JSFILES = $(shell ls mysite/static/Emu86/*.js)

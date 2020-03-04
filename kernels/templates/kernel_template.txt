@@ -132,4 +132,3 @@ class NAMEKernel(Kernel):
                 'payload': [],
                 'user_expressions': {}
                 }
-
