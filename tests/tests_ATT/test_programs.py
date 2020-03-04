@@ -11,25 +11,25 @@ from assembler.assemble import assemble
 """
 Test entire programs.
 
-tests/ATT/area.asm
-tests/ATT/arithmetic_expression.asm
-tests/ATT/array.asm
-tests/ATT/array_average_test.asm
-tests/ATT/cel_to_fah.asm
-tests/ATT/change_array_elem.asm
-tests/ATT/int_square_root.asm
-tests/ATT/log.asm
-tests/ATT/mem_register_test.asm
-tests/ATT/mov_extra_test.asm
-tests/ATT/sum_test
-tests/ATT/arithmetic_shift.asm
-tests/ATT/data.asm
-tests/ATT/gt.asm
-tests/ATT/key_test.asm
-tests/ATT/loop.asm
-tests/ATT/power.asm
-tests/ATT/test.asm
-tests/ATT/test_interrupt.asm
+tests/tests_ATT/area.asm
+tests/tests_ATT/arithmetic_expression.asm
+tests/tests_ATT/array.asm
+tests/tests_ATT/array_average_test.asm
+tests/tests_ATT/cel_to_fah.asm
+tests/tests_ATT/change_array_elem.asm
+tests/tests_ATT/int_square_root.asm
+tests/tests_ATT/log.asm
+tests/tests_ATT/mem_register_test.asm
+tests/tests_ATT/mov_extra_test.asm
+tests/tests_ATT/sum_test
+tests/tests_ATT/arithmetic_shift.asm
+tests/tests_ATT/data.asm
+tests/tests_ATT/gt.asm
+tests/tests_ATT/key_test.asm
+tests/tests_ATT/loop.asm
+tests/tests_ATT/power.asm
+tests/tests_ATT/test.asm
+tests/tests_ATT/test_interrupt.asm
 
 """
 

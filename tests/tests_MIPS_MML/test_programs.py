@@ -15,6 +15,8 @@ tests/key_test.asm  tests/loop.asm  tests/power.asm
 tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
 """
 
+TEST_DIR_NAME = "tests/tests_MIPS_MML/"
+
 
 class TestPrograms(TestCase):
 
@@ -26,7 +28,7 @@ class TestPrograms(TestCase):
         mips_machine.re_init()
         mips_machine.base = "hex"
         mips_machine.flavor = "mips_mml"
-        test_code = self.read_test_code("tests/MIPS_MML/" + filnm)
+        test_code = self.read_test_code(TEST_DIR_NAME + filnm)
         assemble(test_code, mips_machine)
 
     def test_loop(self):

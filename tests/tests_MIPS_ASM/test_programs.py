@@ -22,6 +22,8 @@ tests/key_test.asm  tests/loop.asm  tests/power.asm
 tests/test.asm  tests/test_control_flow.asm  tests/test_interrupt.asm
 """
 
+TEST_DIR_NAME = "tests/tests_MIPS_ASM/"
+
 
 class TestPrograms(TestCase):
 
@@ -33,7 +35,7 @@ class TestPrograms(TestCase):
         mips_machine.re_init()
         mips_machine.base = "hex"
         mips_machine.flavor = "mips_asm"
-        test_code = self.read_test_code("tests/MIPS_ASM/" + filenm)
+        test_code = self.read_test_code(TEST_DIR_NAME + filenm)
         assemble(test_code, mips_machine)
 
     # def convert_hex_float(self, string):
