@@ -8,3 +8,5 @@ Worked with Professor Sandoval to improve application to demo for Intro to OS st
 
 Created a Youtube video -- a tutorial regarding how to navigate and code for the website.
 https://www.youtube.com/watch?v=5v0xxcfmu24&feature=youtu.be
+
+Posted on HackerNews asking for users: https://news.ycombinator.com/item?id=22481910
