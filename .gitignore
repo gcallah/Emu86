@@ -10,3 +10,4 @@ __pycache__/
 node_modules
 *.vscode
 .idea/
+*.ipynb_checkpoints
