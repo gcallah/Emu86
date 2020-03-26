@@ -55,6 +55,13 @@ class Add(Instruction):
         <syntax>
             ADD reg, reg, reg
         </syntax>
+        <descr>
+            The 32 bit word value in Rt is added to the 32 bit word value in Rs
+            to produce a 32 bit result. If the addition results in 32 bit 2's
+            complement arithmetic overflow, the destination register is not
+            modified and an Integer Overflow exception occurs. If the addition
+            deos not overflow, the 32 bit result is placed into Rd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.add, line_num)
@@ -68,6 +75,13 @@ class Addi(Instruction):
         <syntax>
             ADDI reg, reg, con
         </syntax>
+        <descr>
+            The 16 bit signed immediate is added to the 32 bit value in Rs to
+            produce a 32 bit result. If the addition in 32 bit 2's complement
+            arithmetic overflow, the destination register is not modified and
+            an Integer Overflow exception occurs. If the addition does not
+            overflow, the 32 bit result is placed into Rt.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.add, line_num)
@@ -81,6 +95,13 @@ class Sub(Instruction):
         <syntax>
             SUB reg, reg, reg
         </syntax>
+        <descr>
+            The 32 bit word value in Rt is subtracted from the 32 bit value in
+            Rs to produce a 32 bit result. If the subtraction results in a 32
+            bit 2's complement arithmetic overflow, then the destination
+            register is not modified and an Integer Overflow exception occurs.
+            If it does not overflow, the 32 bit result is placed into Rd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.sub, line_num)

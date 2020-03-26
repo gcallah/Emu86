@@ -185,9 +185,6 @@ def one_op_arith(ops, vm, instr, operator, line_num):
 
 class FAdd(Instruction):
     """
-    1 op - adds val to stack top ST(0) and stores value at ST(0)
-    2 ops - sets sum  of floating stack ST(i) and floating stack
-    ST(j) to floating stack ST(i)
         <instr>
              FADD
         </instr>
@@ -195,6 +192,11 @@ class FAdd(Instruction):
             FADD val
             FADD ST(i), ST(j)
         </syntax>
+        <descr>
+            1 op - adds val to stack top ST(0) and stores value at ST(0)
+            2 ops - sets sum  of floating stack ST(i) and floating stack
+            ST(j) to floating stack ST(i)
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
@@ -205,18 +207,20 @@ class FAdd(Instruction):
 
 class FaddP(Instruction):
     """
-        1 op - adds val to stack top ST(0)
-        and stores value at ST(0) and then pops stack
-        2 ops - sets sum  of floating stack ST(i)
-        and floating stack  ST(j) to floating stack ST(i)
-        and then pops stack
-            <instr>
-                 FADDP
-            </instr>
-            <syntax>
-                FADDP val
-                FADDP ST(i), ST(j)
-            </syntax>
+        <instr>
+            FADDP
+        </instr>
+        <syntax>
+            FADDP val
+            FADDP ST(i), ST(j)
+        </syntax>
+        <descr>
+            1 op - adds val to stack top ST(0)
+            and stores value at ST(0) and then pops stack
+            2 ops - sets sum  of floating stack ST(i)
+            and floating stack  ST(j) to floating stack ST(i)
+            and then pops stack
+        </descr>
         """
     def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
@@ -228,9 +232,6 @@ class FaddP(Instruction):
 
 class FSub(Instruction):
     """
-    1 op - subtracts val from stack top ST(0) and stores value at ST(0)
-    2 ops - sets difference  of floating stack ST(i) and floating stack
-    ST(j) to floating stack ST(i)
         <instr>
              FSUB
         </instr>
@@ -238,6 +239,11 @@ class FSub(Instruction):
             FSUB val
             FSUB ST(i), ST(j)
         </syntax>
+        <descr>
+            1 op - subtracts val from stack top ST(0) and stores value at ST(0)
+            2 ops - sets difference  of floating stack ST(i) and floating stack
+            ST(j) to floating stack ST(i)
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
@@ -248,10 +254,6 @@ class FSub(Instruction):
 
 class FSubP(Instruction):
     """
-    1 op - subtracts val from stack top ST(0)
-    and stores value at ST(0) and then pops the stack
-    2 ops - sets difference  of floating stack ST(i) and floating stack
-    ST(j) to floating stack ST(i) and then pops the stack
         <instr>
              FSUBP
         </instr>
@@ -259,6 +261,12 @@ class FSubP(Instruction):
             FSUBP val
             FSUBP ST(i), ST(j)
         </syntax>
+        <descr>
+            1 op - subtracts val from stack top ST(0)
+            and stores value at ST(0) and then pops the stack
+            2 ops - sets difference  of floating stack ST(i) and floating stack
+            ST(j) to floating stack ST(i) and then pops the stack
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
@@ -270,9 +278,6 @@ class FSubP(Instruction):
 
 class FMul(Instruction):
     """
-    1 op - multiplies val with stack top ST(0) and stores value at ST(0)
-    2 ops - sets product of floating stack ST(i) and floating stack
-     ST(j) to floating stack ST(i)
         <instr>
              FMUL
         </instr>
@@ -280,6 +285,11 @@ class FMul(Instruction):
             FMUL val
             FMUL ST(i), ST(j)
         </syntax>
+        <descr>
+            1 op - multiplies val with stack top ST(0) and stores value at ST(0)
+            2 ops - sets product of floating stack ST(i) and floating stack
+            ST(j) to floating stack ST(i)
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
@@ -290,10 +300,6 @@ class FMul(Instruction):
 
 class FMulP(Instruction):
     """
-    1 op - multiplies val with stack top ST(0)
-    and stores value at ST(0) and then pops the stack
-    2 ops - sets product of floating stack ST(i) and floating stack
-     ST(j) to floating stack ST(i) and then pops the stack
         <instr>
              FMULP
         </instr>
@@ -301,6 +307,12 @@ class FMulP(Instruction):
             FMULP val
             FMULP ST(i), ST(j)
         </syntax>
+        <descr>
+            1 op - multiplies val with stack top ST(0)
+            and stores value at ST(0) and then pops the stack
+            2 ops - sets product of floating stack ST(i) and floating stack
+            ST(j) to floating stack ST(i) and then pops the stack
+        </descr>
     """
 
     def fhook(self, ops, vm, line_num):
@@ -313,14 +325,16 @@ class FMulP(Instruction):
 
 class FAbs(Instruction):
     """
-    sets bit  of floating-point register (FPR) FRB to 0
-    and place the results into FPR FRT
         <instr>
-                FABS
+            FABS
         </instr>
         <syntax>
             fabs FRT, FRB
         </syntax>
+        <descr>
+            sets bit  of floating-point register (FPR) FRB to 0
+            and place the results into FPR FRT
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, fabs, line_num)
@@ -328,13 +342,15 @@ class FAbs(Instruction):
 
 class FChs(Instruction):
     """
-    complements the sign of floating-point register (FPR) FRB
         <instr>
-                FCHS
+            FCHS
         </instr>
         <syntax>
             fchs FRT
         </syntax>
+        <descr>
+            complements the sign of floating-point register (FPR) FRB
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, chs, line_num)
@@ -342,9 +358,6 @@ class FChs(Instruction):
 
 class FDiv(Instruction):
     """
-    1 op - divides stack top ST(0) with val and stores the result at ST(0)
-    2 ops - sets the result of dividing floating stack ST(i) by floating stack
-     ST(j) to floating stack ST(i)
         <instr>
              FDIV
         </instr>
@@ -352,6 +365,11 @@ class FDiv(Instruction):
             FDIV val
             FDIV ST(i), ST(j)
         </syntax>
+        <descr>
+            1 op - divides stack top ST(0) with val and stores the result at ST(0)
+            2 ops - sets the result of dividing floating stack ST(i) by floating stack
+            ST(j) to floating stack ST(i)
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
@@ -362,10 +380,6 @@ class FDiv(Instruction):
 
 class FDivP(Instruction):
     """
-    1 op - divides stack top ST(0) with val
-    and stores the result at ST(0) and pops the stack
-    2 ops - sets the result of dividing floating stack ST(i) by floating stack
-     ST(j) to floating stack ST(i) and pops the stack
         <instr>
              FDIVP
         </instr>
@@ -373,6 +387,12 @@ class FDivP(Instruction):
             FDIVP val
             FDIVP ST(i), ST(j)
         </syntax>
+        <descr>
+            1 op - divides stack top ST(0) with val
+            and stores the result at ST(0) and pops the stack
+            2 ops - sets the result of dividing floating stack ST(i) by floating stack
+            ST(j) to floating stack ST(i) and pops the stack
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         if len(ops) == 1:
@@ -384,14 +404,16 @@ class FDivP(Instruction):
 
 class FSqrt(Instruction):
     """
-    0 op - computes the square root of the source value in the ST(0)
-    register and stores the result in ST(0)
         <instr>
              FSQRT
         </instr>
         <syntax>
             FSQRT
         </syntax>
+        <descr>
+            0 op - computes the square root of the source value in the ST(0)
+            register and stores the result in ST(0)
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         if len(ops) == 0:

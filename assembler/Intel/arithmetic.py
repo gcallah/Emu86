@@ -1,5 +1,8 @@
 """
 arithmetic.py: arithmetic and logic instructions.
+
+Descriptions from the Intel 64 and IA-32 Architectures Software and Developer's
+Manual Combined Volumes: 1, 2A, 2B, 2C, 2D, 3A, 3B, 3C, 3D, and 4.
 """
 
 import operator as opfunc
@@ -41,6 +44,13 @@ class Add(Instruction):
             ADD reg, mem
             ADD reg, con
         </syntax>
+        <descr>
+        	Adds the first operand with the second and stores the result in the
+        	first operand. The destination can be a register or memory location;
+        	the source can be an immediate, register, or memory location. Two 
+        	memory operands cannot be used. Immediate values are sign extended.
+        	Works on both signed and unsigned integer operands.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, line_num, opfunc.add)
@@ -56,6 +66,14 @@ class Sub(Instruction):
             SUB reg, mem
             SUB reg, con
         </syntax>
+        <descr>
+        	Subtracts the second operand from the first operand and stores the
+        	result in the first operand. The destination can be a register or 
+        	memory location; the source can be an immediate, register, or
+        	memory location. Two memory operands cannot be used. Immediate 
+        	values are sign extended. Evaluates the result for both signed
+        	and unsigned integer operands.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, line_num, opfunc.sub)
@@ -71,6 +89,13 @@ class Imul(Instruction):
             IMUL reg, mem
             IMUL reg, con
         </syntax>
+        <descr>
+        	Performs a signed multiplication of two operands. The first operand
+        	is multiplied by the second operand. The destination is a general
+        	purpose register and the source can be an immediate, a register, or
+        	a memory location. The product is truncated and stored in the
+        	destination operand location.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, line_num, opfunc.mul)
@@ -87,6 +112,16 @@ class Andf(Instruction):
             AND reg, mem
             AND reg, con
         </syntax>
+        <descr>
+        	Performs a bitwise AND operation on the destination (first) and
+        	source (second) operands and stores the result in the destination
+        	operand location. The source operand can be an immediate, a 
+        	register, or a memory location; the destination operand can be a 
+        	register or memory location. Two memory operands cannot be used in
+        	one instruction. Each bit of the result is set to 1 if both
+        	corresponding bits of the first and second operands are 1; otherwise
+        	it is set to 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, line_num, opfunc.and_)
@@ -103,6 +138,16 @@ class Orf(Instruction):
             OR reg, mem
             OR reg, con
         </syntax>
+        <descr>
+        	Performs a bitwise inclusive OR operation between the destination
+        	(first) and source (second) operands and stores the result in the
+        	destination operand location. The source operand can be an immediate,
+        	a register, or a memory location; the destination operand can be a
+        	register or a memory location. Two memory operands cannot be used in
+        	one instruction. Each bit of the result of the OR instruction is set
+        	to 0 if both corresponding bits of the first and second operands are
+        	0; otherwise, each bit is set to 1.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, line_num, opfunc.or_)
@@ -119,6 +164,16 @@ class Xor(Instruction):
             XOR reg, mem
             XOR reg, con
         </syntax>
+        <descr>
+        	Performs a bitwise exlcusive OR (XOR) operation on the destination
+        	(first) and source (second) operands and stores the result in the
+        	destination operand location. The source operand can be an immediate,
+        	a register, or a memory location; the destination operand can be a
+        	register or a memory location. Two memory operands cannot be used in
+        	one instruction. Each bit of the result is 1 if the corresponding bits
+        	of the operands are different; each bit is 0 if the corresponding bits
+        	are the same.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, line_num, opfunc.xor)
@@ -135,6 +190,16 @@ class Shl(Instruction):
             SHL reg, mem
             SHL reg, con
         </syntax>
+        <descr>
+        	Shifts the bits in the first operand (destination operand) to the
+        	left by the number of bits specified in the second operand
+        	(count operand). Bits shifted beyonf the destination operand
+        	boundary are first shifted into the CF flag, then discarded. At the
+        	end of the shift operation, the CF flag contains the last bit
+        	shifted out of the destination operand.
+        	The destination operand can be a register or a memory location. The
+        	count operand can be an immediate value or the CL register.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, line_num, opfunc.lshift)
@@ -151,6 +216,16 @@ class Shr(Instruction):
             SHR reg, mem
             SHR reg, con
         </syntax>
+        <descr>
+        	Shifts the bits in the first operand (destination operand) to the
+        	right by the number of bits specified in the second operand
+        	(count operand). Bits shifted beyonf the destination operand
+        	boundary are first shifted into the CF flag, then discarded. At the
+        	end of the shift operation, the CF flag contains the last bit
+        	shifted out of the destination operand.
+        	The destination operand can be a register or a memory location. The
+        	count operand can be an immediate value or the CL register.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         two_op_arith(ops, vm, self.name, line_num, opfunc.rshift)
@@ -164,6 +239,12 @@ class Notf(Instruction):
         <syntax>
             NOT reg
         </syntax>
+        <descr>
+        	Performs a bitwise NOT operation (each 1 is set to 0, and each 0 is
+        	set to 1) on the destination operand and stores the result in the
+        	destination operand location. The destination operand can be a
+        	register or a memory location.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         one_op_arith(ops, vm, self.name, line_num, opfunc.inv)
@@ -177,6 +258,14 @@ class Inc(Instruction):
         <syntax>
             INC reg
         </syntax>
+        <descr>
+			Adds 1 to the destination operand, while preserving the state of
+			the CF flag. The destination operand can be a register or a memory
+			location. This instruction allows a loop counter to be updated
+			without disturbing the CF flag. (Use an ADD instriction with an
+			immediate operand of 1 to perform an increment operation that does
+			update the CF flag.)
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 1, line_num)
@@ -192,6 +281,13 @@ class Dec(Instruction):
         <syntax>
             DEC reg
         </syntax>
+        <descr>
+        	Subtracts 1 from the destination operand, while preserving the state
+        	of the CF flag. The destination operand can be a register or a memory
+        	location. This instruction allows a loop counter to be updated without
+        	disturbing the CF flag. (To perform a decrement operation that updates
+        	the CF flag, use a SUB instruction with an immediate operand of 1.)
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 1, line_num)
@@ -208,8 +304,10 @@ class Neg(Instruction):
             NEG reg
         </syntax>
         <descr>
-           Replaces the value of operand with
-           it's two's complement.
+           Replaces the value of operand (the destination operand) with its
+           two's complement. (This operation is equivalent to subracting the
+           operand from 0.) The destination operand is located in a general-
+           purpose register or a memory location.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -259,6 +357,17 @@ class BTR(Instruction):
         btr reg, reg
         btr reg, const
     </syntax>
+    <descr>
+    	Selects the bit in a bit string (specified with the first operand, 
+    	called the bit base) at the bit-position designated by the bit offset
+    	operand (second operand), stores the value of the bit in the CF flag,
+    	and clears the selected bit in the bit string to 0. The bit base
+    	operand can be a register or a memory location; the bit offset operand
+    	can be a register or an immediate value.
+    	If the bit base operand is a register, the instruction takes the modulo
+    	16, 32, or 64 of the bit offset operand (modulo size depends on the mode
+    	and register size). This allows any bit position to be selected.
+    </descr>
     """
 
     def fhook(self, ops, vmachine, line_num):
@@ -288,6 +397,17 @@ class BTS(Instruction):
         bts reg, reg
         bts reg, const
     </syntax>
+    <descr>
+    	Selects the bit in a bit string (specified with the first operand,
+    	called the bit base) at the bit-position designated by the bit offset
+    	operand (second operand), stores the value of the bit in the CF flag,
+    	and sets the selected bit in the bit string to 1. The bit base operand
+    	is a register; the bit offset operand can be a register or an immediate
+    	value.
+    	If the bit base operand is a register, the instruction takes the modulo
+    	16, 32, or 64 of the bit offset operand (modulo size depends on the mode
+    	and register size.) This allows any bit position to be selected.
+    </descr>
     """
 
     def fhook(self, ops, vmachine, line_num):
@@ -309,6 +429,15 @@ class BSF(Instruction):
         bsf reg, reg
         bsf reg, mem
     </syntax>
+    <descr>
+    	Searches the source operand (second operand) for the least significant
+    	set bit (1 bit). If a least significant 1 bit is found, its bit index
+    	is stored in the destination operand (first operand). The source
+    	operand can be a register or memory location; the destination operand
+    	is a register. The bit index is an unsigned offset from bit 0 of the
+    	source operand. If the content of the source operand is 0, the content
+    	of the destination operand is undefined.
+    </descr>
     """
 
     def fhook(self, ops, vmachine, line_num):
@@ -341,6 +470,15 @@ class BSR(Instruction):
         bsr reg, reg
         bsr reg, mem
     </syntax>
+    <descr>
+    	Searches the source operand (second operand) for the most significant
+    	set bit (1 bit). If a most significant 1 bit is found, its bit index is
+    	stored in the destination operand (first operand). The source operand
+    	can be a register or a memory location; the destination operand is a
+    	register. The bit index is an unsigned offset from bit 0 of the source
+    	operand. If the content source operand is 0, the content of the
+    	destination operand is undefined.
+    </descr>
     """
 
     def fhook(self, ops, vmachine, line_num):
@@ -373,6 +511,15 @@ class BT(Instruction):
         bt reg, reg
         bt reg, const
     </syntax>
+    <descr>
+    	Selects the bit in a bit string (specified with the first operand, 
+    	called the bit base) at the bit-position designated by the bit offset
+    	(specified by the second operand) and stores the value of the bit in
+    	the CF flag. The bit base operand is a register; the bit offset operand
+    	can be a register or an immediate value. The instruction takes the
+    	modulo 16, 32, or 64 of the bit offset operand (modulo size depends on
+    	the mode and register size).
+    </descr>
     """
 
     def fhook(self, ops, vmachine, line_num):
@@ -397,6 +544,15 @@ class BTC(Instruction):
         bt reg, reg
         bt reg, const
     </syntax>
+    <descr>
+    	Selects the bit in a bit string (specified with the first operand,
+    	called the bit base) at the bit-position desginated by the bit offset
+    	operand (second operand), stores the value of the bit in the CF flag,
+    	and complements the selected bit in the bit string. The bit base
+    	operand is a register; the bit offset operand can be a register or an
+    	immediate value. The instruction takes the modulo 16, 32, or 64 of the
+    	bit offset operand (modulo size depends on the mode and register size).
+    </descr>
     """
 
     def fhook(self, ops, vmachine, line_num):
