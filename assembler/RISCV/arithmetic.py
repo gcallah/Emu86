@@ -84,6 +84,10 @@ class Add(Instruction):
         <syntax>
             ADD reg, reg, reg
         </syntax>
+        <descr>
+            Performs an add operation on the two source registers and stores
+            the result in the desination register. Overflows are ignored.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.add, line_num)
@@ -97,6 +101,11 @@ class Addi(Instruction):
         <syntax>
             ADDI reg, reg, con
         </syntax>
+        <descr>
+            Adds the sign extended 12-bit immediate to the source register
+            and stores the result in the destination register. Overflows are
+            ignored.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.add, line_num)
@@ -110,6 +119,11 @@ class Sub(Instruction):
         <syntax>
             SUB reg, reg, reg
         </syntax>
+        <descr>
+            Performs a subtract operation on the two source registers and
+            stores the result in the destination register. Overflows are 
+            ignored.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.sub, line_num)
@@ -123,6 +137,10 @@ class Mul(Instruction):
         <syntax>
             MUL reg, reg, reg
         </syntax>
+        <descr>
+            Performs a multiply operation on the two source registers and
+            stores the lower 32 bits of the result in the destination register.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.mul, line_num)
@@ -136,6 +154,12 @@ class And(Instruction):
         <syntax>
             AND reg, reg, reg
         </syntax>
+        <descr>
+            Performs a bitwise AND operation on the two source registers and
+            stores the result in the destination register. If the bit in both
+            source registers is 1, then the destination register gets a 1;
+            otherwise it gets a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.and_, line_num)
@@ -149,6 +173,12 @@ class Andi(Instruction):
         <syntax>
             ANDI reg, reg, con
         </syntax>
+        <descr>
+            Performs a bitwise AND operation on a source registers and a 12-bit
+            sign extended immediate and stores the result in the destination
+            register. If the bit in both the source register and the immediate
+            is 1, then the destination register gets a 1; otherwise it gets a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.and_, line_num)

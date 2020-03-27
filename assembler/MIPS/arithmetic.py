@@ -115,6 +115,13 @@ class Mult(Instruction):
         <syntax>
             MULT reg, reg
         </syntax>
+        <descr>
+            The 32 bit word value in Rt is multiplied by the 32 bit value in Rs
+            to produce a 64 bit result. The upper 32 bits of the 64 bit result
+            is placed in the special register HI, whereas the lower 32 bits are
+            placed in the register LO. Use MFHI and MFLO to move the result to
+            a general purpose register.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 2, line_num)
@@ -139,6 +146,11 @@ class Andf(Instruction):
         <syntax>
             AND reg, reg, reg
         </syntax>
+        <descr>
+            Performs a bitwise AND operation on registers Rt and Rs and stores
+            the result in register Rd. If the bit in both Rt and Rs is 1, Rd
+            will get 1; otherwise it will get 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.and_, line_num)
@@ -153,6 +165,12 @@ class Andi(Instruction):
         <syntax>
             ANDI reg, reg, con
         </syntax>
+        <descr>
+            Performs a bitwise AND operation on register Rs and a 16 bit sign-
+            extended immediate extended to 32 bits and stores the result in
+            register Rt. If the bit in both Rs and the immediate is 1, Rt gets
+            a 1; otherwise it will get a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.and_, line_num)
@@ -167,6 +185,11 @@ class Orf(Instruction):
         <syntax>
             OR reg, reg, reg
         </syntax>
+        <descr>
+            Performs a bitwise OR operation on registers Rs and Rt and stores
+            the result in register Rd. If the bit in both Rs and Rt is 0, Rd
+            gets a 0; otherwise it will get a 1.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.or_, line_num)
@@ -181,6 +204,12 @@ class Ori(Instruction):
         <syntax>
             ORI reg, reg, con
         </syntax>
+        <descr>
+            Performs a bitwise OR operation on register Rs and a 16 bit sign-
+            extended immediate extended to 32 bits and stores the result in Rt. 
+            If the bit in both Rs and the immediate is 0, Rt gets a 0; otherwise
+            it will get a 1.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.or_, line_num)
@@ -195,6 +224,11 @@ class Nor(Instruction):
         <syntax>
             NOR reg, reg, reg
         </syntax>
+        <descr>
+            Performs a bitwise NOR operation on registers Rs and Rt and stores
+            the result in register Rd. If the bit in both Rs and Rt is 0, Rd
+            gets a 1; otherwise it will get a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.or_, line_num)
@@ -210,6 +244,11 @@ class Xor(Instruction):
         <syntax>
             XOR reg, reg, reg
         </syntax>
+        <descr>
+            Performs a bitwise XOR operation on registers Rs and Rt and stores
+            the result in register Rd. If the bit in Rs and Rt is different, Rd
+            gets a 1; otherwise it will get a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.xor, line_num)
@@ -224,6 +263,13 @@ class Sll(Instruction):
         <syntax>
             SLL reg, reg, con
         </syntax>
+        <descr>
+            The 32 bit word value in register Rs is shifted to the left by a
+            number of bits specified by the 16 bit immediate. The result is 
+            stored as a 32 bit word value in register Rt. This is equivalent
+            to multiplying by a power of 2. Bits shifted beyond the boundary of
+            Rt are discarded.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.lshift, line_num)
@@ -238,6 +284,13 @@ class Srl(Instruction):
         <syntax>
             SRL reg, reg, con
         </syntax>
+        <descr>
+            The 32 bit word value in register Rs is shifted to the right by a
+            number of bits specified by the 16 bit immediate. The result is
+            stored as a 32 bit word value in register Rt. This is equivalent to
+            dividing by a power of 2. Bits shifted beyond the boundary of Rt
+            are discarded.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.rshift, line_num)
@@ -252,10 +305,11 @@ class Div(Instruction):
             DIV reg, reg
         </syntax>
         <descr>
-            The div instruction divides the contents of
-            the two registers. The quotient result
-            of the division is stored into LO, while the
-            remainder is placed in HI.
+            The 32 bit word value in register Rs is divided by the 32 bit word
+            value in register Rt. The 32 bit result of the division is stored
+            in special register LO. The 32 bit modulus of the division is
+            stored in the special register HI. Use MFHI and MFLO to move these
+            results to general purpose registers.
         </descr>
     """
     def fhook(self, ops, vm, line_num):

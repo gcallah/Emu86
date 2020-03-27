@@ -62,6 +62,12 @@ class Adds(Instruction):
         <syntax>
             ADD.S reg, reg, reg
         </syntax>
+        <descr>
+            The 32 bit single precision floating point value in register Fs is
+            added to the 32 bit single precision floating point value in
+            register Ft to produce a 32 bit single precision floating point
+            result. The result is stored in register Fd.
+        </descr>
     """
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm, line_num):
@@ -77,6 +83,12 @@ class Subs(Instruction):
         <syntax>
             SUB.S reg, reg, reg
         </syntax>
+        <descr>
+            The 32 bit single precision floating point value in register Fs is
+            subtracted from the 32 bit single precision floating point value in
+            register Ft to produce a 32 bit single precision floating point
+            result. The result is stored in register Fd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.sub, line_num)
@@ -91,6 +103,12 @@ class Mults(Instruction):
         <syntax>
             MULT.S reg, reg, reg
         </syntax>
+        <descr>
+            The 32 bit single precision floating point value in register Fs is
+            multiplied by the 32 bit single precision floating point value in
+            register Ft to produce a 32 bit single precision floating point
+            result. The result is stored in register Fd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 3, line_num, type_ins=1)
@@ -117,6 +135,12 @@ class Divs(Instruction):
         <syntax>
             DIVS reg, reg, reg
         </syntax>
+        <descr>
+            the 32 bit single precision floating point value in register Fs is
+            divided by the 32 bit single precision floating point value in
+            register Ft to produce a 32 bit single precision floating point
+            result. The result is stored in register Fd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 3, line_num, type_ins=1)
@@ -249,6 +273,13 @@ class Addd(Instruction):
         <syntax>
             ADD.D reg, reg, reg
         </syntax>
+        <descr>
+            The 64 bit double precision floating point value in registers Fs
+            and Fs + 1 are added to the 64 bit double precision floating point
+            value in registers Ft and Ft + 1 to get a 64 bit double precision
+            floating point result. The result is stored in registers Fd and
+            Fd + 1.
+        </descr>
     """
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm, line_num):
@@ -263,6 +294,13 @@ class Subd(Instruction):
         <syntax>
             SUB.D reg, reg, reg
         </syntax>
+        <descr>
+            The 64 bit double precision floating point value in registers Fs
+            and Fs + 1 are subtracted from the 64 bit double precision floating
+            point value in registers Ft and Ft + 1 to get a 64 bit double
+            precision floating point result. The result is stored in registers
+            Fd and Fd + 1.
+        </descr>
     """
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm, line_num):
@@ -277,6 +315,13 @@ class Multd(Instruction):
         <syntax>
             MULT.D reg, reg, reg
         </syntax>
+        <descr>
+            The 64 bit double precision floating point value in registers Fs
+            and Fs + 1 are multiplied by the 64 bit double precision floating
+            point value in registers Ft and Ft + 1 to get a 64 bit double
+            precision floating point result. The result is stored in registers
+            Fd and Fd + 1.
+        </descr>
     """
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm, line_num):
@@ -291,6 +336,13 @@ class Divd(Instruction):
         <syntax>
             DIV.D reg, reg, reg
         </syntax>
+        <descr>
+            The 64 bit double precision floating point value in regsiters Fs
+            and Fs + 1 are multiplied by the 64 bit double precision floating
+            point value in registers Ft and Ft + 1 to get a 64 bit double
+            precision floating point result. The result is stored in registers
+            Fd and Fd + 1.
+        </descr>
     """
     # ops is a list of operands (reg, reg, reg)
     def fhook(self, ops, vm, line_num):

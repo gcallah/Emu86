@@ -85,6 +85,10 @@ class Jmp(Instruction):
             J lbl
             J loc
         </syntax>
+        <descr>
+            Performs an unconditional jump to the specified address or label
+            without storing anything.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
@@ -102,6 +106,10 @@ class Jal(Instruction):
         <syntax>
             JAL loc
         </syntax>
+        <descr>
+            Performs an uncondition jump to the specified address. Stores the
+            current address in register $ra.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
@@ -116,6 +124,9 @@ class Jr(Instruction):
         <syntax>
             Jr reg
         </syntax>
+        <descr>
+            Jumps to the address held by register $ra.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
@@ -167,7 +178,7 @@ class Bne(Instruction):
             BNE reg, reg, con
         </syntax>
         <descr>
-            Jumps if registers are equal.
+            Jumps if registers are not equal.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
