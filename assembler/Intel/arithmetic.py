@@ -42,11 +42,11 @@ class Add(Instruction):
             ADD reg, con
         </syntax>
         <descr>
-            Adds the first operand with the second and stores the result in the
-            first operand. The destination can be a register or memory location;
-            the source can be an immediate, register, or memory location. Two 
-            memory operands cannot be used. Immediate values are sign extended.
-            Works on both signed and unsigned integer operands.
+            Adds the first operand with the second and stores the result in
+            the first operand. The destination can be a register or memory
+            location; the source can be an immediate, register, or memory
+            location. Two memory operands cannot be used. Immediate values are
+            sign extended. Works on both signed and unsigned integer operands.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -65,9 +65,9 @@ class Sub(Instruction):
         </syntax>
         <descr>
             Subtracts the second operand from the first operand and stores the
-            result in the first operand. The destination can be a register or 
+            result in the first operand. The destination can be a register or
             memory location; the source can be an immediate, register, or
-            memory location. Two memory operands cannot be used. Immediate 
+            memory location. Two memory operands cannot be used. Immediate
             values are sign extended. Evaluates the result for both signed
             and unsigned integer operands.
         </descr>
@@ -87,11 +87,11 @@ class Imul(Instruction):
             IMUL reg, con
         </syntax>
         <descr>
-            Performs a signed multiplication of two operands. The first operand
-            is multiplied by the second operand. The destination is a general
-            purpose register and the source can be an immediate, a register, or
-            a memory location. The product is truncated and stored in the
-            destination operand location.
+            Performs a signed multiplication of two operands. The first
+            operand is multiplied by the second operand. The destination is a
+            general purpose register and the source can be an immediate, a
+            register, or a memory location. The product is truncated and
+            stored in the destination operand location.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -112,12 +112,12 @@ class Andf(Instruction):
         <descr>
             Performs a bitwise AND operation on the destination (first) and
             source (second) operands and stores the result in the destination
-            operand location. The source operand can be an immediate, a 
-            register, or a memory location; the destination operand can be a 
+            operand location. The source operand can be an immediate, a
+            register, or a memory location; the destination operand can be a
             register or memory location. Two memory operands cannot be used in
             one instruction. Each bit of the result is set to 1 if both
-            corresponding bits of the first and second operands are 1; otherwise
-            it is set to 0.
+            corresponding bits of the first and second operands are 1;
+            otherwise it is set to 0.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -138,12 +138,13 @@ class Orf(Instruction):
         <descr>
             Performs a bitwise inclusive OR operation between the destination
             (first) and source (second) operands and stores the result in the
-            destination operand location. The source operand can be an immediate,
-            a register, or a memory location; the destination operand can be a
-            register or a memory location. Two memory operands cannot be used in
-            one instruction. Each bit of the result of the OR instruction is set
-            to 0 if both corresponding bits of the first and second operands are
-            0; otherwise, each bit is set to 1.
+            destination operand location. The source operand can be an
+            immediate, a register, or a memory location; the destination
+            operand can be a register or a memory location. Two memory
+            operands cannot be used in one instruction. Each bit of the result
+            of the OR instruction is set to 0 if both corresponding bits of
+            the first and second operands are 0; otherwise, each bit is set to
+            1.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -164,12 +165,12 @@ class Xor(Instruction):
         <descr>
             Performs a bitwise exlcusive OR (XOR) operation on the destination
             (first) and source (second) operands and stores the result in the
-            destination operand location. The source operand can be an immediate,
-            a register, or a memory location; the destination operand can be a
-            register or a memory location. Two memory operands cannot be used in
-            one instruction. Each bit of the result is 1 if the corresponding bits
-            of the operands are different; each bit is 0 if the corresponding bits
-            are the same.
+            destination operand location. The source operand can be an
+            immediate, a register, or a memory location; the destination
+            operand can be a register or a memory location. Two memory
+            operands cannot be used in one instruction. Each bit of the result
+            is 1 if the corresponding bits of the operands are different; each
+            bit is 0 if the corresponding bits are the same.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -239,7 +240,8 @@ class Notf(Instruction):
         <descr>
             Performs a bitwise NOT operation (each 1 is set to 0, and each 0 is
             set to 1) on the destination operand and stores the result in the
-            destination operand location. The destination operand is a register.
+            destination operand location. The destination operand is a
+            register.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -256,8 +258,8 @@ class Inc(Instruction):
         </syntax>
         <descr>
             Adds 1 to the destination operand, while preserving the state of
-            the CF flag. The destination operand must be a register. This 
-            instruction allows a loop counter to be updated without disturbing 
+            the CF flag. The destination operand must be a register. This
+            instruction allows a loop counter to be updated without disturbing
             the CF flag. (Use an ADD instriction with an immediate operand of 1
             to perform an increment operation that does update the CF flag.)
         </descr>
@@ -277,11 +279,12 @@ class Dec(Instruction):
             DEC reg
         </syntax>
         <descr>
-            Subtracts 1 from the destination operand, while preserving the state
-            of the CF flag. The destination operand must be a register. This 
-            instruction allows a loop counter to be updated without disturbing 
-            the CF flag. (To perform a decrement operation that updates the CF 
-            flag, use a SUB instruction with an immediate operand of 1.)
+            Subtracts 1 from the destination operand, while preserving the
+            state of the CF flag. The destination operand must be a register.
+            This instruction allows a loop counter to be updated without
+            disturbing the CF flag. (To perform a decrement operation that
+            updates the CF flag, use a SUB instruction with an immediate
+            operand of 1.)
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -319,10 +322,10 @@ class Idiv(Instruction):
             IDIV reg
         </syntax>
         <descr>
-            The idiv instruction divides the contents of the 64 bit integer 
-            EDX:EAX (constructed by viewing EDX as the most significant four 
-            bytes and EAX as the least significant four bytes) by the specified 
-            operand value. The quotient result of the division is stored into 
+            The idiv instruction divides the contents of the 64 bit integer
+            EDX:EAX (constructed by viewing EDX as the most significant four
+            bytes and EAX as the least significant four bytes) by the specified
+            operand value. The quotient result of the division is stored into
             EAX, while the remainder is placed in EDX.
         </descr>
     """
@@ -351,15 +354,15 @@ class BTR(Instruction):
         btr reg, const
     </syntax>
     <descr>
-        Selects the bit in a bit string (specified with the first operand, 
+        Selects the bit in a bit string (specified with the first operand,
         called the bit base) at the bit-position designated by the bit offset
         operand (second operand), stores the value of the bit in the CF flag,
         and clears the selected bit in the bit string to 0. The bit base
         operand can be a register or a memory location; the bit offset operand
         can be a register or an immediate value.
         If the bit base operand is a register, the instruction takes the modulo
-        16, 32, or 64 of the bit offset operand (modulo size depends on the mode
-        and register size). This allows any bit position to be selected.
+        16, 32, or 64 of the bit offset operand (modulo size depends on the
+        mode and register size). This allows any bit position to be selected.
     </descr>
     """
 
@@ -398,8 +401,8 @@ class BTS(Instruction):
         is a register; the bit offset operand can be a register or an immediate
         value.
         If the bit base operand is a register, the instruction takes the modulo
-        16, 32, or 64 of the bit offset operand (modulo size depends on the mode
-        and register size.) This allows any bit position to be selected.
+        16, 32, or 64 of the bit offset operand (modulo size depends on the
+        mode and register size.) This allows any bit position to be selected.
     </descr>
     """
 
@@ -505,7 +508,7 @@ class BT(Instruction):
         bt reg, const
     </syntax>
     <descr>
-        Selects the bit in a bit string (specified with the first operand, 
+        Selects the bit in a bit string (specified with the first operand,
         called the bit base) at the bit-position designated by the bit offset
         (specified by the second operand) and stores the value of the bit in
         the CF flag. The bit base operand is a register; the bit offset operand

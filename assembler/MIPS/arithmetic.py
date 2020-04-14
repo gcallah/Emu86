@@ -206,9 +206,9 @@ class Ori(Instruction):
         </syntax>
         <descr>
             Performs a bitwise OR operation on register Rs and a 16 bit sign-
-            extended immediate extended to 32 bits and stores the result in Rt. 
-            If the bit in both Rs and the immediate is 0, Rt gets a 0; otherwise
-            it will get a 1.
+            extended immediate extended to 32 bits and stores the result in Rt.
+            If the bit in both Rs and the immediate is 0, Rt gets a 0;
+            otherwise it will get a 1.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -265,7 +265,7 @@ class Sll(Instruction):
         </syntax>
         <descr>
             The 32 bit word value in register Rs is shifted to the left by a
-            number of bits specified by the 16 bit immediate. The result is 
+            number of bits specified by the 16 bit immediate. The result is
             stored as a 32 bit word value in register Rt. This is equivalent
             to multiplying by a power of 2. Bits shifted beyond the boundary of
             Rt are discarded.

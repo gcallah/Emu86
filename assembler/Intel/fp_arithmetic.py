@@ -286,7 +286,8 @@ class FMul(Instruction):
             FMUL ST(i), ST(j)
         </syntax>
         <descr>
-            1 op - multiplies val with stack top ST(0) and stores value at ST(0)
+            1 op - multiplies val with stack top ST(0) and stores value at
+            ST(0)
             2 ops - sets product of floating stack ST(i) and floating stack
             ST(j) to floating stack ST(i)
         </descr>
@@ -366,9 +367,10 @@ class FDiv(Instruction):
             FDIV ST(i), ST(j)
         </syntax>
         <descr>
-            1 op - divides stack top ST(0) with val and stores the result at ST(0)
-            2 ops - sets the result of dividing floating stack ST(i) by floating stack
-            ST(j) to floating stack ST(i)
+            1 op - divides stack top ST(0) with val and stores the result at
+            ST(0)
+            2 ops - sets the result of dividing floating stack ST(i) by
+            floating stack ST(j) to floating stack ST(i)
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -390,8 +392,8 @@ class FDivP(Instruction):
         <descr>
             1 op - divides stack top ST(0) with val
             and stores the result at ST(0) and pops the stack
-            2 ops - sets the result of dividing floating stack ST(i) by floating stack
-            ST(j) to floating stack ST(i) and pops the stack
+            2 ops - sets the result of dividing floating stack ST(i) by
+            floating stack ST(j) to floating stack ST(i) and pops the stack
         </descr>
     """
     def fhook(self, ops, vm, line_num):

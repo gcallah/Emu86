@@ -89,7 +89,7 @@ class Jmp(Instruction):
         </syntax>
         <descr>
             Transfers program control to a different point in the instruction
-            stream without recording return information. The destination 
+            stream without recording return information. The destination
             (target) operand specifies the address of the instruction being
             jumped to. This operand can be an immediate value, a register, or
             a memory location.

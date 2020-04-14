@@ -121,7 +121,7 @@ class Sub(Instruction):
         </syntax>
         <descr>
             Performs a subtract operation on the two source registers and
-            stores the result in the destination register. Overflows are 
+            stores the result in the destination register. Overflows are
             ignored.
         </descr>
     """
@@ -177,7 +177,8 @@ class Andi(Instruction):
             Performs a bitwise AND operation on a source registers and a 12-bit
             sign extended immediate and stores the result in the destination
             register. If the bit in both the source register and the immediate
-            is 1, then the destination register gets a 1; otherwise it gets a 0.
+            is 1, then the destination register gets a 1; otherwise it gets a
+            0.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -215,7 +216,8 @@ class Ori(Instruction):
             Performs a bitwise OR operation on a source register and a 12-bit
             sign extended immediate and stores the result in the destination
             register. If the bit in both the source register and the immediate
-            is 0, then the destination register gets a 0; otherwise it gets a 1.
+            is 0, then the destination register gets a 0; otherwise it gets a
+            1.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -232,9 +234,9 @@ class Xor(Instruction):
         </syntax>
         <descr>
             Performs a bitwise XOR operation on two source registers and stores
-            the result in the destination register. If the bit in the source 
-            registers is different, the destination register gets a 1; otherwise
-            it gets a 0.
+            the result in the destination register. If the bit in the source
+            registers is different, the destination register gets a 1;
+            otherwise it gets a 0.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -250,10 +252,11 @@ class Xori(Instruction):
             XORI reg, reg, con
         </syntax>
         <descr>
-            Performs a bitwise XOR operation on a source register and a 12-bit 
-            sign extended immediate and stores the result in the destination 
+            Performs a bitwise XOR operation on a source register and a 12-bit
+            sign extended immediate and stores the result in the destination
             register. If the bit in the source register and the immediate is
-            different, the destination register gets a 1; otherwise it gets a 0.
+            different, the destination register gets a 1; otherwise it gets a
+            0.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -293,7 +296,7 @@ class Srli(Instruction):
         </syntax>
         <descr>
             Performs a logical right shift on the register rs1 by the amount
-            specified by the 12 bit immediate. The result is stored in register 
+            specified by the 12 bit immediate. The result is stored in register
             rd.
         </descr>
     """
@@ -352,7 +355,7 @@ class Slt(Instruction):
         </syntax>
         <descr>
                 Compares the values in rs1 and rs2 and stores a 1 in rd if rs1
-                is less than rs2. Otherwise rd gets a 0. 
+                is less than rs2. Otherwise rd gets a 0.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -398,8 +401,8 @@ class Slti(Instruction):
         </syntax>
         <descr>
             Compares the value in rs1 and the value of the 12-bit sign extended
-            immediate. If rs1 is less than the immediate, rd gets a 1, otherwise
-            it gets a 0.
+            immediate. If rs1 is less than the immediate, rd gets a 1,
+            otherwise it gets a 0.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -445,8 +448,8 @@ class Sra(Instruction):
             SRA reg, reg, reg
         </syntax>
         <descr>
-            Performs an arithmetic right shift on the register rs1 by the 
-            amount specified by the lower 5 bits of rs2. The result is stored 
+            Performs an arithmetic right shift on the register rs1 by the
+            amount specified by the lower 5 bits of rs2. The result is stored
             in register rd.
         </descr>
     """
@@ -472,8 +475,8 @@ class Srai(Instruction):
             SRAI reg, reg, imm
         </syntax>
         <descr>
-            Performs an arithmetic right shift on the register rs1 by the 
-            amount specified by the 12-bit immediate. The result is stored in 
+            Performs an arithmetic right shift on the register rs1 by the
+            amount specified by the 12-bit immediate. The result is stored in
             register rd.
         </descr>
     """
@@ -546,7 +549,7 @@ class Rem(Instruction):
         REM reg, reg, reg
     </syntax>
     <descr>
-        Performs a divide using register rs1 as the dividend and register rs2 
+        Performs a divide using register rs1 as the dividend and register rs2
         as the divisor. The remainder of the divide is stored in register rd.
         To get the result, use DIV.
     </descr>

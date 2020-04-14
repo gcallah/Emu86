@@ -131,8 +131,9 @@ class Lea(Instruction):
             one of the processors addressing modes; the destination operand is
             a register. The address-size and operand-size attributes affect the
             action performed by this instruction. The operand-size attribute of
-            the instruction is determined by the chosen register; the address-size
-            attribute is determined by the attribute of the code segment.
+            the instruction is determined by the chosen register; the
+            address-size attribute is determined by the attribute of the code
+            segment.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
