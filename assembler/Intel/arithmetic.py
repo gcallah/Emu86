@@ -116,11 +116,9 @@ class Andf(Instruction):
         	Performs a bitwise AND operation on the destination (first) and
         	source (second) operands and stores the result in the destination
         	operand location. The source operand can be an immediate, a 
-        	register, or a memory location; the destination operand can be a 
-        	register or memory location. Two memory operands cannot be used in
-        	one instruction. Each bit of the result is set to 1 if both
-        	corresponding bits of the first and second operands are 1; otherwise
-        	it is set to 0.
+        	register, or a memory location; the destination operand is a register.
+        	Each bit of the result is set to 1 if both corresponding bits of 
+        	the first and second operands are 1; otherwise it is set to 0.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -142,11 +140,10 @@ class Orf(Instruction):
         	Performs a bitwise inclusive OR operation between the destination
         	(first) and source (second) operands and stores the result in the
         	destination operand location. The source operand can be an immediate,
-        	a register, or a memory location; the destination operand can be a
-        	register or a memory location. Two memory operands cannot be used in
-        	one instruction. Each bit of the result of the OR instruction is set
-        	to 0 if both corresponding bits of the first and second operands are
-        	0; otherwise, each bit is set to 1.
+        	a register, or a memory location; the destination operand is a 
+        	register. Each bit of the result of the OR instruction is set to 0 
+        	if both corresponding bits of the first and second operands are 0; 
+        	otherwise, each bit is set to 1.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -168,10 +165,9 @@ class Xor(Instruction):
         	Performs a bitwise exlcusive OR (XOR) operation on the destination
         	(first) and source (second) operands and stores the result in the
         	destination operand location. The source operand can be an immediate,
-        	a register, or a memory location; the destination operand can be a
-        	register or a memory location. Two memory operands cannot be used in
-        	one instruction. Each bit of the result is 1 if the corresponding bits
-        	of the operands are different; each bit is 0 if the corresponding bits
+        	a register, or a memory location; the destination operand is a 
+        	register. Each bit of the result is 1 if the corresponding bits of
+        	the operands are different; each bit is 0 if the corresponding bits
         	are the same.
         </descr>
     """
