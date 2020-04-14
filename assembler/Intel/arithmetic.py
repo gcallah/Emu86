@@ -1,8 +1,5 @@
 """
 arithmetic.py: arithmetic and logic instructions.
-
-Descriptions from the Intel 64 and IA-32 Architectures Software and Developer's
-Manual Combined Volumes: 1, 2A, 2B, 2C, 2D, 3A, 3B, 3C, 3D, and 4.
 """
 
 import operator as opfunc
@@ -116,9 +113,11 @@ class Andf(Instruction):
         	Performs a bitwise AND operation on the destination (first) and
         	source (second) operands and stores the result in the destination
         	operand location. The source operand can be an immediate, a 
-        	register, or a memory location; the destination operand is a register.
-        	Each bit of the result is set to 1 if both corresponding bits of 
-        	the first and second operands are 1; otherwise it is set to 0.
+        	register, or a memory location; the destination operand can be a 
+        	register or memory location. Two memory operands cannot be used in
+        	one instruction. Each bit of the result is set to 1 if both
+        	corresponding bits of the first and second operands are 1; otherwise
+        	it is set to 0.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -140,10 +139,11 @@ class Orf(Instruction):
         	Performs a bitwise inclusive OR operation between the destination
         	(first) and source (second) operands and stores the result in the
         	destination operand location. The source operand can be an immediate,
-        	a register, or a memory location; the destination operand is a 
-        	register. Each bit of the result of the OR instruction is set to 0 
-        	if both corresponding bits of the first and second operands are 0; 
-        	otherwise, each bit is set to 1.
+        	a register, or a memory location; the destination operand can be a
+        	register or a memory location. Two memory operands cannot be used in
+        	one instruction. Each bit of the result of the OR instruction is set
+        	to 0 if both corresponding bits of the first and second operands are
+        	0; otherwise, each bit is set to 1.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -165,9 +165,10 @@ class Xor(Instruction):
         	Performs a bitwise exlcusive OR (XOR) operation on the destination
         	(first) and source (second) operands and stores the result in the
         	destination operand location. The source operand can be an immediate,
-        	a register, or a memory location; the destination operand is a 
-        	register. Each bit of the result is 1 if the corresponding bits of
-        	the operands are different; each bit is 0 if the corresponding bits
+        	a register, or a memory location; the destination operand can be a
+        	register or a memory location. Two memory operands cannot be used in
+        	one instruction. Each bit of the result is 1 if the corresponding bits
+        	of the operands are different; each bit is 0 if the corresponding bits
         	are the same.
         </descr>
     """
@@ -215,12 +216,12 @@ class Shr(Instruction):
         <descr>
         	Shifts the bits in the first operand (destination operand) to the
         	right by the number of bits specified in the second operand
-        	(count operand). Bits shifted beyonf the destination operand
+        	(count operand). Bits shifted beyond the destination operand
         	boundary are first shifted into the CF flag, then discarded. At the
         	end of the shift operation, the CF flag contains the last bit
         	shifted out of the destination operand.
         	The destination operand can be a register or a memory location. The
-        	count operand can be an immediate value or the CL register.
+        	count operand can be an immediate value or a register.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -238,8 +239,7 @@ class Notf(Instruction):
         <descr>
         	Performs a bitwise NOT operation (each 1 is set to 0, and each 0 is
         	set to 1) on the destination operand and stores the result in the
-        	destination operand location. The destination operand can be a
-        	register or a memory location.
+        	destination operand location. The destination operand is a register.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -256,11 +256,10 @@ class Inc(Instruction):
         </syntax>
         <descr>
 			Adds 1 to the destination operand, while preserving the state of
-			the CF flag. The destination operand can be a register or a memory
-			location. This instruction allows a loop counter to be updated
-			without disturbing the CF flag. (Use an ADD instriction with an
-			immediate operand of 1 to perform an increment operation that does
-			update the CF flag.)
+			the CF flag. The destination operand must be a register. This 
+			instruction allows a loop counter to be updated without disturbing 
+			the CF flag. (Use an ADD instriction with an immediate operand of 1
+			to perform an increment operation that does update the CF flag.)
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -279,10 +278,10 @@ class Dec(Instruction):
         </syntax>
         <descr>
         	Subtracts 1 from the destination operand, while preserving the state
-        	of the CF flag. The destination operand can be a register or a memory
-        	location. This instruction allows a loop counter to be updated without
-        	disturbing the CF flag. (To perform a decrement operation that updates
-        	the CF flag, use a SUB instruction with an immediate operand of 1.)
+        	of the CF flag. The destination operand must be a register. This 
+			instruction allows a loop counter to be updated without disturbing 
+			the CF flag. (To perform a decrement operation that updates the CF 
+			flag, use a SUB instruction with an immediate operand of 1.)
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -303,7 +302,7 @@ class Neg(Instruction):
            Replaces the value of operand (the destination operand) with its
            two's complement. (This operation is equivalent to subracting the
            operand from 0.) The destination operand is located in a general-
-           purpose register or a memory location.
+           purpose register.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
@@ -320,13 +319,11 @@ class Idiv(Instruction):
             IDIV reg
         </syntax>
         <descr>
-            The idiv instruction divides the contents of
-            the 64 bit integer EDX:EAX (constructed by viewing
-            EDX as the most significant four bytes and EAX
-            as the least significant four bytes) by the
-            specified operand value. The quotient result
-            of the division is stored into EAX, while the
-            remainder is placed in EDX.
+            The idiv instruction divides the contents of the 64 bit integer 
+            EDX:EAX (constructed by viewing EDX as the most significant four 
+            bytes and EAX as the least significant four bytes) by the specified 
+            operand value. The quotient result of the division is stored into 
+            EAX, while the remainder is placed in EDX.
         </descr>
     """
     def fhook(self, ops, vm, line_num):
