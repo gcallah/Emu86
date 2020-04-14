@@ -10,3 +10,8 @@ Created a Youtube video -- a tutorial regarding how to navigate and code for the
 https://www.youtube.com/watch?v=5v0xxcfmu24&feature=youtu.be
 
 Posted on HackerNews asking for users: https://news.ycombinator.com/item?id=22481910
+
+Signed up for SIGCSE as a student, joined the SIGCSE-member mailing list.
+
+Emailed Stuyvesant CS Teacher Mr. DW about whether Stuyvesant teachers would be interested 
+in using Emu86 and whether he has any recommendations as to how to publicize. 
