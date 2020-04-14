@@ -305,34 +305,34 @@ class AssembleTestCase(TestCase):
         self.assertEqual(intel_machine.flags["ZF"], 0)
         self.assertEqual(intel_machine.flags["SF"], 1)
 
-    def test_btr(self):
-        intel_machine.registers["EAX"] = 8
-        intel_machine.registers["EBX"] = 3
-        assemble("btr 8, ebx", intel_machine)
-        assemble("btr eax, ebx", intel_machine)
-        self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
-        self.two_op_test(operator=None, instr="btr", op_type=BIT_WISE,
-                         low1=0, high1=512, low2=0, high2=8)
+    # def test_btr(self):
+    #     intel_machine.registers["EAX"] = 8
+    #     intel_machine.registers["EBX"] = 3
+    #     assemble("btr 8, ebx", intel_machine)
+    #     assemble("btr eax, ebx", intel_machine)
+    #     self.assertAlmostEqual(intel_machine.registers["EAX"], 0)
+    #     self.two_op_test(operator=None, instr="btr", op_type=BIT_WISE,
+    #                      low1=0, high1=512, low2=0, high2=8)
 
-    def test_bts(self):
-        self.two_op_test(operator=None, instr="bts", op_type=BIT_WISE,
-                         low1=0, high1=512, low2=0, high2=8)
+    # def test_bts(self):
+    #     self.two_op_test(operator=None, instr="bts", op_type=BIT_WISE,
+    #                      low1=0, high1=512, low2=0, high2=8)
 
-    def test_bsf(self):
-        self.two_op_test(operator=None, instr='bsf', op_type=BIT_WISE,
-                         low1=0, high1=512, low2=2**16, high2=2**31)
+    # def test_bsf(self):
+    #     self.two_op_test(operator=None, instr='bsf', op_type=BIT_WISE,
+    #                      low1=0, high1=512, low2=2**16, high2=2**31)
 
-    def test_bsr(self):
-        self.two_op_test(operator=None, instr='bsr', op_type=BIT_WISE,
-                         low1=0, high1=512, low2=2**16, high2=2**31)
+    # def test_bsr(self):
+    #     self.two_op_test(operator=None, instr='bsr', op_type=BIT_WISE,
+    #                      low1=0, high1=512, low2=2**16, high2=2**31)
 
-    def test_bt(self):
-        self.two_op_test(operator=None, instr='bt', op_type=BIT_WISE,
-                         low1=0, high1=512, low2=0, high2=8)
+    # def test_bt(self):
+    #     self.two_op_test(operator=None, instr='bt', op_type=BIT_WISE,
+    #                      low1=0, high1=512, low2=0, high2=8)
 
-    def test_btc(self):
-        self.two_op_test(operator=None, instr='btc', op_type=BIT_WISE,
-                         low1=0, high1=512, low2=0, high2=8)
+    # def test_btc(self):
+    #     self.two_op_test(operator=None, instr='btc', op_type=BIT_WISE,
+    #                      low1=0, high1=512, low2=0, high2=8)
 
 
 if __name__ == '__main__':
