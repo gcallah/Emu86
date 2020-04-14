@@ -192,12 +192,12 @@ class Or(Instruction):
         <syntax>
             OR reg, reg, reg
         </syntax>
-		<descr>
-		    Performs a bitwise OR operation on two source registers and stores
-		    the result in the destination register. If the bit in both source
-			registers is a 0, then the destination register gets a 0; otherwise
-			it gets a 1.
-		</descr>
+        <descr>
+            Performs a bitwise OR operation on two source registers and stores
+            the result in the destination register. If the bit in both source
+            registers is a 0, then the destination register gets a 0; otherwise
+            it gets a 1.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.or_, line_num)
@@ -211,12 +211,12 @@ class Ori(Instruction):
         <syntax>
             ORI reg, reg, con
         </syntax>
-		<descr>
-			Performs a bitwise OR operation on a source register and a 12-bit
-			sign extended immediate and stores the result in the destination
-			register. If the bit in both the source register and the immediate
-			is 0, then the destination register gets a 0; otherwise it gets a 1.
-		</descr>
+        <descr>
+            Performs a bitwise OR operation on a source register and a 12-bit
+            sign extended immediate and stores the result in the destination
+            register. If the bit in both the source register and the immediate
+            is 0, then the destination register gets a 0; otherwise it gets a 1.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.or_, line_num)
@@ -230,12 +230,12 @@ class Xor(Instruction):
         <syntax>
             XOR reg, reg, reg
         </syntax>
-		<descr>
-			Performs a bitwise XOR operation on two source registers and stores
-			the result in the destination register. If the bit in the source 
-			registers is different, the destination register gets a 1; otherwise
-			it gets a 0.
-		</descr>
+        <descr>
+            Performs a bitwise XOR operation on two source registers and stores
+            the result in the destination register. If the bit in the source 
+            registers is different, the destination register gets a 1; otherwise
+            it gets a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.xor, line_num)
@@ -249,12 +249,12 @@ class Xori(Instruction):
         <syntax>
             XORI reg, reg, con
         </syntax>
-		<descr>
-			Performs a bitwise XOR operation on a source register and a 12-bit 
-			sign extended immediate and stores the result in the destination 
-			register. If the bit in the source register and the immediate is
-			different, the destination register gets a 1; otherwise it gets a 0.
-		</descr>
+        <descr>
+            Performs a bitwise XOR operation on a source register and a 12-bit 
+            sign extended immediate and stores the result in the destination 
+            register. If the bit in the source register and the immediate is
+            different, the destination register gets a 1; otherwise it gets a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.xor, line_num)
@@ -268,11 +268,11 @@ class Srl(Instruction):
         <syntax>
             SRL reg, reg, reg
         </syntax>
-		<descr>
-			Performs a logical right shift on the register rs1 by the amount
-			specified by the lower 5 bits of rs2. The result is stored in
-			register rd.
-		</descr>
+        <descr>
+            Performs a logical right shift on the register rs1 by the amount
+            specified by the lower 5 bits of rs2. The result is stored in
+            register rd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 3, line_num)
@@ -291,11 +291,11 @@ class Srli(Instruction):
         <syntax>
             SRLI reg, reg, con
         </syntax>
-		<descr>
-			Performs a logical right shift on the register rs1 by the amount
-			specified by the 12 bit immediate. The result is stored in register 
-			rd.
-		</descr>
+        <descr>
+            Performs a logical right shift on the register rs1 by the amount
+            specified by the 12 bit immediate. The result is stored in register 
+            rd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.rshift, line_num)
@@ -309,11 +309,11 @@ class Sll(Instruction):
         <syntax>
             SLL reg, reg, reg
         </syntax>
-		<descr>
-			Performs a logical left shift on the register rs1 by the amount
-			specified by the lower 5 bits of register rs2. The result is stored
-			in register rd.
-		</descr>
+        <descr>
+            Performs a logical left shift on the register rs1 by the amount
+            specified by the lower 5 bits of register rs2. The result is stored
+            in register rd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 3, line_num)
@@ -332,11 +332,11 @@ class Slli(Instruction):
         <syntax>
             SLLI reg, reg, con
         </syntax>
-		<descr>
-			Perfors a logical left shift on the register rs1 by the amount
-			specified by the 12 bit immediate. The result is stored in register
-			rd.
-		</descr>
+        <descr>
+            Perfors a logical left shift on the register rs1 by the amount
+            specified by the 12 bit immediate. The result is stored in register
+            rd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_immediate(ops, vm, self.name, opfunc.lshift, line_num)
@@ -350,10 +350,10 @@ class Slt(Instruction):
         <syntax>
             SLT reg, reg, reg
         </syntax>
-		<descr>
-				Compares the values in rs1 and rs2 and stores a 1 in rd if rs1
-				is less than rs2. Otherwise rd gets a 0. 
-		</descr>
+        <descr>
+                Compares the values in rs1 and rs2 and stores a 1 in rd if rs1
+                is less than rs2. Otherwise rd gets a 0. 
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops, line_num)
@@ -372,10 +372,10 @@ class Sltu(Instruction):
         <syntax>
             SLTU reg, reg, reg
         </syntax>
-		<descr>
-			Performs an unsigned compare of the values in rs1 and rs2 and
-			stores a 1 in rd if rs1 is less than rs2. Otherwise rd gets a 0.
-		</descr>
+        <descr>
+            Performs an unsigned compare of the values in rs1 and rs2 and
+            stores a 1 in rd if rs1 is less than rs2. Otherwise rd gets a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops, line_num)
@@ -396,11 +396,11 @@ class Slti(Instruction):
         <syntax>
             SLTI reg, reg, con
         </syntax>
-		<descr>
-			Compares the value in rs1 and the value of the 12-bit sign extended
-			immediate. If rs1 is less than the immediate, rd gets a 1, otherwise
-			it gets a 0.
-		</descr>
+        <descr>
+            Compares the value in rs1 and the value of the 12-bit sign extended
+            immediate. If rs1 is less than the immediate, rd gets a 1, otherwise
+            it gets a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops, line_num)
@@ -419,11 +419,11 @@ class Sltiu(Instruction):
         <syntax>
             SLTIU reg, reg, con
         </syntax>
-		<descr>
-			Performs an unsigned compare of the value in rs1 and the 12-bit
-			sign extended immediate. If rs1 is less than the immediate, rd gets
-			a 1, otherwise it gets a 0.
-		</descr>
+        <descr>
+            Performs an unsigned compare of the value in rs1 and the 12-bit
+            sign extended immediate. If rs1 is less than the immediate, rd gets
+            a 1, otherwise it gets a 0.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops, line_num)
@@ -444,11 +444,11 @@ class Sra(Instruction):
         <syntax>
             SRA reg, reg, reg
         </syntax>
-		<descr>
-			Performs an arithmetic right shift on the register rs1 by the 
-			amount specified by the lower 5 bits of rs2. The result is stored 
-			in register rd.
-		</descr>
+        <descr>
+            Performs an arithmetic right shift on the register rs1 by the 
+            amount specified by the lower 5 bits of rs2. The result is stored 
+            in register rd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         (op1, op2, op3) = get_three_ops(self.get_nm(), ops, line_num)
@@ -471,11 +471,11 @@ class Srai(Instruction):
         <syntax>
             SRAI reg, reg, imm
         </syntax>
-		<descr>
-			Performs an arithmetic right shift on the register rs1 by the 
-			amount specified by the 12-bit immediate. The result is stored in 
-			register rd.
-		</descr>
+        <descr>
+            Performs an arithmetic right shift on the register rs1 by the 
+            amount specified by the 12-bit immediate. The result is stored in 
+            register rd.
+        </descr>
     """
     def fhook(self, ops, vm, line_num):
         (op1, op2, op3) = get_three_ops_imm(self.get_nm(), ops, line_num)
@@ -498,11 +498,11 @@ class Div(Instruction):
     <syntax>
         DIV reg, reg, reg
     </syntax>
-	<descr>
-		Performs a divide using register rs1 as the dividend and register rs2
-		as the divisor. The result is stored in register rd. To get the
-		remainder, use REM.
-	</descr>
+    <descr>
+        Performs a divide using register rs1 as the dividend and register rs2
+        as the divisor. The result is stored in register rd. To get the
+        remainder, use REM.
+    </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.floordiv, line_num)
@@ -516,11 +516,11 @@ class Divu(Instruction):
     <syntax>
         DIVU reg, reg, reg
     </syntax>
-	<descr>
-		Performs an unsigned divide using register rs1 as the dividend and
-		register rs2 as the divisor. The result is stored in register rd. To
-		get the remainder, use REMU.
-	</descr>
+    <descr>
+        Performs an unsigned divide using register rs1 as the dividend and
+        register rs2 as the divisor. The result is stored in register rd. To
+        get the remainder, use REMU.
+    </descr>
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 3, line_num)
@@ -545,11 +545,11 @@ class Rem(Instruction):
     <syntax>
         REM reg, reg, reg
     </syntax>
-	<descr>
-		Performs a divide using register rs1 as the dividend and register rs2 
-		as the divisor. The remainder of the divide is stored in register rd.
-		To get the result, use DIV.
-	</descr>
+    <descr>
+        Performs a divide using register rs1 as the dividend and register rs2 
+        as the divisor. The remainder of the divide is stored in register rd.
+        To get the result, use DIV.
+    </descr>
     """
     def fhook(self, ops, vm, line_num):
         three_op_arith_reg(ops, vm, self.name, opfunc.mod, line_num)
@@ -563,10 +563,10 @@ class Remu(Instruction):
     <syntax>
         REMU reg, reg, reg
     </syntax>
-	<descr>
-		Performs an unsigned divide using register rs1 as the dividend and
-		register rs2 as the divisor. The remainder of the divide is stored in
-		register rd. To get the result, use DIVU.
+    <descr>
+        Performs an unsigned divide using register rs1 as the dividend and
+        register rs2 as the divisor. The remainder of the divide is stored in
+        register rd. To get the result, use DIVU.
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.name, ops, 3, line_num)
@@ -592,7 +592,7 @@ class Lui(Instruction):
     </syntax>
     <desc>
         Places the specified 20-bit immediate in the upper 20 bits of the
-		specified register. Fills the lower 12-bits with zeroes.
+        specified register. Fills the lower 12-bits with zeroes.
     </desc>
     """
     def fhook(self, ops, vm, line_num):
