@@ -189,6 +189,7 @@ def main_page(request):
     sample = "none"
     bit_code = ""
     button = ""
+    vm = None
 
     site_hdr = get_hdr()
     if request.method == 'GET':
@@ -199,7 +200,7 @@ def main_page(request):
         machine_reinit()
         form = MainForm()
     else:
-        vm = None
+        # vm = None
         base = request.POST['base']
         if 'language' in request.POST:
             machine_reinit()
