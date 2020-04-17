@@ -132,6 +132,24 @@ db:
 	-git commit $(EMUDIR)/migrations/*.py
 	git push origin master
 
+jupyter_kernel:
+	pip3 install --upgrade emu86
+
+intel_kernel:
+	python3 -m kernels.intel.install
+
+att_kernel:
+	python3 -m kernels.att.install
+
+mips_asm_kernel:
+	python3 -m kernels.mips_asm.install
+
+mips_mml_kernel:
+	python3 -m kernels.mips_mml.install
+
+riscv_kernel:
+	python3 -m kernels.riscv.install
+
 all_tests: tests test_docker
 
 tests: FORCE
