@@ -19,12 +19,9 @@ class Mips_asmKernel(Kernel):
     def has_one_data_first(self, code):
         data_first = -1
         text_first = -1
-        data_seg = False
         text_seg = True
         lines = code.split("\n")
         data_seg_count = 0
-        data_seg_found = False
-        text_seg_found = False
         for index in range(len(lines)):
             line = lines[index]
             if line.find(';') > -1:
@@ -35,22 +32,20 @@ class Mips_asmKernel(Kernel):
                 continue
 
             if line[:5] == ".data":
-                data_seg = True
                 text_seg = False
                 data_seg_count += 1
-                data_seg_found = True
+                if data_first == -1:
+                    data_first = index
                 continue
             elif line[:5] == ".text":
-                data_seg = False
                 text_seg = True
-                text_seg_found = True
+                if text_first == -1:
+                    text_first = index
                 continue
-            if data_seg and data_first == -1:
-                data_first = index
-            elif text_seg and text_first == -1:
+            if text_seg and text_first == -1:
                 text_first = index
 
-        if data_seg_found and not text_seg_found:
+        if data_first != -1 and text_first == -1:
             return ""
         errors = []
         if data_first > text_first:
@@ -113,7 +108,9 @@ class Mips_asmKernel(Kernel):
                 (last_instr, error, bit_code) = assemble(code, self.vm_machine,
                                                          web=False)
                 if error == "":
-                    vm_machine_info = {}
+                    vm_machine_info = {
+                        'metadata': {}
+                    }
                     reg_info, mem_info, flag_info = self.parse_changes()
                     output = "Changes: <br />"
                     output += self.construct_table(reg_info, mem_info,

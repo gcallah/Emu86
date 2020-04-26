@@ -21,7 +21,7 @@ def install_kernel(user=True, prefix=None):
             json.dump(kernel_json, f, sort_keys=True)
         print("Installing", kernel_name, "kernel...")
         KernelSpecManager().install_kernel_spec(tempdir, kernel_name, user,
-                                                replace=True, prefix=prefix)
+                                                prefix=prefix)
         print(kernel_name.capitalize(), "kernel installation complete")
 
 
