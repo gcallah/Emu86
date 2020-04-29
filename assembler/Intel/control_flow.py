@@ -232,7 +232,7 @@ class Call(Instruction):
     def fhook(self, ops, vm, line_num):
         check_num_args("CALL", ops, 1, line_num)
         vm.dec_sp(line_num)
-        vm.stack[hex(vm.get_sp() + 1).split('x')[-1].upper()] = vm.get_ip()
+        vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.get_ip()
         target = get_one_op(self.get_nm(), ops, line_num)
         vm.c_stack.append(vm.get_ip())
         raise Jump(target.name)

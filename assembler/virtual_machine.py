@@ -189,8 +189,8 @@ class IntelMachine(VirtualMachine):
                         ('EDX', 0),
                         ('ESI', 0),
                         ('EDI', 0),
-                        (STACK_PTR_INTEL, STACK_TOP),
-                        ('EBP', 0),
+                        (STACK_PTR_INTEL, STACK_TOP + 1),
+                        ('EBP', STACK_TOP + 1),
                         (INSTR_PTR_INTEL, 0),
                         ('ST0', 0.0),
                         ('ST1', 0.0),
@@ -257,7 +257,8 @@ class IntelMachine(VirtualMachine):
     def re_init(self):
         super().re_init()
         self.reset_FP_Stack()
-        self.registers[STACK_PTR_INTEL] = STACK_TOP
+        self.registers[STACK_PTR_INTEL] = STACK_TOP + 1
+        self.registers['EBP'] = STACK_TOP + 1
 
     def stack_init(self):
         for i in range(STACK_TOP, STACK_BOTTOM - 1, -1):
@@ -290,7 +291,7 @@ class IntelMachine(VirtualMachine):
     def set_sp(self, val, line_num):
         if val < STACK_BOTTOM - 1:
             raise StackOverflow(line_num)
-        if val > STACK_TOP:
+        if val > STACK_TOP + 1:
             raise StackUnderflow(line_num)
 
         self.registers[STACK_PTR_INTEL] = val

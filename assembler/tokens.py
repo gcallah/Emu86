@@ -294,6 +294,7 @@ class RegAddress(Address):
 
     def get_mem_addr(self, line_num):
         # right now, memory addresses are strings. eeh!
+        print(self.regs[self.name], self.displacement, self.multiplier)
         address = hex(int(self.regs[self.name]) *
                       self.multiplier).split('x')[-1].upper()
         disp = 0

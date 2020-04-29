@@ -2,7 +2,8 @@
 data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args, StackFull
-from assembler.tokens import Instruction, Register, Address
+from assembler.tokens import Instruction, Register, Address, RegAddress
+from assembler.virtual_machine import STACK_TOP, STACK_BOTTOM
 
 
 class Fld(Instruction):
@@ -63,7 +64,25 @@ class Mov(Instruction):
     """
     def fhook(self, ops, vm, line_num):
         check_num_args(self.get_nm(), ops, 2, line_num)
-        ops[0].set_val(ops[1].get_val(line_num), line_num)
+        stackarg = 0
+        val = 1
+        haveaddressarg = False
+        instack = False
+        if(isinstance(ops[0], Address) or isinstance(ops[0], RegAddress)):
+            haveaddressarg = True
+        if(isinstance(ops[1], Address) or isinstance(ops[1], RegAddress)):
+            stackarg = 1
+            val = 0
+            haveaddressarg = True
+        if(haveaddressarg):
+            stack = int(ops[stackarg].get_mem_addr(line_num), 16)
+            instack = (stack < (STACK_TOP + 1) and stack >= STACK_BOTTOM)
+        if(stackarg == 0 and instack):
+            vm.stack[hex(stack).split('x')[-1].upper()] = ops[val].get_val(line_num)
+        elif(stackarg == 1 and instack):
+            ops[val].set_val(vm.stack[hex(stack).split('x')[-1].upper()], line_num)
+        else:
+            ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
         elif isinstance(ops[0], Address):
@@ -86,11 +105,11 @@ class Pop(Instruction):
         </descr>
     """
     def fhook(self, ops, vm, line_num):
-        vm.inc_sp(line_num)
         check_num_args("POP", ops, 1, line_num)
         val = int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()])
         ops[0].set_val(val, line_num)
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
+        vm.inc_sp(line_num)
 
 
 class Push(Instruction):
@@ -113,8 +132,7 @@ class Push(Instruction):
     def fhook(self, ops, vm, line_num):
         vm.dec_sp(line_num)
         check_num_args("PUSH", ops, 1, line_num)
-        vm.stack[hex(vm.get_sp() +
-                     1).split('x')[-1].upper()] = ops[0].get_val(line_num)
+        vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = ops[0].get_val(line_num)
 
 
 class Lea(Instruction):
