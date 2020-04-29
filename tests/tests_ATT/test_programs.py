@@ -69,7 +69,7 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.registers["EAX"], 71)
         self.assertEqual(intel_machine.registers["EBX"], 6)
         self.assertEqual(intel_machine.registers["ECX"], 1)
-        self.assertEqual(intel_machine.registers["ESP"], 511)
+        self.assertEqual(intel_machine.registers["ESP"], 512)
         self.assertEqual(intel_machine.memory["6"], 71)
 
     def test_key_att(self):
@@ -77,7 +77,7 @@ class TestPrograms(TestCase):
         self.assertEqual(intel_machine.registers["EAX"], 71)
         self.assertEqual(intel_machine.registers["EBX"], 71)
         self.assertEqual(intel_machine.registers["ECX"], 1)
-        self.assertEqual(intel_machine.registers["ESP"], 511)
+        self.assertEqual(intel_machine.registers["ESP"], 512)
         self.assertEqual(intel_machine.memory["9"], 83)
 
     def test_arithmetic_shift_att(self):

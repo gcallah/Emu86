@@ -58,7 +58,7 @@ class ErrorTestCase(TestCase):
         self.assertTrue(error.startswith(LINE_ONE_MSG + STACK_OVERFLOW))
 
     def test_stack_underflow(self):
-        intel_machine.registers["ESP"] = STACK_TOP
+        intel_machine.registers["ESP"] = STACK_TOP + 1
         (output, error, bit_code) = assemble("pop %ebx",
                                              intel_machine)
         self.assertTrue(error.startswith(LINE_ONE_MSG + STACK_UNDERFLOW))

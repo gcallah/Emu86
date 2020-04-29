@@ -254,8 +254,8 @@ class Ret(Instruction):
     def fhook(self, ops, vm, line_num):
         check_num_args("RET", ops, 0, line_num)
         vm.inc_sp(line_num)
-        vm.set_ip(int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()]))
-        vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
+        vm.set_ip(int(vm.stack[hex(vm.get_sp() - 1).split('x')[-1].upper()]))
+        vm.stack[hex(vm.get_sp() - 1).split('x')[-1].upper()] = vm.empty_cell()
         while not isinstance(vm.c_stack[-1], int):
             vm.c_stack.pop()
         if isinstance(vm.c_stack[-1], int):

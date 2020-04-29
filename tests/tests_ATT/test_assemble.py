@@ -117,7 +117,7 @@ class AssembleTestCase(TestCase):
             intel_machine.registers["EAX"] = a
             assemble("push %eax", intel_machine)
 
-        for i in range(STACK_BOTTOM, STACK_TOP+1):
+        for i in range(STACK_BOTTOM, STACK_TOP + 1):
             assemble("pop %ebx", intel_machine)
             self.assertEqual(intel_machine.registers["EBX"], correct_stack[i])
 

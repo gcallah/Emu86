@@ -76,11 +76,12 @@ class Mov(Instruction):
             haveaddressarg = True
         if(haveaddressarg):
             stack = int(ops[stackarg].get_mem_addr(line_num), 16)
+            stack_loc = hex(stack).split('x')[-1].upper()
             instack = (stack < (STACK_TOP + 1) and stack >= STACK_BOTTOM)
         if(stackarg == 0 and instack):
-            vm.stack[hex(stack).split('x')[-1].upper()] = ops[val].get_val(line_num)
+            vm.stack[stack_loc] = ops[val].get_val(line_num)
         elif(stackarg == 1 and instack):
-            ops[val].set_val(vm.stack[hex(stack).split('x')[-1].upper()], line_num)
+            ops[val].set_val(vm.stack[stack_loc], line_num)
         else:
             ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
@@ -106,10 +107,10 @@ class Pop(Instruction):
     """
     def fhook(self, ops, vm, line_num):
         check_num_args("POP", ops, 1, line_num)
-        val = int(vm.stack[hex(vm.get_sp()).split('x')[-1].upper()])
-        ops[0].set_val(val, line_num)
-        vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.empty_cell()
         vm.inc_sp(line_num)
+        val = int(vm.stack[hex(vm.get_sp() - 1).split('x')[-1].upper()])
+        ops[0].set_val(val, line_num)
+        vm.stack[hex(vm.get_sp() - 1).split('x')[-1].upper()] = vm.empty_cell()
 
 
 class Push(Instruction):

@@ -244,16 +244,16 @@ class AssembleTestCase(TestCase):
     def test_push_and_pop(self):
         # Note: size(correct_stack) = size(stack + memory)
 
-        correct_stack = [None] * (STACK_TOP+1)
+        correct_stack = [None] * (STACK_TOP + 1)
 
         # Traverse the stack registers.
-        for i in range(STACK_TOP, STACK_BOTTOM-1, -1):
+        for i in range(STACK_TOP, STACK_BOTTOM - 1, -1):
             a = random.randint(MIN_TEST, MAX_TEST)
             correct_stack[i] = a
             intel_machine.registers["EAX"] = a
             assemble("push eax", intel_machine)
 
-        for i in range(STACK_BOTTOM, STACK_TOP+1):
+        for i in range(STACK_BOTTOM, STACK_TOP + 1):
             assemble("pop ebx", intel_machine)
             self.assertEqual(intel_machine.registers["EBX"], correct_stack[i])
 

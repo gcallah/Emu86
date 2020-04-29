@@ -455,6 +455,7 @@ def get_expr_intel(token_line, pos, vm, line_num, reg):
     if isinstance(left, Register):
         reg = left
     next_term = token_line[pos + 1]
+    next_val_pos = None
     if isinstance(next_term, PlusTok):
         next_val_pos = get_expr_intel(token_line, pos + 2, vm, line_num, reg)
         return (next_val_pos[REG],
@@ -466,7 +467,10 @@ def get_expr_intel(token_line, pos, vm, line_num, reg):
                 left.get_val(line_num) - next_val_pos[DISP_VAL],
                 next_val_pos[POSITION])
     else:
-        return (reg, left.get_val(line_num), pos + 1)
+        if not reg == left:
+            return (reg, left.get_val(line_num), pos + 1)
+        else:
+            return (reg, 0, pos + 1)
 
 
 SEC_REG = 0
@@ -648,7 +652,7 @@ def get_address_location(token_line, pos, vm, line_num):
         reg, disp, pos = get_address_mips(token_line, pos, vm, line_num)
     if reg:
         return (RegAddress(reg.get_nm(), vm,
-                           disp - reg.get_val(line_num),
+                           disp,
                            reg.get_multiplier()), pos)
     else:
         # eliminates negative memory locations
