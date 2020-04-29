@@ -648,7 +648,8 @@ def get_address_location(token_line, pos, vm, line_num):
         reg, disp, pos = get_address_mips(token_line, pos, vm, line_num)
     if reg:
         return (RegAddress(reg.get_nm(), vm,
-                           disp, reg.get_multiplier()), pos)
+                           disp - reg.get_val(line_num),
+                           reg.get_multiplier()), pos)
     else:
         # eliminates negative memory locations
         if disp < 0:
