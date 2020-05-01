@@ -93,9 +93,9 @@ class Jmp(Instruction):
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
         if isinstance(target, IntegerTok):
-            raise Jump(str(target.get_val(line_num)))
+            raise Jump(str(target.get_val(line_num)), line_num)
         else:
-            raise Jump(target.name)
+            raise Jump(target.name, line_num)
 
 
 class Jal(Instruction):
@@ -113,7 +113,7 @@ class Jal(Instruction):
     """
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
-        raise Jump(str(target.get_val(line_num)))
+        raise Jump(str(target.get_val(line_num)), line_num)
 
 
 class Jr(Instruction):
@@ -130,7 +130,7 @@ class Jr(Instruction):
     """
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
-        raise Jump(str(target.get_val(line_num)))
+        raise Jump(str(target.get_val(line_num)), line_num)
 
 
 class Beq(Instruction):

@@ -97,7 +97,7 @@ class Jmp(Instruction):
     """
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
-        raise Jump(target.name)
+        raise Jump(target.name, line_num)
 
 
 class Je(Instruction):
@@ -116,7 +116,7 @@ class Je(Instruction):
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
         if int(vm.flags['ZF']) == 1:
-            raise Jump(target.name)
+            raise Jump(target.name, line_num)
 
 
 class Jne(Instruction):
@@ -135,7 +135,7 @@ class Jne(Instruction):
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
         if int(vm.flags['ZF']) == 0:
-            raise Jump(target.name)
+            raise Jump(target.name, line_num)
 
 
 class Jg(Instruction):
@@ -155,7 +155,7 @@ class Jg(Instruction):
         target = get_one_op(self.get_nm(), ops, line_num)
         if (int(vm.flags['SF']) == 0 and
                 int(vm.flags['ZF']) == 0):
-            raise Jump(target.name)
+            raise Jump(target.name, line_num)
 
 
 class Jge(Instruction):
@@ -173,7 +173,7 @@ class Jge(Instruction):
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
         if int(vm.flags['SF']) == 0:
-            raise Jump(target.name)
+            raise Jump(target.name, line_num)
         return ''
 
 
@@ -193,7 +193,7 @@ class Jl(Instruction):
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
         if int(vm.flags['SF']) == 1:
-            raise Jump(target.name)
+            raise Jump(target.name, line_num)
         return ''
 
 
@@ -213,7 +213,7 @@ class Jle(Instruction):
         target = get_one_op(self.get_nm(), ops, line_num)
         if (int(vm.flags['SF']) == 1 or
                 int(vm.flags['ZF']) == 1):
-            raise Jump(target.name)
+            raise Jump(target.name, line_num)
         return ''
 
 
@@ -235,7 +235,7 @@ class Call(Instruction):
         vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = vm.get_ip()
         target = get_one_op(self.get_nm(), ops, line_num)
         vm.c_stack.append(vm.get_ip())
-        raise Jump(target.name)
+        raise Jump(target.name, line_num)
 
 
 class Ret(Instruction):

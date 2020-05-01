@@ -144,19 +144,19 @@ class VirtualMachine:
     def set_data_init(self, on_or_off):
         self.data_init = on_or_off
 
-    def jump_to_label(self, label, source, jal=False):
+    def jump_to_label(self, label, source, line_num, jal=False):
         if label in self.labels:
             ip = self.labels[label]
             self.set_ip(ip + self.start_ip)
             self.next_stack_change = label
-            return (True, source, "")
+            return (True, f'Line {line_num}: {source}', "")
         else:
             try:
                 ip = int(label)
                 if jal:
                     ip = ip >> 2
                 self.set_ip(ip)
-                return (True, source, "")
+                return (True, f'Line {line_num}: {source}', "")
             except Exception:
                 return (False, source, f"Invalid label: {label}")
 
@@ -300,7 +300,7 @@ class IntelMachine(VirtualMachine):
         return int(self.registers[STACK_PTR_INTEL])
 
     def jump_handler(self, brk, source, instr_line=None):
-        return self.jump_to_label(brk.label, source, True)
+        return self.jump_to_label(brk.label, source, brk.line_num, True)
 
     def exec_instr(self, instr_line, line_num):
         self.inc_ip()
@@ -625,8 +625,8 @@ class MIPSMachine(VirtualMachine):
         if isinstance(instr_line[self.instr], Jal):
             self.registers["R31"] = self.get_ip()
         if isinstance(instr_line[self.instr], Jr):
-            return self.jump_to_label(brk.label, source)
-        return self.jump_to_label(brk.label, source, True)
+            return self.jump_to_label(brk.label, source, brk.line_num)
+        return self.jump_to_label(brk.label, source, brk.line_num, True)
 
     def exec_instr(self, instr_line, line_num):
         if self.get_ip() != instr_line[self.pc].get_val(line_num):
@@ -740,7 +740,7 @@ class RISCVMachine(VirtualMachine):
         return instr_line[self.instr].f(instr_line[self.ops:], self, line_num)
 
     def jump_handler(self, brk, source, instr_line):
-        return self.jump_to_label(brk.label, source, True)
+        return self.jump_to_label(brk.label, source, brk.line_num, True)
 
 
 class WASMMachine(VirtualMachine):

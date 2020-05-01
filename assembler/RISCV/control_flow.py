@@ -31,7 +31,7 @@ class Jr(Instruction):
     """
     def fhook(self, ops, vm, line_num):
         target = get_one_op(self.get_nm(), ops, line_num)
-        raise Jump(str(target.get_val(line_num)))
+        raise Jump(str(target.get_val(line_num)), line_num)
 
 
 class Jal(Instruction):
@@ -57,7 +57,7 @@ class Jal(Instruction):
         op1.set_val(current_ip + 4, line_num)
         print(current_ip + 4)
         vm.changes.add(op1.get_nm())
-        raise Jump(str(target))
+        raise Jump(str(target), line_num)
 
 # The original implementation of JAL was pretty off.
 # I've corrected it, but it needs to be tested some more.
@@ -83,7 +83,7 @@ class Jalr(Instruction):
         target = ops[1] + ops[2]
         ops[0].set_val(current_ip + 4, line_num)
         vm.changes.add(ops[0].get_nm())
-        raise Jump(str(target))
+        raise Jump(str(target), line_num)
 # I need to find a better way to zero out the LSB. I think I
 # will be converting into binary form of string, slicing and
 # then converting back. It's the converting back that I have
