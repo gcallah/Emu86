@@ -21,3 +21,6 @@ He however said that he joined Matplotlib when it was already well established a
 
 Signed up for SIGCSE as a student, joined the SIGCSE-member mailing list.
 Emailed the SIGCSE-member list about whether they would be interested in being users for either the website or the Jupyter kernel.
+
+Emailed Professor Tan in regards to whether he would be interested in using Emu86 for Computer Architecture class.
+He said that he has already moved past MIPS in the course, but will spread the word about Emu.
