@@ -193,8 +193,9 @@ class StackUnderflow(Error):
 
 
 class ExitProg(Error):
-    def __init__(self, offender):
+    def __init__(self, offender, line_num):
         self.msg = offender + ": " + PROGRAM_EXIT
+        self.line_num = line_num
 
 
 class MissingOps(Error):

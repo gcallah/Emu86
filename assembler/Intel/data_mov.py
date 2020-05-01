@@ -133,7 +133,8 @@ class Push(Instruction):
     def fhook(self, ops, vm, line_num):
         vm.dec_sp(line_num)
         check_num_args("PUSH", ops, 1, line_num)
-        vm.stack[hex(vm.get_sp()).split('x')[-1].upper()] = ops[0].get_val(line_num)
+        stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
+        vm.stack[stack_loc] = ops[0].get_val(line_num)
 
 
 class Lea(Instruction):

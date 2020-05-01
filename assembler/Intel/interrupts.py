@@ -9,7 +9,7 @@ from assembler.tokens import Instruction, IntegerTok
 EAX = 'EAX'
 
 
-def read_key(vm, msg=None):
+def read_key(vm, line_num, msg=None):
     # we are faking 'reading' from the keyboard
     c = vm.ret_str[vm.nxt_key]
     vm.nxt_key = (vm.nxt_key + 1) % len(vm.ret_str)
@@ -17,8 +17,8 @@ def read_key(vm, msg=None):
     return ""
 
 
-def exit_prog(vm, msg):
-    raise ExitProg(msg)
+def exit_prog(vm, msg, line_num):
+    raise ExitProg(msg, line_num)
 
 
 int_vectors = {
@@ -59,5 +59,5 @@ class Interrupt(Instruction):
         except KeyError:
             raise UnknownInt(str(ops[0].get_val(line_num)) + ": "
                              + vm.registers[EAX], line_num)
-        c = interrupt_handler(vm, self.get_nm())
+        c = interrupt_handler(vm, self.get_nm(), line_num)
         return str(c)

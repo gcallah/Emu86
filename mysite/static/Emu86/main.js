@@ -193,73 +193,30 @@ function loadcode()
 function highlightCode(){
     const instr = document.getElementsByName("last_instr")[0];
     let lastInstr = instr.value;
+    let line_num;
+    if (lastInstr.indexOf("Line") !== -1){
+        line_num = parseInt(lastInstr.substring(5, lastInstr.indexOf(":")))
+        lastInstr = lastInstr.substring(lastInstr.indexOf(":") + 1)
+    }
     if (lastInstr.indexOf(": Exiting program") !== -1){
         lastInstr = lastInstr.substring(0, lastInstr.indexOf(": Exiting program"));
     }
-    const mipsIp = document.getElementsByName("PC");
-    const intelIp = document.getElementsByName("EIP");
-    let ipVal = null;
-    let hexOrDec = null;
-    const radios = document.getElementsByName("base");
-    for (let index = 0; index < radios.length; index++) {
-        if (radios[index].checked) {
-            hexOrDec = radios[index].value;
-            break;
-        }
-    }
-    if (mipsIp.length !== 0){
-        if (hexOrDec === "hex") {
-            ipVal = parseInt(mipsIp[0].value, 16)/4;
-        }
-        else {
-            ipVal = parseInt(mipsIp[0].value)/4;
-        }
-    }
-    else if (intelIp.length !== 0) {
-        if (hexOrDec === "hex") {
-            ipVal = parseInt(intelIp[0].value, 16);
-        }
-        else {
-            ipVal = parseInt(intelIp[0].value);
-        }
-    }
-    if (instr && ipVal) {
+    if (instr && lastInstr) {
         const input = document.getElementById("id_code");
-        let countCode = 0;
-        let countRepeats = 0;
         const codeArray = input.value.split("\n");
-        let textArea = true;
-        if (instr.value !== "") {
-            for (let index = 0; index < codeArray.length; index++) {
-                const string = codeArray[index].trim();
-                if (countCode === ipVal){
-                    break;
-                }
-                if (string === ".data"){
-                    textArea = false;
-                    continue;
-                }
-                else if (string === ".text"){
-                    textArea = true;
-                    continue;
-                }
-                if (!(string === "") && textArea && string[0] !== ";"){
-                    countCode++;
-                }
-                if (string === lastInstr){
-                    countRepeats++;
-                }
+        let startIndex = 0;
+        let lineLength = 0;
+        for (let index = 0; index < codeArray.length; index++) {
+            lineLength = codeArray[index].length;
+            if (index === line_num - 1){
+                break;
             }
-            input.focus();
-            let startIndex = 0;
-            for (let time = 0; time < countRepeats; time++) {
-                startIndex = input.value.indexOf(lastInstr, startIndex)
-                             + lastInstr.length;
-            }
-            startIndex -= lastInstr.length;
-            input.setSelectionRange(startIndex,
-                   startIndex + lastInstr.length);
+            startIndex += codeArray[index].length + 1;
+            // the extra + 1 is to take the new line character into account
         }
+        input.focus();
+        startIndex += lineLength - lastInstr.length + 1;
+        input.setSelectionRange(startIndex, startIndex + lastInstr.length);
     }
 }
 

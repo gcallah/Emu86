@@ -47,7 +47,7 @@ def exec(tok_lines, vm, last_instr):
 
         vm.set_next_stack_change()
 
-        return (True, source, "")
+        return (True, f'Line {line_num}: {source}', "")
 
     except FlowBreak as brk:
         # we have hit one of the JUMP instructions: jump to that line.
@@ -55,7 +55,7 @@ def exec(tok_lines, vm, last_instr):
         dump_flags(vm)
         return vm.jump_handler(brk, source, curr_instr)
     except ExitProg:
-        raise ExitProg(source)
+        raise ExitProg(source, line_num)
     except Error as err:
         error_msg = f'Line {err.line_num}: {err.msg}'
         return (False, last_instr, error_msg)
@@ -145,5 +145,6 @@ def assemble(code, vm, step=False, web=True):
 
     except ExitProg as ep:
         last_instr = ep.msg.split(":")[0] + ": Exiting program"
+        last_instr = f'Line {ep.line_num}: {last_instr}'
         vm.set_int_ip()
     return (last_instr, error, bit_code)
