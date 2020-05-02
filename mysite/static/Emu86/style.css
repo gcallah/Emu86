@@ -365,6 +365,8 @@ select[multiple] {
 
 button#viewReg {
     margin-bottom: 10px;
+    position: relative;
+    left: 28%;
 }
 
 a.button {
