@@ -3,7 +3,8 @@ data_mov_att.py: other data movement instructions for AT&T
 """
 
 from assembler.errors import check_num_args, InvalidConVal, InvalidArgument
-from assembler.tokens import Instruction, IntegerTok, Register, Address
+from assembler.tokens import Instruction, IntegerTok, Register, Address, RegAddress
+from assembler.virtual_machine import STACK_TOP, STACK_BOTTOM
 
 
 def check_source_val(instr, ops, data_type, line_num):
@@ -52,7 +53,26 @@ class Movb(Instruction):
     def fhook(self, ops, vm, line_num):
         check_num_args(self.get_nm(), ops, 2, line_num)
         check_source_val(self.get_nm(), ops, 'b', line_num)
-        ops[0].set_val(ops[1].get_val(line_num), line_num)
+        stackarg = 0
+        val = 1
+        haveaddressarg = False
+        instack = False
+        if(isinstance(ops[0], Address) or isinstance(ops[0], RegAddress)):
+            haveaddressarg = True
+        if(isinstance(ops[1], Address) or isinstance(ops[1], RegAddress)):
+            stackarg = 1
+            val = 0
+            haveaddressarg = True
+        if(haveaddressarg):
+            stack = int(ops[stackarg].get_mem_addr(line_num), 16)
+            stack_loc = hex(stack).split('x')[-1].upper()
+            instack = (stack < (STACK_TOP + 1) and stack >= STACK_BOTTOM)
+        if(stackarg == 0 and instack):
+            vm.stack[stack_loc] = ops[val].get_val(line_num)
+        elif(stackarg == 1 and instack):
+            ops[val].set_val(vm.stack[stack_loc], line_num)
+        else:
+            ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
         elif isinstance(ops[0], Address):
@@ -74,7 +94,26 @@ class Movw(Instruction):
     def fhook(self, ops, vm, line_num):
         check_num_args(self.get_nm(), ops, 2, line_num)
         check_source_val(self.get_nm(), ops, 'w', line_num)
-        ops[0].set_val(ops[1].get_val(line_num), line_num)
+        stackarg = 0
+        val = 1
+        haveaddressarg = False
+        instack = False
+        if(isinstance(ops[0], Address) or isinstance(ops[0], RegAddress)):
+            haveaddressarg = True
+        if(isinstance(ops[1], Address) or isinstance(ops[1], RegAddress)):
+            stackarg = 1
+            val = 0
+            haveaddressarg = True
+        if(haveaddressarg):
+            stack = int(ops[stackarg].get_mem_addr(line_num), 16)
+            stack_loc = hex(stack).split('x')[-1].upper()
+            instack = (stack < (STACK_TOP + 1) and stack >= STACK_BOTTOM)
+        if(stackarg == 0 and instack):
+            vm.stack[stack_loc] = ops[val].get_val(line_num)
+        elif(stackarg == 1 and instack):
+            ops[val].set_val(vm.stack[stack_loc], line_num)
+        else:
+            ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
         elif isinstance(ops[0], Address):
@@ -96,7 +135,26 @@ class Movl(Instruction):
     def fhook(self, ops, vm, line_num):
         check_num_args(self.get_nm(), ops, 2, line_num)
         check_source_val(self.get_nm(), ops, 'l', line_num)
-        ops[0].set_val(ops[1].get_val(line_num), line_num)
+        stackarg = 0
+        val = 1
+        haveaddressarg = False
+        instack = False
+        if(isinstance(ops[0], Address) or isinstance(ops[0], RegAddress)):
+            haveaddressarg = True
+        if(isinstance(ops[1], Address) or isinstance(ops[1], RegAddress)):
+            stackarg = 1
+            val = 0
+            haveaddressarg = True
+        if(haveaddressarg):
+            stack = int(ops[stackarg].get_mem_addr(line_num), 16)
+            stack_loc = hex(stack).split('x')[-1].upper()
+            instack = (stack < (STACK_TOP + 1) and stack >= STACK_BOTTOM)
+        if(stackarg == 0 and instack):
+            vm.stack[stack_loc] = ops[val].get_val(line_num)
+        elif(stackarg == 1 and instack):
+            ops[val].set_val(vm.stack[stack_loc], line_num)
+        else:
+            ops[0].set_val(ops[1].get_val(line_num), line_num)
         if isinstance(ops[0], Register):
             vm.changes.add(ops[0].get_nm())
         elif isinstance(ops[0], Address):
