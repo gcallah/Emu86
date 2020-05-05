@@ -458,14 +458,16 @@ def get_expr_intel(token_line, pos, vm, line_num, reg):
     next_val_pos = None
     if isinstance(next_term, PlusTok):
         next_val_pos = get_expr_intel(token_line, pos + 2, vm, line_num, reg)
-        return (next_val_pos[REG],
-                left.get_val(line_num) + next_val_pos[DISP_VAL],
-                next_val_pos[POSITION])
+        total_disp = next_val_pos[DISP_VAL]
+        if not left == next_val_pos[REG]:
+            total_disp += left.get_val(line_num)
+        return (next_val_pos[REG], total_disp, next_val_pos[POSITION])
     elif isinstance(next_term, MinusTok):
         next_val_pos = get_expr_intel(token_line, pos + 2, vm, line_num, reg)
-        return (next_val_pos[REG],
-                left.get_val(line_num) - next_val_pos[DISP_VAL],
-                next_val_pos[POSITION])
+        total_disp = next_val_pos[DISP_VAL]
+        if not left == next_val_pos[REG]:
+            total_disp = left.get_val(line_num) - total_disp
+        return (next_val_pos[REG], total_disp, next_val_pos[POSITION])
     else:
         if not reg == left:
             return (reg, left.get_val(line_num), pos + 1)
