@@ -58,6 +58,6 @@ class Interrupt(Instruction):
             interrupt_handler = interrupt_class[int(vm.registers[EAX])]
         except KeyError:
             raise UnknownInt(str(ops[0].get_val(line_num)) + ": "
-                             + vm.registers[EAX], line_num)
+                             + str(vm.registers[EAX]), line_num)
         c = interrupt_handler(vm, self.get_nm(), line_num)
         return str(c)
