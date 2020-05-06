@@ -23,22 +23,22 @@ link_names = {
 def create_href():
     tab = '    '
     directories = [
-                    "tests/Intel",
-                    "tests/ATT",
-                    "tests/MIPS_ASM",
-                    "tests/MIPS_MML",
-                    "tests/RISCV"
+                    "tests/tests_Intel",
+                    "tests/tests_ATT",
+                    "tests/tests_MIPS_ASM",
+                    "tests/tests_MIPS_MML",
+                    "tests/tests_RISCV"
                     ]
     for dire in directories:
         directory_intel = os.fsencode(dire)
         name = "templates/sample_programs"
-        if dire == "tests/Intel":
+        if dire == "tests/tests_Intel":
             name += "_intel"
-        elif dire == "tests/ATT":
+        elif dire == "tests/tests_ATT":
             name += "_att"
-        elif dire == "tests/MIPS_ASM":
+        elif dire == "tests/tests_MIPS_ASM":
             name += "_mips_asm"
-        elif dire == "tests/MIPS_MML":
+        elif dire == "tests/tests_MIPS_MML":
             name += "_mips_mml"
         else:
             name += "_riscv"
@@ -61,7 +61,7 @@ def create_href():
 
 def create_sidebar():
     tab = '    '
-    directory = os.fsencode("tests/Intel")
+    directory = os.fsencode("tests/tests_Intel")
     file_name = open("templates/samples.txt", "w")
     file_name.write(tab * 3 +
                     '<ul class="collapse list-unstyled nested"' +

@@ -1,76 +1,76 @@
             <ul class="nested">
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/array.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/array.asm">
                         Declare an array
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/power.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/power.asm">
                         Raise a number to a power
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/sum_test.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/sum_test.asm">
                         Add two numbers
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/change_array_elem_test.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/change_array_elem_test.asm">
                         Change array elements below min
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/key_test.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/key_test.asm">
                         Uses our keyboard interrupt
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/arithmetic_shift.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/arithmetic_shift.asm">
                         Arithmetic shift
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/area.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/area.asm">
                         Calculate area of a rectangle
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/loop.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/loop.asm">
                         A simple loop
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/mem_register_test.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/mem_register_test.asm">
                         Store values into memory
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/log.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/log.asm">
                         Calculate log in base 2
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/array_average_test.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/array_average_test.asm">
                         Calculate average of an array of numbers
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/int_square_root.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/int_square_root.asm">
                         Calculate square root of a number
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/arithmetic_expression.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/arithmetic_expression.asm">
                         Calculate an arithmetic expression
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/cel_to_fah.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/cel_to_fah.asm">
                         Convert from Celsius to Fahrenheit
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/ATT/data.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_ATT/data.asm">
                         How to use the .data section
                     </a>
                 </li>

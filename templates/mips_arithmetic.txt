@@ -1,0 +1,299 @@
+<hr>
+<h4>
+             ADD
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            ADD reg, reg, reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            The 32 bit word value in Rt is added to the 32 bit word value in Rs
+            to produce a 32 bit result. If the addition results in 32 bit 2's
+            complement arithmetic overflow, the destination register is not
+            modified and an Integer Overflow exception occurs. If the addition
+            deos not overflow, the 32 bit result is placed into Rd.
+</p>
+<hr>
+<h4>
+             ADDI
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            ADDI reg, reg, con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            The 16 bit signed immediate is added to the 32 bit value in Rs to
+            produce a 32 bit result. If the addition in 32 bit 2's complement
+            arithmetic overflow, the destination register is not modified and
+            an Integer Overflow exception occurs. If the addition does not
+            overflow, the 32 bit result is placed into Rt.
+</p>
+<hr>
+<h4>
+             SUB
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            SUB reg, reg, reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            The 32 bit word value in Rt is subtracted from the 32 bit value in
+            Rs to produce a 32 bit result. If the subtraction results in a 32
+            bit 2's complement arithmetic overflow, then the destination
+            register is not modified and an Integer Overflow exception occurs.
+            If it does not overflow, the 32 bit result is placed into Rd.
+</p>
+<hr>
+<h4>
+             MULT
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            MULT reg, reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            The 32 bit word value in Rt is multiplied by the 32 bit value in Rs
+            to produce a 64 bit result. The upper 32 bits of the 64 bit result
+            is placed in the special register HI, whereas the lower 32 bits are
+            placed in the register LO. Use MFHI and MFLO to move the result to
+            a general purpose register.
+</p>
+<hr>
+<h4>
+             AND
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            AND reg, reg, reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Performs a bitwise AND operation on registers Rt and Rs and stores
+            the result in register Rd. If the bit in both Rt and Rs is 1, Rd
+            will get 1; otherwise it will get 0.
+</p>
+<hr>
+<h4>
+             AND
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            ANDI reg, reg, con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Performs a bitwise AND operation on register Rs and a 16 bit sign-
+            extended immediate extended to 32 bits and stores the result in
+            register Rt. If the bit in both Rs and the immediate is 1, Rt gets
+            a 1; otherwise it will get a 0.
+</p>
+<hr>
+<h4>
+             OR
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            OR reg, reg, reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Performs a bitwise OR operation on registers Rs and Rt and stores
+            the result in register Rd. If the bit in both Rs and Rt is 0, Rd
+            gets a 0; otherwise it will get a 1.
+</p>
+<hr>
+<h4>
+             OR
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            ORI reg, reg, con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Performs a bitwise OR operation on register Rs and a 16 bit sign-
+            extended immediate extended to 32 bits and stores the result in Rt.
+            If the bit in both Rs and the immediate is 0, Rt gets a 0;
+            otherwise it will get a 1.
+</p>
+<hr>
+<h4>
+             NOR
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            NOR reg, reg, reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Performs a bitwise NOR operation on registers Rs and Rt and stores
+            the result in register Rd. If the bit in both Rs and Rt is 0, Rd
+            gets a 1; otherwise it will get a 0.
+</p>
+<hr>
+<h4>
+             XOR
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            XOR reg, reg, reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Performs a bitwise XOR operation on registers Rs and Rt and stores
+            the result in register Rd. If the bit in Rs and Rt is different, Rd
+            gets a 1; otherwise it will get a 0.
+</p>
+<hr>
+<h4>
+             sll
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            SLL reg, reg, con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            The 32 bit word value in register Rs is shifted to the left by a
+            number of bits specified by the 16 bit immediate. The result is
+            stored as a 32 bit word value in register Rt. This is equivalent
+            to multiplying by a power of 2. Bits shifted beyond the boundary of
+            Rt are discarded.
+</p>
+<hr>
+<h4>
+             srl
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            SRL reg, reg, con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            The 32 bit word value in register Rs is shifted to the right by a
+            number of bits specified by the 16 bit immediate. The result is
+            stored as a 32 bit word value in register Rt. This is equivalent to
+            dividing by a power of 2. Bits shifted beyond the boundary of Rt
+            are discarded.
+</p>
+<hr>
+<h4>
+             DIV
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            DIV reg, reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            The 32 bit word value in register Rs is divided by the 32 bit word
+            value in register Rt. The 32 bit result of the division is stored
+            in special register LO. The 32 bit modulus of the division is
+            stored in the special register HI. Use MFHI and MFLO to move these
+            results to general purpose registers.
+</p>
+<hr>
+<h4>
+             mfhi
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            MFHI reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Moves the value from the HI register into the
+            destination register given.
+</p>
+<hr>
+<h4>
+             mflo
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            MFLO reg
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Moves the value from the LO register into the
+            destination register given.
+</p>

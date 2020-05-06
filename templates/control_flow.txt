@@ -1,0 +1,211 @@
+<hr>
+<h4>
+             cmp
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            CMP reg, reg
+</li>
+<li>
+            CMP reg, mem
+</li>
+<li>
+            CMP reg, con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Compares op1 and op2, and sets (right now) the SF and ZF flags.
+            It is not clear at this moment how to
+            treat the OF and CF flags in Python,
+            since Python integer arithmetic never carries or overflows!
+</p>
+<hr>
+<h4>
+             test
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            TEST reg, reg
+</li>
+<li>
+            TEST reg, mem
+</li>
+<li>
+            TEST reg, con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Performs bitwise AND on op1 and op2 and sets the SF and ZF flags.
+</p>
+<hr>
+<h4>
+            jmp
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            JMP lbl
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Transfers program control to a different point in the instruction
+            stream without recording return information. The destination
+            (target) operand specifies the address of the instruction being
+            jumped to. This operand can be an immediate value, a register, or
+            a memory location.
+</p>
+<hr>
+<h4>
+             je
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            JE lbl
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if ZF is one. <br>
+            Equivalent name: JZ
+</p>
+<hr>
+<h4>
+             jne
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            JNE lbl
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if ZF is zero. <br>
+            Equivalent name: JNZ
+</p>
+<hr>
+<h4>
+             jg
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            JG lbl
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 0 and ZF == 0. <br>
+            Equivalent name: JLNE
+</p>
+<hr>
+<h4>
+             jge
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            JGE lbl
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 0.
+</p>
+<hr>
+<h4>
+             jl
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            JL lbl
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 1. <br>
+            Equivalent name: JGNE
+</p>
+<hr>
+<h4>
+             jle
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            JLE lbl
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Jumps if SF == 1 or ZF == 1.
+</p>
+<hr>
+<h4>
+             call
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            CALL lbl
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Pushes value of EIP to stack and jumps to the internal subroutine.
+</p>
+<hr>
+<h4>
+             ret
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            RET
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Pops value from stack to EIP and returns control to the
+            the line after the subroutine call.
+</p>

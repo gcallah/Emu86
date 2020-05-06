@@ -1,76 +1,76 @@
-            <ul class="nested">
+            <ul class="collapse list-unstyled nested" id="programsSubmenu">
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/array.asm">
+                    <a href ="array.html">
                         Declare an array
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/power.asm">
+                    <a href ="power.html">
                         Raise a number to a power
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/sum_test.asm">
+                    <a href ="sum_test.html">
                         Add two numbers
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/change_array_elem_test.asm">
+                    <a href ="change_array_elem_test.html">
                         Change array elements below min
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/key_test.asm">
+                    <a href ="key_test.html">
                         Uses our keyboard interrupt
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/arithmetic_shift.asm">
+                    <a href ="arithmetic_shift.html">
                         Arithmetic shift
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/area.asm">
+                    <a href ="area.html">
                         Calculate area of a rectangle
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/loop.asm">
+                    <a href ="loop.html">
                         A simple loop
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/mem_register_test.asm">
+                    <a href ="mem_register_test.html">
                         Store values into memory
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/log.asm">
+                    <a href ="log.html">
                         Calculate log in base 2
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/array_average_test.asm">
+                    <a href ="array_average_test.html">
                         Calculate average of an array of numbers
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/int_square_root.asm">
+                    <a href ="int_square_root.html">
                         Calculate square root of a number
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/arithmetic_expression.asm">
+                    <a href ="arithmetic_expression.html">
                         Calculate an arithmetic expression
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/cel_to_fah.asm">
+                    <a href ="cel_to_fah.html">
                         Convert from Celsius to Fahrenheit
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/data.asm">
+                    <a href ="data.html">
                         How to use the .data section
                     </a>
                 </li>

@@ -1,0 +1,26 @@
+<hr>
+<h4>
+             int
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            INT con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            The behavior of INT depends on both its "con" operand
+            as well as the value of the EAX register. See the descriptions
+            of specific interrupt commands below.
+            We will build various "interrupt" handlers as needed.
+            At present, we only have two:
+                INT 22, with EAX set to 0, to get a key from
+            the keyboard. And we only pretend the key is from the keyboard,
+            since we are running on the Internet, and can't read the user's
+            keyboard.
+            And INT 32, to exit the program. There should be a 0 in EAX.
+</p>

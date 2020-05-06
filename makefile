@@ -34,7 +34,7 @@ JSFILES = $(shell ls mysite/static/Emu86/*.js)
 HTML_FILES = $(shell ls $(PTML_DIR)/*.ptml | sed -e 's/.ptml/.html/' | sed -e 's/html_src\///')
 
 ASM_FILES = $(shell ls $(TDIR)/*/*.asm)
-ASM_PTMLS = $(shell ls $(TDIR)/tests_Intel/*.asm | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/Intel\//html_src\//')
+ASM_PTMLS = $(shell find ./$(TDIR)/tests_Intel -type f -name "*.asm" -not -path "./$(TDIR)/tests_Intel/fp*" -not -path "./$(TDIR)/tests_Intel/sieve*" | sed -e 's/.asm/.ptml/' | sed -e 's/tests\/tests_Intel\//html_src\//')
 
 FORCE:
 

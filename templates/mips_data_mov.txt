@@ -1,0 +1,40 @@
+<hr>
+<h4>
+             LW
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            LW reg, reg
+</li>
+<li>
+            LW reg, disp(reg)
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Copies the value of op2 to the location mentioned in op1.
+</p>
+<hr>
+<h4>
+             SW
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            SW reg, reg
+</li>
+<li>
+            SW reg, disp(reg)
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Copies the value of op2 to the location mentioned in op1.
+</p>

@@ -1,66 +1,66 @@
             <ul class="nested">
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/array.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/array.asm">
                         Declare an array
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/power.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/power.asm">
                         Raise a number to a power
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/sum_test.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/sum_test.asm">
                         Add two numbers
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/change_array_elem_test.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/change_array_elem_test.asm">
                         Change array elements below min
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/arithmetic_shift.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/arithmetic_shift.asm">
                         Arithmetic shift
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/area.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/area.asm">
                         Calculate area of a rectangle
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/loop.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/loop.asm">
                         A simple loop
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/log.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/log.asm">
                         Calculate log in base 2
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/array_average_test.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/array_average_test.asm">
                         Calculate average of an array of numbers
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/int_square_root.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/int_square_root.asm">
                         Calculate square root of a number
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/arithmetic_expression.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/arithmetic_expression.asm">
                         Calculate an arithmetic expression
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/cel_to_fah.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/cel_to_fah.asm">
                         Convert from Celsius to Fahrenheit
                     </a>
                 </li>
                 <li>
-                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/MIPS_MML/data.asm">
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_MIPS_MML/data.asm">
                         How to use the .data section
                     </a>
                 </li>

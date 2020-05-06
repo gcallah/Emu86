@@ -1,0 +1,133 @@
+<hr>
+<h4>
+             fld
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            fld con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            loads value onto stack
+</p>
+<hr>
+<h4>
+             fst
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            fst con
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            stores value from top of stack
+</p>
+<hr>
+<h4>
+             mov
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            MOV reg, reg
+</li>
+<li>
+            MOV reg, con
+</li>
+<li>
+            MOV reg, mem
+</li>
+<li>
+            MOV mem, reg
+</li>
+<li>
+            MOV mem, mem
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            Copies the value of op2 to the location mentioned in op1.
+</p>
+<hr>
+<h4>
+             pop
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            POP reg
+</li>
+<li>
+            POP mem
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            POPS the topmost value out of the stack.
+            Decrements the stack pointer.
+            Can move the stack value to a memory location or register.
+</p>
+<hr>
+<h4>
+             push
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+<li>
+            PUSH reg
+</li>
+<li>
+            PUSH con
+</li>
+<li>
+            PUSH mem
+</li>
+</ul>
+<h5>Description</h5>
+
+<p>
+            PUSHES the value into the stack with reference to the stack
+            pointer position (ESP). Increments the stack pointer automatically,
+            everytime a PUSH is called. Callable to store a memory value,
+            register value, and constant value to the stack.
+</p>
+<hr>
+<h4>
+             lea
+</h4>
+
+<h5>Syntax</h5>
+
+<ul class="nested">
+</ul>
+<h5>Description</h5>
+
+<p>
+            Computes the effective address of the second operand (the source
+            operand) and stores it in the first operand (destination operand).
+            The source operand is a memory address (offset part) specified with
+            one of the processors addressing modes; the destination operand is
+            a register. The address-size and operand-size attributes affect the
+            action performed by this instruction. The operand-size attribute of
+            the instruction is determined by the chosen register; the
+            address-size attribute is determined by the attribute of the code
+            segment.
+</p>
