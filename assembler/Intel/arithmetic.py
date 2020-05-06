@@ -6,7 +6,7 @@ import operator as opfunc
 
 from assembler.errors import DivisionZero, check_num_args, InvalidConVal
 from assembler.errors import InvalidOperand
-from assembler.tokens import Instruction, MAX_INT, Register
+from assembler.tokens import Instruction, MAX_INT, Register, MIN_INT
 from assembler.ops_check import one_op_arith
 
 
@@ -18,16 +18,48 @@ def two_op_arith(ops, vm, instr, line_num, operator):
     check_num_args(instr, ops, 2, line_num)
     ops[0].set_val(
         checkflag(operator(ops[0].get_val(line_num),
-                           ops[1].get_val(line_num)), vm), line_num)
+                           ops[1].get_val(line_num)), vm, operator), line_num)
     vm.changes.add(ops[0].get_nm())
 
 
-def checkflag(val, vm):
-    if(val > MAX_INT):
-        vm.flags['CF'] = 1
-        val = val - MAX_INT+1
-    else:
+def checkflag(val, vm, operator):
+    if(operator == opfunc.add):
+        if(val > MAX_INT):
+            vm.flags['CF'] = 1
+            vm.flags['OF'] = 1
+            vm.flags['SF'] = 1
+            vm.flags['ZF'] = 0
+            val = (val - MAX_INT) + MIN_INT
+        elif(val == 0):
+            vm.flags['ZF'] = 1
+        else:
+            vm.flags['CF'] = 0
+            vm.flags['OF'] = 0
+            vm.flags['SF'] = 0
+            vm.flags['ZF'] = 0
+    elif(operator == opfunc.sub):
         vm.flags['CF'] = 0
+        vm.flags['OF'] = 0
+        vm.flags['SF'] = 0
+        vm.flags['ZF'] = 0
+        if(val == 0):
+            vm.flags['ZF'] = 1
+        if(val < 0):
+            vm.flags['CF'] = 1
+        if(val < MIN_INT):
+            vm.flags['OF'] = 1
+            vm.flags['SF'] = 1
+            val = MAX_INT - (MIN_INT - val) + 1
+    elif(operator == opfunc.mul):
+        if(val > MAX_INT):
+            vm.flags['CF'] = 1
+            vm.flags['OF'] = 1
+            val = val & 0x7FFFFFFF
+        elif(val < MIN_INT):
+            vm.flags['CF'] = 1
+            vm.flags['OF'] = 1
+            val = val & 0xFFFFFFFF
+            val = val | 0x80000000
     return val
 
 
