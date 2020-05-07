@@ -434,19 +434,24 @@ function AddMem()
     let currentHtml = document.getElementById("memory-table").innerHTML;
     let addHtml = "";
     for (let i = 0; i < repeat; i++) {
-        if (currentHtml.indexOf('name="' + loc + '"') !== -1) {
-            const findValue = currentHtml.indexOf('value="', currentHtml.indexOf('name="' + loc + '"'));
-            const findEnd = currentHtml.indexOf('"', findValue);
-            currentHtml = currentHtml.substring(0, findValue + 7) + val.toString() + currentHtml.substring(findEnd);
-            const locationIndex = memData.indexOf(loc + ":");
-            const commaIndex = memData.indexOf(",", locationIndex);
-            memData = memData.substring(0, locationIndex + loc.length + 1) + val + memData.substring(commaIndex);
+        if (inStack(loc)){
+            setStackLoc(loc, val);
         }
-        else {
-            addHtml += "<tr><td id='mem-loc' style='height:5px'>" + loc + "</td>";
-            addHtml += "<td id='contents' style='height:5px'>";
-            addHtml += "<input id='mem-cont' name='" + loc + "' value='" + val.toString() + "' size ='5' readonly='readonly' style='background-color:#eff;'></td></tr>";
-            memData += loc + ":" + val + ", ";
+        else{
+            if (currentHtml.indexOf('name="' + loc + '"') !== -1) {
+                const findValue = currentHtml.indexOf('value="', currentHtml.indexOf('name="' + loc + '"'));
+                const findEnd = currentHtml.indexOf('"', findValue);
+                currentHtml = currentHtml.substring(0, findValue + 7) + val.toString() + currentHtml.substring(findEnd);
+                const locationIndex = memData.indexOf(loc + ":");
+                const commaIndex = memData.indexOf(",", locationIndex);
+                memData = memData.substring(0, locationIndex + loc.length + 1) + val + memData.substring(commaIndex);
+            }
+            else {
+                addHtml += "<tr><td id='mem-loc' style='height:5px'>" + loc + "</td>";
+                addHtml += "<td id='contents' style='height:5px'>";
+                addHtml += "<input id='mem-cont' name='" + loc + "' value='" + val.toString() + "' size ='5' readonly='readonly' style='background-color:#eff;'></td></tr>";
+                memData += loc + ":" + val + ", ";
+            }
         }
         let location = null;
         if (flav !== "mips_asm" && flav !== "mips_mml") {
@@ -464,6 +469,19 @@ function AddMem()
     document.getElementById("memText").value = "";
     document.getElementById("valueText").value = "";
     document.getElementById("repeatText").value = "1";
+}
+
+function setStackLoc(loc, value){
+    const stackCell = document.getElementsByName(loc)[0];
+    stackCell.value = value;
+}
+
+function inStack(location){
+    const numLoc = parseInt(location, 16);
+    if (numLoc >= Math.pow(2, 8) && numLoc < Math.pow(2, 9)){
+        return true;
+    }
+    return false;
 }
 
 function displayHelp(buttonType){
