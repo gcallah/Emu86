@@ -107,7 +107,7 @@ class TestPrograms(TestCase):
     def test_celsius_conversion(self):
         self.run_mips_test_code("cel_to_fah.asm")
         self.assertEqual(mips_machine.registers["R8"], 95)
-        self.assertEqual(mips_machine.memory["100"], 95)
+        self.assertEqual(mips_machine.memory["80"], 95)
         self.assertEqual(mips_machine.registers["HI"], 2)
         self.assertEqual(mips_machine.registers["R9"], 5)
 
