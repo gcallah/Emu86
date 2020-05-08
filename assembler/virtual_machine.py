@@ -318,8 +318,7 @@ class MIPSMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
         self.ip_div = 4
-        self.unwritable = [INSTR_PTR_MIPS, 'R0', 'F0',
-                            'HI', 'LO']
+        self.unwritable = [INSTR_PTR_MIPS, 'R0', 'F0', 'HI', 'LO']
         self.registers = OrderedDict(
                     [
                         ('R0', 0),

@@ -60,7 +60,9 @@ def checkflag(val, vm, operator):
             vm.flags['OF'] = 1
             val = val & 0xFFFFFFFF
             val = val | 0x80000000
-    elif(operator == opfunc.and_ or operator == opfunc.or_ or operator == opfunc.xor):
+    elif(operator == opfunc.and_ or
+         operator == opfunc.or_ or
+         operator == opfunc.xor):
         vm.flags['CF'] = 0
         vm.flags['OF'] = 0
         if(val == 0):
