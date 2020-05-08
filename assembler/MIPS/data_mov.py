@@ -24,7 +24,8 @@ class Load(Instruction):
             if isinstance(ops[1], RegAddress):
                 stack = int(ops[1].get_mem_addr(line_num), 16)
                 if(vm.check_stack(stack)):
-                    ops[0].set_val(vm.stack[stack], line_num)
+                    ops[0].set_val(
+                        vm.stack[hex(stack).split('x')[-1].upper()], line_num)
                 else:
                     ops[0].set_val(ops[1].get_val(line_num), line_num)
                 vm.changes.add(ops[0].get_nm())
@@ -53,7 +54,8 @@ class Store(Instruction):
             if isinstance(ops[1], RegAddress):
                 stack = int(ops[1].get_mem_addr(line_num), 16)
                 if(vm.check_stack(stack)):
-                    vm.stack[hex(stack).split('x')[-1].upper()] = ops[0].get_val(line_num)
+                    vm.stack[hex(stack).split(
+                        'x')[-1].upper()] = ops[0].get_val(line_num)
                     vm.changes.add("STACK" + hex(stack).split('x')[-1].upper())
                 else:
                     ops[1].set_val(ops[0].get_val(line_num), line_num)

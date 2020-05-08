@@ -3,7 +3,8 @@ data_mov_att.py: other data movement instructions for AT&T
 """
 
 from assembler.errors import check_num_args, InvalidConVal, InvalidArgument
-from assembler.tokens import Instruction, IntegerTok, Register, Address, RegAddress
+from assembler.tokens import Instruction, IntegerTok, Register, Address
+from assembler.tokens import RegAddress
 from assembler.virtual_machine import STACK_TOP, STACK_BOTTOM
 
 
