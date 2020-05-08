@@ -1,4 +1,4 @@
- #Promoting your open source project: lessons from Emu86
+ # Promoting your open source project: lessons from Emu86
 
 I first started promoting Emu86 by posting in two Facebook groups related to computer science, Ladies Storm Hackathons and Hackathon Hackers. In the post, I described how Emu86 needed users to help us further develop the product and to reach out to their professors. Although both groups have at least 15000 members, only 1-3 members replied back saying how it was a cool and interesting product. Yet, there was a lack of response as to whether anyone reached out to their professors. 
 
