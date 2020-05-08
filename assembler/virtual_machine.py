@@ -174,6 +174,9 @@ class VirtualMachine:
             if self.get_ip() == self.labels[label]:
                 self.next_stack_change = label
 
+    def check_stack(self, loc):
+        return loc <= STACK_TOP and loc >= STACK_BOTTOM
+
 
 class IntelMachine(VirtualMachine):
     def __init__(self):
@@ -202,7 +205,7 @@ class IntelMachine(VirtualMachine):
                         ('ST7', 0.0),
                     ])
 
-        self.unwritable = [INSTR_PTR_INTEL, STACK_PTR_INTEL]
+        self.unwritable = [INSTR_PTR_INTEL]
 
         # for now we only need four of the flags
         self.flags = OrderedDict(
@@ -315,8 +318,8 @@ class MIPSMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
         self.ip_div = 4
-        self.unwritable = [INSTR_PTR_MIPS, 'R0', 'F0', 'F29',
-                           STACK_PTR_MIPS, 'HI', 'LO']
+        self.unwritable = [INSTR_PTR_MIPS, 'R0', 'F0',
+                            'HI', 'LO']
         self.registers = OrderedDict(
                     [
                         ('R0', 0),
@@ -399,7 +402,7 @@ class MIPSMachine(VirtualMachine):
 
     def re_init(self):
         super().re_init()
-        self.registers[STACK_PTR_MIPS] = STACK_TOP
+        self.registers[STACK_PTR_MIPS] = STACK_TOP + 1
         self.changes.clear()
 
     def stack_init(self):
@@ -642,7 +645,7 @@ class RISCVMachine(VirtualMachine):
     def __init__(self):
         super().__init__()
         self.ip_div = 4
-        self.unwritable = [INSTR_PTR_RISCV, 'X0', STACK_PTR_RISCV]
+        self.unwritable = [INSTR_PTR_RISCV, 'X0']
         self.registers = OrderedDict(
                         [
                             ('X0', 0),

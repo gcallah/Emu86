@@ -3,7 +3,6 @@ data_mov.py: data movement instructions.
 """
 from assembler.errors import check_num_args, StackFull
 from assembler.tokens import Instruction, Register, Address, RegAddress
-from assembler.virtual_machine import STACK_TOP, STACK_BOTTOM
 
 
 class Fld(Instruction):
@@ -77,7 +76,7 @@ class Mov(Instruction):
         if(haveaddressarg):
             stack = int(ops[stackarg].get_mem_addr(line_num), 16)
             stack_loc = hex(stack).split('x')[-1].upper()
-            instack = (stack < (STACK_TOP + 1) and stack >= STACK_BOTTOM)
+            instack = vm.check_stack(stack)
         if(stackarg == 0 and instack):
             vm.stack[stack_loc] = ops[val].get_val(line_num)
         elif(stackarg == 1 and instack):
