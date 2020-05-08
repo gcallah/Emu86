@@ -79,6 +79,7 @@ class Mov(Instruction):
             instack = vm.check_stack(stack)
         if(stackarg == 0 and instack):
             vm.stack[stack_loc] = ops[val].get_val(line_num)
+            vm.changes.add("STACK" + hex(stack).split('x')[-1].upper())
         elif(stackarg == 1 and instack):
             ops[val].set_val(vm.stack[stack_loc], line_num)
         else:
@@ -110,6 +111,7 @@ class Pop(Instruction):
         val = int(vm.stack[hex(vm.get_sp() - 1).split('x')[-1].upper()])
         ops[0].set_val(val, line_num)
         vm.stack[hex(vm.get_sp() - 1).split('x')[-1].upper()] = vm.empty_cell()
+        vm.changes.add("STACK" + hex(vm.get_sp() - 1).split('x')[-1].upper())
 
 
 class Push(Instruction):
@@ -134,6 +136,7 @@ class Push(Instruction):
         check_num_args("PUSH", ops, 1, line_num)
         stack_loc = hex(vm.get_sp()).split('x')[-1].upper()
         vm.stack[stack_loc] = ops[0].get_val(line_num)
+        vm.changes.add("STACK" + stack_loc)
 
 
 class Lea(Instruction):

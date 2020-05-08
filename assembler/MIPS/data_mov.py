@@ -53,7 +53,8 @@ class Store(Instruction):
             if isinstance(ops[1], RegAddress):
                 stack = int(ops[1].get_mem_addr(line_num), 16)
                 if(vm.check_stack(stack)):
-                    vm.stack[stack] = ops[0].get_val(line_num)
+                    vm.stack[hex(stack).split('x')[-1].upper()] = ops[0].get_val(line_num)
+                    vm.changes.add("STACK" + hex(stack).split('x')[-1].upper())
                 else:
                     ops[1].set_val(ops[0].get_val(line_num), line_num)
             else:

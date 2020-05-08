@@ -693,7 +693,7 @@ class RISCVMachine(VirtualMachine):
 
     def re_init(self):
         super().re_init()
-        self.registers[STACK_PTR_RISCV] = STACK_TOP
+        self.registers[STACK_PTR_RISCV] = STACK_TOP + 1
         self.changes.clear()
 
     def stack_init(self):
