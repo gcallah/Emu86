@@ -61,6 +61,7 @@ class Jal(Instruction):
 
 # The original implementation of JAL was pretty off.
 # I've corrected it, but it needs to be tested some more.
+# It's still broken .-.
 
 
 class Jalr(Instruction):
