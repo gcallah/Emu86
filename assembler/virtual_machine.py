@@ -154,7 +154,7 @@ class VirtualMachine:
             try:
                 ip = int(label)
                 if jal:
-                    ip = ip >> 2
+                    ip = ip << 2
                 self.set_ip(ip)
                 return (True, f'Line {line_num}: {source}', "")
             except Exception:
