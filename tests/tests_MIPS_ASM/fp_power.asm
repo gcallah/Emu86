@@ -7,7 +7,7 @@
 .text
       0x400000 LWC F8, 0(F28)
       0x400004 LW R9, 4(R28)
-      0x400008 JAL 0x1000040
+      0x400008 JAL 0x100004
       0x40000C SYSCALL
 
 power: 0x400010 ADD.S F16, F0, F8

@@ -25,7 +25,7 @@
     40048 SW R7, R6(R0)
     4004C ADDI R6, R6, 4
     40050 ADDI R14, R14, -1
-    40054 J 100110
+    40054 J 10011
 
 ; Change any numbers in array less than 33 to 33:
     40058 ADD R8, R0, R0
@@ -43,5 +43,5 @@
     40088 ADD R8, R8, R11
     4008C ADDI R9, R9, 4
     40090 ADDI R10, R10, 1
-    40094 J 1001A0
+    40094 J 1001A
     40098 ADD R13, R0, R8

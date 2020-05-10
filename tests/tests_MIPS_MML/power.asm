@@ -1,7 +1,7 @@
 ; In R8, we put the number to raise to the power we put in R9.
     400000 ADDI R8, R0, 2
     400004 ADDI R9, R9, 10
-    400008 JAL 1000040
+    400008 JAL 100004
     40000C SYSCALL
 
     400010 ADD R16, R0, R8

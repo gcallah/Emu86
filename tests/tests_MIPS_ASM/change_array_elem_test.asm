@@ -22,5 +22,5 @@ ENDIFSMALL: 0x4002C LW R11, (R9)
             0x40030 ADD R8, R8, R11
             0x40034 ADDI R9, R9, 4
             0x40038 ADDI R10, R10, 1
-            0x4003C J 0x100060
+            0x4003C J 0x10006
 ENDCOUNT: 0x40040 ADD R13, R0, R8

@@ -7,7 +7,7 @@
     40010 ADDI R12, R0, 1
     40014 BEQ R11, R12, 2
     40018 ADDI R8, R8, 1
-    4001C J 100020
+    4001C J 10002
 
 ; when done, store R9 in R13
     40020 ADD R13, R9, R0

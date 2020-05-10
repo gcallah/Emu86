@@ -23,7 +23,7 @@
     40048 SW R7, R6(R0)
     4004C ADDI R6, R6, 4
     40050 ADDI R14, R14, -1
-    40054 J 100110
+    40054 J 10011
 
 ; Calculate the average of the array:
     40058 ADD R8, R0, R0
@@ -35,7 +35,7 @@
     40070 ADD R8, R8, R11
     40074 ADDI R9, R9, 1
     40078 ADDI R10, R10, 4
-    4007C J 1001A0
+    4007C J 1001A
     40080 DIV R8, R16
     40084 MFLO R12
     40088 MFHI R13
