@@ -25,6 +25,6 @@ ENDIFSMALL: 0x4002C LW X11, 0(X9)
             0x40030 ADD X8, X8, X11
             0x40034 ADDI X9, X9, 4
             0x40038 ADDI X10, X10, 1
-            0x4003C JR 0x10006
+            0x4003C JAL X0, 0x10006
 
 ENDCOUNT: 0x40040 ADD X13, X0, X8

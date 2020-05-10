@@ -5,7 +5,7 @@ Our x86 virtual machine representation.
 from collections import OrderedDict
 
 from .errors import StackOverflow, StackUnderflow, InvalidArgument
-from .MIPS.control_flow import Jal, Jr
+from .MIPS.control_flow import Jal, Jr as Jal_MIPS, Jr_MIPS
 from .MIPS.key_words import op_func_codes
 
 MEM_DIGITS = 2
@@ -624,9 +624,9 @@ class MIPSMachine(VirtualMachine):
                 return self.create_bit_j_format(instr_lst, op_func)
 
     def jump_handler(self, brk, source, instr_line):
-        if isinstance(instr_line[self.instr], Jal):
+        if isinstance(instr_line[self.instr], JAL_MIPS):
             self.registers["R31"] = self.get_ip()
-        if isinstance(instr_line[self.instr], Jr):
+        if isinstance(instr_line[self.instr], Jr_MIPS):
             return self.jump_to_label(brk.label, source, brk.line_num)
         return self.jump_to_label(brk.label, source, brk.line_num, True)
 
@@ -742,6 +742,10 @@ class RISCVMachine(VirtualMachine):
         return instr_line[self.instr].f(instr_line[self.ops:], self, line_num)
 
     def jump_handler(self, brk, source, instr_line):
+        print(instr_line[self.instr])
+        print(isinstance(instr_line[self.instr], Jr))
+        if isinstance(instr_line[self.instr], Jr):
+            return self.jump_to_label(brk.label, source, brk.line_num)
         return self.jump_to_label(brk.label, source, brk.line_num, True)
 
 

@@ -50,7 +50,7 @@ class Jal(Instruction):
     def fhook(self, ops, vm, line_num):
         (op1, op2) = get_two_op_imm(self.get_nm(), ops, line_num)
         current_ip = vm.get_ip()
-        target = current_ip + op2.get_val(line_num)
+        target = op2.get_val(line_num) << 2
         print(op2.get_val(line_num))
         print("curr", current_ip, 'tar', target)
 
