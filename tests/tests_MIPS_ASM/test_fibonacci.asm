@@ -1,3 +1,6 @@
+; A program that calculates the 7th Fibonacci Number
+; Uses the silly recursive algorithm
+; Stores the result in R2 (0xD)
 main:      0x00 addi R4, R0, 0x7
            0x04 jal 0x3
            0x08 syscall

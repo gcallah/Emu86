@@ -45,23 +45,16 @@ class Jal(Instruction):
         <descr>
             Jump to address and place return address in GPR.
             R[rd] = PC + 4; PC = PC + sext(imm)
+            If rd = x0, it implements the J pseudo-instruction
         </descr>
     """
     def fhook(self, ops, vm, line_num):
         (op1, op2) = get_two_op_imm(self.get_nm(), ops, line_num)
         current_ip = vm.get_ip()
-        target = op2.get_val(line_num) << 2
-        print(op2.get_val(line_num))
-        print("curr", current_ip, 'tar', target)
-
-        op1.set_val(current_ip + 4, line_num)
-        print(current_ip + 4)
-        vm.changes.add(op1.get_nm())
-        raise Jump(str(target), line_num)
-
-# The original implementation of JAL was pretty off.
-# I've corrected it, but it needs to be tested some more.
-# It's still broken .-.
+        if(op1.name != "X0"):
+            op1.set_val(current_ip, line_num)
+            vm.changes.add(op1.get_nm())
+        raise Jump(str(op2.get_val(line_num)), line_num)
 
 
 class Jalr(Instruction):
