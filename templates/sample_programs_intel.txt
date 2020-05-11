@@ -20,6 +20,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/simple_func.asm">
+                        A simple program that calls a function
+                    </a>
+                </li>
+                <li>
                     <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/key_test.asm">
                         Uses our keyboard interrupt
                     </a>
@@ -52,6 +57,11 @@
                 <li>
                     <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/array_average_test.asm">
                         Calculate average of an array of numbers
+                    </a>
+                </li>
+                <li>
+                    <a href ="https://github.com/gcallah/Emu86/blob/master/tests/tests_Intel/fibonacci.asm">
+                        A recursive fibonacci
                     </a>
                 </li>
                 <li>
