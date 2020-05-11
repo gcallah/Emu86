@@ -14,6 +14,8 @@ function_names = {
     "int_square_root.asm": "sqrt",
     "arithmetic_shift.asm": "arithShift",
     "array.asm": "array"
+    "simple_func.asm": "simpleFunc"
+    "fibonacci.asm": "fibonacci"
 }
 
 intel_function_names = {

@@ -17,6 +17,8 @@ link_names = {
     "change_array_elem_test.asm": "Change array elements below min",
     "int_square_root.asm": "Calculate square root of a number",
     "reg_mem_addition_test.asm": "Store values into memory using multi syntax"
+    "simple_func.asm" : "A simple program that calls a function"
+    "fibonacci.asm" : "A recursive fibonacci"
 }
 
 
