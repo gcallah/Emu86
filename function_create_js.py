@@ -13,8 +13,8 @@ function_names = {
     "change_array_elem_test.asm": "modify",
     "int_square_root.asm": "sqrt",
     "arithmetic_shift.asm": "arithShift",
-    "array.asm": "array"
-    "simple_func.asm": "simpleFunc"
+    "array.asm": "array",
+    "simple_func.asm": "simpleFunc",
     "fibonacci.asm": "fibonacci"
 }
 
@@ -182,27 +182,27 @@ def function_directory_fp(func_dict, directory_lst):
 
 
 def create_js_files():
-    intel_directory = ["tests/Intel/", "tests/ATT/"]
+    intel_directory = ["tests/tests_Intel/", "tests/tests_ATT/"]
     js_file_dec = open("mysite/static/Emu86/sample_functions.js", "w")
     file_code = sample_dir(function_names, intel_directory +
-                           ["tests/MIPS_ASM/", "tests/MIPS_MML/",
-                            "tests/RISCV/", "tests/WASM/"], DEC)
+                           ["tests/tests_MIPS_ASM/", "tests/tests_MIPS_MML/",
+                            "tests/tests_RISCV/", "tests/tests_WASM/"], DEC)
     file_code += sample_dir(intel_function_names, intel_directory, DEC)
     js_file_dec.write(file_code)
     js_file_dec.close()
 
     js_file_hex = open("mysite/static/Emu86/sample_functions_hex.js", "w")
     file_code = sample_dir(function_names, intel_directory +
-                           ["tests/MIPS_ASM/", "tests/MIPS_MML/",
-                            "tests/RISCV/", "tests/WASM/"], HEX)
+                           ["tests/tests_MIPS_ASM/", "tests/tests_MIPS_MML/",
+                            "tests/tests_RISCV/", "tests/tests_WASM/"], HEX)
     file_code += sample_dir(intel_function_names, intel_directory, HEX)
     js_file_hex.write(file_code)
     js_file_hex.close()
 
     js_file_fp = open("mysite/static/Emu86/sample_functions_fp.js", "w")
     file_code = function_directory_fp(fp_function_names,
-                                      ["tests/Intel/", "tests/ATT/",
-                                       "tests/MIPS_ASM/"])
+                                      ["tests/tests_Intel/", "tests/tests_ATT/",
+                                       "tests/tests_MIPS_ASM/"])
     file_code += function_directory_fp(intel_function_names, intel_directory)
     js_file_fp.write(file_code)
     js_file_fp.close()
