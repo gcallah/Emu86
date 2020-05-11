@@ -43,9 +43,9 @@ HEX = 1
 def convert_line_dec_to_hex(code):
     dec_num = re.compile(r'\d+')
     match_lst = dec_num.findall(code)
-    space = 0
+    start = 0
     for match in match_lst:
-        start = code.find(match)
+        start = code.find(match, start)
         if code[start - 2: start] == "0x":
             start = code.find(match, start + 1)
         end = start + len(match)
@@ -55,7 +55,7 @@ def convert_line_dec_to_hex(code):
         hex_lst[-1] = hex_lst[-1].upper()
         hex_string = "0x".join(hex_lst)
         code = code[:start] + hex_string + code[end:]
-        space += 2
+        start += 2
     return code
 
 
