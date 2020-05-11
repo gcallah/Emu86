@@ -40,15 +40,27 @@ DEC = 0
 HEX = 1
 
 
+def should_convert(code, pos):
+    # if already converted or is part of label name
+    if code[pos - 2: pos] == "0x" or code[pos - 1: pos].isalpha():
+        return False
+
+    if pos + 2 < len(code) and code[pos: pos + 2] == "0x":
+        return False
+    return True
+
+
 def convert_line_dec_to_hex(code):
     dec_num = re.compile(r'\d+')
     match_lst = dec_num.findall(code)
     for match in match_lst:
         start = code.find(match)
-        if code[start - 2: start] == "0x" or code[start - 1: start].isalpha():
+        while not should_convert(code, start):
             start = code.find(match, start + 1)
             if start == -1:
-                continue
+                break
+        if start == -1:
+            continue
         end = start + len(match)
         dec_string = int(code[start:end])
         hex_string = hex(dec_string)
