@@ -46,10 +46,14 @@ ALL_TEST_DIRS = INTEL_TEST_DIRS + [
 
 INTEL = 0
 ATT = 1
-MIPS = 2
+MIPS_ASM = 2
+MIPS_MML = 3
+RISCV = 4
+WASM = 5
 
 DEC = 0
 HEX = 1
+DEC_LANGS = [INTEL, ATT, WASM]
 
 
 def should_convert(code, pos):
@@ -127,32 +131,45 @@ def convert_line_hex_to_fp(code):
     return code
 
 
+def create_function_def(file_name, func_dict, base):
+    function_header = "function " + func_dict[file_name]
+    if base == HEX:
+        return function_header + "_hex"
+    return function_header
+
+
+def create_cond_line(const_val):
+    lang = ""
+    if const_val == INTEL:
+        lang = "intel"
+        return "\n\tif (flavor === '" + lang + "'){\n"
+    elif const_val == ATT:
+        lang = "att"
+    elif const_val == MIPS_ASM:
+        lang = "mips_asm"
+    elif const_val == MIPS_MML:
+        lang = "mips_mml"
+    else:
+        lang = "riscv"
+    return "\n\telse if (flavor === '" + lang + "'){\n"
+
+
 def sample_dir(func_dict, directory_lst, base):
     file_code = ""
     for file_name in func_dict:
-        function_code = "function " + func_dict[file_name]
+        function_code = create_function_def(file_name, func_dict, base)
         count = 0
-        if base == HEX:
-            function_code += "_hex"
         function_code += "(flavor) {\n\tlet codeString = '';"
         for dire in directory_lst:
-            if count == 0:
-                function_code += "\n\tif (flavor === 'intel'){\n"
-            elif count == 1:
-                function_code += "\n\telse if (flavor === 'att'){\n"
-            elif count == 2:
-                function_code += "\n\telse if (flavor === 'mips_asm'){\n"
-            elif count == 3:
-                function_code += "\n\telse if (flavor === 'mips_mml'){\n"
-            elif count == 4:
-                function_code += "\n\telse if (flavor === 'riscv'){\n"
+            if count < WASM:
+                function_code += create_cond_line(count)
             else:
                 if file_name != "sum_test.asm" and file_name != 'area.asm':
                     break
                 function_code += "\n\telse{\n"
             sample_test = open(dire + file_name, "r")
             function_code += "\t\tcodeString += "
-            if ((base == DEC and (count == 0 or count == 1 or count == 5)) or
+            if ((base == DEC and count in DEC_LANGS) or
                     base == HEX and count != 0 and count != 1 and count != 5 or
                     count == 3):
                 function_code += repr(sample_test.read())
