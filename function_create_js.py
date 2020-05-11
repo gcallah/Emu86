@@ -33,7 +33,7 @@ fp_function_names = {
 
 
 INTEL_TEST_DIRS = [
-    "tests/tests_Intel/", 
+    "tests/tests_Intel/",
     "tests/tests_ATT/"
 ]
 FP_DIRS = INTEL_TEST_DIRS + ["tests/tests_MIPS_ASM/"]
