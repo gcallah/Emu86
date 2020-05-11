@@ -67,6 +67,12 @@ function selectSample()
         else if (selected === "data") {
             data(flav.value);
         }
+        else if (selected === "fibonacci") {
+            fibonacci(flav.value);
+        }
+        else if (selected === "simpleFunc") {
+            simpleFunc(flav.value);
+        }
         else if (selected === "keyInterrupt") {
             keyInterrupt(flav.value);
         }
@@ -132,6 +138,12 @@ function selectSample()
         }
         else if (selected === "data") {
             data_hex(flav.value);
+        }
+        else if (selected === "fibonacci") {
+            fibonacci_hex(flav.value);
+        }
+        else if (selected === "simpleFunc") {
+            simpleFunc_hex(flav.value);
         }
         else if (selected === "keyInterrupt") {
             keyInterrupt_hex(flav.value);
