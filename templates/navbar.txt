@@ -83,6 +83,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href ="simple_func.html">
+                        A simple program that calls a function
+                    </a>
+                </li>
+                <li>
                     <a href ="key_test.html">
                         Uses our keyboard interrupt
                     </a>
@@ -115,6 +120,11 @@
                 <li>
                     <a href ="array_average_test.html">
                         Calculate average of an array of numbers
+                    </a>
+                </li>
+                <li>
+                    <a href ="fibonacci.html">
+                        A recursive fibonacci
                     </a>
                 </li>
                 <li>
