@@ -43,11 +43,12 @@ HEX = 1
 def convert_line_dec_to_hex(code):
     dec_num = re.compile(r'\d+')
     match_lst = dec_num.findall(code)
-    start = 0
     for match in match_lst:
-        start = code.find(match, start)
-        if code[start - 2: start] == "0x":
+        start = code.find(match)
+        if code[start - 2: start] == "0x" or code[start - 1: start].isalpha():
             start = code.find(match, start + 1)
+            if start == -1:
+                continue
         end = start + len(match)
         dec_string = int(code[start:end])
         hex_string = hex(dec_string)
@@ -55,7 +56,6 @@ def convert_line_dec_to_hex(code):
         hex_lst[-1] = hex_lst[-1].upper()
         hex_string = "0x".join(hex_lst)
         code = code[:start] + hex_string + code[end:]
-        start += 2
     return code
 
 
