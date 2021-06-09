@@ -1,2 +1,2 @@
-Django==2.2.10
+Django==2.2.22
 django-extensions==2.2.3
