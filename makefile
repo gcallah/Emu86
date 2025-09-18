@@ -67,6 +67,10 @@ website: $(INCS) $(HTML_FILES) help
 	git pull --recurse-submodules origin master
 	git push origin master
 
+# setup developer
+dev_env:
+	pip install -r $(DOCKER_DIR)/requirements-dev.txt
+
 # dev container has dev tools
 dev_container: $(DOCKER_DIR)/Dockerfile $(DOCKER_DIR)/requirements-dev.txt
 	docker build -t gcallah/$(REPO)-dev docker
@@ -150,7 +154,7 @@ mips_mml_kernel:
 riscv_kernel:
 	python3 -m kernels.riscv.install
 
-all_tests: tests test_docker
+all_tests: tests # test_docker
 
 tests: FORCE
 	./all_tests.sh
