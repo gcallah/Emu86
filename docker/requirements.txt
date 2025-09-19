@@ -1,2 +1,2 @@
-Django==2.2.10
-django-extensions==2.2.3
+Django>=4.2,<4.3
+django-extensions>=3.2.3
