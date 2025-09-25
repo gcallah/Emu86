@@ -10,9 +10,9 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-Install dependencies
+Install dev dependencies
 ```
-pip install -r docker/requirements-dev.txt --upgrade
+make dev_env
 ```
 Run
 ```
