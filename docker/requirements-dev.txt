@@ -7,3 +7,4 @@ pytest-django
 selenium
 urllib3
 flake8
+python-dotenv
