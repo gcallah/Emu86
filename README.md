@@ -3,6 +3,9 @@ This project will emulate an x86 assembler in Python, as a learning tool for stu
 
 This project has now been expanded to emulating x86 assembler in Jupyter notebooks: [Emu86 Kernel](https://github.com/gcallah/Emu86/blob/master/kernels/README.md)
 
+## View this project on web
+[Link to Pythonanywhere](https://emu86.pythonanywhere.com)
+
 ## To Run (Bypassing Docker)
 Create and activate the virtual environment
 ```
