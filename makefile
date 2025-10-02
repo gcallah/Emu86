@@ -163,8 +163,8 @@ test_docker:
 	docker build -t gcallah/$(REPO) docker/
 
 dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
-	-git commit -a
-	git push origin master
+# 	-git commit -a
+# 	git push origin master
 	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
 
 prod: $(SRCS) $(OBJ) navbar tests
