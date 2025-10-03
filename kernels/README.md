@@ -2,7 +2,9 @@
 The Emu86 kernel emulates Intel assembly language in Jupyter notebooks.
 ## Installation Instructions in Terminal
 1. `pip install emu86`
-2. `python -m kernels.intel.install`
+2. `pip install jupyter_client IPython`
+3. `pip install notebook`
+4. `python -m kernels.intel.install`
 ## Using Emu86 Kernel in Jupyter Notebook
 1. Type `jupyter notebook` in terminal
 2. After jupyter notebook launches in browser, click the `New` dropdown on the upper right and then click on `Intel`
