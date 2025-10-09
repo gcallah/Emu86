@@ -13,3 +13,4 @@ node_modules
 *.ipynb_checkpoints
 .coverage
 *.env
+*.ipynb
