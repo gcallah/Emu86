@@ -23,7 +23,11 @@ Generate a secret key for Django settings
 from django.core.management.utils import get_random_secret_key
 print(get_random_secret_key())
 ```
-Add the printed key to `.env` file as `SECRET_KEY`
+
+Create a new file `.env` and add the printed key to `.env` file as 
+```
+SECRET_KEY = the printed key you just generate
+```
 
 Run
 ```
