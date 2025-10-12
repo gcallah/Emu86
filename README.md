@@ -28,5 +28,5 @@ Add the printed key to `.env` file as `SECRET_KEY`
 
 Run
 ```
-python3 manage.py runserver
+make dev
 ```
