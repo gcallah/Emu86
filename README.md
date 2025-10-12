@@ -9,8 +9,7 @@ This project has now been expanded to emulating x86 assembler in Jupyter noteboo
 ## To Run (Bypassing Docker)
 Create and activate the virtual environment
 ```
-python3 -m venv venv
-source venv/bin/activate
+source venv.sh
 ```
 
 Install dev dependencies
