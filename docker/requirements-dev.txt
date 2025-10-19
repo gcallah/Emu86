@@ -1,7 +1,10 @@
 -r requirements.txt
 setuptools
 coverage
-django-autofixture
+model-bakery==1.18.0
+pytest
+pytest-django
 selenium
 urllib3
 flake8
+python-dotenv

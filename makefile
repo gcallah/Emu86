@@ -27,6 +27,7 @@ DOCKER_DIR = docker
 PYLINT = flake8
 PYLINTFLAGS = 
 PYTHONFILES = $(shell find . -type f -name "*.py" -not -path "./utils/*" -not -path "./Emu86/migrations/*" -not -path "./mysite/*")
+PYTESTFILES = pytests
 
 ESLINT = npx eslint
 JSFILES = $(shell ls mysite/static/Emu86/*.js)
@@ -162,12 +163,17 @@ tests: FORCE
 test_docker:
 	docker build -t gcallah/$(REPO) docker/
 
-dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
-	-git commit -a
-	git push origin master
-	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
+# dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
+# 	-git commit -a
+# 	git push origin master
+dev: tests
+	pytest $(PYTESTFILES)
+	python3 manage.py runserver
 
-prod: $(SRCS) $(OBJ) navbar tests
-	git pull --recurse-submodules origin master
-	-git commit -a
-	git push origin master
+# prod: $(SRCS) $(MIPS_SRCS) $(OBJS) navbar tests
+prod: tests
+# 	git pull --recurse-submodules origin master
+# 	-git commit -a
+# 	git push origin master
+	pytest $(PYTESTFILES)
+	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'

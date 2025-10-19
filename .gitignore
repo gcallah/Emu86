@@ -12,3 +12,5 @@ node_modules
 .idea/
 *.ipynb_checkpoints
 .coverage
+*.env
+*.ipynb

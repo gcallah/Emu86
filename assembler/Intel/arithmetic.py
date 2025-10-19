@@ -377,7 +377,7 @@ class Idiv(Instruction):
         lowreg = int(vm.registers['EAX'])
         dividend = hireg + lowreg
         if ops[0].get_val(line_num) == 0:
-            raise DivisionZero()
+            raise DivisionZero( line_num )
         vm.registers['EAX'] = dividend // ops[0].get_val(line_num)
         vm.registers['EDX'] = dividend % ops[0].get_val(line_num)
         vm.changes.add('EAX')
