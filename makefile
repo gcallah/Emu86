@@ -24,6 +24,7 @@ EXTR = $(UDIR)/extract_doc.awk
 D2HTML = $(UDIR)/doc2html.awk
 INCS = $(TEMPLATE_DIR)/head.txt $(TEMPLATE_DIR)/navbar.txt
 DOCKER_DIR = docker
+REQ_DIR = $(DOCKER_DIR)
 PYLINT = flake8
 PYLINTFLAGS = 
 PYTHONFILES = $(shell find . -type f -name "*.py" -not -path "./utils/*" -not -path "./Emu86/migrations/*" -not -path "./mysite/*")
@@ -68,16 +69,20 @@ website: $(INCS) $(HTML_FILES) help
 	git pull --recurse-submodules origin master
 	git push origin master
 
+# setup a server
+prod_env:
+	pip install -r $(REQ_DIR)/requirements.txt
+
 # setup developer
 dev_env:
-	pip install -r $(DOCKER_DIR)/requirements-dev.txt
+	pip install -r $(REQ_DIR)/requirements-dev.txt
 
 # dev container has dev tools
-dev_container: $(DOCKER_DIR)/Dockerfile $(DOCKER_DIR)/requirements-dev.txt
+dev_container: $(DOCKER_DIR)/Dockerfile $(REQ_DIR)/requirements-dev.txt
 	docker build -t gcallah/$(REPO)-dev docker
 
 # prod container has only what's needed to run
-prod_container: $(DOCKER_DIR)/Deployable $(DOCKER_DIR)/requirements.txt
+prod_container: $(DOCKER_DIR)/Deployable $(REQ_DIR)/requirements.txt
 	docker system prune -f
 	docker build -t gcallah/$(REPO) docker --no-cache --build-arg repo=$(REPO) -f $(DOCKER_DIR)/Deployable
 
