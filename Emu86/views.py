@@ -38,7 +38,7 @@ WASM = {'wasm': 'WASM'}
 
 
 def get_hdr():
-    site_hdr = "EMU Multi-Language Assembly Emulator"
+    site_hdr = "Emu: a multi-language assembly emulator"
     site_list = Site.objects.all()
     for site in site_list:
         site_hdr = site.header
