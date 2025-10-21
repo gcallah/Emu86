@@ -780,7 +780,7 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
-    color: #ffcc33;
+    color: gray;
 }
 
 #branding h2 {
@@ -1017,7 +1017,7 @@ summary.sum1 {
 
 summary.sum2 {
     font-size: 1.6em;
-    color: #937;
+    color: rgb(148, 76, 124);
     font-weight: 500;
     margin: .8em 1.2em .8em 2em;
 }
