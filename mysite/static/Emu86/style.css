@@ -775,12 +775,12 @@ a.deletelink:focus, a.deletelink:hover {
     padding: 0;
     margin: 0 20px 0 0;
     font-weight: 300;
-    font-size: 2.2em;
+    font-size: 2.0em;
     color: #ffcc33;
 }
 
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
-    color: #ffcc33;
+    color: #808080;
 }
 
 #branding h2 {
