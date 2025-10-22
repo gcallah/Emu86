@@ -2,6 +2,11 @@ import logging
 
 from django.shortcuts import render
 
+from common.constants import (
+    ATT_LANG,
+    INTEL_LANG,
+)
+
 from .models import AdminEmail
 from .models import Site
 from .forms import MainForm
@@ -23,18 +28,38 @@ CLEAR = 'clear'
 HEADER = 'header'
 DATA_INIT = 'data_init'
 
-MIPS = {'mips_asm': 'MIPS Assembly',
-        'mips_mml': 'MIPS Mnemonic Machine Language'
-        }
+MIPS = {
+    'mips_asm': 'MIPS Assembly',
+    'mips_mml': 'MIPS Mnemonic Machine Language',
+}
 
-INTEL = {'intel': 'Intel',
-         'att': 'AT&T'
-         }
+INTEL = {
+    INTEL_LANG: 'Intel',
+    ATT_LANG: 'AT&T',
+}
 
-RISCV = {'riscv': 'RISC-V'
-         }
+RISCV = {'riscv': 'RISC-V'}
 
 WASM = {'wasm': 'WASM'}
+
+SAMPLE_PROGS = {
+    'none': '',
+    'addTwo': 'Add two numbers',
+    'arithExpr': 'Arithmetic expression',
+    'arithShift': 'Arithmetic shift',
+    'array': 'Declare an array',
+    'area': 'Area of a rectangle',
+    'loop': 'A simple loop',
+    'log': 'Calculate log (base 2) of a number',
+    'avg': 'Calculate average of an array',
+    'celFah': 'Convert from Celsius to Fahrenheit',
+    'modify': 'Modify an array',
+    'sqrt': 'Square root of a number',
+    'power': 'Raise a number to a power',
+    'data': 'Use the data section',
+    'simpleFunc': 'A simple function call',
+    'fibonacci': 'A recursive fibonacci',
+}
 
 
 def get_hdr():
@@ -101,7 +126,7 @@ def getRegisters(registers, keys, type):
         retArray.insert(28, ('HI', registers['HI']))
         retArray.insert(31, ('LO', registers['LO']))
         retArray.insert(34, ('PC', registers['PC']))
-    return(retArray)
+    return retArray
 
 
 def processRegisters(vm):
@@ -111,7 +136,7 @@ def processRegisters(vm):
                          list(vm.registers.keys())[:35], 'R')
         f = getRegisters(vm.registers,
                          list(vm.registers.keys())[35:], 'F')
-    return(r, f)
+    return (r, f)
 
 
 def getCurrRegister(post_body):
@@ -124,29 +149,31 @@ def getCurrRegister(post_body):
 def create_render_data(request, vm, form, site_hdr, last_instr, error,
                        sample, bit_code, button):
     curr_reg = getCurrRegister(request.POST)
-    render_data = {'form': form,
-                   HEADER: site_hdr,
-                   'last_instr': last_instr,
-                   'error': error,
-                   'unwritable': vm.unwritable,
-                   'debug': vm.debug,
-                   NXT_KEY: vm.nxt_key,
-                   'registers': vm.registers,
-                   'memory': vm.memory,
-                   'stack': vm.stack,
-                   'symbols': vm.symbols,
-                   'cstack': vm.c_stack,
-                   'flags': vm.flags,
-                   'flavor': vm.flavor,
-                   DATA_INIT: vm.data_init,
-                   'base': vm.base,
-                   'sample': sample,
-                   'start_ip': vm.start_ip,
-                   'bit_code': bit_code,
-                   'button_type': button,
-                   'changes': vm.changes,
-                   'stack_change': vm.stack_change
-                   }
+    render_data = {
+        'form': form,
+        HEADER: site_hdr,
+        'last_instr': last_instr,
+        'error': error,
+        'unwritable': vm.unwritable,
+        'debug': vm.debug,
+        NXT_KEY: vm.nxt_key,
+        'registers': vm.registers,
+        'memory': vm.memory,
+        'stack': vm.stack,
+        'symbols': vm.symbols,
+        'cstack': vm.c_stack,
+        'flags': vm.flags,
+        'flavor': vm.flavor,
+        DATA_INIT: vm.data_init,
+        'base': vm.base,
+        'sample': sample,
+        'start_ip': vm.start_ip,
+        'bit_code': bit_code,
+        'button_type': button,
+        'changes': vm.changes,
+        'stack_change': vm.stack_change,
+        'sample_progs': SAMPLE_PROGS,
+    }
     if vm.flavor in MIPS:
         r_reg, f_reg = processRegisters(vm)
         render_data['int_registers'] = r_reg
@@ -167,7 +194,6 @@ def create_render_data(request, vm, form, site_hdr, last_instr, error,
 
 
 def machine_reinit(wasm_machine_init_status=True):
-
     intel_machine.re_init()
     mips_machine.re_init()
     riscv_machine.re_init()
@@ -193,10 +219,9 @@ def main_page(request):
 
     site_hdr = get_hdr()
     if request.method == 'GET':
-        if (intel_machine.flavor is None and
-                mips_machine.flavor is None and
-                riscv_machine.flavor is None):
-            return render(request, 'main_error.html', {HEADER: site_hdr})
+        if mips_machine.flavor is None and riscv_machine.flavor is None:
+            # default to Intel
+            intel_machine.flavor = INTEL_LANG
         machine_reinit()
         form = MainForm()
     else:
@@ -250,9 +275,15 @@ def main_page(request):
             vm.base = base
             vm.flavor = lang
             hex_conversion(vm)
-            render_data = create_render_data(request, vm, form, site_hdr,
-                                             last_instr, error, sample,
-                                             bit_code, button)
+            render_data = create_render_data(request,
+                                             vm,
+                                             form,
+                                             site_hdr,
+                                             last_instr,
+                                             error,
+                                             sample,
+                                             bit_code,
+                                             button)
             return render(request, 'main.html', render_data)
 
         form = MainForm(request.POST)

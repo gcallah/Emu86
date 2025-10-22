@@ -41,86 +41,13 @@
             {% endif %}
             Sample programs:
             <select id="sample" name="sample" onchange="selectSample()">
-                {% if sample == "none" %}
-                    <option value="none" selected></option>
-                {% else %}
-                    <option value="none"></option>
-                {% endif %}
-                {% if sample == "addTwo" %}
-                    <option value="addTwo" selected>Add two numbers</option>
-                {% else %}
-                    <option value="addTwo">Add two numbers</option>
-                {% endif %}
-                {% if sample == "arithExpr" %}
-                    <option value="arithExpr" selected>Arithmetic expression</option>
-                {% else %}
-                    <option value="arithExpr">Arithmetic expression</option>
-                {% endif %}
-                {% if sample == "arithShift" %}
-                    <option value="arithShift" selected>Arithmetic shift</option>
-                {% else %}
-                    <option value="arithShift">Arithmetic shift</option>
-                {% endif %}
-                {% if sample == "array" %}
-                    <option value="array" selected>Declare an array</option>
-                {% else %}
-                    <option value="array">Declare an array</option>
-                {% endif %}
-                {% if sample == "area" %}
-                    <option value="area" selected>Area of a rectangle</option>
-                {% else %}
-                    <option value="area">Area of a rectangle</option>
-                {% endif %}
-                {% if sample == "loop" %}
-                    <option value="loop" selected>A simple loop</option>
-                {% else %}
-                    <option value="loop">A simple loop</option>
-                {% endif %}
-                {% if sample == "log" %}
-                    <option value="log" selected>Calculate log (base 2) of a number</option>
-                {% else %}
-                    <option value="log">Calculate log (base 2) of a number</option>
-                {% endif %}
-                {% if sample == "avg" %}
-                    <option value="avg" selected>Calculate average of an array</option>
-                {% else %}
-                    <option value="avg">Calculate average of an array</option>
-                {% endif %}
-                {% if sample == "celFah" %}
-                    <option value="celFah" selected>Convert from Celsius to Fahrenheit</option>
-                {% else %}
-                    <option value="celFah">Convert from Celsius to Fahrenheit</option>
-                {% endif %}
-                {% if sample == "modify" %}
-                    <option value="modify" selected>Modify an array</option>
-                {% else %}
-                    <option value="modify">Modify an array</option>
-                {% endif %}
-                {% if sample == "sqrt" %}
-                    <option value="sqrt" selected>Square root of a number</option>
-                {% else %}
-                    <option value="sqrt">Square root of a number</option>
-                {% endif %}
-                {% if sample == "power" %}
-                    <option value="power" selected>Raise a number to a power</option>
-                {% else %}
-                    <option value="power">Raise a number to a power</option>
-                {% endif %}
-                {% if sample == "data" %}
-                    <option value="data" selected>Use the data section</option>
-                {% else %}
-                    <option value="data">Use the data section</option>
-                {% endif %}
-                {% if sample == "simpleFunc" %}
-                    <option value="simpleFunc" selected>A simple function call</option>
-                {% else %}
-                    <option value="simpleFunc">A simple function call</option>
-                {% endif %}
-                {% if sample == "fibonacci" %}
-                    <option value="fibonacci" selected>A recursive fibonacci</option>
-                {% else %}
-                    <option value="fibonacci">A recursive fibonacci</option>
-                {% endif %}
+                {% for prog_nm, descr in sample_progs.items %}
+                    {% if sample == prog_nm %}
+                        <option value="{{ prog_nm }}" selected>{{ descr }}</option>
+                    {% else %}
+                        <option value="{{ prog_nm }}">{{ descr }}</option>
+                    {% endif %}
+                {% endfor %}
                 {% if flavor != "mips_asm" and flavor != "mips_mml" and flavor != "riscv" %}
                     {% if sample == "keyInterrupt" %}
                         <option value="keyInterrupt" selected>Keyboard interrupt</option>
