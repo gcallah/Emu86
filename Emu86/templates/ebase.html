@@ -14,22 +14,27 @@
 
 <body class="dashboard" onload="loadcode()">
     <div id="container">
-        <div id="top-image">
-            <img src="/static/Emu86/logo.png" alt="Logo"/>
+        <!--<div id="top-image">
+            <img src="/static/Emu86/logo.png" alt="Logo" style="width:200px; height:auto;"/>
             <br>
-        </div>
-        <div id="header">
-            <div id="branding">
+        </div>-->
+
+        <div id="header" style="display:flex; align-items:center; justify-content:space-between;">
+            <div id="branding" style="display:flex; align-items:center;">
+                <img src="/static/Emu86/logo.png" alt="Logo"
+                     style="height:30px; width:auto; margin-right:15px;">
                 <h1>{{ header }}</h1>
             </div>
+        
             <div id="user-tools">
-                <a href="/">Home</a>
-                &nbsp; &nbsp; 
+                <a href="/" style="color:chartreuse;">Home </a>
+                &nbsp;&nbsp;
                 <a href="/help">Help</a>
-                &nbsp; &nbsp; 
+                &nbsp;&nbsp;
                 <a href="/feedback">Feedback</a>
             </div>
         </div>
+
         <div id="content">
             <div id="content-main">
                 {% block content %}
