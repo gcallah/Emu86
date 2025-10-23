@@ -59,35 +59,9 @@
                     {% endif %}
                 {% endif %}
                 {% if flavor == "intel" or flavor == 'att' and base == "dec" %}
-                    {% if sample == "area_fp" %}
-                        <option value="area_fp" selected>Area of a rectangle
-                        using floating point</option>
-                    {% else %}
-                        <option value="area_fp">Area of a rectangle
-                        using floating point</option>
-                    {% endif %}
-                    {% if sample == "data_fp" %}
-                        <option value="data_fp" selected>Accessing data in memory
-                        for floating point</option>
-                    {% else %}
-                        <option value="data_fp">Accessing data in memory
-                        for floating point</option>
-                    {% endif %}
-                    {% if sample == "power_fp" %}
-                        <option value="power_fp" selected>Raise a floating point to a power</option>
-                    {% else %}
-                        <option value="power_fp">Raise a floating point to a power</option>
-                    {% endif %}
-                    {% if sample == "addTwo_fp" %}
-                        <option value="addTwo_fp" selected>Add two floating point numbers</option>
-                    {% else %}
-                        <option value="addTwo_fp">Add two floating point numbers</option>
-                    {% endif %}
-                    {% if sample == "celFah_fp" %}
-                        <option value="celFah_fp" selected>Convert floating point Celsius to Fahrenheit</option>
-                    {% else %}
-                        <option value="celFah_fp">Convert floating point Celsius to Fahrenheit</option>
-                    {% endif %}
+                    {% for prog_nm, descr in intel_sample_progs.items %}
+                        {% option_maybe_selected prog_nm descr selected %}
+                    {% endfor %}
                 {% elif flavor == "mips_asm" %}
                     {% if sample == "area_fp" %}
                         <option value="area_fp" selected>Area of a rectangle
