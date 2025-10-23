@@ -43,34 +43,33 @@ RISCV = {'riscv': 'RISC-V'}
 WASM = {'wasm': 'WASM'}
 
 SAMPLE_PROGS = {
-    'none': '',
     'addTwo': 'Add two numbers',
+    'area': 'Area of a rectangle',
     'arithExpr': 'Arithmetic expression',
     'arithShift': 'Arithmetic shift',
     'array': 'Declare an array',
-    'area': 'Area of a rectangle',
-    'loop': 'A simple loop',
-    'log': 'Calculate log (base 2) of a number',
     'avg': 'Calculate average of an array',
     'celFah': 'Convert from Celsius to Fahrenheit',
-    'modify': 'Modify an array',
-    'sqrt': 'Square root of a number',
-    'power': 'Raise a number to a power',
     'data': 'Use the data section',
-    'simpleFunc': 'A simple function call',
     'fibonacci': 'A recursive fibonacci',
+    'log': 'Calculate log (base 2) of a number',
+    'loop': 'A simple loop',
+    'modify': 'Modify an array',
+    'none': '',
+    'power': 'Raise a number to a power',
+    'simpleFunc': 'A simple function call',
+    'sqrt': 'Square root of a number',
 }
 FP_SAMPLE_PROGS = {
+    'addTwo_fp': 'Add two floating point numbers',
     'area_fp': 'Area of a rectangle using floating point',
-    'area_fp': 'Area of a rectangle using floating point',
+    'celFah_fp': 'Convert floating point Celsius to Fahrenheit',
     'data_fp': 'Accessing data in memory for floating point',
     'power_fp': 'Raise a floating point to a power',
-    'addTwo_fp': 'Add two floating point numbers',
-    'celFah_fp': 'Convert floating point Celsius to Fahrenheit',
 }
 NOT_MIPS_RISC_PROGS = {
-    'keyInterrupt': 'Keyboard interrupt',
     'dataAccess': 'Accessing data in memory',
+    'keyInterrupt': 'Keyboard interrupt',
 }
 
 
