@@ -60,13 +60,17 @@ SAMPLE_PROGS = {
     'simpleFunc': 'A simple function call',
     'fibonacci': 'A recursive fibonacci',
 }
-INTEL_SAMPLE_PROGS = {
+FP_SAMPLE_PROGS = {
     'area_fp': 'Area of a rectangle using floating point',
     'area_fp': 'Area of a rectangle using floating point',
     'data_fp': 'Accessing data in memory for floating point',
     'power_fp': 'Raise a floating point to a power',
     'addTwo_fp': 'Add two floating point numbers',
     'celFah_fp': 'Convert floating point Celsius to Fahrenheit',
+}
+NOT_MIPS_RISC_PROGS = {
+    'keyInterrupt': 'Keyboard interrupt',
+    'dataAccess': 'Accessing data in memory',
 }
 
 
@@ -181,7 +185,8 @@ def create_render_data(request, vm, form, site_hdr, last_instr, error,
         'changes': vm.changes,
         'stack_change': vm.stack_change,
         'sample_progs': SAMPLE_PROGS,
-        'intel_sample_progs': INTEL_SAMPLE_PROGS,
+        'fp_sample_progs': FP_SAMPLE_PROGS,
+        'not_mips_risc_progs': NOT_MIPS_RISC_PROGS,
     }
     if vm.flavor in MIPS:
         r_reg, f_reg = processRegisters(vm)
