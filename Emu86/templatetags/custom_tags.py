@@ -1,12 +1,12 @@
 from django import template
-from datetime import datetime
+from django.utils.html import format_html
 
 register = template.Library()
 
 @register.simple_tag
 def option_maybe_selected(val, text, selected):
     if val == selected:
-        return f'<option value="{val}" selected>{text}</option>'
+        return format_html('<option value="{}" selected>{}</option>', val, text)
     else:
-        return f'<option value="{val}">{text}</option>'
+        return format_html('<option value="{}">{}</option>', val, text)
 
