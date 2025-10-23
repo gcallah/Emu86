@@ -168,15 +168,14 @@ tests: FORCE
 test_docker:
 	docker build -t gcallah/$(REPO) docker/
 
+github:
+	-git commit -a
+	git push origin master
+
 # dev: $(SRCS) $(MIPS_SRCS) $(OBJS) tests
-# 	-git commit -a
-# 	git push origin master
 dev: tests
 	pytest $(PYTESTFILES)
 	python3 manage.py runserver
 
 # prod: $(SRCS) $(MIPS_SRCS) $(OBJS) navbar tests
-prod: tests
-	# I don't understand what the next test is for and it fails for me:
-	# pytest $(PYTESTFILES)
-	ssh emu86@ssh.pythonanywhere.com 'cd /home/emu86/Emu86; /home/emu86/Emu86/myutils/dev.sh'
+prod: tests github

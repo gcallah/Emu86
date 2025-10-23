@@ -1,3 +1,5 @@
+{% load custom_tags %}
+
 {% extends "ebase.html" %}
 
 {% block content %}
@@ -42,11 +44,7 @@
             Sample programs:
             <select id="sample" name="sample" onchange="selectSample()">
                 {% for prog_nm, descr in sample_progs.items %}
-                    {% if sample == prog_nm %}
-                        <option value="{{ prog_nm }}" selected>{{ descr }}</option>
-                    {% else %}
-                        <option value="{{ prog_nm }}">{{ descr }}</option>
-                    {% endif %}
+                    {% option_maybe_selected prog_nm descr selected %}
                 {% endfor %}
                 {% if flavor != "mips_asm" and flavor != "mips_mml" and flavor != "riscv" %}
                     {% if sample == "keyInterrupt" %}
