@@ -1,5 +1,5 @@
 import logging
-
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from common.constants import (
@@ -221,6 +221,12 @@ def machine_flavor_reset(wasm_machine_flavor_status=True):
     if wasm_machine_flavor_status:
         wasm_machine.flavor = None
 
+# def emu_request(request) {
+    
+# }
+# def emu_page(request, slug) :
+#     # TODO: use this to replace main page
+#     return HttpResponse(slug)
 
 def main_page(request):
     last_instr = ""
@@ -232,10 +238,11 @@ def main_page(request):
 
     site_hdr = get_hdr()
     if request.method == 'GET':
-        if mips_machine.flavor is None and riscv_machine.flavor is None:
-            # default to Intel
-            intel_machine.flavor = INTEL_LANG
         machine_reinit()
+        machine_flavor_reset()
+        vm = intel_machine
+        vm.flavor = INTEL_LANG
+        vm.base   = "dec"
         form = MainForm()
     else:
         # vm = None
