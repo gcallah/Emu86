@@ -194,20 +194,20 @@
                             </tr>
                             <tr>
                                 <td>
-                                <div style="height:500px;overflow:auto;">
+                                <div class="table-wrapper">
                                     <table id="memory-table">
                                         {% for key, val in globals.items %}
                                             <script>
                                                 document.getElementsByName("global_data")[0].value += "{{ key }}:{{ val }}, ";
                                             </script>
                                             <tr>
-                                                <td id="mem-loc" style="height:5px">
+                                                <td id="mem-loc">
                                                     {{ key }}
                                                 </td>
                                                 {% if "GLOBALVAR"|add:key in changes %}
-                                                    <td id="contents" style="background-color:#FFFF00; height:5px">
+                                                    <td id="contents" class="bg-color-yellow">
                                                  {% else %}
-                                                <td id="contents" style="height:5px">
+                                                <td id="contents">
                                                 {% endif %}
                                                 <!-- <td id="contents" style="height:5px"> -->
                                                     <input
@@ -217,9 +217,9 @@
                                                         size="5"
                                                         readonly="readonly"
                                                         {% if "GLOBALVAR"|add:key in changes %}
-                                                            style="background-color:#FFFF00;"
+                                                            class="bg-color-yellow"
                                                         {% else %}
-                                                            style="background-color:#eff;"
+                                                            class="bg-color-white"
                                                         {% endif %}
                                                     >
                                                 </td>
@@ -229,20 +229,20 @@
                                 </div>
                                 </td>
                                 <td>
-                                <div style="height:500px;overflow:auto;">
+                                <div class="table-wrapper">
                                     <table id="memory-table">
                                         {% for key, val in locals.items %}
                                             <script>
                                                 document.getElementsByName("local_data")[0].value += "{{ key }}:{{ val }}, ";
                                             </script>
                                             <tr>
-                                                <td id="mem-loc" style="height:5px">
+                                                <td id="mem-loc">
                                                     {{ key }}
                                                 </td>
                                                 {% if "LOCALVAR"|add:key in changes %}
-                                                    <td id="contents" style="background-color:#FFFF00; height:5px">
+                                                    <td id="contents" class="bg-color-yellow">
                                                  {% else %}
-                                                <td id="contents" style="height:5px">
+                                                <td id="contents">
                                                 {% endif %}
                                                 <!-- <td id="contents" style="height:5px"> -->
                                                     <input
@@ -252,9 +252,9 @@
                                                         size="5"
                                                         readonly="readonly"
                                                         {% if "LOCALVAR"|add:key in changes %}
-                                                            style="background-color:#FFFF00;"
+                                                            class="bg-color-yellow"
                                                         {% else %}
-                                                            style="background-color:#eff;"
+                                                            class="bg-color-white"
                                                         {% endif %}
                                                     >
                                                 </td>
@@ -282,24 +282,24 @@
                             </tr>
                             <tr>
                                 <td>
-                                <div style="height:500px;overflow:auto;">
+                                <div class="table-wrapper">
                                     <table id="memory-table">
                                         {% for addr, cont in memory.items %}
                                             <script>
                                                 document.getElementsByName("mem_data")[0].value += "{{ addr }}:{{ cont }}, ";
                                             </script>
                                             <tr>
-                                                <td id="mem-loc" style="height:5px">
+                                                <td id="mem-loc">
                                                     {{ addr }}
                                                 </td>
-                                                <td id="contents" style="height:5px">
+                                                <td id="contents" >
                                                     <input
                                                         id="mem-cont"
                                                         value="{{ cont }}"
                                                         name="{{ addr }}"
                                                         size="5"
                                                         readonly="readonly"
-                                                        style="background-color:#eff;"
+                                                        class="bg-color-white"
                                                     >
                                                 </td>
                                             </tr>
@@ -308,14 +308,14 @@
                                 </div>
                                 </td>
                                 <td>
-                                    <div style="height:500px;overflow:auto;">
+                                    <div class="table_wrapper">
                                     <table id="stack-table">
                                         {% for addr, cont in stack.items %}
                                             <tr>
-                                                <td id="mem-loc" style="height:5px">
+                                                <td id="mem-loc">
                                                     {{ addr }}
                                                 </td>
-                                                <td id="contents" style="height:5px">
+                                                <td id="contents">
                                                     {% if data_init == "on" %}
                                                         <input
                                                             id="mem-cont"
@@ -330,7 +330,7 @@
                                                             name="{{ addr }}"
                                                             size="5"
                                                             readonly="readonly"
-                                                            style="background-color:#eff;"
+                                                            class="bg-color-white"
                                                         >
                                                     {% endif %}
                                                 </td>
