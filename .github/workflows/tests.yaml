@@ -17,7 +17,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      - run: chmod +x setup.sh all_tests.sh
-      - run: pip install dotenv
-      - run: ./setup.sh
+      - run: chmod +x all_tests.sh
+      - run: make dev_env
       - run: ./all_tests.sh
