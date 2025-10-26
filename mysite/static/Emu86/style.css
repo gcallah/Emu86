@@ -861,8 +861,8 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 td#flag, td#register, td#mem-loc {
-    color: #ffc;
-    background: #285D91;
+    color: white;
+    background: black;
     vertical-align: middle
 }
 
@@ -871,7 +871,7 @@ td#float-cell {
 }
 
 td#unwritable {
-    color: #ffc;
+    color: white;
     background: #936;
     vertical-align: middle
 }
@@ -892,11 +892,11 @@ input#unwr-cont {
 }
 
 td#form-cell {
-    background: #dde;
+    background: black;
 }
 
 td#registers-cell {
-    background: #edd;
+    background: black;
 }
 
 
