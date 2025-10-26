@@ -74,7 +74,7 @@ NOT_MIPS_RISC_PROGS = {
 
 
 def get_hdr():
-    site_hdr = "EMU Multi-Language Assembly Emulator"
+    site_hdr = "Multi-Language Assembly Emulator"
     site_list = Site.objects.all()
     for site in site_list:
         site_hdr = site.header

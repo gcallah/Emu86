@@ -8,7 +8,7 @@ body {
     padding: 0;
     font-size: 100%;
     color: white ; 
-    background: #000000;
+    background: #1f1f1f;
 }
 
 /* LINKS */
@@ -753,7 +753,8 @@ a.deletelink:focus, a.deletelink:hover {
     width: auto;
     height: 40px;
     padding: 10px 40px;
-    background: #285D91;
+    background-color: #000000 ;
+    /*background: #285D91;*/
     line-height: 40px;
     color: #ffc;
     overflow: hidden;
@@ -775,7 +776,7 @@ a.deletelink:focus, a.deletelink:hover {
     padding: 0;
     margin: 0 20px 0 0;
     font-weight: 300;
-    font-size: 2.0em;
+    font-size: 1.5em;
     color: #ffcc33;
 }
 
