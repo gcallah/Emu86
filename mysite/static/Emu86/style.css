@@ -264,24 +264,26 @@ table {
 }
 
 td, th {
-    border: 1px solid black;
+    border: 1px solid white;
     font-size: 13px;
     line-height: 10px;
-    border-bottom: 1px solid #111;
+    border-bottom: 1px solid white;
     vertical-align: top;
     padding: 8px;
     font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+    background: black;
+    color: white;
 }
 
 th {
     text-align: center;
-    background: #afd;
+    background: black;
 }
 
 th#MemStack {
     text-align: center;
-    background: #435;
-    color: #dbf;
+    background: black;
+    color: white;
 }
 
 thead th,
@@ -875,7 +877,8 @@ td#unwritable {
 }
 
 td#contents, input#flag-cont {
-    background: #eff;
+    background: black;
+    color: white;
 }
 
 input#reg-cont, input#mem-cont, input#flag-cont, input#unwr-cont {
@@ -1039,4 +1042,25 @@ summary.menu_sum {
     font-size: 1.4em;
     color: #639;
     margin: .5em 0em .5em 0em;
+}
+
+.table-wrapper {
+    height:300px;
+    overflow:auto;
+}
+
+.table-wrapper td {
+    height:5px;
+}
+
+.bg-color-yellow {
+    background-color:#FFFF00;
+}
+
+.bg-color-white {
+    background-color: white;
+}
+
+.align-center {
+    text-align:center
 }

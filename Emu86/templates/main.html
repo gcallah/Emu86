@@ -186,7 +186,7 @@
                                 </td>
 
                                 {% if reg in changes %}
-                                    <td id="contents" style="background-color:#FFFF00;">
+                                    <td id="contents" class="bg-color-yellow">
                                 {% else %}
                                     <td id="contents">
                                 {% endif %}
@@ -214,9 +214,9 @@
                                         size="10"
                                         readonly="readonly"
                                         {% if reg in changes %}
-                                            style="background-color:#FFFF00;"
+                                            class="bg-color-yellow"
                                         {% else %}
-                                            style="background-color:#eff;"
+                                            class="bg-color-white"
                                         {% endif %}
                                     onclick=convert(name,value)>
                                 {% endif %}
@@ -227,14 +227,14 @@
                                 <table id="flags-table">
                                     <tr>
                                         <th colspan="4"
-                                            style="text-align:center">
+                                            class="align-center">
                                             Flags
                                         </th>
                                     </tr>
                                     <tr>
                                         {% for flag in flags %}
                                             <td id="flag"
-                                                style="text-align:center">
+                                                class="align-center">
                                                 {{ flag }}
                                             </td>
                                         {% endfor %}
@@ -242,7 +242,7 @@
                                     <tr>
                                         {% for flag, val in flags.items %}
                                             <td id="contents"
-                                                style="text-align:center"
+                                                class="align-center"
                                             >
                                                 <input
                                                     id="flag-cont"
@@ -312,7 +312,7 @@
                                 </td>
 
                                 {% if reg in changes %}
-                                    <td id="contents" style="background-color:#FFFF00;">
+                                    <td id="contents" class="bg-color-yellow">
                                 {% else %}
                                     <td id="contents">
                                 {% endif %}
@@ -340,9 +340,9 @@
                                         size="10"
                                         readonly="readonly"
                                         {% if reg in changes %}
-                                            style="background-color:#FFFF00;"
+                                            class="bg-color-yellow"
                                         {% else %}
-                                            style="background-color:#eff;"
+                                            class="bg-color-white"
                                         {% endif %}
                                     onclick=convert(name,value)>
                                 {% endif %}
@@ -379,7 +379,7 @@
                                 </td>
 
                                 {% if reg in changes %}
-                                    <td id="contents" style="background-color:#FFFF00;">
+                                    <td id="contents" class="bg-color-yellow">
                                 {% else %}
                                     <td id="contents">
                                 {% endif %}
@@ -407,9 +407,9 @@
                                         size="10"
                                         readonly="readonly"
                                         {% if reg in changes %}
-                                            style="background-color:#FFFF00;"
+                                            class="bg-color-yellow"
                                         {% else %}
-                                            style="background-color:#eff;"
+                                            class="bg-color-white"
                                         {% endif %}
                                     onclick=convert(name,value)>
                                 {% endif %}
@@ -420,14 +420,14 @@
                                 <table id="flags-table">
                                     <tr>
                                         <th colspan="4"
-                                            style="text-align:center">
+                                            class="align-center">
                                             Flags
                                         </th>
                                     </tr>
                                     <tr>
                                         {% for flag in flags %}
                                             <td id="flag"
-                                                style="text-align:center">
+                                                class="align-center">
                                                 {{ flag }}
                                             </td>
                                         {% endfor %}
@@ -435,7 +435,7 @@
                                     <tr>
                                         {% for flag, val in flags.items %}
                                             <td id="contents"
-                                                style="text-align:center"
+                                                class="align-center"
                                             >
                                                 <input
                                                     id="flag-cont"
@@ -494,20 +494,20 @@
                 </tr>
                 <tr>
                     <td>
-                    <div style="height:300px;overflow:auto;">
+                    <div class="table-wrapper">
                         <table id="memory-table">
                             {% for addr, cont in memory.items %}
                                 <script>
                                     document.getElementsByName("mem_data")[0].value += "{{ addr }}:{{ cont }}, ";
                                 </script>
                                 <tr>
-                                    <td id="mem-loc" style="height:5px">
+                                    <td id="mem-loc">
                                         {{ addr }}
                                     </td>
                                     {% if "MEM"|add:addr in changes %}
-                                        <td id="contents" style="background-color:#FFFF00; height:5px">
+                                        <td id="contents" class="bg-color-yellow">
                                     {% else %}
-                                        <td id="contents" style="height:5px">
+                                        <td id="contents">
                                     {% endif %}
                                         <input
                                             id="mem-cont"
@@ -516,9 +516,9 @@
                                             size="5"
                                             readonly="readonly"
                                             {% if "MEM"|add:addr in changes %}
-                                                style="background-color:#FFFF00;"
+                                                class="bg-color-yellow"
                                             {% else %}
-                                                style="background-color:#eff;"
+                                                class="bg-color-white"
                                             {% endif %}
                                         >
                                     </td>
@@ -528,17 +528,17 @@
                     </div>
                     </td>
                     <td>
-                        <div style="height:300px;overflow:auto;">
+                        <div class="table-wrapper">
                         <table id="stack-table">
                             {% for addr, cont in stack.items %}
                                 <tr>
-                                    <td id="mem-loc" style="height:5px">
+                                    <td id="mem-loc">
                                         {{ addr }}
                                     </td>
                                     {% if "STACK"|add:addr in changes %}
-                                        <td id="contents" style="background-color:#FFFF00; height:5px">
+                                        <td id="contents" class="bg-color-yellow">
                                     {% else %}
-                                        <td id="contents" style="height:5px">
+                                        <td id="contents">
                                     {% endif %}
                                         {% if data_init == "on" %}
                                             <input
@@ -555,9 +555,9 @@
                                                 size="5"
                                                 readonly="readonly"
                                                 {% if "STACK"|add:addr in changes %}
-                                                    style="background-color:#FFFF00;"
+                                                    class="bg-color-yellow"
                                                 {% else %}
-                                                    style="background-color:#eff;"
+                                                    class="bg-color-white"
                                                 {% endif %}
                                             >
                                         {% endif %}
@@ -568,28 +568,28 @@
                     </div>
                     </td>
                      <td>
-                        <div style="height:300px;overflow:auto;">
+                        <div class="table-wrapper">
                         <table id="stack-table">
                             {% for label in cstack reversed %}
                                 <tr>
                                     {% if stack_change == label %}
-                                        <td id="mem-loc" style="height:5px">
+                                        <td id="mem-loc">
                                             SP
                                         </td>
                                     {% else %}
-                                        <td id="mem-loc" style="height:5px">
+                                        <td id="mem-loc">
                                         </td>
                                     {% endif %}
-                                    <td id="mem-cont" style="height:5px">
+                                    <td id="mem-cont">
                                         {{ label }}
                                     </td>
                                 </tr>
                             {% endfor %}
                             {% for sym, cont in symbols.items reversed %}
                                 <tr>
-                                    <td id="mem-loc" style="height:5px">
+                                    <td id="mem-loc">
                                     </td>
-                                    <td id="mem-cont" style="height:5px">
+                                    <td id="mem-cont">
                                         {{ sym }}
                                     </td>
                                 </tr>
