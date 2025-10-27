@@ -1,5 +1,5 @@
 import logging
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
 from common.constants import (
@@ -34,13 +34,17 @@ MIPS = {
 }
 
 INTEL = {
+    # "intel"
     INTEL_LANG: 'Intel',
+    # "att"
     ATT_LANG: 'AT&T',
 }
 
 RISCV = {'riscv': 'RISC-V'}
 
 WASM = {'wasm': 'WASM'}
+
+ALL_FLAVORS = {**MIPS, **INTEL, **RISCV, **WASM}
 
 SAMPLE_PROGS = {
     'addTwo': 'Add two numbers',
@@ -73,12 +77,15 @@ NOT_MIPS_RISC_PROGS = {
 }
 
 
-def get_hdr():
+def get_hdr(lang = None, base=None):
     site_hdr = "Multi-Language Assembly Emulator"
     site_list = Site.objects.all()
     for site in site_list:
         site_hdr = site.header
         break   # since we only expect a single site record!
+    
+    if(lang and base):
+        site_hdr += f": {ALL_FLAVORS[lang]} {base.upper()}"
     return site_hdr
 
 
@@ -228,21 +235,33 @@ def machine_flavor_reset(wasm_machine_flavor_status=True):
 #     # TODO: use this to replace main page
 #     return HttpResponse(slug)
 
-def main_page(request):
+def main_page(request, slug = None):
     last_instr = ""
     error = ""
     sample = "none"
     bit_code = ""
     button = ""
     vm = None
-
     site_hdr = get_hdr()
     if request.method == 'GET':
+        
+
         machine_reinit()
         machine_flavor_reset()
+        # slug: <processor>-<base: hex/dec>
+        
+        # if (slug) :
+        #     config = parts = slug.split("-")
+        #     if len(parts) != 2:
+        #         return HttpResponseBadRequest("Invalid Request")
+            
+
+        
         vm = intel_machine
         vm.flavor = INTEL_LANG
         vm.base   = "dec"
+        
+        
         form = MainForm()
     else:
         # vm = None
@@ -252,19 +271,20 @@ def main_page(request):
             machine_flavor_reset()
             form = MainForm()
             lang = request.POST['language']
+            
+            site_hdr = get_hdr(lang, base)
+            
+            
             if lang in MIPS:
-                site_hdr += f": {MIPS[lang]} {base.upper()}"
                 vm = mips_machine
             if lang in INTEL:
-                site_hdr += f": {INTEL[lang]} {base.upper()}"
                 vm = intel_machine
             if lang in RISCV:
-                site_hdr += f": {RISCV[lang]} {base.upper()}"
                 vm = riscv_machine
             if lang in WASM:
                 wasm_machine.flavor = lang
                 wasm_machine.base = base
-                site_hdr += ": " + WASM[lang] + " " + wasm_machine.base.upper()
+                
                 # wasm does not have registers so it should not be calling
                 # hex_conversion(wasm_machine)
                 # r_reg, f_reg = processRegisters(wasm_machine.registers)
