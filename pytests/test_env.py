@@ -1,12 +1,11 @@
 import os
-from dotenv import load_dotenv
+import pytest
 
-def test_env_secret_key_present():
-    """
-    Ensures that .env is set up and contains a SECRET_KEY.
-    """
-    loaded = load_dotenv()
-    assert loaded, ".env could not be loaded"
+REQUIRED_ENV_VARS = [
+    "SECRET_KEY",
+]
 
-    secret_key = os.getenv("SECRET_KEY")
-    assert secret_key, "SECRET_KEY is missing in .env"
+@pytest.mark.parametrize("var", REQUIRED_ENV_VARS)
+def test_required_environment_variables_exist(var):
+    value = os.environ.get(var)
+    assert value is not None and value != "", f"Environment variable {var} is missing or empty!"

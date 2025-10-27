@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-from dotenv import load_dotenv
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -27,8 +27,7 @@ os.path.join(BASE_DIR, "mysite","static"),
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-load_dotenv()
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

@@ -24,9 +24,9 @@ from django.core.management.utils import get_random_secret_key
 print(get_random_secret_key())
 ```
 
-Create a new file `.env` and add the printed key to `.env` file as 
+Exit the interactive mode, and run:
 ```
-SECRET_KEY = the printed key you just generate
+export SECRET_KEY = "<the generated key>"
 ```
 
 Run
