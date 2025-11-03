@@ -8,8 +8,28 @@ body {
     padding: 0;
     font-size: 100%;
     color: white ; 
-    background: #202020;
+    background: #000000;
+    position: relative;
 }
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  
+    height: 2160px; 
+  
+    
+    background-image: url("EMU_BBG.png");
+    background-size: contain;
+    background-position: top center;
+    background-repeat: no-repeat;
+  
+    z-index: -1;        
+    pointer-events: none;
+  }
 
 /* LINKS */
 
@@ -408,10 +428,11 @@ input[type=button][disabled].default {
 /* MODULES */
 
 .module {
-    border: 1px solid #ffffff;
+    /*
     border-radius: 4px;
+    */
     margin-bottom: 30px;
-    background: #202020;
+    background: #131313;
     
 }
 
