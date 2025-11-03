@@ -275,13 +275,13 @@ td, th {
 
 th {
     text-align: center;
-    background: black;
+    background: rgb(87, 210, 161); /**/
 }
 
 th#MemStack {
     text-align: center;
-    background: black;
-    color: white;
+    background: #435;
+    color: #dbf;
 }
 
 thead th,
