@@ -275,13 +275,13 @@ td, th {
 
 th {
     text-align: center;
-    background: #afd;
+    background: black;
 }
 
 th#MemStack {
     text-align: center;
-    background: #435;
-    color: #dbf;
+    background: black;
+    color: white;
 }
 
 thead th,
@@ -1048,3 +1048,21 @@ summary.menu_sum {
     color: #639;
     margin: .5em 0em .5em 0em;
 }
+.editor { display: flex; }
+#gutter {
+  background: #f0f0f0;
+  text-align: right;
+  padding: 5px;
+  white-space: pre;
+  user-select: none;
+  line-height: 1.4;
+}
+#id_code {
+  flex: 1;
+  border: 0;
+  outline: none;
+  resize: vertical;
+  padding: 5px;
+  overflow: auto;
+}
+#gutter, #id_code { height: 400px; }
