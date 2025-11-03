@@ -9,7 +9,7 @@ function area_fp(flavor){
 	else if (flavor == 'mips_asm'){
 		codeString += '; Declare length and width\n.data\n\tlong: .float 12.2\n\twide: .float 12.5\n\n; Calc area of rect\n.text\n\t0x40000 LWC F8, 0(F28)\n    0x40004 LWC F10, 4(F28)\n    0x40008 MULT.S F12, F8, F10';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function data_fp(flavor){
 	let codeString = '';
@@ -22,7 +22,7 @@ function data_fp(flavor){
 	else if (flavor == 'mips_asm'){
 		codeString += '; First comes the data section, where we declare some names.\n.data\n    x: .float 8.0\n    y: .float 10.5\n    z: .double 20.555\n\n; Next is the .text section, where we use them:\n.text\n    0x400000 LWC F8, 0(F28)\n    0x400004 LWC F10, 4(F28)\n    0x400008 LDC F12, 8(F28)\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function power_fp(flavor){
 	let codeString = '';
@@ -35,7 +35,7 @@ function power_fp(flavor){
 	else if (flavor == 'mips_asm'){
 		codeString += '; x is the base, y is the power\n.data\n    x: .float 5.5\n    y: .word 0x3\n\n; In F8, we put the number to raise to the power we put in R9.\n.text\n      0x400000 LWC F8, 0(F28)\n      0x400004 LW R9, 4(R28)\n      0x400008 JAL 0x100004\n      0x40000C SYSCALL\n\npower: 0x400010 ADD.S F16, F0, F8\nloop: 0x400014 MULT.S F8, F8, F16\n      0x400018 ADDI R9, R9, -1\n      0x40001C ADDI R10, R0, 1\n      0x400020 BNE R9, R10, -4\n      0x400024 JR R31';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function addTwo_fp(flavor){
 	let codeString = '';
@@ -48,7 +48,7 @@ function addTwo_fp(flavor){
 	else if (flavor == 'mips_asm'){
 		codeString += '; Declare x, y, and sum.\n.data\n    x: .double 56789.1234\n    y: .double 12345.6789\n    sum: .double 0\n\n; Store first number to F8\n; Store second number to F10\n; Add numbers together\n; Store total to sum\n.text\n    0x40000 LDC F8, 0(F28)\n    0x40004 LDC F10, 4(F28)\t\t\n    0x40008 ADD.D F12, F8, F10\n    0x4000C SDC F12, 8(F28)';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function celFah_fp(flavor){
 	let codeString = '';
@@ -61,7 +61,7 @@ function celFah_fp(flavor){
 	else if (flavor == 'mips_asm'){
 		codeString += '; Declare a Celsius temperature floating points\n.data\n    cTemp: .double 10.0\n    scale: .double 1.8\n    offsetAdd: .double 32.0\n    fTemp: .double 10.0\n\n; Convert from Celsius to Fahrenheit\n; Store result in fTemp\n.text\n    0x40000 LDC F8, 0(F28)\n    0x40004 LDC F10, 4(F28)\n    0x40008 MULT.D F8, F8, F10\n    0x4000C LDC F12, 8(F28)\n    0x40010 ADD.D F12, F8, F12\n    0x40014 SDC F12, 0xC(F28)';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function keyInterrupt(flavor){
 	let codeString = '';
@@ -71,7 +71,7 @@ function keyInterrupt(flavor){
 	else if (flavor == 'att'){
 		codeString += '; Asking for key input\nINT $22\nMOV %EAX, %EBX\nMOV $0, %ECX\nMOV $0, %ESI\n\n; Move input to memory location esi\n; Ask for key input again\nL1: MOV %EAX, (%ESI)\nMOV $0, %EAX\nINT $22\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L1\n\n; Asking for key input\nL2: MOV $0, %EAX\nINT $22\nDEC %ECX\nCMP $1, %ECX\nJNE L2\n\nMOV $0, %EAX\nINT $22\nMOV %EAX, %EBX\n\n; Move input to memory location esi\n; Ask for key input again\nL3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0, %EAX\nINT $22\nCMP %EAX, %EBX\nJNE L3\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function dataAccess(flavor){
 	let codeString = '';
@@ -81,5 +81,5 @@ function dataAccess(flavor){
 	else if (flavor == 'att'){
 		codeString += '; Declare arrays\n.data\n    x: .byte 1, 2, 3, 4, 5\n    y: .short 2, 54, 32, 8\n    z: .long 10 DUP (50)\n\n; Storing values into memory using register arithmetic\n.text\n\tmov $6, %eax\n\tmov 2(x), (%eax)\n\tmov 3(y), 2(%eax)\n\tmov (z), (%ebx)\n\tmov 3, %ecx\n\tmov 2(y), -5(%eax, 3)\n\tmov 4(x), (%eax, 2, %ecx)\n\tmov 4(x), 12(%eax, 2, %ecx)\n\tmov 4(x), 12(%eax, 2, %ecx, 4)';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }

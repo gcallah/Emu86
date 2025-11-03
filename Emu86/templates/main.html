@@ -696,5 +696,24 @@
         highlightCode();
     });
     </script>
-
+    <script>
+        // Turn the <textarea> into a CodeMirror editor
+        const textarea = document.getElementById('id_code');
+        // Global editor object
+        window.editor = CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            mode: 'gas',
+            theme: 'default'
+        });
+        // Keep Django form data in sync
+        window.editor.on('change', () => {
+            textarea.value = window.editor.getValue();
+        });
+        // Helper function to update the code editor
+        function setCode(newCode) {
+            window.editor.setValue(newCode || '');
+            textarea.value = window.editor.getValue();
+            window.editor.refresh();
+        }
+    </script>
 {% endblock content %}

@@ -18,7 +18,7 @@ function addTwo_hex(flavor) {
 	else{
 		codeString += 'i32.const -0x69\nglobal number\nglobal.set number\ni32.const 0x9E\ni32.add';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function arithExpr_hex(flavor) {
 	let codeString = '';
@@ -37,7 +37,7 @@ function arithExpr_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare x, y, and z variables \n.data\n    x: .word 0x23\n    y: .word 0x2F\n    z: .word 0x1A\n\n; Calculate -(x + y - 2 * z + 1)\n.text\n    0x40000 LW X8, 0(X28)\n    0x40004 LW X9, 4(X28)\n    0x40008 ADD X8, X8, X9\n    0x4000C LW X10, 8(X28)\n    0x40010 ADD X10, X10, X10\n    0x40014 SUB X8, X8, X10\n    0x40018 ADDI X8, X8, 1\n    0x4001C SUB X8, X0, X8\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function area_hex(flavor) {
 	let codeString = '';
@@ -59,7 +59,7 @@ function area_hex(flavor) {
 	else{
 		codeString += 'i32.const 0x23\nlocal length\nlocal.set length\ni32.const 0x1B\nlocal width\nlocal.set width\nlocal.get length\nlocal.get width\ni32.mul\nlocal area\nlocal.set area';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function power_hex(flavor) {
 	let codeString = '';
@@ -78,7 +78,7 @@ function power_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; In X8, we put the number to raise to the power we put in X9.\n     0x400000 ADDI X8, X0, 2\n     0x400004 ADDI X9, X9, 0x10\n      0x400008 ADD X16, X0, X8\nloop: 0x40000C MUL X8, X8, X16\n      0x400010 ADDI X9, X9, -1\n      0x400014 ADDI X10, X0, 1\n      0x400018 BNE X9, X10, -4\n      0x40001C SYSCALL\n\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function data_hex(flavor) {
 	let codeString = '';
@@ -97,7 +97,7 @@ function data_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; First comes the data section, where we declare some names.\n.data\n    x: .word 0x8\n    y: .word 0x10\n    z: .word 0x20\n\n; Next is the .text section, where we use them:\n.text\n    0x400000 LW X8, 0(X28)\n    0x400004 LW X9, 4(X28)\n    0x400008 LW X10, 8(X28)\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function loop_hex(flavor) {
 	let codeString = '';
@@ -116,7 +116,7 @@ function loop_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Compare X8 and X9 and loop until equal\n; When done, store X9 to X11\n    0x40000 ADDI X8, X0, 10\n    0x40004 ADD X9, X0, X0\n    0x40008 ADDI X9, X9, 1\n    0x4000C ADDI X10, X10, -1\n    0x40010 BNE X8, X9, -3\n    0x40014 ADD X11, X11, X9\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function log_hex(flavor) {
 	let codeString = '';
@@ -135,7 +135,7 @@ function log_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare a number\n.data\n    number: .word 0x2F7\n\n; Calculating log (base 2) of a number\n.text\n    0x40000 ADD X8, X8, X0\n    0x40004 ADDI X9, X9, 1\n    0x40008 LW X10, 0(X28)\n\nWHILELE: 0x4000C SUB X11, X9, X10\n         0x40010 SLT X12, X0, X11\n         0x40014 BNE X12, X0, 3\nBODY: 0x40018 ADD X9, X9, X9\n      0x4001C ADDI X8, X8, 1\n      0x40020 BEQ X0, X0, -6\n\nENDWHILELE: 0x40024 ADDI X8, X8, -1\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function avg_hex(flavor) {
 	let codeString = '';
@@ -154,7 +154,7 @@ function avg_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare an array and declare size of the array\n.data\n    nbrArray: .word 0x19, 0x2F, -0xF, -0x32, 0x20, 0xA, 0xA, 0xA, 0xA, 0xA\n    nbrElts: .word 0xA\n\n; Calculate the average of the array:\n.text\n    0x40000 ADD X8, X0, X0\n    0x40004 ADD X9, X0, X0\n    0x40008 LW X16, 28(X28)\n    0x4000C ADD X10, X0, X0\nBODY: 0x40010 LW X11, 0(X10)\n      0x40014 ADD X8, X8, X11\n      0x40018 ADDI X9, X9, 1\n      0x4001C ADDI X10, X10, 4\n      0x40020 BNE X9, X16, -5\nENDCOUNT: 0x40024 DIV X17, X8, X16\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function celFah_hex(flavor) {
 	let codeString = '';
@@ -173,7 +173,7 @@ function celFah_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare a Celsius temperature\n\n.data\n    cTemp: .word 0x23\n    fTemp: .word 0x0\n\n; Convert from Celsius to Fahrenheit\n; Store result in fTemp\n.text\n    0x40000 LW X8, 0(X28)\n    0x40004 ADDI X9, X0, 9\n    0x40008 MUL X8, X8, X9\n    0x4000C ADDI X8, X8, 2\n    0x40010 ADDI X9, X0, 5\n    0x40014 DIV X8, X8, X9\n    0x40018 ADDI X8, X8, 0x20\n    0x4001C SW X8, 4(X28)\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function modify_hex(flavor) {
 	let codeString = '';
@@ -192,7 +192,7 @@ function modify_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .word 0x19, 0x2F, 0xF, 0x32, 0x20, 0xA, 0xA, 0xA, 0xA, 0xA\n    nbrElts: .word 0xA\n    nbrMin: .word 0x21\n\n; Change any numbers less than min to min:\n.text\n    0x40000 ADD X8, X0, X0\n    0x40004 ADD X9, X0, X0\n    0x40008 ADD X10, X0, X0\n    0x4000C ADD X11, X0, X0\n    0x40010 LW X16, 0x2C(X28)\n    0x40014 LW X17, 0x28(X28)\n\nFORCOUNT: 0x40018 BEQ X10, X17, 9\n\nBODY: 0x4001C LW X12, 0(X9)\n      0x40020 SLT X13, X16, X12\n      0x40024 BNE X13, X0, 1\n      0x40028 SW X16, 0(X9)\n\nENDIFSMALL: 0x4002C LW X11, 0(X9)\n            0x40030 ADD X8, X8, X11\n            0x40034 ADDI X9, X9, 4\n            0x40038 ADDI X10, X10, 1\n            0x4003C JAL X0, 0x10006\n\nENDCOUNT: 0x40040 ADD X13, X0, X8\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function sqrt_hex(flavor) {
 	let codeString = '';
@@ -211,7 +211,7 @@ function sqrt_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare a number\n.data\n    number: .word 0x64\n\n; Calculate square root of the number\n.text\n    0x40000 LW X8, 0(X28)\n\nWHILELE: 0x40004 ADD X10, X0, X9\n         0x40008 MUL X10, X10, X9\n         0x4000C SUB X11, X10, X8\n         0x40010 SLT X12, X0, X11\n         0x40014 ADDI X9, X9, 1\n         0x40018 BEQ X12, X0, -6\nENDWHILELE: 0x4001C ADDI X9, X9, -2\n            0x40020 ADD X8, X0, X9\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function arithShift_hex(flavor) {
 	let codeString = '';
@@ -230,7 +230,7 @@ function arithShift_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '0x400000 ADDI X8, X0, 4\n0x400004 ADDI X9, X0, 1\n0x400008 SW X9, 0(X8)\n0x40000C ADD X10, X0, X8\n0x400010 ADDI X11, X0, 2\n0x400014 ADDI X12, X0, 8\n0x400018 ADDI X13, X0, 0X10\n0x40001C ADD X11, X11, X12\n0x400020 SUB X13, X13, X12\n0x400024 MUL X10, X10, X9\n0x400028 SLLI X9, X9, 2\n0x40002C SW X9, 0(X8)\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function array_hex(flavor) {
 	let codeString = '';
@@ -249,7 +249,7 @@ function array_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .word 0x3, 0x8, 0x5, 0x2\n    y: .word 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32\n    z: .word 'hello', 0\n\n; Store array values\n.text\n    0x400000 LW X8, 0(X28) \n    0x400004 LW X9, 0x20(X28)\n    0x400008 LW X10, 0x50(X28)\n    0x40000C LW X11, 0x8(X28)\n";
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function simpleFunc_hex(flavor) {
 	let codeString = '';
@@ -268,7 +268,7 @@ function simpleFunc_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; A simple function call\n; Calls a function to do a simple calculation\n; Stores the argument in X12 (29A)\n; Stores the result in X10 (6C4A4)\nmain:     0x00 addi X12, X0, 0x299\n          0x04 addi X12, X12, 0x1\n          0x08 jal X1, 0x4\n          0x0C syscall\nsomeFunc: 0x10 mul X10, X12, X12\n          0x14 jr X1';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function fibonacci_hex(flavor) {
 	let codeString = '';
@@ -287,7 +287,7 @@ function fibonacci_hex(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; A program that calculates the 7th Fibonacci Number\n; Uses the silly recursive algorithm\n; Stores the result in X10 (0xD)\nmain:      0x00 addi X12, X0, 0x7\n           0x04 jal X1, 0x3\n           0x08 syscall\nfib:       0x0C beq X12, X0, 0x13\n           0x10 slti X6, X12, 0x2\n           0x14 bne X6, X0, 0x13\n           0x18 addi X12, X12, -1\n           0x1C sw X12, -4(X2)\n           0x20 sw X1, -8(X2)\n           0x24 addi X2, X2, -8\n           0x28 jal X1, 0x3\n           0x2C lw X1, 0(X2)\n           0x30 lw X12, 4(X2)\n           0x34 addi X12, X12, -1\n           0x38 sw X10, 0(X2)\n           0x3C sw X1, -4(X2)\n           0x40 addi X2, X2, -4\n           0x44 jal X1, 0x3\n           0x48 lw X1, 0(X2)\n           0x4C lw X6, 4(X2)\n           0x50 addi X2, X2, 0xC\n           0x54 add X10, X10, X6\n           0x58 jr X1\nbasecase0: 0x5C add X10, X0, X0\n           0x60 jr X1\nbasecase1: 0x64 addi X10, X0, 1\n           0x68 jr X1';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function keyInterrupt_hex(flavor) {
 	let codeString = '';
@@ -297,7 +297,7 @@ function keyInterrupt_hex(flavor) {
 	else if (flavor === 'att'){
 		codeString += '; Asking for key input\nINT $0x16\nMOV %EAX, %EBX\nMOV $0x0, %ECX\nMOV $0x0, %ESI\n\n; Move input to memory location esi\n; Ask for key input again\nL1: MOV %EAX, (%ESI)\nMOV $0x0, %EAX\nINT $0x16\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L1\n\n; Asking for key input\nL2: MOV $0x0, %EAX\nINT $0x16\nDEC %ECX\nCMP $0x1, %ECX\nJNE L2\n\nMOV $0x0, %EAX\nINT $0x16\nMOV %EAX, %EBX\n\n; Move input to memory location esi\n; Ask for key input again\nL3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0x0, %EAX\nINT $0x16\nCMP %EAX, %EBX\nJNE L3\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function dataAccess_hex(flavor) {
 	let codeString = '';
@@ -307,5 +307,5 @@ function dataAccess_hex(flavor) {
 	else if (flavor === 'att'){
 		codeString += '; Declare arrays\n.data\n    x: .byte 0x1, 0x2, 0x3, 0x4, 0x5\n    y: .short 0x2, 0x36, 0x20, 0x8\n    z: .long 0xA DUP (0x32)\n\n; Storing values into memory using register arithmetic\n.text\n\tmov $0x6, %eax\n\tmov 0x2(x), (%eax)\n\tmov 0x3(y), 0x2(%eax)\n\tmov (z), (%ebx)\n\tmov 0x3, %ecx\n\tmov 0x2(y), -0x5(%eax, 0x3)\n\tmov 0x4(x), (%eax, 0x2, %ecx)\n\tmov 0x4(x), 0xC(%eax, 0x2, %ecx)\n\tmov 0x4(x), 0xC(%eax, 0x2, %ecx, 0x4)';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }

@@ -18,7 +18,7 @@ function addTwo(flavor) {
 	else{
 		codeString += 'i32.const -105\nglobal number\nglobal.set number\ni32.const 158\ni32.add';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function arithExpr(flavor) {
 	let codeString = '';
@@ -37,7 +37,7 @@ function arithExpr(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare x, y, and z variables \n.data\n    x: .word 35\n    y: .word 47\n    z: .word 26\n\n; Calculate -(x + y - 2 * z + 1)\n.text\n    262144 LW X8, 0(X28)\n    262148 LW X9, 4(X28)\n    262152 ADD X8, X8, X9\n    262156 LW X10, 8(X28)\n    262160 ADD X10, X10, X10\n    262164 SUB X8, X8, X10\n    262168 ADDI X8, X8, 1\n    262172 SUB X8, X0, X8\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function area(flavor) {
 	let codeString = '';
@@ -59,7 +59,7 @@ function area(flavor) {
 	else{
 		codeString += 'i32.const 35\nlocal length\nlocal.set length\ni32.const 27\nlocal width\nlocal.set width\nlocal.get length\nlocal.get width\ni32.mul\nlocal area\nlocal.set area';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function power(flavor) {
 	let codeString = '';
@@ -78,7 +78,7 @@ function power(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; In X8, we put the number to raise to the power we put in X9.\n     4194304 ADDI X8, X0, 2\n     4194308 ADDI X9, X9, 16\n      4194312 ADD X16, X0, X8\nloop: 4194316 MUL X8, X8, X16\n      4194320 ADDI X9, X9, -1\n      4194324 ADDI X10, X0, 1\n      4194328 BNE X9, X10, -4\n      4194332 SYSCALL\n\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function data(flavor) {
 	let codeString = '';
@@ -97,7 +97,7 @@ function data(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; First comes the data section, where we declare some names.\n.data\n    x: .word 8\n    y: .word 16\n    z: .word 32\n\n; Next is the .text section, where we use them:\n.text\n    4194304 LW X8, 0(X28)\n    4194308 LW X9, 4(X28)\n    4194312 LW X10, 8(X28)\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function loop(flavor) {
 	let codeString = '';
@@ -116,7 +116,7 @@ function loop(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Compare X8 and X9 and loop until equal\n; When done, store X9 to X11\n    262144 ADDI X8, X0, 10\n    262148 ADD X9, X0, X0\n    262152 ADDI X9, X9, 1\n    262156 ADDI X10, X10, -1\n    262160 BNE X8, X9, -3\n    262164 ADD X11, X11, X9\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function log(flavor) {
 	let codeString = '';
@@ -135,7 +135,7 @@ function log(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare a number\n.data\n    number: .word 477\n\n; Calculating log (base 2) of a number\n.text\n    262144 ADD X8, X8, X0\n    262148 ADDI X9, X9, 1\n    262152 LW X10, 0(X28)\n\nWHILELE: 262156 SUB X11, X9, X10\n         262160 SLT X12, X0, X11\n         262164 BNE X12, X0, 3\nBODY: 262168 ADD X9, X9, X9\n      262172 ADDI X8, X8, 1\n      262176 BEQ X0, X0, -6\n\nENDWHILELE: 262180 ADDI X8, X8, -1\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function avg(flavor) {
 	let codeString = '';
@@ -154,7 +154,7 @@ function avg(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare an array and declare size of the array\n.data\n    nbrArray: .word 25, 47, -15, -50, 32, 10, 10, 10, 10, 10\n    nbrElts: .word 10\n\n; Calculate the average of the array:\n.text\n    262144 ADD X8, X0, X0\n    262148 ADD X9, X0, X0\n    262152 LW X16, 28(X28)\n    262156 ADD X10, X0, X0\nBODY: 262160 LW X11, 0(X10)\n      262164 ADD X8, X8, X11\n      262168 ADDI X9, X9, 1\n      262172 ADDI X10, X10, 4\n      262176 BNE X9, X16, -5\nENDCOUNT: 262180 DIV X17, X8, X16\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function celFah(flavor) {
 	let codeString = '';
@@ -173,7 +173,7 @@ function celFah(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare a Celsius temperature\n\n.data\n    cTemp: .word 35\n    fTemp: .word 0\n\n; Convert from Celsius to Fahrenheit\n; Store result in fTemp\n.text\n    262144 LW X8, 0(X28)\n    262148 ADDI X9, X0, 9\n    262152 MUL X8, X8, X9\n    262156 ADDI X8, X8, 2\n    262160 ADDI X9, X0, 5\n    262164 DIV X8, X8, X9\n    262168 ADDI X8, X8, 32\n    262172 SW X8, 4(X28)\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function modify(flavor) {
 	let codeString = '';
@@ -192,7 +192,7 @@ function modify(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare an array and declare size of the array\n; Declare the minimum of the array\n.data\n    nbrArray: .word 25, 47, 15, 50, 32, 10, 10, 10, 10, 10\n    nbrElts: .word 10\n    nbrMin: .word 33\n\n; Change any numbers less than min to min:\n.text\n    262144 ADD X8, X0, X0\n    262148 ADD X9, X0, X0\n    262152 ADD X10, X0, X0\n    262156 ADD X11, X0, X0\n    262160 LW X16, 44(X28)\n    262164 LW X17, 40(X28)\n\nFORCOUNT: 262168 BEQ X10, X17, 9\n\nBODY: 262172 LW X12, 0(X9)\n      262176 SLT X13, X16, X12\n      262180 BNE X13, X0, 1\n      262184 SW X16, 0(X9)\n\nENDIFSMALL: 262188 LW X11, 0(X9)\n            262192 ADD X8, X8, X11\n            262196 ADDI X9, X9, 4\n            262200 ADDI X10, X10, 1\n            262204 JAL X0, 65542\n\nENDCOUNT: 262208 ADD X13, X0, X8\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function sqrt(flavor) {
 	let codeString = '';
@@ -211,7 +211,7 @@ function sqrt(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; Declare a number\n.data\n    number: .word 100\n\n; Calculate square root of the number\n.text\n    262144 LW X8, 0(X28)\n\nWHILELE: 262148 ADD X10, X0, X9\n         262152 MUL X10, X10, X9\n         262156 SUB X11, X10, X8\n         262160 SLT X12, X0, X11\n         262164 ADDI X9, X9, 1\n         262168 BEQ X12, X0, -6\nENDWHILELE: 262172 ADDI X9, X9, -2\n            262176 ADD X8, X0, X9\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function arithShift(flavor) {
 	let codeString = '';
@@ -230,7 +230,7 @@ function arithShift(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '4194304 ADDI X8, X0, 4\n4194308 ADDI X9, X0, 1\n4194312 SW X9, 0(X8)\n4194316 ADD X10, X0, X8\n4194320 ADDI X11, X0, 2\n4194324 ADDI X12, X0, 8\n4194328 ADDI X13, X0, 0X10\n4194332 ADD X11, X11, X12\n4194336 SUB X13, X13, X12\n4194340 MUL X10, X10, X9\n4194344 SLLI X9, X9, 2\n4194348 SW X9, 0(X8)\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function array(flavor) {
 	let codeString = '';
@@ -249,7 +249,7 @@ function array(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += "; Declare arrays x, y, z\n; y is an array of size 13, holding element 50\n; z is an array of the ASCII values of 'hello', ends in 0 \n.data\n    x: .word 3, 8, 5, 2\n    y: .word 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50\n    z: .word 'hello', 0\n\n; Store array values\n.text\n    4194304 LW X8, 0(X28) \n    4194308 LW X9, 32(X28)\n    4194312 LW X10, 80(X28)\n    4194316 LW X11, 8(X28)\n";
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function simpleFunc(flavor) {
 	let codeString = '';
@@ -268,7 +268,7 @@ function simpleFunc(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; A simple function call\n; Calls a function to do a simple calculation\n; Stores the argument in X12 (29A)\n; Stores the result in X10 (6C4A4)\nmain:     0 addi X12, X0, 665\n          4 addi X12, X12, 1\n          8 jal X1, 4\n          12 syscall\nsomeFunc: 16 mul X10, X12, X12\n          20 jr X1';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function fibonacci(flavor) {
 	let codeString = '';
@@ -287,7 +287,7 @@ function fibonacci(flavor) {
 	else if (flavor === 'riscv'){
 		codeString += '; A program that calculates the 7th Fibonacci Number\n; Uses the silly recursive algorithm\n; Stores the result in X10 (0xD)\nmain:      0 addi X12, X0, 7\n           4 jal X1, 3\n           8 syscall\nfib:       12 beq X12, X0, 19\n           16 slti X6, X12, 2\n           20 bne X6, X0, 19\n           24 addi X12, X12, -1\n           28 sw X12, -4(X2)\n           32 sw X1, -8(X2)\n           36 addi X2, X2, -8\n           40 jal X1, 3\n           44 lw X1, 0(X2)\n           48 lw X12, 4(X2)\n           52 addi X12, X12, -1\n           56 sw X10, 0(X2)\n           60 sw X1, -4(X2)\n           64 addi X2, X2, -4\n           68 jal X1, 3\n           72 lw X1, 0(X2)\n           76 lw X6, 4(X2)\n           80 addi X2, X2, 12\n           84 add X10, X10, X6\n           88 jr X1\nbasecase0: 92 add X10, X0, X0\n           96 jr X1\nbasecase1: 100 addi X10, X0, 1\n           104 jr X1';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function keyInterrupt(flavor) {
 	let codeString = '';
@@ -297,7 +297,7 @@ function keyInterrupt(flavor) {
 	else if (flavor === 'att'){
 		codeString += '; Asking for key input\nINT $22\nMOV %EAX, %EBX\nMOV $0, %ECX\nMOV $0, %ESI\n\n; Move input to memory location esi\n; Ask for key input again\nL1: MOV %EAX, (%ESI)\nMOV $0, %EAX\nINT $22\nINC %ECX\nCMP %EAX, %EBX\nINC %ESI\nJNE L1\n\n; Asking for key input\nL2: MOV $0, %EAX\nINT $22\nDEC %ECX\nCMP $1, %ECX\nJNE L2\n\nMOV $0, %EAX\nINT $22\nMOV %EAX, %EBX\n\n; Move input to memory location esi\n; Ask for key input again\nL3: MOV %EAX, (%ESI)\nINC %ESI\nMOV $0, %EAX\nINT $22\nCMP %EAX, %EBX\nJNE L3\n';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
 function dataAccess(flavor) {
 	let codeString = '';
@@ -307,5 +307,5 @@ function dataAccess(flavor) {
 	else if (flavor === 'att'){
 		codeString += '; Declare arrays\n.data\n    x: .byte 1, 2, 3, 4, 5\n    y: .short 2, 54, 32, 8\n    z: .long 10 DUP (50)\n\n; Storing values into memory using register arithmetic\n.text\n\tmov $6, %eax\n\tmov 2(x), (%eax)\n\tmov 3(y), 2(%eax)\n\tmov (z), (%ebx)\n\tmov 3, %ecx\n\tmov 2(y), -5(%eax, 3)\n\tmov 4(x), (%eax, 2, %ecx)\n\tmov 4(x), 12(%eax, 2, %ecx)\n\tmov 4(x), 12(%eax, 2, %ecx, 4)';
 	}
-	document.getElementById('id_code').value = codeString;
+	setCode(codeString);
 }
