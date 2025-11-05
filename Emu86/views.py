@@ -272,15 +272,6 @@ def main_page(request, slug = None):
         vm.flavor = lang
         vm.base = base
         site_hdr = get_hdr(lang, base)
-        # else:
-        #     vm = intel_machine
-        #     vm.flavor = INTEL_LANG
-        #     vm.base   = "dec"
-        
-        vm = intel_machine
-        vm.flavor = INTEL_LANG
-        vm.base   = "dec"
-        
         
         form = MainForm()
     else:
