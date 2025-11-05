@@ -1,6 +1,6 @@
 import logging
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from common.constants import (
     ATT_LANG,
@@ -244,6 +244,7 @@ def main_page(request, slug = None):
     vm = None
     site_hdr = get_hdr()
     
+    default_slug = 'intel-dec'
     
     def _parse(slug_value):
         parts = slug_value.split("-", 1)
@@ -259,27 +260,29 @@ def main_page(request, slug = None):
         machine_flavor_reset()
         # slug: <processor>-<base: hex/dec>
         
-        if slug:
-            lang, base = _parse(slug)
-            if not lang or not base:
-                return HttpResponseBadRequest("Invalid Request")
-            if lang in MIPS:
-                vm = mips_machine
-            elif lang in INTEL:
-                vm = intel_machine
-            elif lang in RISCV:
-                vm = riscv_machine
-            elif lang in WASM:
-                vm = wasm_machine
-            else:
-                return HttpResponseBadRequest("Unsupported language")
-            vm.flavor = lang
-            vm.base = base
-            site_hdr = get_hdr(lang, base)
-        else:
+        # if slug:
+        if slug == None:
+            return redirect('Emu86:emu_page', slug=default_slug)
+        lang, base = _parse(slug)
+        if not lang or not base:
+            return HttpResponseBadRequest("Invalid Request")
+        if lang in MIPS:
+            vm = mips_machine
+        elif lang in INTEL:
             vm = intel_machine
-            vm.flavor = INTEL_LANG
-            vm.base   = "dec"
+        elif lang in RISCV:
+            vm = riscv_machine
+        elif lang in WASM:
+            vm = wasm_machine
+        else:
+            return HttpResponseBadRequest("Unsupported language")
+        vm.flavor = lang
+        vm.base = base
+        site_hdr = get_hdr(lang, base)
+        # else:
+        #     vm = intel_machine
+        #     vm.flavor = INTEL_LANG
+        #     vm.base   = "dec"
         
         vm = intel_machine
         vm.flavor = INTEL_LANG
