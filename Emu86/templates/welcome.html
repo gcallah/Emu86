@@ -16,8 +16,16 @@
       </select>
       <br />
       Please select your number system:
-      <input type="radio" name="base" value="dec" checked /> Decimal
-      <input type="radio" name="base" value="hex" /> Hexadecimal <br />
+      <input
+        type="radio"
+        name="base"
+        value="dec"
+        onchange="updateAction()"
+        checked
+      />
+      Decimal
+      <input type="radio" name="base" value="hex" onchange="updateAction()" />
+      Hexadecimal <br />
       <br />
       <input type="submit" id="subButton" value="Submit" />
     </form>
