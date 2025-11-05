@@ -26,7 +26,7 @@ print(get_random_secret_key())
 
 Exit the interactive mode, and run:
 ```
-export SECRET_KEY = "<the generated key>"
+export SECRET_KEY="<the generated key>"
 ```
 
 Run
