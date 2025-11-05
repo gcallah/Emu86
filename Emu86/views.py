@@ -228,13 +228,6 @@ def machine_flavor_reset(wasm_machine_flavor_status=True):
     if wasm_machine_flavor_status:
         wasm_machine.flavor = None
 
-# def emu_request(request) {
-    
-# }
-# def emu_page(request, slug) :
-#     # TODO: use this to replace main page
-#     return HttpResponse(slug)
-
 def main_page(request, slug = None):
     last_instr = ""
     error = ""
