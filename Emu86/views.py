@@ -1,6 +1,6 @@
 import logging
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from common.constants import (
     ATT_LANG,
@@ -228,13 +228,6 @@ def machine_flavor_reset(wasm_machine_flavor_status=True):
     if wasm_machine_flavor_status:
         wasm_machine.flavor = None
 
-# def emu_request(request) {
-    
-# }
-# def emu_page(request, slug) :
-#     # TODO: use this to replace main page
-#     return HttpResponse(slug)
-
 def main_page(request, slug = None):
     last_instr = ""
     error = ""
@@ -243,6 +236,16 @@ def main_page(request, slug = None):
     button = ""
     vm = None
     site_hdr = get_hdr()
+    
+    default_slug = 'intel-dec'
+    
+    def _parse(slug_value):
+        parts = slug_value.split("-", 1)
+        if len(parts) != 2:
+            return None, None
+        return parts[0], parts[1]
+    
+    
     if request.method == 'GET':
         
 
@@ -250,17 +253,25 @@ def main_page(request, slug = None):
         machine_flavor_reset()
         # slug: <processor>-<base: hex/dec>
         
-        # if (slug) :
-        #     config = parts = slug.split("-")
-        #     if len(parts) != 2:
-        #         return HttpResponseBadRequest("Invalid Request")
-            
-
-        
-        vm = intel_machine
-        vm.flavor = INTEL_LANG
-        vm.base   = "dec"
-        
+        # if slug:
+        if slug == None:
+            return redirect('Emu86:emu_page', slug=default_slug)
+        lang, base = _parse(slug)
+        if not lang or not base:
+            return HttpResponseBadRequest("Invalid Request")
+        if lang in MIPS:
+            vm = mips_machine
+        elif lang in INTEL:
+            vm = intel_machine
+        elif lang in RISCV:
+            vm = riscv_machine
+        elif lang in WASM:
+            vm = wasm_machine
+        else:
+            return HttpResponseBadRequest("Unsupported language")
+        vm.flavor = lang
+        vm.base = base
+        site_hdr = get_hdr(lang, base)
         
         form = MainForm()
     else:
