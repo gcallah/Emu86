@@ -1,11 +1,20 @@
 {% extends "ebase.html" %} {% block content %}
 <body>
+  
   <h5 style="font-weight: normal; text-transform: none">
-    Welcome to Emu, your online assembly language emulator. Currently we support
-    several distinct assembly languages, with more to come.
+    <div class="module_start">
+    <h1>
+      A Multi-Language <br/> 
+      Assembly Playground.
+      <!--Welcome to Emu, your online assembly language emulator. Currently we support
+    several distinct assembly languages, with more to come.-->
+    </h1>
     <form id="langForm" method="post">
       {% csrf_token %}
-      <br />Select your dialect of assembler:
+      <h2>
+        Write assembly, run it instantly, and inspect registers, <br/>
+        flags, stacks, and memory - right in the browser.
+        <!--Select your dialect of assembler:--></h2>
       <select name="language" onchange="SetBase(); updateAction()">
         <option value="intel">Intel</option>
         <option value="att">AT&amp;T</option>
@@ -27,7 +36,7 @@
       <input type="radio" name="base" value="hex" onchange="updateAction()" />
       Hexadecimal <br />
       <br />
-      <input type="submit" id="subButton" value="Submit" />
+      <input type="submit" id="subButton" value="Start coding" />
     </form>
 
     <script>
@@ -60,5 +69,6 @@
       document.addEventListener("DOMContentLoaded", updateAction);
     </script>
   </h5>
+  </div>
 </body>
 {% endblock content %}

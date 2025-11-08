@@ -431,6 +431,7 @@ input[type=button][disabled].default {
     /*
     border-radius: 4px;
     */
+    padding:  10px;
     margin-bottom: 30px;
     background: #131313;
     
@@ -468,6 +469,25 @@ input[type=button][disabled].default {
     font-size: 20px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+}
+
+/* module for the starting page interface */
+.module_start{
+    padding:  10px;
+    margin-bottom: 30px;
+    background: #131313;
+}
+
+.module_start h1{
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.module_start h2{
+    color:#929292;
+    font-weight: normal;
+    font-size: 16px;
 }
 
 
@@ -930,16 +950,18 @@ td#registers-cell {
 #user-tools {
     float: right;
     padding: 0;
-    margin: 0 0 0 20px;
+    margin-right: 40px;
     font-weight: 300;
-    font-size: 1.1em;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    font-size: 1.0em;
+    letter-spacing: 1px;
+    font-family: serif;
+    /*text-transform: uppercase;*/
     text-align: right;
 }
 
 #user-tools a {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    /*border-bottom: 1px solid rgba(255, 255, 255, 0.25);*/
+    margin: 0 10px;
 }
 
 #user-tools a:focus, #user-tools a:hover {
