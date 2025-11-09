@@ -67,8 +67,7 @@
                             {% csrf_token %}
                             {{ form.as_p }}
 
-                            <input type="button" name="clear"
-                                value="Reinitialize"
+                            <button name="clear"
                                 title="Clear the contents of memory and the stack."
                                 id="clear-button"
                                 onclick="clearButton()"
@@ -76,8 +75,8 @@
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
-                                {% endif %}>
-                            <input type="button" name="run"
+                                {% endif %}><i class="fa-solid fa-rotate-left"></i> Reinitialize</button>
+                            <button name="run"
                                 value="Run Code"
                                 title="Execute all lines of code"
                                 id="run-button"
@@ -86,8 +85,8 @@
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
-                                {% endif %}>
-                            <input type="button" name="step"
+                                {% endif %}><i class="fa-solid fa-play"></i> Run</button>
+                            <button name="step"
                                 value="Step Code"
                                 title="Execute one instruction at a time."
                                 id="step-button"
@@ -96,8 +95,8 @@
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
-                                {% endif %}>
-                            <input type="button" name="save"
+                                {% endif %}><i class="fa-solid fa-forward-step"></i> Step</button>
+                            <button name="save"
                                 value="Save Code"
                                 id="save-button"
                                 title="Saves the code "
@@ -106,8 +105,15 @@
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
-                                {% endif %}>
-                            <input type="button" name="demo"
+                                {% endif %}><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                                <button name="pause"
+                                value="Pause Code"
+                                title="Pauses code."
+                                id="pause-button"
+                                onclick="pauseButton()"
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()"><i class="fa-solid fa-pause"></i> Pause Code</button>
+                            <button name="demo"
                                 value="Demo Code"
                                 title="Demo code line by line."
                                 id="demo-button"
@@ -116,14 +122,7 @@
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
-                                {% endif %}>
-                            <input type="button" name="pause"
-                                value="Pause Code"
-                                title="Pauses code."
-                                id="pause-button"
-                                onclick="pauseButton()"
-                                onmouseover="displayHelp(this.name)"
-                                onmouseleave="hideHelp()">
+                                {% endif %}> Demo Code</button>
                             <br>
                             <div class="help-pop">
                                 <span class="help-text" id="help-desc">

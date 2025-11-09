@@ -356,12 +356,12 @@ select[multiple] {
 
 /* FORM BUTTONS */
 
-.button, input[type=submit], input[type=button], .submit-row input, a.button, #viewReg {
-    background: #285d91;
+.button, input[type=submit], button, .submit-row input, a.button, #viewReg {
+    background: black;
     padding: 10px 15px;
-    border: none;
+    border: white;
     border-radius: 4px;
-    color: #ffcc33;
+    color: white;
     cursor: pointer;
 }
 
@@ -803,61 +803,64 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 #clear-button, #run-button, #pause-button, #step-button, #demo-button, #save-button {
-    padding: 10px 3px;
+    padding: 10px 10px;
 }
 
 #run-button {
     text-align: center;
     font-size: 13px;
     margin: 10px 5px 20px 5px;
-    background: #075;
+    background: black;
     border-radius: 10px;
-    border: 1px solid #003366;
+    border: 1px solid white;
+    color: white;
 }
 
 #pause-button {
     text-align: center;
     font-size: 13px;
     margin: 10px 5px 20px 5px;
-    background: #285d91;
+    background: black;
     border-radius: 10px;
-    border: 1px solid #003366;
+    border: 1px solid white;
+    color: white;
 }
 
 
 #step-button {
     margin: 10px 5px 20px 5px;
     font-size: 13px;
-    color: #285D91;
-    background: #ffcc33;
+    color: white;
+    background: black;
     border-radius: 10px;
-    border: 1px solid #003366;
+    border: 1px solid white;
 }
 
 #demo-button {
     margin: 10px 5px 20px 5px;
     font-size: 13px;
-    background: #6A5ACD;
+    background: black;
     border-radius: 10px;
-    border: 1px solid #003366;
+    border: 1px solid white;
+    color: white;
 }
 
 #save-button {
     font-size: 13px;
     margin: 10px 1px 20px 2px;
-    color:#ffcc33;
-    background: blue;;
+    color: white;
+    background: black;;
     border-radius: 10px;
-    border: 1px solid #003366;
+    border: 1px solid white;
 }
 
 #clear-button{
     float: left;
     font-size: 13px;
     margin: 10px 10px 20px 15px;
-    background: #91285d;
+    background: black;
     border-radius: 10px;
-    border: 1px solid #003366;
+    border: 1px solid white;
 }
 
 td#flag, td#register, td#mem-loc {
