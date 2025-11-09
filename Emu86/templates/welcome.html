@@ -1,43 +1,74 @@
-{% extends "ebase.html" %}
-{% block content %}
-    <body>
-        <h5 style="font-weight: normal; text-transform: none;">
-            Welcome to Emu, your online assembly language emulator.
-            Currently we support several distinct assembly languages, with more
-            to come.
-            <form action="{% url 'Emu86:main_page' %}" method="post">
-                {% csrf_token %}
-                <br>Select your dialect of assembler:
-                <select name="language" onchange="SetBase()">
-                    <option value="intel"> Intel </option>
-                    <option value="att"> AT&amp;T </option>
-                    <option value="mips_asm"> MIPS Assembly </option>
-                    <option value="mips_mml"> MIPS Mnemonic Machine Language </option>
-                    <option value="riscv"> RISC-V </option>
-                    <option value="wasm"> WASM </option>
-                </select>
-                <br>
-                Please select your number system:
-                <input type="radio" name="base" value="dec" checked> Decimal
-                <input type="radio" name="base" value="hex"> Hexadecimal <br>
-                <br>
-                <input type = "submit" id="subButton" value= "Submit">
-            </form>
+{% extends "ebase.html" %} {% block content %}
+<body>
+  
+  <h5 style="font-weight: normal; text-transform: none">
+    <div class="module_start">
+    <h1>
+      A Multi-Language <br/> 
+      Assembly Playground.
+      <!--Welcome to Emu, your online assembly language emulator. Currently we support
+    several distinct assembly languages, with more to come.-->
+    </h1>
+    <form id="langForm" method="post">
+      {% csrf_token %}
+      <h2>
+        Write assembly, run it instantly, and inspect registers, <br/>
+        flags, stacks, and memory - right in the browser.
+        <!--Select your dialect of assembler:--></h2>
+      <select name="language" onchange="SetBase(); updateAction()">
+        <option value="intel">Intel</option>
+        <option value="att">AT&amp;T</option>
+        <option value="mips_asm">MIPS Assembly</option>
+        <option value="mips_mml">MIPS Mnemonic Machine Language</option>
+        <option value="riscv">RISC-V</option>
+        <option value="wasm">WASM</option>
+      </select>
+      <br />
+      Please select your number system:
+      <input
+        type="radio"
+        name="base"
+        value="dec"
+        onchange="updateAction()"
+        checked
+      />
+      Decimal
+      <input type="radio" name="base" value="hex" onchange="updateAction()" />
+      Hexadecimal <br />
+      <br />
+      <input type="submit" id="subButton" value="Start coding" />
+    </form>
 
-            <script>
-                function SetBase(){
-                    langBar = document.getElementsByName("language")[0];
-                    var language = langBar.options[langBar.selectedIndex].value
-                    if (language == "mips_asm" || language == "mips_mml" || language == "riscv"){
-                        document.getElementsByName("base")[0].removeAttribute("checked");
-                        document.getElementsByName("base")[1].checked = true;
-                    }
-                    else {
-                        document.getElementsByName("base")[0].checked = true;
-                        document.getElementsByName("base")[1].removeAttribute("checked");
-                    }
-                }
-            </script>
-        </h5>
-    </body>
+    <script>
+      function SetBase() {
+        langBar = document.getElementsByName("language")[0];
+        var language = langBar.options[langBar.selectedIndex].value;
+        if (
+          language == "mips_asm" ||
+          language == "mips_mml" ||
+          language == "riscv"
+        ) {
+          document.getElementsByName("base")[0].removeAttribute("checked");
+          document.getElementsByName("base")[1].checked = true;
+        } else {
+          document.getElementsByName("base")[0].checked = true;
+          document.getElementsByName("base")[1].removeAttribute("checked");
+        }
+      }
+      function updateAction() {
+        const lang = document.getElementsByName("language")[0].value;
+        const base = document.querySelector('input[name="base"]:checked').value;
+        const slug = `${lang}-${base}`;
+        const url = `{% url 'Emu86:emu_page' slug='SLUG' %}`.replace(
+          "SLUG",
+          slug
+        );
+        document.getElementById("langForm").action = url;
+      }
+
+      document.addEventListener("DOMContentLoaded", updateAction);
+    </script>
+  </h5>
+  </div>
+</body>
 {% endblock content %}

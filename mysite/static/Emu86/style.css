@@ -8,8 +8,28 @@ body {
     padding: 0;
     font-size: 100%;
     color: white ; 
-    background: #202020;
+    background: #000000;
+    position: relative;
 }
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  
+    height: 2160px; 
+  
+    
+    background-image: url("EMU_BBG.png");
+    background-size: contain;
+    background-position: top center;
+    background-repeat: no-repeat;
+  
+    z-index: -1;        
+    pointer-events: none;
+  }
 
 /* LINKS */
 
@@ -275,13 +295,13 @@ td, th {
 
 th {
     text-align: center;
-    background: black;
+    background: rgb(87, 210, 161); /**/
 }
 
 th#MemStack {
     text-align: center;
-    background: black;
-    color: white;
+    background: #435;
+    color: #dbf;
 }
 
 thead th,
@@ -408,10 +428,12 @@ input[type=button][disabled].default {
 /* MODULES */
 
 .module {
-    border: 1px solid #ffffff;
+    /*
     border-radius: 4px;
+    */
+    padding:  10px;
     margin-bottom: 30px;
-    background: #202020;
+    background: #131313;
     
 }
 
@@ -447,6 +469,25 @@ input[type=button][disabled].default {
     font-size: 20px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+}
+
+/* module for the starting page interface */
+.module_start{
+    padding:  10px;
+    margin-bottom: 30px;
+    background: #131313;
+}
+
+.module_start h1{
+    color:#ffffff;
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.module_start h2{
+    color:#929292;
+    font-weight: normal;
+    font-size: 16px;
 }
 
 
@@ -912,16 +953,18 @@ td#registers-cell {
 #user-tools {
     float: right;
     padding: 0;
-    margin: 0 0 0 20px;
+    margin-right: 40px;
     font-weight: 300;
-    font-size: 1.1em;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    font-size: 1.0em;
+    letter-spacing: 1px;
+    font-family: serif;
+    /*text-transform: uppercase;*/
     text-align: right;
 }
 
 #user-tools a {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    /*border-bottom: 1px solid rgba(255, 255, 255, 0.25);*/
+    margin: 0 10px;
 }
 
 #user-tools a:focus, #user-tools a:hover {
