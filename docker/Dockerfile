@@ -7,7 +7,7 @@ COPY requirements-dev.txt /requirements-dev.txt
 
 RUN pip install --upgrade pip
 
-RUN pip install -r requirements-dev.txt
+RUN make dev_env
 
 WORKDIR /home/$PROJECT/
 

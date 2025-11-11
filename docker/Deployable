@@ -6,6 +6,6 @@ COPY requirements.txt /requirements.txt
 
 RUN pip install --upgrade pip
 
-RUN pip install -r requirements.txt
+RUN make prod_env
 
 WORKDIR /home/$PROJECT/
