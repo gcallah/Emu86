@@ -44,17 +44,19 @@
             Sample programs:
             <select id="sample" name="sample" onchange="selectSample()">
                 {% for prog_nm, descr in sample_progs.items %}
-                    {% option_maybe_selected prog_nm descr selected %}
+                    {% option_maybe_selected prog_nm descr sample %}
                 {% endfor %}
                 {% if flavor != "mips_asm" and flavor != "mips_mml" and flavor != "riscv" %}
                     {% for prog_nm, descr in not_mips_risc_progs.items %}
-                        {% option_maybe_selected prog_nm descr selected %}
+                        {% option_maybe_selected prog_nm descr sample %}
                     {% endfor %}
                 {% endif %}
-                {% if flavor == "intel" or flavor == 'att' or flavor == "mips_asm" and base == "dec" %}
-                    {% for prog_nm, descr in fp_sample_progs.items %}
-                        {% option_maybe_selected prog_nm descr selected %}
-                    {% endfor %}
+                {% if base == "dec" %}
+                    {% if flavor == "intel" or flavor == 'att' or flavor == "mips_asm"  %}
+                        {% for prog_nm, descr in fp_sample_progs.items %}
+                            {% option_maybe_selected prog_nm descr sample %}
+                        {% endfor %}
+                    {% endif %}
                 {% endif %}
             </select>
             {% if flavor == "intel" or flavor == "att" or flavor == "mips_asm" or flavor == "mips_mml" %}
@@ -616,21 +618,23 @@
 
     <script>
 
-    var sortedElement = document.getElementById('sample');
+    var sampleProgDOM = document.getElementById('sample');
     var tmpAry = new Array();
-    for (var i=0;i<sortedElement.options.length;i++) {
+    var selectedProgram = sampleProgDOM.value; // Save the selected program
+    for (var i=0;i<sampleProgDOM.options.length;i++) {
         tmpAry[i] = new Array();
-        tmpAry[i][0] = sortedElement.options[i].text;
-        tmpAry[i][1] = sortedElement.options[i].value;
+        tmpAry[i][0] = sampleProgDOM.options[i].text;
+        tmpAry[i][1] = sampleProgDOM.options[i].value;
     }
     tmpAry.sort();
-    while (sortedElement.options.length > 0) {
-        sortedElement.options[0] = null;
+    while (sampleProgDOM.options.length > 0) {
+        sampleProgDOM.options[0] = null;
     }
     for (var i=0;i<tmpAry.length;i++) {
         var op = new Option(tmpAry[i][0], tmpAry[i][1]);
-        sortedElement.options[i] = op;
+        sampleProgDOM.options[i] = op;
     }
+    sampleProgDOM.value = selectedProgram; // Restore the selected program
 
         if (document.getElementsByName("button_type")[0].value == "demo"){
             SubmitForm(true);
