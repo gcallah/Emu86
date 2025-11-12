@@ -77,7 +77,7 @@
                                 onmouseleave="hideHelp()"
                                 {% if button_type == "demo" %}
                                     disabled
-                                {% endif %}><i class="fa-solid fa-rotate-left"></i> Reinitialize</button>
+                                {% endif %}><i class="fa-solid fa-rotate-left"></i> Reinit</button>
                             <button name="run"
                                 value="Run Code"
                                 title="Execute all lines of code"
@@ -114,17 +114,7 @@
                                 id="pause-button"
                                 onclick="pauseButton()"
                                 onmouseover="displayHelp(this.name)"
-                                onmouseleave="hideHelp()"><i class="fa-solid fa-pause"></i> Pause Code</button>
-                            <button name="demo"
-                                value="Demo Code"
-                                title="Demo code line by line."
-                                id="demo-button"
-                                onclick="demoButton()"
-                                onmouseover="displayHelp(this.name)"
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "demo" %}
-                                    disabled
-                                {% endif %}> Demo Code</button>
+                                onmouseleave="hideHelp()"><i class="fa-solid fa-pause"></i> Pause</button>
                             <br>
                             <div class="help-pop">
                                 <span class="help-text" id="help-desc">
