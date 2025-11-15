@@ -84,8 +84,9 @@ def get_hdr(lang = None, base=None):
         site_hdr = site.header
         break   # since we only expect a single site record!
     
-    if(lang and base):
-        site_hdr += f": {ALL_FLAVORS[lang]} {base.upper()}"
+    #if(lang and base):
+    #    site_hdr += f": {ALL_FLAVORS[lang]} {base.upper()}"
+    # Remove the extended language name on header to make sure won't 
     return site_hdr
 
 
