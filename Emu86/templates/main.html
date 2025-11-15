@@ -5,7 +5,7 @@
 {% block content %}
 
     <div class="module">
-        <form id="codeForm" action="{% url 'Emu86:main_page' %}" method="post">
+        <form id="codeForm" action="{% url 'Emu86:emu_page' slug=slug %}" method="post">
             <br>
             <input type="hidden" name="nxt_key">
             <input type="hidden" name="unwritable">
@@ -115,6 +115,16 @@
                                 onclick="pauseButton()"
                                 onmouseover="displayHelp(this.name)"
                                 onmouseleave="hideHelp()"><i class="fa-solid fa-pause"></i> Pause</button>
+                            <button name="demo"
+                                value="Demo Code"
+                                title="Demo code line by line."
+                                id="demo-button"
+                                onclick="demoButton()"
+                                onmouseover="displayHelp(this.name)"
+                                onmouseleave="hideHelp()"
+                                {% if button_type == "demo" %}
+                                    disabled
+                                {% endif %}><i class="fa-solid fa-person-chalkboard"></i> Demo</button>
                             <br>
                             <div class="help-pop">
                                 <span class="help-text" id="help-desc">

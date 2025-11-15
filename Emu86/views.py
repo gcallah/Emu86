@@ -166,7 +166,7 @@ def getCurrRegister(post_body):
 
 
 def create_render_data(request, vm, form, site_hdr, last_instr, error,
-                       sample, bit_code, button):
+                       sample, bit_code, button, slug=None):
     curr_reg = getCurrRegister(request.POST)
     render_data = {
         'form': form,
@@ -194,6 +194,7 @@ def create_render_data(request, vm, form, site_hdr, last_instr, error,
         'sample_progs': SAMPLE_PROGS,
         'fp_sample_progs': FP_SAMPLE_PROGS,
         'not_mips_risc_progs': NOT_MIPS_RISC_PROGS,
+        'slug': slug,
     }
     if vm.flavor in MIPS:
         r_reg, f_reg = processRegisters(vm)
@@ -335,7 +336,8 @@ def main_page(request, slug = None):
                                              error,
                                              sample,
                                              bit_code,
-                                             button)
+                                             button,
+                                             slug)
             return render(request, 'main.html', render_data)
 
         form = MainForm(request.POST)
@@ -392,7 +394,7 @@ def main_page(request, slug = None):
 
             (last_instr, error, bit_code) = assemble(request.POST[CODE],
                                                      vm, step)
-    if button == DEMO:
+    if button == DEMO or button == STEP:
         if (last_instr == "Reached end of executable code." or
                 last_instr.find("Exiting program") != -1):
             button = ""
@@ -403,6 +405,11 @@ def main_page(request, slug = None):
 
     vm.order_mem()
     hex_conversion(vm)
+
+    # Reconstruct slug from vm.flavor and vm.base to ensure it's always current
+    if vm.flavor and vm.base:
+        slug = f"{vm.flavor}-{vm.base}"
+
     if vm.flavor == 'wasm':
         return render(request, 'wasm.html',
                       {'form': form,
@@ -428,7 +435,7 @@ def main_page(request, slug = None):
                        'stack_change': "",
                        })
     render_data = create_render_data(request, vm, form, site_hdr, last_instr,
-                                     error, sample, bit_code, button)
+                                     error, sample, bit_code, button, slug)
     return render(request, 'main.html', render_data)
 
 
