@@ -379,7 +379,7 @@ select[multiple] {
 .button, input[type=submit], button, .submit-row input, a.button, #viewReg {
     background: black;
     padding: 10px 15px;
-    border: white;
+    border: 1px solid white;
     border-radius: 4px;
     color: white;
     cursor: pointer;
@@ -389,6 +389,7 @@ button#viewReg {
     margin-bottom: 10px;
     position: relative;
     left: 28%;
+    
 }
 
 a.button {
