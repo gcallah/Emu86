@@ -1,4 +1,4 @@
-name: Run Tests
+yamlname: Run Tests
 
 on:
   push:
