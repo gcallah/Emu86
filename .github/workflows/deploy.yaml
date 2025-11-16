@@ -1,0 +1,33 @@
+# .github/workflows/deploy.yml
+name: Deploy to PythonAnywhere
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: Deploy via SSH
+        env:
+          PA_USERNAME: ${{ secrets.PYTHONANYWHERE_USERNAME }}
+          PA_PASSWORD: ${{ secrets.PYTHONANYWHERE_PASSWORD }}
+        run: |
+          echo "SSHing to PythonAnywhere with username/password."
+          sshpass -p "$PA_PASSWORD" ssh \
+            -o StrictHostKeyChecking=no \
+            "$PA_USERNAME"@ssh.pythonanywhere.com << 'EOF'
+              cd /home/emu86/Emu86
+              /home/emu86/Emu86/myutils/prod.sh
+          EOF
