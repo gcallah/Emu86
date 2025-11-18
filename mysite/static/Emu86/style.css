@@ -1113,3 +1113,12 @@ summary.menu_sum {
   overflow: auto;
 }
 #gutter, #id_code { height: 400px; }
+
+/* Highlight for current step instruction */
+.CodeMirror .line-highlight {
+    background-color: #ffffcc !important;
+}
+
+.CodeMirror-selected {
+    background-color: #d7d4f0 !important;
+}
