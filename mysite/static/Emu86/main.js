@@ -223,6 +223,16 @@ function highlightCode(){
 
             window.editor.addLineClass(line_num - 1, 'background', 'line-highlight');
 
+            // select the specific instr text
+            const lineContent = window.editor.getLine(line_num - 1);
+            const instrIndex = lineContent.indexOf(lastInstr);
+            if (instrIndex !== -1) {
+                window.editor.setSelection(
+                    {line: line_num - 1, ch: instrIndex},
+                    {line: line_num - 1, ch: instrIndex + lastInstr.length}
+                );
+            }
+
             window.editor.scrollIntoView({line: line_num - 1, ch: 0}, 100);
         } else {
             const input = document.getElementById("id_code");
