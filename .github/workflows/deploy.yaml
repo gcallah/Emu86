@@ -28,6 +28,6 @@ jobs:
           sshpass -p "$PA_PASSWORD" ssh \
             -o StrictHostKeyChecking=no \
             "$PA_USERNAME"@ssh.pythonanywhere.com << 'EOF'
-              cd /home/emu86/Emu86
-              /home/emu86/Emu86/myutils/prod.sh
-          EOF
+          cd /home/emu86/Emu86
+          /home/emu86/Emu86/myutils/prod.sh
+EOF
