@@ -23,7 +23,6 @@ logger = logging.getLogger(__name__)
 CODE = 'code'
 NXT_KEY = 'nxt_key'
 STEP = 'step'
-DEMO = 'demo'
 CLEAR = 'clear'
 HEADER = 'header'
 DATA_INIT = 'data_init'
@@ -368,7 +367,7 @@ def main_page(request, slug = None):
             mips_machine.changes_init()
             riscv_machine.changes_init()
             wasm_machine.changes_init()
-            step = (button == STEP) or (button == DEMO)
+            step = (button == STEP)
             intel_machine.nxt_key = 0
             mips_machine.nxt_key = 0
             riscv_machine.nxt_key = 0
@@ -394,7 +393,7 @@ def main_page(request, slug = None):
 
             (last_instr, error, bit_code) = assemble(request.POST[CODE],
                                                      vm, step)
-    if button == DEMO or button == STEP:
+    if button == STEP:
         if (last_instr == "Reached end of executable code." or
                 last_instr.find("Exiting program") != -1):
             button = ""
