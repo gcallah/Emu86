@@ -29,5 +29,5 @@ jobs:
             -o StrictHostKeyChecking=no \
             "$PA_USERNAME"@ssh.pythonanywhere.com << 'EOF'
           cd /home/emu86/Emu86
-          /home/emu86/Emu86/myutils/prod.sh
+          /home/emu86/Emu86/myutils/dev.sh
           EOF
