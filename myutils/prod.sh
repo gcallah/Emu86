@@ -8,4 +8,4 @@ source /home/emu86/.virtualenvs/emu86/bin/activate
 # install all of our packages:
 make prod_env
 echo "Rebooting server."
-touch /var/www/www_emu86_org_wsgi.py
+touch /var/www/emu86_pythonanywhere_com_wsgi.py

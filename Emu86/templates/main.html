@@ -74,40 +74,28 @@
                                 id="clear-button"
                                 onclick="clearButton()"
                                 onmouseover="displayHelp(this.name)"
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "demo" %}
-                                    disabled
-                                {% endif %}><i class="fa-solid fa-rotate-left"></i> Reinit</button>
+                                onmouseleave="hideHelp()"><i class="fa-solid fa-rotate-left"></i> Reinit</button>
                             <button name="run"
                                 value="Run Code"
                                 title="Execute all lines of code"
                                 id="run-button"
                                 onclick="runButton()"
                                 onmouseover="displayHelp(this.name)"
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "demo" %}
-                                    disabled
-                                {% endif %}><i class="fa-solid fa-play"></i> Run</button>
+                                onmouseleave="hideHelp()"><i class="fa-solid fa-play"></i> Run</button>
                             <button name="step"
                                 value="Step Code"
                                 title="Execute one instruction at a time."
                                 id="step-button"
                                 onclick="stepButton()"
                                 onmouseover="displayHelp(this.name)"
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "demo" %}
-                                    disabled
-                                {% endif %}><i class="fa-solid fa-forward-step"></i> Step</button>
+                                onmouseleave="hideHelp()"><i class="fa-solid fa-forward-step"></i> Step</button>
                             <button name="save"
                                 value="Save Code"
                                 id="save-button"
                                 title="Saves the code "
                                 onclick="Savecode()"
                                 onmouseover="displayHelp(this.name)"
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "demo" %}
-                                    disabled
-                                {% endif %}><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                                onmouseleave="hideHelp()"><i class="fa-solid fa-floppy-disk"></i> Save</button>
                                 <button name="pause"
                                 value="Pause Code"
                                 title="Pauses code."
@@ -115,16 +103,7 @@
                                 onclick="pauseButton()"
                                 onmouseover="displayHelp(this.name)"
                                 onmouseleave="hideHelp()"><i class="fa-solid fa-pause"></i> Pause</button>
-                            <button name="demo"
-                                value="Demo Code"
-                                title="Demo code line by line."
-                                id="demo-button"
-                                onclick="demoButton()"
-                                onmouseover="displayHelp(this.name)"
-                                onmouseleave="hideHelp()"
-                                {% if button_type == "demo" %}
-                                    disabled
-                                {% endif %}><i class="fa-solid fa-person-chalkboard"></i> Demo</button>
+
                             <br>
                             <div class="help-pop">
                                 <span class="help-text" id="help-desc">
@@ -554,9 +533,6 @@
     }
     sampleProgDOM.value = selectedProgram; // Restore the selected program
 
-        if (document.getElementsByName("button_type")[0].value == "demo"){
-            SubmitForm(true);
-        }
         if (document.getElementsByName("button_type")[0].value == "pause") {
             SubmitForm(true, true);
         }

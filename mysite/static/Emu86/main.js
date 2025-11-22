@@ -213,22 +213,44 @@ function highlightCode(){
     if (lastInstr.indexOf(": Exiting program") !== -1){
         lastInstr = lastInstr.substring(0, lastInstr.indexOf(": Exiting program"));
     }
-    if (instr && lastInstr) {
-        const input = document.getElementById("id_code");
-        const codeArray = input.value.split("\n");
-        let startIndex = 0;
-        let lineLength = 0;
-        for (let index = 0; index < codeArray.length; index++) {
-            lineLength = codeArray[index].length;
-            if (index === line_num - 1){
-                break;
+    if (instr && lastInstr && line_num) {
+        // codeMirror
+        if (window.editor) {
+            // clear prev highlights
+            for (let i = 0; i < window.editor.lineCount(); i++) {
+                window.editor.removeLineClass(i, 'background', 'line-highlight');
             }
-            startIndex += codeArray[index].length + 1;
-            // the extra + 1 is to take the new line character into account
+
+            window.editor.addLineClass(line_num - 1, 'background', 'line-highlight');
+
+            // select the specific instr text
+            const lineContent = window.editor.getLine(line_num - 1);
+            const instrIndex = lineContent.indexOf(lastInstr);
+            if (instrIndex !== -1) {
+                window.editor.setSelection(
+                    {line: line_num - 1, ch: instrIndex},
+                    {line: line_num - 1, ch: instrIndex + lastInstr.length}
+                );
+            }
+
+            window.editor.scrollIntoView({line: line_num - 1, ch: 0}, 100);
+        } else {
+            const input = document.getElementById("id_code");
+            const codeArray = input.value.split("\n");
+            let startIndex = 0;
+            let lineLength = 0;
+            for (let index = 0; index < codeArray.length; index++) {
+                lineLength = codeArray[index].length;
+                if (index === line_num - 1){
+                    break;
+                }
+                startIndex += codeArray[index].length + 1;
+                // the extra + 1 is to take the new line character into account
+            }
+            input.focus();
+            startIndex += lineLength - lastInstr.length + 1;
+            input.setSelectionRange(startIndex, startIndex + lastInstr.length);
         }
-        input.focus();
-        startIndex += lineLength - lastInstr.length + 1;
-        input.setSelectionRange(startIndex, startIndex + lastInstr.length);
     }
 }
 
