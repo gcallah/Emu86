@@ -279,11 +279,12 @@ p img, h1 img, h2 img, h3 img, h4 img, td img {
 /* TABLES */
 
 table {
-    border: 1px solid black;
-    border-collapse: collapse;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px; 
 }
 
-td, th {
+th {
     border: 1px solid black;
     font-size: 13px;
     line-height: 10px;
@@ -292,6 +293,36 @@ td, th {
     padding: 8px;
     font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
 }
+
+td {
+    padding: 4px 6px;
+    color: white;
+    font-size: 14px;
+}
+
+.row-wrapper {
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 12px 16px;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.row-wrapper .label {
+    width: 70px; 
+    flex-shrink: 0; 
+    color: white;
+}
+
+.row-wrapper .value {
+    flex: 1; 
+    text-align: right;
+    color: white;
+}
+
 
 th {
     text-align: center;

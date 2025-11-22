@@ -137,12 +137,12 @@
                         {% if flavor != 'mips_asm' and flavor != 'mips_mml' and flavor != 'intel' and flavor != 'att'%}
                             <table id="registers-table">
                             <tr>
-                                <th>
-                                    Registers
-                                </th>
-                                <th>
-                                    Contents
-                                </th>
+                                <td colspan="2">
+                                <div class="row-wrapper">
+                                    <span class="label">Registers</span>
+                                    <span class="value">Contents</span>
+                                 </div>
+                                </td>
                                 {% if registers|length > 10 %}
                                     <th>
                                     Registers
@@ -263,158 +263,76 @@
                             <!-- else there are F registers as well -->
                             <table id="registers-table">
                             <tr>
-                                <th>
-                                    Registers
-                                </th>
-                                <th>
-                                    Contents
-                                </th>
+                                <td colspan="2">
+                                <div class="row-wrapper">
+                                    <span class="label">Registers</span>
+                                    <span class="value">Contents</span>
+                                 </div>
+                                </td>
                                 {% if int_registers|length > 10 %}
-                                    <th>
-                                    Registers
-                                    </th>
-                                    <th>
-                                    Contents
-                                    </th>
-                                    <th>
-                                    Registers
-                                    </th>
-                                    <th>
-                                    Contents
-                                    </th>
+                                <td colspan="2">
+                                <div class="row-wrapper">
+                                    <span class="label">Registers</span>
+                                    <span class="value">Contents</span>
+                                 </div>
+                                </td>
+                                <td colspan="2">
+                                <div class="row-wrapper">
+                                    <span class="label">Registers</span>
+                                    <span class="value">Contents</span>
+                                 </div>
+                                </td>
                                 {% endif %}
                             </tr>
                             <tr>
                             {% for reg, cont in int_registers %}
-                                {% if int_registers|length > 10 %}
-                                    {% if reg == "R9" %}
-                                        <td id="register"></td><td id="contents"></td></tr><tr class="R">
-                                    {% elif reg == "R10" or reg == "R11" %}
-                                        </tr> <tr class ="R">
-                                    {% elif reg == "PC" %}
-                                        <td id="register"></td><td id="contents"></td></tr><tr class="R">
-                                    {% else %}
-                                        {% if forloop.counter0|divisibleby:3 %}
-                                            {% if reg != "R21" and reg != "R22" and reg != "R23" %}
-                                                </tr> <tr class="R">
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% else %}
-                                    </tr> <tr class="R">
-                                {% endif %}
+                                    {% if forloop.first or forloop.counter0|divisibleby:3 %}
+                                <tr class="R">
+                            {% endif %}
 
-                                {% if reg in unwritable %}
-                                    <td id="unwritable">
-                                {% else %}
-                                    <td id="register">
-                                {% endif %}
-                                    {{ reg }}
-                                </td>
+                <td colspan="2">
+                    <div class="row-wrapper">
+                        <span class="reg-label {% if reg in unwritable %}unwritable{% endif %}">
+                            {{ reg }}
+                                </span>
 
-                                {% if reg in changes %}
-                                    <td id="contents" class="bg-color-yellow">
-                                {% else %}
-                                    <td id="contents">
-                                {% endif %}
+                                <span class="reg-value {% if reg in changes %}bg-color-yellow{% endif %}">
+                            {% if data_init == "on" %}
+                                <input
+                            {% if reg in unwritable %}
+                                id="unwr-cont"
+                                readonly="readonly"
+                            {% else %}
+                                id="reg-cont"
+                            {% endif %}
+                                value="{{ cont }}"
+                                name="{{ reg }}"
+                                size="10">
+                            {% else %}
+                                <input
+                            {% if reg in unwritable %}
+                                id="unwr-cont"
+                            {% else %}
+                                id="reg-cont"
+                            {% endif %}
+                                value="{{ cont }}"
+                                name="{{ reg }}"
+                                size="10"
+                                readonly="readonly"
+                            {% if reg in changes %}
+                                class="bg-color-yellow"
+                            {% else %}
+                                class="bg-color-white"
+                            {% endif %}
+                                onclick="convert(name,value)">
+                            {% endif %}
+                        </span>
+                    </div>
+                </td>
 
-                                {% if data_init == "on" %}
-                                    <input
-                                        {% if reg in unwritable %}
-                                            id="unwr-cont"
-                                            readonly = "readonly"
-                                        {% else %}
-                                            id="reg-cont"
-                                        {% endif %}
-                                        value="{{ cont }}"
-                                        name="{{ reg }}"
-                                        size="10">
-                                {% else %}
-                                    <input
-                                        {% if reg in unwritable %}
-                                            id="unwr-cont"
-                                        {% else %}
-                                            id="reg-cont"
-                                        {% endif %}
-                                        value="{{ cont }}"
-                                        name="{{ reg }}"
-                                        size="10"
-                                        readonly="readonly"
-                                        {% if reg in changes %}
-                                            class="bg-color-yellow"
-                                        {% else %}
-                                            class="bg-color-white"
-                                        {% endif %}
-                                    onclick=convert(name,value)>
-                                {% endif %}
-                                </td>
-
-                            {% endfor %}
-                            </tr>
-                            <tr>
-                            {% for reg, cont in float_registers %}
-                                {% if float_registers|length > 10 %}
-                                    {% if reg == "F9" %}
-                                        <td id="register"></td><td id="contents"></td></tr><tr class ="F">
-                                    {% elif reg == "F10" or reg == "F11" %}
-                                        </tr> <tr class ="F">
-                                    {% elif reg == "PC" %}
-                                        <td id="register"></td><td id="contents"></td></tr><tr class="F">
-                                    {% else %}
-                                        {% if forloop.counter0|divisibleby:3 %}
-                                            {% if reg != "F21" and reg != "F22" and reg != "F23" %}
-                                                </tr> <tr class="F">
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% else %}
-                                    </tr> <tr class="F">
-                                {% endif %}
-
-                                {% if reg in unwritable %}
-                                    <td id="unwritable">
-                                {% else %}
-                                    <td id="register">
-                                {% endif %}
-                                    {{ reg }}
-                                </td>
-
-                                {% if reg in changes %}
-                                    <td id="contents" class="bg-color-yellow">
-                                {% else %}
-                                    <td id="contents">
-                                {% endif %}
-
-                                {% if data_init == "on" %}
-                                    <input
-                                        {% if reg in unwritable %}
-                                            id="unwr-cont"
-                                            readonly = "readonly"
-                                        {% else %}
-                                            id="reg-cont"
-                                        {% endif %}
-                                        value="{{ cont }}"
-                                        name="{{ reg }}"
-                                        size="10">
-                                {% else %}
-                                    <input
-                                        {% if reg in unwritable %}
-                                            id="unwr-cont"
-                                        {% else %}
-                                            id="reg-cont"
-                                        {% endif %}
-                                        value="{{ cont }}"
-                                        name="{{ reg }}"
-                                        size="10"
-                                        readonly="readonly"
-                                        {% if reg in changes %}
-                                            class="bg-color-yellow"
-                                        {% else %}
-                                            class="bg-color-white"
-                                        {% endif %}
-                                    onclick=convert(name,value)>
-                                {% endif %}
-                                </td>
+                            {% if forloop.counter|divisibleby:3 or forloop.last %}
+                </tr>
+                            {% endif %}
                             {% endfor %}
                             </tr>
                             <tr>
