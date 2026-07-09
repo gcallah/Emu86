@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/gcallah/Emu86#readme",
   "dependencies": {
-    "eslint": "^9.38.0",
+    "eslint": "^10.0.0",
     "eslint-plugin-mocha": "^5.3.0"
   }
 }
